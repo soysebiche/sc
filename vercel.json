@@ -17,6 +17,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "comment": "Updated for automatic deployment trigger"
+  ]
 }
