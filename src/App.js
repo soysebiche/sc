@@ -392,7 +392,6 @@ function App() {
                       const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
                       const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
                                          (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
-                      const rival = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
 
                       return (
                         <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
@@ -405,7 +404,7 @@ function App() {
                             </span>
                           </div>
                           <p className="font-bold text-lg">
-                            Sporting Cristal <span className="font-normal">vs</span> {rival}
+                            {match["Equipo Local"]} <span className="font-normal">vs</span> {match["Equipo Visita"]}
                           </p>
                           <p className="text-3xl font-bold text-center my-2">{match.Marcador}</p>
                           {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
@@ -460,7 +459,6 @@ function App() {
                 const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
                 const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
                                    (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
-                const rival = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
 
                 return (
                   <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
@@ -471,7 +469,7 @@ function App() {
                       </span>
                     </div>
                     <p className="font-bold text-lg">
-                      Sporting Cristal <span className="font-normal">vs</span> {rival}
+                      {match["Equipo Local"]} <span className="font-normal">vs</span> {match["Equipo Visita"]}
                     </p>
                     <p className="text-3xl font-bold text-center my-2">{match.Marcador}</p>
                     <p className="text-sm text-gray-600 mb-1">{match.Torneo}</p>
