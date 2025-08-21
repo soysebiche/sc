@@ -14,6 +14,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedMinute, setSelectedMinute] = useState('');
   const [curiosidades, setCuriosidades] = useState({});
+  const [yearlyStats, setYearlyStats] = useState([]);
 
   useEffect(() => {
     try {
@@ -51,6 +52,9 @@ function App() {
 
       // Calculate curiosidades
       setCuriosidades(calculateCuriosidades(combinedData));
+
+      // Calculate yearly statistics
+      setYearlyStats(calculateYearlyStats(combinedData));
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
@@ -159,7 +163,7 @@ function App() {
         maxScGoals = scGoals;
         maxScGoalsMatch = match;
       }
-      if (scGoals < minScGoals) {
+      if (scGoals < minScGoals && scGoals > 0) {
         minScGoals = scGoals;
         minScGoalsMatch = match;
       }
@@ -199,7 +203,7 @@ function App() {
             const numericalMinuteMatch = minuteStr.match(/^(\\d+\\+?\\d*)/);
             if (numericalMinuteMatch) {
               const minute = parseInt(numericalMinuteMatch[1], 10);
-              if (minute > 0) { // Exclude minute 0
+              if (minute >= 1 && minute <= 90) { // Only count minutes 1-90
                 minuteStats[minute] = (minuteStats[minute] || 0) + 1;
               }
             }
@@ -241,12 +245,13 @@ function App() {
     
     const mostGoalsMinute = minuteEntries.length > 0 
       ? minuteEntries.reduce((a, b) => a.goals > b.goals ? a : b)
-      : {minute: 0, goals: 0};
+      : {minute: 'N/A', goals: 0};
     const leastGoalsMinute = minuteEntries.length > 0
       ? minuteEntries.reduce((a, b) => a.goals < b.goals ? a : b)
-      : {minute: 0, goals: 0};
+      : {minute: 'N/A', goals: 0};
     
     const bestDay = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
+    const bestDayMatches = monthStats[bestDay] || 0;
     const bestMonth = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
     const victoryMonthEntries = Object.entries(monthVictories);
     const defeatMonthEntries = Object.entries(monthDefeats);
@@ -267,6 +272,7 @@ function App() {
       defeats: defeats.length,
       draws: draws.length,
       bestDay,
+      bestDayMatches,
       bestMonth,
       bestMonthMatches: monthStats[bestMonth] || 0,
       bestVictoryMonth,
@@ -299,6 +305,53 @@ function App() {
       leastGoalsMinute: leastGoalsMinute.minute,
       leastGoalsMinuteCount: leastGoalsMinute.goals
     };
+  };
+
+  const calculateYearlyStats = (data) => {
+    const yearlyData = {};
+    
+    data.forEach(match => {
+      const year = new Date(match.Fecha).getFullYear();
+      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[0]) 
+        : parseInt(match.Marcador.split('-')[1]);
+      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[1]) 
+        : parseInt(match.Marcador.split('-')[0]);
+
+      if (!yearlyData[year]) {
+        yearlyData[year] = {
+          year,
+          victories: 0,
+          draws: 0,
+          defeats: 0,
+          total: 0,
+          goalsFor: 0,
+          goalsAgainst: 0
+        };
+      }
+
+      yearlyData[year].total++;
+      yearlyData[year].goalsFor += scGoals;
+      yearlyData[year].goalsAgainst += opponentGoals;
+
+      if (scGoals > opponentGoals) {
+        yearlyData[year].victories++;
+      } else if (scGoals < opponentGoals) {
+        yearlyData[year].defeats++;
+      } else {
+        yearlyData[year].draws++;
+      }
+    });
+
+    return Object.values(yearlyData)
+      .sort((a, b) => a.year - b.year)
+      .map(yearData => ({
+        ...yearData,
+        winPercentage: ((yearData.victories / yearData.total) * 100).toFixed(1),
+        avgGoalsFor: (yearData.goalsFor / yearData.total).toFixed(2),
+        avgGoalsAgainst: (yearData.goalsAgainst / yearData.total).toFixed(2)
+      }));
   };
 
   if (loading) {
@@ -370,6 +423,15 @@ function App() {
             >
               <span className="hidden sm:inline">Datos Curiosos</span>
               <span className="sm:hidden">Datos</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('analisis-anual')}
+              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
+                activeTab === 'analisis-anual' ? 'tab-active' : ''
+              }`}
+            >
+              <span className="hidden sm:inline">Análisis por Año</span>
+              <span className="sm:hidden">Años</span>
             </button>
           </nav>
         </div>
@@ -754,6 +816,128 @@ function App() {
                 <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-purple-800 mb-1">Día con Más Partidos</h4>
                   <p className="text-xl font-bold text-purple-900">{curiosidades.bestDay}</p>
+                  <p className="text-xs text-purple-700">{curiosidades.bestDayMatches} partidos</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Contenido de Análisis por Año */}
+        {activeTab === 'analisis-anual' && (
+          <div className="py-6">
+            <h2 className="text-2xl font-semibold mb-6">Análisis por Año de Sporting Cristal</h2>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
+                <thead className="bg-sky-500 text-white">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Año</th>
+                    <th className="px-4 py-3 text-center">PJ</th>
+                    <th className="px-4 py-3 text-center">V</th>
+                    <th className="px-4 py-3 text-center">E</th>
+                    <th className="px-4 py-3 text-center">D</th>
+                    <th className="px-4 py-3 text-center">%V</th>
+                    <th className="px-4 py-3 text-center">GF</th>
+                    <th className="px-4 py-3 text-center">GC</th>
+                    <th className="px-4 py-3 text-center">Dif</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {yearlyStats.map((yearData, index) => {
+                    const goalDifference = yearData.goalsFor - yearData.goalsAgainst;
+                    const isPositiveDiff = goalDifference > 0;
+                    return (
+                      <tr key={yearData.year} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 font-semibold text-sky-600">{yearData.year}</td>
+                        <td className="px-4 py-3 text-center">{yearData.total}</td>
+                        <td className="px-4 py-3 text-center text-green-600 font-semibold">{yearData.victories}</td>
+                        <td className="px-4 py-3 text-center text-yellow-600 font-semibold">{yearData.draws}</td>
+                        <td className="px-4 py-3 text-center text-red-600 font-semibold">{yearData.defeats}</td>
+                        <td className="px-4 py-3 text-center font-semibold">{yearData.winPercentage}%</td>
+                        <td className="px-4 py-3 text-center">{yearData.goalsFor}</td>
+                        <td className="px-4 py-3 text-center">{yearData.goalsAgainst}</td>
+                        <td className={`px-4 py-3 text-center font-semibold ${
+                          isPositiveDiff ? 'text-green-600' : goalDifference < 0 ? 'text-red-600' : 'text-gray-600'
+                        }`}>
+                          {goalDifference > 0 ? '+' : ''}{goalDifference}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Gráfico simple de tendencias */}
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold mb-4 text-sky-600">📈 Tendencias por Año</h3>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  
+                  {/* Victorias por año */}
+                  <div>
+                    <h4 className="text-lg font-semibold mb-3 text-green-600">🏆 Victorias</h4>
+                    <div className="space-y-2">
+                      {yearlyStats.map(yearData => (
+                        <div key={`v-${yearData.year}`} className="flex items-center">
+                          <span className="w-12 text-sm">{yearData.year}</span>
+                          <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2 overflow-hidden">
+                            <div 
+                              className="bg-green-500 h-4 rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.max(5, (yearData.victories / Math.max(...yearlyStats.map(y => y.victories))) * 100)}%`
+                              }}
+                            ></div>
+                          </div>
+                          <span className="w-8 text-sm text-green-600 font-semibold">{yearData.victories}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Empates por año */}
+                  <div>
+                    <h4 className="text-lg font-semibold mb-3 text-yellow-600">🤝 Empates</h4>
+                    <div className="space-y-2">
+                      {yearlyStats.map(yearData => (
+                        <div key={`e-${yearData.year}`} className="flex items-center">
+                          <span className="w-12 text-sm">{yearData.year}</span>
+                          <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2 overflow-hidden">
+                            <div 
+                              className="bg-yellow-500 h-4 rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.max(5, (yearData.draws / Math.max(...yearlyStats.map(y => y.draws))) * 100)}%`
+                              }}
+                            ></div>
+                          </div>
+                          <span className="w-8 text-sm text-yellow-600 font-semibold">{yearData.draws}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Derrotas por año */}
+                  <div>
+                    <h4 className="text-lg font-semibold mb-3 text-red-600">❌ Derrotas</h4>
+                    <div className="space-y-2">
+                      {yearlyStats.map(yearData => (
+                        <div key={`d-${yearData.year}`} className="flex items-center">
+                          <span className="w-12 text-sm">{yearData.year}</span>
+                          <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2 overflow-hidden">
+                            <div 
+                              className="bg-red-500 h-4 rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.max(5, (yearData.defeats / Math.max(...yearlyStats.map(y => y.defeats))) * 100)}%`
+                              }}
+                            ></div>
+                          </div>
+                          <span className="w-8 text-sm text-red-600 font-semibold">{yearData.defeats}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
