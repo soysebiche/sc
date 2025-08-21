@@ -2,6 +2,8 @@
 
 Una aplicación web moderna para visualizar las estadísticas históricas del Club Sporting Cristal, diseñada con React y un estilo visual del 2025.
 
+<!-- Rollback completado a commit 7130cba - 2024 -->
+
 ## ✨ Características
 
 - 📊 **Estadísticas Interactivas**: Visualización de datos históricos completos del club
