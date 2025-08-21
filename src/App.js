@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 import historicoData from './data/historico_completo_sc.json';
 
 function App() {
@@ -8,6 +7,9 @@ function App() {
   const [error, setError] = useState(null);
   const [selectedYear, setSelectedYear] = useState('');
   const [years, setYears] = useState([]);
+  const [activeTab, setActiveTab] = useState('efemerides');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedMinute, setSelectedMinute] = useState('');
 
   useEffect(() => {
     try {
@@ -20,8 +22,15 @@ function App() {
       console.log('Unique Years:', uniqueYears);
       setYears(uniqueYears);
       if (uniqueYears.length > 0) {
-        setSelectedYear(uniqueYears[0].toString()); // Set default to the latest year
+        setSelectedYear(uniqueYears[0].toString());
       }
+
+      // Set today's date for efemérides
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      setSelectedDate(`${yyyy}-${mm}-${dd}`);
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
@@ -29,660 +38,317 @@ function App() {
     }
   }, []);
 
+  // Helper functions
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', options);
+  };
+
+  const getDayName = () => {
+    const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const today = new Date();
+    return days[today.getDay()];
+  };
+
+  const getCurrentDateText = () => {
+    const today = new Date();
+    const day = today.getDate();
+    const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const month = months[today.getMonth()];
+    return `${getDayName()} ${day} de ${month}`;
+  };
+
+  // Filter functions
   const filteredMatches = selectedYear
     ? data.filter(match => new Date(match.Fecha).getFullYear().toString() === selectedYear)
     : data;
 
-  const stats = useMemo(() => {
-    if (data.length === 0) return {};
+  const getMatchesForDate = (date) => {
+    if (!date) return [];
+    const [year, month, day] = date.split('-');
+    const searchMonthDay = `${month}-${day}`;
+    return data.filter(match => match.Fecha.substring(5) === searchMonthDay);
+  };
 
-    const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-    const victoriesByDay = new Array(7).fill(0);
-    const defeatsByDay = new Array(7).fill(0);
-    const goalsByMinute = new Array(121).fill(0); // Assuming minutes 0-120 (for extra time)
-    const goalsByMonth = new Array(12).fill(0);
-    const victoriesByMonth = new Array(12).fill(0);
-    const defeatsByMonth = new Array(12).fill(0);
-    const drawsByMonth = new Array(12).fill(0);
-
-    let totalVictories = 0;
-    let totalDefeats = 0;
-    let totalDraws = 0;
-
+  const getGoalsForMinute = (minute) => {
+    if (!minute) return [];
+    const goals = [];
     data.forEach(match => {
-      const matchDate = new Date(match.Fecha);
-      const dayOfWeek = matchDate.getDay(); // 0 for Sunday, 6 for Saturday
-      const month = matchDate.getMonth(); // 0 for January, 11 for December
-
-      // Results by Day and Month
-      if (match.Resultado === 'V') {
-        victoriesByDay[dayOfWeek]++;
-        victoriesByMonth[month]++;
-        totalVictories++;
-      } else if (match.Resultado === 'D') {
-        defeatsByDay[dayOfWeek]++;
-        defeatsByMonth[month]++;
-        totalDefeats++;
-      } else if (match.Resultado === 'E') {
-        drawsByMonth[month]++;
-        totalDraws++;
-      }
-
-      // Calculate goals by minute from 'Goles (Solo SC)' field
-      let minutesExtracted = false; // Flag to check if any minutes were extracted
       if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
         const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\(([^)]+)\)/g)]
-            .map(m => m[1]); // Get content inside parentheses, e.g., "12', 78'"
-
+          .map(m => m[1]);
+        
         allParenthesizedContents.forEach(content => {
-            const individualMinuteStrings = content.split(/,\s*/);
-
-            individualMinuteStrings.forEach(minuteStr => {
-                const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
-                if (numericalMinuteMatch) {
-                    const parsedMinute = parseInt(numericalMinuteMatch[1], 10);
-
-                    if (!isNaN(parsedMinute) && parsedMinute >= 0 && parsedMinute <= 120) {
-                        goalsByMinute[parsedMinute]++;
-                        goalsByMonth[month]++; // Aggregate goals by month
-                        minutesExtracted = true; // Set flag if a minute is extracted
-                    }
-                }
-            });
+          const individualMinuteStrings = content.split(/,\s*/);
+          individualMinuteStrings.forEach(minuteStr => {
+            const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
+            if (numericalMinuteMatch) {
+              const parsedMinute = parseInt(numericalMinuteMatch[1], 10);
+              if (parsedMinute == minute) {
+                goals.push({
+                  fecha: match.Fecha,
+                  rival: match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"],
+                  marcador: match.Marcador,
+                  minuto: parsedMinute
+                });
+              }
+            }
+          });
         });
       }
-
-      // Check if goals were scored but no minutes extracted
-      // Assuming 'Marcador' is like "X-Y"
-      const scoreParts = match.Marcador.split('-');
-      let scGoalsCount = 0;
-      if (match["Equipo Local"] === "Sporting Cristal") {
-          scGoalsCount = parseInt(scoreParts[0], 10);
-      } else if (match["Equipo Visita"] === "Sporting Cristal") {
-          scGoalsCount = parseInt(scoreParts[1], 10);
-      }
-
-      if (scGoalsCount > 0 && !minutesExtracted) {
-          console.log('Match with goals but no minutes extracted:', match.Fecha, match.Marcador, match["Goles (Solo SC)"]);
-      }
     });
-
-    // Day with most victories
-    const maxVictoriesDayCount = Math.max(...victoriesByDay);
-    const dayWithMostVictories = dayNames[victoriesByDay.indexOf(maxVictoriesDayCount)];
-
-    // Day with most defeats
-    const maxDefeatsDayCount = Math.max(...defeatsByDay);
-    const dayWithMostDefeats = dayNames[defeatsByDay.indexOf(maxDefeatsDayCount)];
-
-    // Top 5 minutes with most goals
-    const top5MostGoalsMinutes = goalsByMinute
-      .map((count, minute) => ({ minute, count }))
-      .filter(item => item.count > 0)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-
-    // Top 5 minutes with fewest goals (excluding 0 goals, and minutes > 90)
-    const top5FewestGoalsMinutes = goalsByMinute
-      .map((count, minute) => ({ minute, count }))
-      .filter(item => item.count > 0 && item.minute <= 90) // Only minutes 1-90 with at least one goal
-      .sort((a, b) => a.count - b.count)
-      .slice(0, 5);
-
-    // Month with most goals
-    const maxGoalsMonthCount = Math.max(...goalsByMonth);
-    const monthWithMostGoals = monthNames[goalsByMonth.indexOf(maxGoalsMonthCount)];
-
-    // Month with fewest goals (excluding 0 goals)
-    const minGoalsMonthCount = Math.min(...goalsByMonth.filter(count => count > 0));
-    const monthWithFewestGoals = monthNames[goalsByMonth.indexOf(minGoalsMonthCount)];
-
-    // Month with most victories
-    const maxVictoriesMonthCount = Math.max(...victoriesByMonth);
-    const monthWithMostVictories = monthNames[victoriesByMonth.indexOf(maxVictoriesMonthCount)];
-
-    // Month with most defeats
-    const maxDefeatsMonthCount = Math.max(...defeatsByMonth);
-    const monthWithMostDefeats = monthNames[defeatsByMonth.indexOf(maxDefeatsMonthCount)];
-
-    // Minutes with no goals (1-90)
-    const minutesWithNoGoals = [];
-    for (let i = 1; i <= 90; i++) {
-      if (goalsByMinute[i] === 0) {
-        minutesWithNoGoals.push(i);
-      }
-    }
-
-    // Single minute with most goals
-    const maxGoalsInMinute = Math.max(...goalsByMinute);
-    const minuteWithMostGoals = goalsByMinute.indexOf(maxGoalsInMinute);
-
-    // Single minute with fewest goals (excluding 0 goals, and minutes > 90)
-    const filteredGoalsByMinute = goalsByMinute
-      .map((count, minute) => ({ minute, count }))
-      .filter(item => item.count > 0 && item.minute <= 90);
-    
-    const minGoalsInMinute = filteredGoalsByMinute.length > 0 
-      ? Math.min(...filteredGoalsByMinute.map(item => item.count)) 
-      : 0;
-    const minuteWithFewestGoals = filteredGoalsByMinute.length > 0 
-      ? filteredGoalsByMinute.find(item => item.count === minGoalsInMinute)?.minute || 0 
-      : 0;
-
-    // Additional Curious Facts (at least 20)
-
-    // Example: Average goals per match
-    const totalGoalsScored = goalsByMinute.reduce((sum, count) => sum + count, 0);
-    const averageGoalsPerMatch = data.length > 0 ? (totalGoalsScored / data.length).toFixed(2) : 0;
-
-    // Example: Win/Loss/Draw percentage
-    const winPercentage = data.length > 0 ? ((totalVictories / data.length) * 100).toFixed(2) : 0;
-    const lossPercentage = data.length > 0 ? ((totalDefeats / data.length) * 100).toFixed(2) : 0;
-    const drawPercentage = data.length > 0 ? ((totalDraws / data.length) * 100).toFixed(2) : 0;
-
-    // Example: Most common score (requires parsing Marcador)
-    const scoreCounts = {};
-    data.forEach(match => {
-      scoreCounts[match.Marcador] = (scoreCounts[match.Marcador] || 0) + 1;
-    });
-    let mostCommonScore = 'N/A';
-    let maxScoreCount = 0;
-    for (const score in scoreCounts) {
-      if (scoreCounts[score] > maxScoreCount) {
-        maxScoreCount = scoreCounts[score];
-        mostCommonScore = score;
-      }
-    }
-
-    // Example: Biggest win (by goal difference)
-    let biggestWinDiff = -Infinity;
-    let biggestWinMatch = null;
-    data.forEach(match => {
-      if (match.Resultado === 'V') {
-        const scoreParts = match.Marcador.split('-');
-        let scGoals = 0;
-        let opponentGoals = 0;
-        if (match["Equipo Local"] === "Sporting Cristal") {
-            scGoals = parseInt(scoreParts[0], 10);
-            opponentGoals = parseInt(scoreParts[1], 10);
-        } else if (match["Equipo Visita"] === "Sporting Cristal") {
-            scGoals = parseInt(scoreParts[1], 10);
-            opponentGoals = parseInt(scoreParts[0], 10);
-        }
-        const diff = scGoals - opponentGoals;
-        if (diff > biggestWinDiff) {
-          biggestWinDiff = diff;
-          biggestWinMatch = `${match.Fecha} vs ${match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"]} (${match.Marcador})`;
-        }
-      }
-    });
-
-    // Example: Most common opponent (requires parsing Equipo Local/Visita)
-    const opponentCounts = {};
-    data.forEach(match => {
-      const opponent = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
-      opponentCounts[opponent] = (opponentCounts[opponent] || 0) + 1;
-    });
-    let mostCommonOpponent = 'N/A';
-    let maxOpponentCount = 0;
-    for (const opp in opponentCounts) {
-      if (opponentCounts[opp] > maxOpponentCount) {
-        maxOpponentCount = opponentCounts[opp];
-        mostCommonOpponent = opp;
-      }
-    }
-
-    // Example: Total goals scored by SC
-    // totalGoalsScored is already calculated
-
-    // Example: Total goals conceded by SC
-    let totalGoalsConceded = 0;
-    data.forEach(match => {
-        const scoreParts = match.Marcador.split('-');
-        let conceded = 0;
-        if (match["Equipo Local"] === "Sporting Cristal") {
-            conceded = parseInt(scoreParts[1], 10);
-        }
-        else if (match["Equipo Visita"] === "Sporting Cristal") {
-            conceded = parseInt(scoreParts[0], 10);
-        }
-        totalGoalsConceded += conceded;
-    });
-
-    // Example: Clean sheets (matches with 0 goals conceded)
-    let cleanSheets = 0;
-    data.forEach(match => {
-        let conceded = 0;
-        const scoreParts = match.Marcador.split('-');
-        if (match["Equipo Local"] === "Sporting Cristal") {
-            conceded = parseInt(scoreParts[1], 10);
-        }
-        else if (match["Equipo Visita"] === "Sporting Cristal") {
-            conceded = parseInt(scoreParts[0], 10);
-        }
-        if (conceded === 0) {
-            cleanSheets++;
-        }
-    });
-
-    // Example: Matches with 5+ goals (total goals in match)
-    let matchesWithHighGoals = 0;
-    data.forEach(match => {
-        const scoreParts = match.Marcador.split('-');
-        const team1Goals = parseInt(scoreParts[0], 10);
-        const team2Goals = parseInt(scoreParts[1], 10);
-        if (team1Goals + team2Goals >= 5) {
-            matchesWithHighGoals++;
-        }
-    });
-
-    // Example: Most common goal scorer (requires parsing Goles (Solo SC) for player names)
-    const scorerCounts = {};
-    data.forEach(match => {
-        if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
-            const players = match["Goles (Solo SC)"].split(/,\s*(?![^()]*\))/); // Split by comma, but not inside parentheses
-            players.forEach(playerEntry => {
-                const playerNameMatch = playerEntry.match(/^([^(\[]+)/); // Get name before '(' or '['
-                if (playerNameMatch) {
-                    const playerName = playerNameMatch[1].trim();
-                    if (playerName) {
-                        scorerCounts[playerName] = (scorerCounts[playerName] || 0) + 1;
-                    }
-                }
-            });
-        }
-    });
-    let topScorer = 'N/A';
-    let maxScorerGoals = 0;
-    for (const scorer in scorerCounts) {
-        if (scorerCounts[scorer] > maxScorerGoals) {
-            maxScorerGoals = scorerCounts[scorer];
-            topScorer = scorer;
-        }
-    }
-
-    // Example: Number of tournaments played
-    const uniqueTournaments = new Set(data.map(match => match.Torneo));
-    const numberOfTournaments = uniqueTournaments.size;
-
-    // Example: Number of unique opponents
-    const uniqueOpponents = new Set();
-    data.forEach(match => {
-        const opponent = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
-        uniqueOpponents.add(opponent);
-    });
-    const numberOfUniqueOpponents = uniqueOpponents.size;
-
-    // Example: Matches with "Walkover"
-    let walkoverWins = 0;
-    let walkoverLosses = 0;
-    data.forEach(match => {
-        if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"].includes("Walkover")) {
-            if (match.Resultado === 'V') walkoverWins++;
-            if (match.Resultado === 'D') walkoverLosses++;
-        }
-    });
-
-    // Example: Matches with "autogol"
-    let autogolesForSC = 0;
-    data.forEach(match => {
-        if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"].includes("autogol")) {
-            autogolesForSC++;
-        }
-    });
-
-    // Example: Matches with "pen" (penalty)
-    let penaltiesScored = 0;
-    data.forEach(match => {
-        if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"].includes("pen")) {
-            penaltiesScored++;
-        }
-    });
-
-    // Example: Matches with 0-0 draws
-    const zeroZeroDraws = data.filter(match => match.Marcador === '0-0').length;
-
-    // Example: Matches with 1-1 draws
-    const oneOneDrawsCount = data.filter(match => match.Marcador === '1-1').length;
-
-    // Example: Matches with 2-2 draws
-    const twoTwoDraws = data.filter(match => match.Marcador === '2-2').length;
-
-    // Example: Matches with 1-0 wins
-    const oneZeroWins = data.filter(match => {
-        if (match.Resultado === 'V') {
-            const scoreParts = match.Marcador.split('-');
-            let scGoals = 0;
-            let opponentGoals = 0;
-            if (match["Equipo Local"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[0], 10);
-                opponentGoals = parseInt(scoreParts[1], 10);
-            } else if (match["Equipo Visita"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[1], 10);
-                opponentGoals = parseInt(scoreParts[0], 10);
-            }
-            return scGoals === 1 && opponentGoals === 0;
-        }
-        return false;
-    }).length;
-
-    // Example: Matches with 2-1 wins
-    const twoOneWins = data.filter(match => {
-        if (match.Resultado === 'V') {
-            const scoreParts = match.Marcador.split('-');
-            let scGoals = 0;
-            let opponentGoals = 0;
-            if (match["Equipo Local"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[0], 10);
-                opponentGoals = parseInt(scoreParts[1], 10);
-            }
-            else if (match["Equipo Visita"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[1], 10);
-                opponentGoals = parseInt(scoreParts[0], 10);
-            }
-            return scGoals === 2 && opponentGoals === 1;
-        }
-        return false;
-    }).length;
-
-    // Example: Matches with 3-0 wins
-    const threeZeroWins = data.filter(match => {
-        if (match.Resultado === 'V') {
-            const scoreParts = match.Marcador.split('-');
-            let scGoals = 0;
-            let opponentGoals = 0;
-            if (match["Equipo Local"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[0], 10);
-                opponentGoals = parseInt(scoreParts[1], 10);
-            }
-            else if (match["Equipo Visita"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[1], 10);
-                opponentGoals = parseInt(scoreParts[0], 10);
-            }
-            return scGoals === 3 && opponentGoals === 0;
-        }
-        return false;
-    }).length;
-
-    // Example: Matches with 0-1 losses
-    const zeroOneLosses = data.filter(match => {
-        if (match.Resultado === 'D') {
-            const scoreParts = match.Marcador.split('-');
-            let scGoals = 0;
-            let opponentGoals = 0;
-            if (match["Equipo Local"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[0], 10);
-                opponentGoals = parseInt(scoreParts[1], 10);
-            }
-            else if (match["Equipo Visita"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[1], 10);
-                opponentGoals = parseInt(scoreParts[0], 10);
-            }
-            return scGoals === 0 && opponentGoals === 1;
-        }
-        return false;
-    }).length;
-
-    // Example: Matches with 1-2 losses
-    const oneTwoLosses = data.filter(match => {
-        if (match.Resultado === 'D') {
-            const scoreParts = match.Marcador.split('-');
-            let scGoals = 0;
-            let opponentGoals = 0;
-            if (match["Equipo Local"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[0], 10);
-                opponentGoals = parseInt(scoreParts[1], 10);
-            }
-            else if (match["Equipo Visita"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[1], 10);
-                opponentGoals = parseInt(scoreParts[0], 10);
-            }
-            return scGoals === 1 && opponentGoals === 2;
-        }
-        return false;
-    }).length;
-
-    // Example: Matches with 0-3 losses
-    const zeroThreeLosses = data.filter(match => {
-        if (match.Resultado === 'D') {
-            const scoreParts = match.Marcador.split('-');
-            let scGoals = 0;
-            let opponentGoals = 0;
-            if (match["Equipo Local"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[0], 10);
-                opponentGoals = parseInt(scoreParts[1], 10);
-            }
-            else if (match["Equipo Visita"] === "Sporting Cristal") {
-                scGoals = parseInt(scoreParts[1], 10);
-                opponentGoals = parseInt(scoreParts[0], 10);
-            }
-            return scGoals === 0 && opponentGoals === 3;
-        }
-        return false;
-    }).length;
-
-
-    return {
-      totalMatches: data.length,
-      totalVictories,
-      totalDefeats,
-      totalDraws,
-      dayWithMostVictories: { day: dayWithMostVictories, count: maxVictoriesDayCount },
-      dayWithMostDefeats: { day: dayWithMostDefeats, count: maxDefeatsDayCount },
-      minuteWithMostGoals: { minute: minuteWithMostGoals, count: maxGoalsInMinute },
-      minuteWithFewestGoals: { minute: minuteWithFewestGoals, count: minGoalsInMinute },
-      minutesWithNoGoals,
-      top5MostGoalsMinutes,
-      top5FewestGoalsMinutes,
-      monthWithMostGoals: { month: monthWithMostGoals, count: maxGoalsMonthCount },
-      monthWithFewestGoals: { month: monthWithFewestGoals, count: minGoalsMonthCount },
-      monthWithMostVictories: { month: monthWithMostVictories, count: maxVictoriesMonthCount },
-      monthWithMostDefeats: { month: monthWithMostDefeats, count: maxDefeatsMonthCount },
-      averageGoalsPerMatch,
-      winPercentage,
-      lossPercentage,
-      drawPercentage,
-      mostCommonScore,
-      biggestWin: biggestWinMatch,
-      biggestWinDiff,
-      mostCommonOpponent,
-      totalGoalsScored,
-      totalGoalsConceded,
-      cleanSheets,
-      matchesWithHighGoals,
-      topScorer,
-      numberOfTournaments,
-      numberOfUniqueOpponents,
-      walkoverWins,
-      walkoverLosses,
-      autogolesForSC,
-      penaltiesScored,
-      zeroZeroDraws,
-      oneOneDrawsCount,
-      twoTwoDraws,
-      oneZeroWins,
-      twoOneWins,
-      threeZeroWins,
-      zeroOneLosses,
-      oneTwoLosses,
-      zeroThreeLosses,
-    };
-  }, [data]); // Recalculate when data changes
+    return goals;
+  };
 
   if (loading) {
-    return <div className="App">Cargando datos...</div>;
+    return (
+      <div className="container mx-auto p-4 md:p-8">
+        <div className="text-center">
+          <p className="text-lg text-gray-600">Cargando datos...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="App">Error al cargar los datos: {error.message}</div>;
+    return (
+      <div className="container mx-auto p-4 md:p-8">
+        <div className="text-center">
+          <p className="text-lg text-red-600">Error al cargar los datos: {error.message}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Histórico Sporting Cristal</h1>
+    <div className="container mx-auto p-4 md:p-8">
+      <header className="text-center mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+          Archivo Histórico del Fútbol Peruano
+        </h1>
+        <p className="text-lg text-gray-600">Explora 25 años de datos de Sporting Cristal</p>
       </header>
-      <main>
-        <section className="match-list-section">
-          <h2>Resultados por Año</h2>
-          <div className="year-selector">
-            <label htmlFor="year-select">Selecciona un Año: </label>
-            <select
-              id="year-select"
-              value={selectedYear}
-              onChange={e => setSelectedYear(e.target.value)}
+
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+            <button
+              onClick={() => setActiveTab('efemerides')}
+              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'efemerides' ? 'tab-active' : ''
+              }`}
             >
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+              Efemérides
+            </button>
+            <button
+              onClick={() => setActiveTab('temporadas')}
+              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'temporadas' ? 'tab-active' : ''
+              }`}
+            >
+              Temporadas
+            </button>
+            <button
+              onClick={() => setActiveTab('minutos')}
+              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'minutos' ? 'tab-active' : ''
+              }`}
+            >
+              Goles por Minuto
+            </button>
+          </nav>
+        </div>
+
+        {/* Contenido de Efemérides */}
+        {activeTab === 'efemerides' && (
+          <div className="py-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                ¡Hola, feliz {getCurrentDateText()}!
+              </h2>
+              <p className="text-lg text-gray-600">
+                Descubre qué partidos se jugaron en esta fecha
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
+              <p className="text-sm font-medium">Busca partidos en una fecha específica:</p>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              {getMatchesForDate(selectedDate).length > 0 ? (
+                <>
+                  <h3 className="text-xl font-semibold mb-3 text-blue-600">
+                    Partidos jugados el {formatDate(selectedDate)}
+                  </h3>
+                  <div className="space-y-4">
+                    {getMatchesForDate(selectedDate).map((match, index) => {
+                      const matchDate = new Date(match.Fecha);
+                      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+                        ? parseInt(match.Marcador.split('-')[0]) 
+                        : parseInt(match.Marcador.split('-')[1]);
+                      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+                        ? parseInt(match.Marcador.split('-')[1]) 
+                        : parseInt(match.Marcador.split('-')[0]);
+                      const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
+                      const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
+                                         (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
+                      const rival = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
+
+                      return (
+                        <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
+                          <div className="flex justify-between items-center mb-2">
+                            <p className="text-sm text-gray-500">
+                              {matchDate.getFullYear()} - {match.Torneo}
+                            </p>
+                            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
+                              {result}
+                            </span>
+                          </div>
+                          <p className="font-bold text-lg">
+                            Sporting Cristal <span className="font-normal">vs</span> {rival}
+                          </p>
+                          <p className="text-3xl font-bold text-center my-2">{match.Marcador}</p>
+                          {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
+                            <div>
+                              <h4 className="font-semibold text-sm mb-1">Goles de Sporting Cristal:</h4>
+                              <p className="text-sm text-gray-700">{match["Goles (Solo SC)"]}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <p className="text-gray-500 text-center">
+                  No se encontraron partidos de Sporting Cristal para esta fecha.
+                </p>
+              )}
+            </div>
           </div>
+        )}
 
-          <div className="matches-container">
-            {filteredMatches.length > 0 ? (
-              filteredMatches.map((match, index) => {
+        {/* Contenido de Temporadas */}
+        {activeTab === 'temporadas' && (
+          <div className="py-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+              <h2 className="text-2xl font-semibold mb-2 sm:mb-0">Resultados de Sporting Cristal</h2>
+              <div className="flex items-center space-x-2">
+                <label htmlFor="year-select" className="text-sm font-medium">Año:</label>
+                <select
+                  id="year-select"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                >
+                  {years.map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredMatches.map((match, index) => {
                 const matchDate = new Date(match.Fecha);
-                const displayDate = matchDate.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+                const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+                  ? parseInt(match.Marcador.split('-')[0]) 
+                  : parseInt(match.Marcador.split('-')[1]);
+                const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+                  ? parseInt(match.Marcador.split('-')[1]) 
+                  : parseInt(match.Marcador.split('-')[0]);
+                const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
+                const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
+                                   (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
                 const rival = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
-                const goalsScoredDisplay = []; // New array for display
-                if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
-                  const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\(([^)]+)\)/g)]
-                      .map(m => m[1]);
-
-                  allParenthesizedContents.forEach(content => {
-                      const individualMinuteStrings = content.split(/,\s*/);
-                      individualMinuteStrings.forEach(minuteStr => {
-                          // Extract only the numerical part (e.g., "12", "45+2", "63")
-                          const match = minuteStr.match(/^(\d+\+?\d*)/);
-                          if (match) {
-                              const numericalMinuteStr = match[1]; // "12", "45+2", "63"
-                              const parsedMinuteForStats = parseInt(numericalMinuteStr, 10); // 12, 45, 63
-
-                              if (!isNaN(parsedMinuteForStats)) {
-                                  // For display, push the numerical string
-                                  goalsScoredDisplay.push(numericalMinuteStr);
-                              }
-                              // For stats, the logic is already in useMemo and uses parsedMinuteForStats
-                              // The stats calculation already uses parseInt on the extracted numerical part,
-                              // so it will correctly count 45+2 as 45.
-                          }
-                      });
-                  });
-                }
-
-                
-
-                let goalsDisplayContent = null;
-                if (goalsScoredDisplay.length > 0) {
-                    goalsDisplayContent = `Goles de SC en los minutos: ${goalsScoredDisplay.join(', ')}`;
-                } else if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
-                    goalsDisplayContent = `Goles de SC: ${match["Goles (Solo SC)"]}`;
-                }
 
                 return (
-                  <div key={index} className="match-card">
-                    <h3>{displayDate} vs {rival}</h3>
-                    <p>Marcador: {match.Marcador}</p>
-                    <p>Resultado: {match.Resultado === 'V' ? 'Victoria' : match.Resultado === 'D' ? 'Derrota' : 'Empate'}</p>
-                    {match["Goles (Solo SC)"] && ( // Display raw string
-                      <p>Goles (raw): {match["Goles (Solo SC)"]}</p>
-                    )}
-                    {goalsDisplayContent && ( // Display the determined content
-                      <p>{goalsDisplayContent}</p>
+                  <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-sm text-gray-500">{formatDate(match.Fecha)}</p>
+                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
+                        {result}
+                      </span>
+                    </div>
+                    <p className="font-bold text-lg">
+                      Sporting Cristal <span className="font-normal">vs</span> {rival}
+                    </p>
+                    <p className="text-3xl font-bold text-center my-2">{match.Marcador}</p>
+                    <p className="text-sm text-gray-600 mb-1">{match.Torneo}</p>
+                    {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">Goles de Sporting Cristal:</h4>
+                        <p className="text-sm text-gray-700">{match["Goles (Solo SC)"]}</p>
+                      </div>
                     )}
                   </div>
                 );
-              })
-            ) : (
-              <p>No hay partidos para el año seleccionado.</p>
-            )}
-          </div>
-        </section>
-        <section className="stats-section">
-          <h2>Estadísticas Curiosas</h2>
-          {stats.totalMatches && (
-            <div className="stats-grid">
-              <div className="stat-card">
-                <h3>Resumen General</h3>
-                <p>Total de partidos registrados: {stats.totalMatches}</p>
-                <p>Total de victorias: {stats.totalVictories} ({stats.winPercentage}%)</p>
-                <p>Total de derrotas: {stats.totalDefeats} ({stats.lossPercentage}%)</p>
-                <p>Total de empates: {stats.totalDraws} ({stats.drawPercentage}%)</p>
-                <p>Goles a favor: {stats.totalGoalsScored}</p>
-                <p>Goles en contra: {stats.totalGoalsConceded}</p>
-                <p>Promedio de goles por partido: {stats.averageGoalsPerMatch}</p>
-                <p>Partidos con valla invicta (portería a 0): {stats.cleanSheets}</p>
-              </div>
-
-              <div className="stat-card">
-                <h3>Minutos de Goles</h3>
-                <p>Minuto con más goles: Minuto {stats.minuteWithMostGoals.minute} ({stats.minuteWithMostGoals.count} goles)</p>
-                <p>Minuto con menos goles: Minuto {stats.minuteWithFewestGoals.minute} ({stats.minuteWithFewestGoals.count} goles)</p>
-                {stats.minutesWithNoGoals && stats.minutesWithNoGoals.length > 0 && (
-                  <p>Minutos sin goles (1-90): {stats.minutesWithNoGoals.join(', ')}</p>
-                )}
-                {stats.minutesWithNoGoals && stats.minutesWithNoGoals.length === 0 && (
-                  <p>¡Sporting Cristal ha anotado en cada minuto del 1 al 90!</p>
-                )}
-                <h4>Top 5 Minutos con Más Goles:</h4>
-                <ul>
-                  {stats.top5MostGoalsMinutes.map(item => (
-                    <li key={item.minute}>Minuto {item.minute}: {item.count} goles</li>
-                  ))}
-                </ul>
-                <h4>Top 5 Minutos con Menos Goles (con al menos 1 gol):</h4>
-                <ul>
-                  {stats.top5FewestGoalsMinutes.map(item => (
-                    <li key={item.minute}>Minuto {item.minute}: {item.count} goles</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="stat-card">
-                <h3>Días de la Semana</h3>
-                <p>Día con más victorias: {stats.dayWithMostVictories.day} ({stats.dayWithMostVictories.count} victorias)</p>
-                <p>Día con más derrotas: {stats.dayWithMostDefeats.day} ({stats.dayWithMostDefeats.count} derrotas)</p>
-              </div>
-
-              <div className="stat-card">
-                <h3>Meses</h3>
-                <p>Mes con más goles: {stats.monthWithMostGoals.month} ({stats.monthWithMostGoals.count} goles)</p>
-                <p>Mes con menos goles: {stats.monthWithFewestGoals.month} ({stats.monthWithFewestGoals.count} goles)</p>
-                <p>Mes con más victorias: {stats.monthWithMostVictories.month} ({stats.monthWithMostVictories.count} victorias)</p>
-                <p>Mes con más derrotas: {stats.monthWithMostDefeats.month} ({stats.monthWithMostDefeats.count} derrotas)</p>
-              </div>
-
-              <div className="stat-card">
-                <h3>Curiosidades Adicionales</h3>
-                <p>Marcador más común: {stats.mostCommonScore}</p>
-                <p>Mayor goleada: {stats.biggestWin} (diferencia de {stats.biggestWinDiff} goles)</p>
-                <p>Rival más enfrentado: {stats.mostCommonOpponent}</p>
-                <p>Máximo goleador (según datos): {stats.topScorer}</p>
-                <p>Número de torneos jugados: {stats.numberOfTournaments}</p>
-                <p>Número de rivales únicos: {stats.numberOfUniqueOpponents}</p>
-                <p>Victorias por walkover: {stats.walkoverWins}</p>
-                <p>Derrotas por walkover: {stats.walkoverLosses}</p>
-                <p>Goles en contra por autogol: {stats.autogolesForSC}</p>
-                <p>Goles de penal: {stats.penaltiesScored}</p>
-                <p>Empates 0-0: {stats.zeroZeroDraws}</p>
-                <p>Empates 1-1: {stats.oneOneDrawsCount}</p>
-                <p>Empates 2-2: {stats.twoTwoDraws}</p>
-                <p>Victorias 1-0: {stats.oneZeroWins}</p>
-                <p>Victorias 2-1: {stats.twoOneWins}</p>
-                <p>Victorias 3-0: {stats.threeZeroWins}</p>
-                <p>Derrotas 0-1: {stats.zeroOneLosses}</p>
-                <p>Derrotas 1-2: {stats.oneTwoLosses}</p>
-                <p>Derrotas 0-3: {stats.zeroThreeLosses}</p>
-                <p>Partidos con 5 o más goles (total): {stats.matchesWithHighGoals}</p>
-              </div>
+              })}
             </div>
-          )}
-        </section>
-      </main>
+          </div>
+        )}
+
+        {/* Contenido de Goles por Minuto */}
+        {activeTab === 'minutos' && (
+          <div className="py-6">
+            <h2 className="text-2xl font-semibold mb-4">Goles por Minuto de Sporting Cristal</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
+              <p className="text-sm font-medium">Busca goles anotados en un minuto específico:</p>
+              <input
+                type="number"
+                min="1"
+                max="120"
+                placeholder="Ej: 15"
+                value={selectedMinute}
+                onChange={(e) => setSelectedMinute(e.target.value)}
+                className="w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+              <button
+                onClick={() => {/* trigger search */}}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-300"
+              >
+                Buscar
+              </button>
+            </div>
+
+            <div>
+              {selectedMinute && getGoalsForMinute(selectedMinute).length > 0 ? (
+                <>
+                  <h3 className="text-xl font-semibold mb-3 text-blue-600">
+                    Goles anotados en el minuto {selectedMinute}
+                  </h3>
+                  <div className="space-y-3">
+                    {getGoalsForMinute(selectedMinute).map((goal, index) => (
+                      <div key={index} className="card bg-white rounded-lg shadow p-3">
+                        <p className="font-semibold">Contra {goal.rival}</p>
+                        <p className="text-sm text-gray-600">
+                          {formatDate(goal.fecha)} - Resultado: {goal.marcador}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : selectedMinute ? (
+                <p className="text-gray-500">
+                  No se encontraron goles de Sporting Cristal en el minuto {selectedMinute}.
+                </p>
+              ) : (
+                <p className="text-gray-500">
+                  Ingresa un minuto para buscar goles.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
