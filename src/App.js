@@ -15,6 +15,7 @@ function App() {
   const [selectedMinute, setSelectedMinute] = useState('');
   const [curiosidades, setCuriosidades] = useState({});
   const [yearlyStats, setYearlyStats] = useState([]);
+  const [tournamentFilter, setTournamentFilter] = useState('todos');
 
   useEffect(() => {
     try {
@@ -54,13 +55,13 @@ function App() {
       setCuriosidades(calculateCuriosidades(combinedData));
 
       // Calculate yearly statistics
-      setYearlyStats(calculateYearlyStats(combinedData));
+      setYearlyStats(calculateYearlyStats(combinedData, tournamentFilter));
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
       setLoading(false);
     }
-  }, []);
+  }, [tournamentFilter]);
 
   // Helper functions
   const formatDate = (dateString) => {
@@ -150,6 +151,7 @@ function App() {
     const scoreStats = {};
     const minuteStats = {};
     let totalScGoals = 0;
+    let totalOpponentGoals = 0;
     let maxScGoals = 0;
     let maxScGoalsMatch = null;
     let minScGoals = Infinity;
@@ -164,6 +166,7 @@ function App() {
         : parseInt(match.Marcador.split('-')[0]);
       
       totalScGoals += scGoals;
+      totalOpponentGoals += opponentGoals;
       
       if (scGoals > maxScGoals) {
         maxScGoals = scGoals;
@@ -276,6 +279,7 @@ function App() {
     const mostCommonScore = Object.keys(scoreStats).reduce((a, b) => scoreStats[a] > scoreStats[b] ? a : b);
     
     const averageGoals = (totalScGoals / data.length).toFixed(2);
+    const averageGoalsAgainst = (totalOpponentGoals / data.length).toFixed(2);
     
     return {
       totalMatches: data.length,
@@ -299,6 +303,7 @@ function App() {
       defeatPercentage: ((defeats.length / data.length) * 100).toFixed(1),
       drawPercentage: ((draws.length / data.length) * 100).toFixed(1),
       averageGoals,
+      averageGoalsAgainst,
       maxGoals: maxScGoals,
       maxGoalsMatch: maxScGoalsMatch,
       minGoals: minScGoals,
@@ -322,10 +327,21 @@ function App() {
     };
   };
 
-  const calculateYearlyStats = (data) => {
+  const calculateYearlyStats = (data, filter = 'todos') => {
+    // Filter data based on tournament type
+    let filteredData = data;
+    if (filter === 'local') {
+      filteredData = data.filter(match => 
+        !['Copa Libertadores', 'Copa Sudamericana', 'Copa Merconorte'].includes(match.Torneo)
+      );
+    } else if (filter === 'internacional') {
+      filteredData = data.filter(match => 
+        ['Copa Libertadores', 'Copa Sudamericana', 'Copa Merconorte'].includes(match.Torneo)
+      );
+    }
     const yearlyData = {};
     
-    data.forEach(match => {
+    filteredData.forEach(match => {
       const year = new Date(match.Fecha).getFullYear();
       const scGoals = match["Equipo Local"] === "Sporting Cristal" 
         ? parseInt(match.Marcador.split('-')[0]) 
@@ -629,7 +645,7 @@ function App() {
               {selectedMinute && getGoalsForMinute(selectedMinute).length > 0 ? (
                 <>
                   <h3 className="text-xl font-semibold mb-3 text-sky-600">
-                    Goles anotados en el minuto {selectedMinute}
+                    En el minuto {selectedMinute} se anotaron {getGoalsForMinute(selectedMinute).length} goles
                   </h3>
                   <div className="space-y-4">
                     {getGoalsForMinute(selectedMinute).map((goal, index) => {
@@ -721,7 +737,7 @@ function App() {
               <h3 className="text-xl font-semibold mb-4 text-sky-600">⚽ Estadísticas de Goles</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-blue-800 mb-1">Promedio de Goles</h4>
+                  <h4 className="text-sm font-bold text-blue-800 mb-1">Promedio de Goles Anotados</h4>
                   <p className="text-2xl font-bold text-blue-900">{curiosidades.averageGoals}</p>
                   <p className="text-xs text-blue-700">por partido</p>
                 </div>
@@ -733,9 +749,9 @@ function App() {
                 </div>
                 
                 <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-orange-800 mb-1">Mínimo de Goles</h4>
-                  <p className="text-2xl font-bold text-orange-900">{curiosidades.minGoals}</p>
-                  <p className="text-xs text-orange-700">goles en un partido</p>
+                  <h4 className="text-sm font-bold text-orange-800 mb-1">Promedio de Goles Recibidos</h4>
+                  <p className="text-2xl font-bold text-orange-900">{curiosidades.averageGoalsAgainst}</p>
+                  <p className="text-xs text-orange-700">por partido</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-lg p-4 text-center shadow-lg">
@@ -870,7 +886,22 @@ function App() {
         {/* Contenido de Análisis por Año */}
         {activeTab === 'analisis-anual' && (
           <div className="py-6">
-            <h2 className="text-2xl font-semibold mb-6">Análisis por Año de Sporting Cristal</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+              <h2 className="text-2xl font-semibold mb-2 sm:mb-0">Análisis por Año de Sporting Cristal</h2>
+              <div className="flex items-center space-x-2">
+                <label htmlFor="tournament-filter" className="text-sm font-medium">Filtro:</label>
+                <select
+                  id="tournament-filter"
+                  value={tournamentFilter}
+                  onChange={(e) => setTournamentFilter(e.target.value)}
+                  className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
+                >
+                  <option value="todos">Todos los torneos</option>
+                  <option value="local">Solo torneos locales</option>
+                  <option value="internacional">Solo torneos internacionales</option>
+                </select>
+              </div>
+            </div>
             
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
