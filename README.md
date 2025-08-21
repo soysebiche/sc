@@ -1,10 +1,100 @@
-# Getting Started with Create React App
+# 🏆 Sporting Cristal Stats Viewer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Una aplicación web moderna para visualizar las estadísticas históricas del Club Sporting Cristal, diseñada con React y un estilo visual del 2025.
 
-## Available Scripts
+## ✨ Características
 
-In the project directory, you can run:
+- 📊 **Estadísticas Interactivas**: Visualización de datos históricos completos del club
+- 🎨 **Diseño Moderno**: UI/UX del 2025 con efectos glassmorphism y gradientes
+- 📱 **Responsive**: Adaptado para móviles, tablets y desktop
+- 🔍 **Filtros**: Navegación por años para análisis específicos
+- ⚡ **Performance**: Optimizado con React 19 y hooks modernos
+
+## 🎯 Funcionalidades
+
+### Estadísticas Disponibles
+- Goles por minuto de juego
+- Victorias y derrotas por día de la semana
+- Rendimiento por meses del año
+- Marcadores más comunes
+- Máximo goleador histórico
+- Curiosidades y datos únicos del club
+
+### Diseño Visual
+- **Colores**: Sky Blue (#00BFFF), Navy (#293146), White (#FFFFFF)
+- **Tipografía**: Roboto (Google Fonts)
+- **Efectos**: Sombras modernas, animaciones suaves, hover effects
+
+## 🚀 Deployment Automático en Vercel
+
+### Configuración Recomendada
+
+**Opción 1: Deployment desde GitHub (Recomendado)**
+
+1. Ve a [vercel.com](https://vercel.com) e inicia sesión
+2. Haz clic en "New Project"
+3. Importa tu repositorio de GitHub: `https://github.com/soysebiche/sc`
+4. Vercel detectará automáticamente que es un proyecto React
+5. Configura el proyecto:
+   - **Framework Preset**: Create React App
+   - **Root Directory**: `./` (o deja vacío)
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `build`
+6. Haz clic en "Deploy"
+
+### Variables de Entorno (Opcional)
+Si necesitas configurar variables de entorno, agrégalas en Vercel Dashboard:
+```
+REACT_APP_API_URL=tu_api_url_aqui
+```
+
+### Configuración Vercel (vercel.json)
+El proyecto incluye un archivo `vercel.json` optimizado para SPA React:
+
+```json
+{
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+```
+
+### Deploy Automático
+- ✅ **Auto-deploy**: Cada push a `main` despliega automáticamente
+- ✅ **Preview**: Las pull requests generan deploys de preview
+- ✅ **Rollback**: Fácil rollback a versiones anteriores
+
+## 💻 Desarrollo Local
+
+### Prerequisitos
+- Node.js 16+ 
+- npm o yarn
+
+### Instalación
+
+1. **Clona el repositorio**
+```bash
+git clone https://github.com/soysebiche/sc.git
+cd sc
+```
+
+2. **Instala las dependencias**
+```bash
+npm install
+```
+
+3. **Inicia el servidor de desarrollo**
+```bash
+npm start
+```
+
+4. **Abre tu navegador**
+Ve a [http://localhost:3000](http://localhost:3000)
+
+### Scripts Disponibles
 
 ### `npm start`
 
