@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import historicoLocalData from './data/historico_completo_sc.json';
-import historicoInternacionalData from './data/historico_conmebol_sc.json';
-import historicoIncaData from './data/historico_inca_sc.json';
+import authService from './services/authService';
+import vercelDataService from './services/vercelDataService';
+import Login from './components/Login';
 
 function App() {
   const [data, setData] = useState([]);
@@ -17,15 +17,42 @@ function App() {
   const [curiosidades, setCuriosidades] = useState({});
   const [yearlyStats, setYearlyStats] = useState([]);
   const [tournamentFilter, setTournamentFilter] = useState('todos');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    try {
-      // Combine local (including Copa del Inca) and international data and sort by date (ascending)
-      const combinedData = [...historicoLocalData, ...historicoIncaData, ...historicoInternacionalData]
-        .sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
-      console.log('Loading Combined JSON Data:', combinedData);
-      setData(combinedData);
+    // Verificar si el usuario está autenticado
+    if (authService.isAuthenticated()) {
+      setIsAuthenticated(true);
+      loadData();
+    } else {
       setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated && data.length > 0) {
+      // Calculate yearly statistics when data or filter changes
+      setYearlyStats(calculateYearlyStats(data, tournamentFilter));
+    }
+  }, [data, tournamentFilter, isAuthenticated]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Cargar todos los datos usando el servicio de Vercel Functions
+      const allData = await vercelDataService.fetchAllData();
+      
+      // Combinar y ordenar los datos por fecha
+      const combinedData = [
+        ...allData.completo,
+        ...allData.inca,
+        ...allData.conmebol
+      ].sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
+      
+      console.log('Loading Combined JSON Data from Vercel Functions:', combinedData);
+      setData(combinedData);
 
       // Extract unique years
       const uniqueYears = [...new Set(combinedData.map(match => new Date(match.Fecha).getFullYear()))].sort((a, b) => b - a);
@@ -55,14 +82,28 @@ function App() {
       // Calculate curiosidades
       setCuriosidades(calculateCuriosidades(combinedData));
 
-      // Calculate yearly statistics
-      setYearlyStats(calculateYearlyStats(combinedData, tournamentFilter));
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
+      if (error.message === 'No autenticado') {
+        setIsAuthenticated(false);
+      }
+    } finally {
       setLoading(false);
     }
-  }, [tournamentFilter]);
+  };
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    loadData();
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setIsAuthenticated(false);
+    setData([]);
+    setError(null);
+  };
 
   // Helper functions
   const formatDate = (dateString) => {
@@ -406,9 +447,55 @@ function App() {
     );
   }
 
+  // Si no está autenticado, mostrar el componente de login
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  // Si está cargando, mostrar spinner
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-sky-400 via-sky-500 to-navy-600 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-xl">Cargando estadísticas...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si hay error, mostrar mensaje de error
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-sky-400 via-sky-500 to-navy-600 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-400 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold mb-2">Error al cargar datos</h2>
+          <p className="text-lg mb-4">{error.message}</p>
+          <button 
+            onClick={handleLogout}
+            className="bg-white text-sky-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          >
+            🔓 Cerrar sesión
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl p-6 shadow-lg">
+        {/* Header con botón de logout */}
+        <div className="flex justify-between items-center mb-4">
+          <div></div>
+          <button 
+            onClick={handleLogout}
+            className="bg-white text-sky-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          >
+            🔓 Cerrar sesión
+          </button>
+        </div>
         <div className="flex justify-center mb-4">
           <img 
             src="/SebicheCeleste logo copy.png" 

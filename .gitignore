@@ -9,6 +9,9 @@
 # Production
 /build
 
+# Data files (protected)
+/data/*.json
+
 # Misc
 .DS_Store
 .env.local

@@ -1,19 +1,21 @@
 {
   "version": 2,
+  "functions": {
+    "api/data/index.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
+    {
+      "src": "/api/data",
+      "dest": "/api/data"
+    },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },
     {
-      "src": "/historico_completo_sc.json",
-      "dest": "/historico_completo_sc.json",
-      "headers": {
-        "Content-Type": "application/json"
-      }
-    },
-    {
-      "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|css|js|json))",
+      "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|css|js))",
       "dest": "/$1"
     },
     {
