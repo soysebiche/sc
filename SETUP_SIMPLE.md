@@ -72,19 +72,23 @@ Se ha implementado un sistema **SIN autenticación** que protege los archivos JS
 ## 🚨 Consideraciones
 
 - **Los archivos JSON NO se suben a GitHub** (están en `.gitignore`)
-- **Necesitas copiarlos manualmente** al directorio `data/` en Vercel
-- **O usar variables de entorno** para almacenar los datos como strings
+- **SÍ se incluyen en el deploy de Vercel** (usando `.vercelignore`)
+- **Los datos están protegidos** porque no están en `/public`
 
-## 📚 Alternativas para Datos
+## 📚 Cómo Funciona la Protección
 
-### Opción 1: Archivos en Vercel (Recomendado)
-- Copia los archivos JSON al directorio `data/` en Vercel
-- Los archivos se mantienen privados
+### 1. **Archivos en GitHub**
+- Los archivos JSON están en `.gitignore` (no se suben a GitHub)
+- Mantienes el código fuente limpio
 
-### Opción 2: Variables de Entorno
-- Convierte los JSONs a strings
-- Almacénalos como variables de entorno en Vercel
-- Más complejo pero más seguro
+### 2. **Archivos en Vercel**
+- Los archivos JSON SÍ se incluyen en el deploy usando `.vercelignore`
+- Están disponibles para las Vercel Functions
+
+### 3. **Seguridad**
+- Los usuarios NO pueden acceder directamente a `/data/*.json`
+- Solo pueden acceder a través de `/api/data` (Vercel Functions)
+- Los datos están protegidos pero la app funciona normalmente
 
 ---
 

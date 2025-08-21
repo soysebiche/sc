@@ -1,0 +1,41 @@
+# Vercel ignore file
+# Los archivos JSON en /data/ SÍ se incluyen en el deploy
+# Solo ignoramos archivos innecesarios
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+.cache/
+dist/
+build/
+
+# Development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Git
+.git/
+.gitignore
+
+# README files (opcional)
+README.md
+SETUP_*.md

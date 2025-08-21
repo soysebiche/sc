@@ -9,8 +9,8 @@
 # Production
 /build
 
-# Data files (protected - never commit these)
-/data/
+# Data files (protected - but will be deployed)
+# Los archivos JSON se incluyen en el deploy pero no en GitHub
 
 # Misc
 .DS_Store
