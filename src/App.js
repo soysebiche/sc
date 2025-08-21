@@ -118,8 +118,14 @@ function App() {
               if (parsedMinute == minute) {
                 goals.push({
                   fecha: match.Fecha,
-                  rival: match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"],
+                  equipoLocal: match["Equipo Local"],
+                  equipoVisita: match["Equipo Visita"],
                   marcador: match.Marcador,
+                  torneo: match.Torneo,
+                  año: match.Año,
+                  goles: match["Goles (Solo SC)"],
+                  resultado: match.Resultado,
+                  rival: match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"],
                   minuto: parsedMinute
                 });
               }
@@ -194,13 +200,13 @@ function App() {
       
       // Analyze minutes (exclude minute 0)
       if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
-        const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\\(([^)]+)\\)/g)]
+        const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\(([^)]+)\)/g)]
           .map(m => m[1]);
         
         allParenthesizedContents.forEach(content => {
-          const individualMinuteStrings = content.split(/,\\s*/);
+          const individualMinuteStrings = content.split(/,\s*/);
           individualMinuteStrings.forEach(minuteStr => {
-            const numericalMinuteMatch = minuteStr.match(/^(\\d+\\+?\\d*)/);
+            const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
             if (numericalMinuteMatch) {
               const minute = parseInt(numericalMinuteMatch[1], 10);
               if (minute >= 1 && minute <= 90) { // Only count minutes 1-90
@@ -262,6 +268,11 @@ function App() {
     const bestDefeatMonth = defeatMonthEntries.length > 0
       ? defeatMonthEntries.reduce((a, b) => a[1] > b[1] ? a : b)[0]
       : 'N/A';
+    const worstDefeatMonth = defeatMonthEntries.length > 0
+      ? defeatMonthEntries.reduce((a, b) => a[1] < b[1] ? a : b)[0]
+      : 'N/A';
+    const worstDefeatMonthCount = worstDefeatMonth !== 'N/A' ? 
+      (defeatMonthEntries.find(([month, count]) => month === worstDefeatMonth)?.[1] || 0) : 0;
     const mostCommonScore = Object.keys(scoreStats).reduce((a, b) => scoreStats[a] > scoreStats[b] ? a : b);
     
     const averageGoals = (totalScGoals / data.length).toFixed(2);
@@ -281,8 +292,12 @@ function App() {
       bestDefeatMonth,
       bestDefeatMonthCount: bestDefeatMonth !== 'N/A' ? 
         (defeatMonthEntries.find(([month, count]) => month === bestDefeatMonth)?.[1] || 0) : 0,
+      worstDefeatMonth,
+      worstDefeatMonthCount,
       mostCommonScore,
       winPercentage: ((victories.length / data.length) * 100).toFixed(1),
+      defeatPercentage: ((defeats.length / data.length) * 100).toFixed(1),
+      drawPercentage: ((draws.length / data.length) * 100).toFixed(1),
       averageGoals,
       maxGoals: maxScGoals,
       maxGoalsMatch: maxScGoalsMatch,
@@ -616,15 +631,42 @@ function App() {
                   <h3 className="text-xl font-semibold mb-3 text-sky-600">
                     Goles anotados en el minuto {selectedMinute}
                   </h3>
-                  <div className="space-y-3">
-                    {getGoalsForMinute(selectedMinute).map((goal, index) => (
-                      <div key={index} className="card bg-white rounded-lg shadow p-3">
-                        <p className="font-semibold">Contra {goal.rival}</p>
-                        <p className="text-sm text-gray-600">
-                          {formatDate(goal.fecha)} - Resultado: {goal.marcador}
-                        </p>
-                      </div>
-                    ))}
+                  <div className="space-y-4">
+                    {getGoalsForMinute(selectedMinute).map((goal, index) => {
+                      const matchDate = new Date(goal.fecha);
+                      const scGoals = goal.equipoLocal === "Sporting Cristal" 
+                        ? parseInt(goal.marcador.split('-')[0]) 
+                        : parseInt(goal.marcador.split('-')[1]);
+                      const opponentGoals = goal.equipoLocal === "Sporting Cristal" 
+                        ? parseInt(goal.marcador.split('-')[1]) 
+                        : parseInt(goal.marcador.split('-')[0]);
+                      const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
+                      const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
+                                         (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
+
+                      return (
+                        <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
+                          <div className="flex justify-between items-center mb-2">
+                            <p className="text-sm text-gray-500">
+                              {goal.año} - {goal.torneo}
+                            </p>
+                            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
+                              {result}
+                            </span>
+                          </div>
+                          <p className="font-bold text-lg">
+                            {goal.equipoLocal} <span className="font-normal">vs</span> {goal.equipoVisita}
+                          </p>
+                          <p className="text-3xl font-bold text-center my-2">{goal.marcador}</p>
+                          {goal.goles && goal.goles !== '-' && (
+                            <div>
+                              <h4 className="font-semibold text-sm mb-1">Goles de Sporting Cristal:</h4>
+                              <p className="text-sm text-gray-700">{goal.goles}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </>
               ) : selectedMinute ? (
@@ -663,11 +705,13 @@ function App() {
                 <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-red-800 mb-1">Derrotas</h4>
                   <p className="text-2xl font-bold text-red-900">{curiosidades.defeats}</p>
+                  <p className="text-xs text-red-700">{curiosidades.defeatPercentage}%</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-yellow-800 mb-1">Empates</h4>
                   <p className="text-2xl font-bold text-yellow-900">{curiosidades.draws}</p>
+                  <p className="text-xs text-yellow-700">{curiosidades.drawPercentage}%</p>
                 </div>
               </div>
             </div>
@@ -814,9 +858,9 @@ function App() {
                 </div>
                 
                 <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-purple-800 mb-1">Día con Más Partidos</h4>
-                  <p className="text-xl font-bold text-purple-900">{curiosidades.bestDay}</p>
-                  <p className="text-xs text-purple-700">{curiosidades.bestDayMatches} partidos</p>
+                  <h4 className="text-sm font-bold text-purple-800 mb-1">Mes con Menos Derrotas</h4>
+                  <p className="text-xl font-bold text-purple-900">{curiosidades.worstDefeatMonth}</p>
+                  <p className="text-xs text-purple-700">{curiosidades.worstDefeatMonthCount} derrotas</p>
                 </div>
               </div>
             </div>
