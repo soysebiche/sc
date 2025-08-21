@@ -1,5 +1,3 @@
-import authService from './authService';
-
 class VercelDataService {
   constructor() {
     this.apiBaseUrl = '/api/data';
@@ -8,9 +6,7 @@ class VercelDataService {
   // Obtener datos de Conmebol
   async fetchConmebolData() {
     try {
-      const response = await authService.authenticatedRequest(
-        `${this.apiBaseUrl}?type=conmebol`
-      );
+      const response = await fetch(`${this.apiBaseUrl}?type=conmebol`);
 
       if (response.ok) {
         return await response.json();
@@ -26,9 +22,7 @@ class VercelDataService {
   // Obtener datos de Copa del Inca
   async fetchIncaData() {
     try {
-      const response = await authService.authenticatedRequest(
-        `${this.apiBaseUrl}?type=inca`
-      );
+      const response = await fetch(`${this.apiBaseUrl}?type=inca`);
 
       if (response.ok) {
         return await response.json();
@@ -44,9 +38,7 @@ class VercelDataService {
   // Obtener datos completos
   async fetchCompleteData() {
     try {
-      const response = await authService.authenticatedRequest(
-        `${this.apiBaseUrl}?type=completo`
-      );
+      const response = await fetch(`${this.apiBaseUrl}?type=completo`);
 
       if (response.ok) {
         return await response.json();

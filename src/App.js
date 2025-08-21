@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import authService from './services/authService';
 import vercelDataService from './services/vercelDataService';
-import Login from './components/Login';
 
 function App() {
   const [data, setData] = useState([]);
@@ -17,24 +15,18 @@ function App() {
   const [curiosidades, setCuriosidades] = useState({});
   const [yearlyStats, setYearlyStats] = useState([]);
   const [tournamentFilter, setTournamentFilter] = useState('todos');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Verificar si el usuario está autenticado
-    if (authService.isAuthenticated()) {
-      setIsAuthenticated(true);
-      loadData();
-    } else {
-      setLoading(false);
-    }
+    // Cargar datos automáticamente al iniciar
+    loadData();
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated && data.length > 0) {
+    if (data.length > 0) {
       // Calculate yearly statistics when data or filter changes
       setYearlyStats(calculateYearlyStats(data, tournamentFilter));
     }
-  }, [data, tournamentFilter, isAuthenticated]);
+  }, [data, tournamentFilter]);
 
   const loadData = async () => {
     try {
@@ -85,24 +77,9 @@ function App() {
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
-      if (error.message === 'No autenticado') {
-        setIsAuthenticated(false);
-      }
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-    loadData();
-  };
-
-  const handleLogout = () => {
-    authService.logout();
-    setIsAuthenticated(false);
-    setData([]);
-    setError(null);
   };
 
   // Helper functions
@@ -447,11 +424,6 @@ function App() {
     );
   }
 
-  // Si no está autenticado, mostrar el componente de login
-  if (!isAuthenticated) {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
-  }
-
   // Si está cargando, mostrar spinner
   if (loading) {
     return (
@@ -473,10 +445,10 @@ function App() {
           <h2 className="text-2xl font-bold mb-2">Error al cargar datos</h2>
           <p className="text-lg mb-4">{error.message}</p>
           <button 
-            onClick={handleLogout}
+            onClick={() => window.location.reload()}
             className="bg-white text-sky-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
-            🔓 Cerrar sesión
+            🔄 Recargar página
           </button>
         </div>
       </div>
@@ -486,17 +458,7 @@ function App() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl p-6 shadow-lg">
-        {/* Header con botón de logout */}
-        <div className="flex justify-between items-center mb-4">
-          <div></div>
-          <button 
-            onClick={handleLogout}
-            className="bg-white text-sky-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            🔓 Cerrar sesión
-          </button>
-        </div>
-        <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4">
           <img 
             src="/SebicheCeleste logo copy.png" 
             alt="Sebiche Celeste Logo" 

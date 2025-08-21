@@ -9,8 +9,8 @@
 # Production
 /build
 
-# Data files (protected)
-/data/*.json
+# Data files (protected - never commit these)
+/data/
 
 # Misc
 .DS_Store
