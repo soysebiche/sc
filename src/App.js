@@ -297,15 +297,12 @@ function App() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl p-6 shadow-lg">
-        <div className="flex items-center justify-center mb-4">
+        <div className="flex justify-center mb-4">
           <img 
             src="/SebicheCeleste logo copy.png" 
             alt="Sebiche Celeste Logo" 
-            className="h-16 md:h-20 mr-4"
+            className="h-16 md:h-20"
           />
-          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{fontFamily: 'Bebas Neue, cursive'}}>
-            Sebiche Celeste
-          </h1>
         </div>
         <p className="text-lg text-sky-100">Explora 25 años de historia celeste</p>
       </header>
