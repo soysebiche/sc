@@ -10,6 +10,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('efemerides');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedMinute, setSelectedMinute] = useState('');
+  const [curiosidades, setCuriosidades] = useState({});
 
   useEffect(() => {
     try {
@@ -31,6 +32,9 @@ function App() {
       const mm = String(today.getMonth() + 1).padStart(2, '0');
       const dd = String(today.getDate()).padStart(2, '0');
       setSelectedDate(`${yyyy}-${mm}-${dd}`);
+
+      // Calculate curiosidades
+      setCuriosidades(calculateCuriosidades(historicoData));
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
@@ -40,7 +44,7 @@ function App() {
 
   // Helper functions
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { month: 'long', day: 'numeric' };
     return new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', options);
   };
 
@@ -101,6 +105,67 @@ function App() {
     return goals;
   };
 
+  const calculateCuriosidades = (data) => {
+    const victories = data.filter(match => {
+      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[0]) 
+        : parseInt(match.Marcador.split('-')[1]);
+      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[1]) 
+        : parseInt(match.Marcador.split('-')[0]);
+      return scGoals > opponentGoals;
+    });
+    
+    const defeats = data.filter(match => {
+      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[0]) 
+        : parseInt(match.Marcador.split('-')[1]);
+      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[1]) 
+        : parseInt(match.Marcador.split('-')[0]);
+      return scGoals < opponentGoals;
+    });
+    
+    const draws = data.filter(match => {
+      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[0]) 
+        : parseInt(match.Marcador.split('-')[1]);
+      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+        ? parseInt(match.Marcador.split('-')[1]) 
+        : parseInt(match.Marcador.split('-')[0]);
+      return scGoals === opponentGoals;
+    });
+
+    const dayStats = {};
+    const monthStats = {};
+    const scoreStats = {};
+    
+    data.forEach(match => {
+      const date = new Date(match.Fecha);
+      const dayName = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][date.getDay()];
+      const monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][date.getMonth()];
+      
+      dayStats[dayName] = (dayStats[dayName] || 0) + 1;
+      monthStats[monthName] = (monthStats[monthName] || 0) + 1;
+      scoreStats[match.Marcador] = (scoreStats[match.Marcador] || 0) + 1;
+    });
+
+    const bestDay = Object.keys(dayStats).reduce((a, b) => dayStats[a] > dayStats[b] ? a : b);
+    const bestMonth = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
+    const mostCommonScore = Object.keys(scoreStats).reduce((a, b) => scoreStats[a] > scoreStats[b] ? a : b);
+    
+    return {
+      totalMatches: data.length,
+      victories: victories.length,
+      defeats: defeats.length,
+      draws: draws.length,
+      bestDay,
+      bestMonth,
+      mostCommonScore,
+      winPercentage: ((victories.length / data.length) * 100).toFixed(1)
+    };
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto p-4 md:p-8">
@@ -125,9 +190,9 @@ function App() {
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-          Archivo Histórico del Fútbol Peruano
+          Archivo Histórico de Sporting Cristal
         </h1>
-        <p className="text-lg text-gray-600">Explora 25 años de datos de Sporting Cristal</p>
+        <p className="text-lg text-gray-600">Explora 25 años de historia celeste</p>
       </header>
 
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
@@ -157,6 +222,14 @@ function App() {
             >
               Goles por Minuto
             </button>
+            <button
+              onClick={() => setActiveTab('curiosidades')}
+              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'curiosidades' ? 'tab-active' : ''
+              }`}
+            >
+              Datos Curiosos
+            </button>
           </nav>
         </div>
 
@@ -165,7 +238,7 @@ function App() {
           <div className="py-6">
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                ¡Hola, feliz {getCurrentDateText()}!
+                ¡Hola Celeste, feliz {getCurrentDateText()}!
               </h2>
               <p className="text-lg text-gray-600">
                 Descubre qué partidos se jugaron en esta fecha
@@ -178,14 +251,14 @@ function App() {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
               />
             </div>
 
             <div>
               {getMatchesForDate(selectedDate).length > 0 ? (
                 <>
-                  <h3 className="text-xl font-semibold mb-3 text-blue-600">
+                  <h3 className="text-xl font-semibold mb-3 text-sky-600">
                     Partidos jugados el {formatDate(selectedDate)}
                   </h3>
                   <div className="space-y-4">
@@ -247,7 +320,7 @@ function App() {
                   id="year-select"
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(e.target.value)}
-                  className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
                 >
                   {years.map(year => (
                     <option key={year} value={year}>{year}</option>
@@ -309,11 +382,11 @@ function App() {
                 placeholder="Ej: 15"
                 value={selectedMinute}
                 onChange={(e) => setSelectedMinute(e.target.value)}
-                className="w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                className="w-24 rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
               />
               <button
                 onClick={() => {/* trigger search */}}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-300"
+                className="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-md transition duration-300"
               >
                 Buscar
               </button>
@@ -322,7 +395,7 @@ function App() {
             <div>
               {selectedMinute && getGoalsForMinute(selectedMinute).length > 0 ? (
                 <>
-                  <h3 className="text-xl font-semibold mb-3 text-blue-600">
+                  <h3 className="text-xl font-semibold mb-3 text-sky-600">
                     Goles anotados en el minuto {selectedMinute}
                   </h3>
                   <div className="space-y-3">
@@ -345,6 +418,56 @@ function App() {
                   Ingresa un minuto para buscar goles.
                 </p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Contenido de Datos Curiosos */}
+        {activeTab === 'curiosidades' && (
+          <div className="py-6">
+            <h2 className="text-2xl font-semibold mb-6">Datos Curiosos de Sporting Cristal</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg p-6 text-center shadow-lg">
+                <h3 className="text-lg font-bold text-sky-800 mb-2">Total de Partidos</h3>
+                <p className="text-3xl font-bold text-sky-900">{curiosidades.totalMatches}</p>
+                <p className="text-sm text-sky-700 mt-1">En nuestra base de datos</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 text-center shadow-lg">
+                <h3 className="text-lg font-bold text-green-800 mb-2">Victorias</h3>
+                <p className="text-3xl font-bold text-green-900">{curiosidades.victories}</p>
+                <p className="text-sm text-green-700 mt-1">{curiosidades.winPercentage}% de efectividad</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-6 text-center shadow-lg">
+                <h3 className="text-lg font-bold text-red-800 mb-2">Derrotas</h3>
+                <p className="text-3xl font-bold text-red-900">{curiosidades.defeats}</p>
+                <p className="text-sm text-red-700 mt-1">Aprendizajes del pasado</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg p-6 text-center shadow-lg">
+                <h3 className="text-lg font-bold text-yellow-800 mb-2">Empates</h3>
+                <p className="text-3xl font-bold text-yellow-900">{curiosidades.draws}</p>
+                <p className="text-sm text-yellow-700 mt-1">Puntos compartidos</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg p-6 text-center shadow-lg">
+                <h3 className="text-lg font-bold text-purple-800 mb-2">Día Favorito</h3>
+                <p className="text-xl font-bold text-purple-900">{curiosidades.bestDay}</p>
+                <p className="text-sm text-purple-700 mt-1">Día con más partidos</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-lg p-6 text-center shadow-lg">
+                <h3 className="text-lg font-bold text-indigo-800 mb-2">Mes Favorito</h3>
+                <p className="text-xl font-bold text-indigo-900">{curiosidades.bestMonth}</p>
+                <p className="text-sm text-indigo-700 mt-1">Mes con más actividad</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg p-6 text-center shadow-lg md:col-span-2 lg:col-span-1">
+                <h3 className="text-lg font-bold text-sky-800 mb-2">Marcador Más Común</h3>
+                <p className="text-2xl font-bold text-sky-900">{curiosidades.mostCommonScore}</p>
+                <p className="text-sm text-sky-700 mt-1">Resultado más frecuente</p>
+              </div>
             </div>
           </div>
         )}
