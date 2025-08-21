@@ -297,9 +297,16 @@ function App() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl p-6 shadow-lg">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2" style={{fontFamily: 'Bebas Neue, cursive'}}>
-          Sebiche Celeste
-        </h1>
+        <div className="flex items-center justify-center mb-4">
+          <img 
+            src="/SebicheCeleste logo copy.png" 
+            alt="Sebiche Celeste Logo" 
+            className="h-16 md:h-20 mr-4"
+          />
+          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{fontFamily: 'Bebas Neue, cursive'}}>
+            Sebiche Celeste
+          </h1>
+        </div>
         <p className="text-lg text-sky-100">Explora 25 años de historia celeste</p>
       </header>
 
@@ -346,7 +353,7 @@ function App() {
           <div className="py-6">
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                ¡Hola Celeste, feliz {getCurrentDateText()}!
+                ¡Hola Sebichero, feliz {getCurrentDateText()}!
               </h2>
               <p className="text-lg text-gray-600">
                 Descubre qué partidos se jugaron en esta fecha
