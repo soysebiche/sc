@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import historicoLocalData from './data/historico_completo_sc.json';
 import historicoInternacionalData from './data/historico_conmebol_sc.json';
+import historicoIncaData from './data/historico_inca_sc.json';
 
 function App() {
   const [data, setData] = useState([]);
@@ -19,8 +20,8 @@ function App() {
 
   useEffect(() => {
     try {
-      // Combine local and international data and sort by date (ascending)
-      const combinedData = [...historicoLocalData, ...historicoInternacionalData]
+      // Combine local (including Copa del Inca) and international data and sort by date (ascending)
+      const combinedData = [...historicoLocalData, ...historicoIncaData, ...historicoInternacionalData]
         .sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
       console.log('Loading Combined JSON Data:', combinedData);
       setData(combinedData);
@@ -493,7 +494,7 @@ function App() {
               {getMatchesForDate(selectedDate).length > 0 ? (
                 <>
                   <h3 className="text-xl font-semibold mb-3 text-sky-600">
-                    Partidos jugados el {formatDate(selectedDate)}
+                    El {formatDate(selectedDate)} se jugaron {getMatchesForDate(selectedDate).length} partidos
                   </h3>
                   <div className="space-y-4">
                     {getMatchesForDate(selectedDate).map((match, index) => {
