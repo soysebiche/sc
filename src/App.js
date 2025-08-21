@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './App.css';
+import historicoData from './data/historico_completo_sc.json';
 
 function App() {
   const [data, setData] = useState([]);
@@ -9,30 +10,23 @@ function App() {
   const [years, setYears] = useState([]);
 
   useEffect(() => {
-    fetch('/historico_completo_sc.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(jsonData => {
-        console.log('Fetched JSON Data:', jsonData);
-        setData(jsonData);
-        setLoading(false);
+    try {
+      console.log('Loading JSON Data:', historicoData);
+      setData(historicoData);
+      setLoading(false);
 
-        // Extract unique years
-        const uniqueYears = [...new Set(jsonData.map(match => new Date(match.Fecha).getFullYear()))].sort((a, b) => b - a);
-        console.log('Unique Years:', uniqueYears);
-        setYears(uniqueYears);
-        if (uniqueYears.length > 0) {
-          setSelectedYear(uniqueYears[0].toString()); // Set default to the latest year
-        }
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
+      // Extract unique years
+      const uniqueYears = [...new Set(historicoData.map(match => new Date(match.Fecha).getFullYear()))].sort((a, b) => b - a);
+      console.log('Unique Years:', uniqueYears);
+      setYears(uniqueYears);
+      if (uniqueYears.length > 0) {
+        setSelectedYear(uniqueYears[0].toString()); // Set default to the latest year
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+      setError(error);
+      setLoading(false);
+    }
   }, []);
 
   const filteredMatches = selectedYear

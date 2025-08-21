@@ -6,6 +6,17 @@
       "dest": "/static/$1"
     },
     {
+      "src": "/historico_completo_sc.json",
+      "dest": "/historico_completo_sc.json",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    },
+    {
+      "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|css|js|json))",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
