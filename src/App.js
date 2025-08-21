@@ -314,10 +314,10 @@ function App() {
 
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+          <nav className="-mb-px flex space-x-1 sm:space-x-6 overflow-x-auto" aria-label="Tabs">
             <button
               onClick={() => setActiveTab('efemerides')}
-              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'efemerides' ? 'tab-active' : ''
               }`}
             >
@@ -325,7 +325,7 @@ function App() {
             </button>
             <button
               onClick={() => setActiveTab('temporadas')}
-              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'temporadas' ? 'tab-active' : ''
               }`}
             >
@@ -333,19 +333,21 @@ function App() {
             </button>
             <button
               onClick={() => setActiveTab('minutos')}
-              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'minutos' ? 'tab-active' : ''
               }`}
             >
-              Goles por Minuto
+              <span className="hidden sm:inline">Goles por Minuto</span>
+              <span className="sm:hidden">Minutos</span>
             </button>
             <button
               onClick={() => setActiveTab('curiosidades')}
-              className={`tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'curiosidades' ? 'tab-active' : ''
               }`}
             >
-              Datos Curiosos
+              <span className="hidden sm:inline">Datos Curiosos</span>
+              <span className="sm:hidden">Datos</span>
             </button>
           </nav>
         </div>
