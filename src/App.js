@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import historicoData from './data/historico_completo_sc.json';
+import historicoLocalData from './data/historico_completo_sc.json';
+import historicoInternacionalData from './data/historico_conmebol_sc.json';
 
 function App() {
   const [data, setData] = useState([]);
@@ -14,12 +15,14 @@ function App() {
 
   useEffect(() => {
     try {
-      console.log('Loading JSON Data:', historicoData);
-      setData(historicoData);
+      // Combine local and international data
+      const combinedData = [...historicoLocalData, ...historicoInternacionalData];
+      console.log('Loading Combined JSON Data:', combinedData);
+      setData(combinedData);
       setLoading(false);
 
       // Extract unique years
-      const uniqueYears = [...new Set(historicoData.map(match => new Date(match.Fecha).getFullYear()))].sort((a, b) => b - a);
+      const uniqueYears = [...new Set(combinedData.map(match => new Date(match.Fecha).getFullYear()))].sort((a, b) => b - a);
       console.log('Unique Years:', uniqueYears);
       setYears(uniqueYears);
       if (uniqueYears.length > 0) {
@@ -34,7 +37,7 @@ function App() {
       setSelectedDate(`${yyyy}-${mm}-${dd}`);
 
       // Calculate curiosidades
-      setCuriosidades(calculateCuriosidades(historicoData));
+      setCuriosidades(calculateCuriosidades(combinedData));
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
