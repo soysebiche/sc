@@ -7,7 +7,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
   const [years, setYears] = useState([]);
+  const [months, setMonths] = useState([]);
   const [activeTab, setActiveTab] = useState('efemerides');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedMinute, setSelectedMinute] = useState('');
@@ -15,8 +17,9 @@ function App() {
 
   useEffect(() => {
     try {
-      // Combine local and international data
-      const combinedData = [...historicoLocalData, ...historicoInternacionalData];
+      // Combine local and international data and sort by date (ascending)
+      const combinedData = [...historicoLocalData, ...historicoInternacionalData]
+        .sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
       console.log('Loading Combined JSON Data:', combinedData);
       setData(combinedData);
       setLoading(false);
@@ -28,6 +31,16 @@ function App() {
       if (uniqueYears.length > 0) {
         setSelectedYear(uniqueYears[0].toString());
       }
+
+      // Extract unique months
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const uniqueMonths = [...new Set(combinedData.map(match => {
+        const date = new Date(match.Fecha);
+        return monthNames[date.getMonth()];
+      }))];
+      const sortedMonths = monthNames.filter(month => uniqueMonths.includes(month));
+      setMonths(sortedMonths);
 
       // Set today's date for efemérides
       const today = new Date();
@@ -67,9 +80,15 @@ function App() {
   };
 
   // Filter functions
-  const filteredMatches = selectedYear
-    ? data.filter(match => new Date(match.Fecha).getFullYear().toString() === selectedYear)
-    : data;
+  const filteredMatches = data.filter(match => {
+    const matchDate = new Date(match.Fecha);
+    const yearMatch = selectedYear ? matchDate.getFullYear().toString() === selectedYear : true;
+    const monthMatch = selectedMonth ? {
+      'Enero': 0, 'Febrero': 1, 'Marzo': 2, 'Abril': 3, 'Mayo': 4, 'Junio': 5,
+      'Julio': 6, 'Agosto': 7, 'Septiembre': 8, 'Octubre': 9, 'Noviembre': 10, 'Diciembre': 11
+    }[selectedMonth] === matchDate.getMonth() : true;
+    return yearMatch && monthMatch;
+  });
 
   const getMatchesForDate = (date) => {
     if (!date) return [];
@@ -435,18 +454,35 @@ function App() {
           <div className="py-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
               <h2 className="text-2xl font-semibold mb-2 sm:mb-0">Resultados de Sporting Cristal</h2>
-              <div className="flex items-center space-x-2">
-                <label htmlFor="year-select" className="text-sm font-medium">Año:</label>
-                <select
-                  id="year-select"
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                  className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
-                >
-                  {years.map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
+              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                <div className="flex items-center space-x-2">
+                  <label htmlFor="year-select" className="text-sm font-medium">Año:</label>
+                  <select
+                    id="year-select"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
+                  >
+                    <option value="">Todos</option>
+                    {years.map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <label htmlFor="month-select" className="text-sm font-medium">Mes:</label>
+                  <select
+                    id="month-select"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
+                  >
+                    <option value="">Todos</option>
+                    {months.map(month => (
+                      <option key={month} value={month}>{month}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
