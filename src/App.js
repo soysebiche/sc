@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
+import { useAnalytics } from './hooks/useAnalytics';
 
 function App() {
   const [data, setData] = useState([]);
@@ -15,6 +16,9 @@ function App() {
   const [curiosidades, setCuriosidades] = useState({});
   const [yearlyStats, setYearlyStats] = useState([]);
   const [tournamentFilter, setTournamentFilter] = useState('todos');
+  
+  // Analytics hook
+  const analytics = useAnalytics();
 
   useEffect(() => {
     // Cargar datos automáticamente al iniciar
@@ -29,6 +33,8 @@ function App() {
   }, [data, tournamentFilter]);
 
   const loadData = async () => {
+    const startTime = performance.now();
+    
     try {
       setLoading(true);
       setError(null);
@@ -74,9 +80,20 @@ function App() {
       // Calculate curiosidades
       setCuriosidades(calculateCuriosidades(combinedData));
 
+      // Trackear tiempo de carga exitoso
+      const loadTime = performance.now() - startTime;
+      analytics.trackLoadTime(loadTime);
+      analytics.trackEvent('data_load_success', {
+        data_count: combinedData.length,
+        load_time_ms: loadTime
+      });
+
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
+      
+      // Trackear error
+      analytics.trackError('data_load_error', error.message);
     } finally {
       setLoading(false);
     }
@@ -472,7 +489,10 @@ function App() {
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-1 sm:space-x-6 overflow-x-auto" aria-label="Tabs">
             <button
-              onClick={() => setActiveTab('efemerides')}
+              onClick={() => {
+                setActiveTab('efemerides');
+                analytics.trackTabNavigation('efemerides');
+              }}
               className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'efemerides' ? 'tab-active' : ''
               }`}
@@ -480,7 +500,10 @@ function App() {
               Efemérides
             </button>
             <button
-              onClick={() => setActiveTab('temporadas')}
+              onClick={() => {
+                setActiveTab('temporadas');
+                analytics.trackTabNavigation('temporadas');
+              }}
               className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'temporadas' ? 'tab-active' : ''
               }`}
@@ -488,7 +511,10 @@ function App() {
               Temporadas
             </button>
             <button
-              onClick={() => setActiveTab('minutos')}
+              onClick={() => {
+                setActiveTab('minutos');
+                analytics.trackTabNavigation('minutos');
+              }}
               className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
                 activeTab === 'minutos' ? 'tab-active' : ''
               }`}
@@ -603,7 +629,10 @@ function App() {
                   <select
                     id="year-select"
                     value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedYear(e.target.value);
+                      analytics.trackFilter('year', e.target.value);
+                    }}
                     className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
                   >
                     <option value="">Todos</option>
@@ -617,7 +646,10 @@ function App() {
                   <select
                     id="month-select"
                     value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedMonth(e.target.value);
+                      analytics.trackFilter('month', e.target.value);
+                    }}
                     className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
                   >
                     <option value="">Todos</option>
