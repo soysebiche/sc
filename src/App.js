@@ -226,11 +226,14 @@ function App() {
     
     const bestDay = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
     const bestMonth = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
-    const bestVictoryMonth = Object.keys(monthVictories).length > 0 
-      ? Object.keys(monthVictories).reduce((a, b) => monthVictories[a] > monthVictories[b] ? a : b)
+    const victoryMonthEntries = Object.entries(monthVictories);
+    const defeatMonthEntries = Object.entries(monthDefeats);
+    
+    const bestVictoryMonth = victoryMonthEntries.length > 0 
+      ? victoryMonthEntries.reduce((a, b) => a[1] > b[1] ? a : b)[0]
       : 'N/A';
-    const bestDefeatMonth = Object.keys(monthDefeats).length > 0
-      ? Object.keys(monthDefeats).reduce((a, b) => monthDefeats[a] > monthDefeats[b] ? a : b)
+    const bestDefeatMonth = defeatMonthEntries.length > 0
+      ? defeatMonthEntries.reduce((a, b) => a[1] > b[1] ? a : b)[0]
       : 'N/A';
     const mostCommonScore = Object.keys(scoreStats).reduce((a, b) => scoreStats[a] > scoreStats[b] ? a : b);
     
@@ -245,9 +248,11 @@ function App() {
       bestMonth,
       bestMonthMatches: monthStats[bestMonth] || 0,
       bestVictoryMonth,
-      bestVictoryMonthCount: monthVictories[bestVictoryMonth] || 0,
+      bestVictoryMonthCount: bestVictoryMonth !== 'N/A' ? 
+        (victoryMonthEntries.find(([month, count]) => month === bestVictoryMonth)?.[1] || 0) : 0,
       bestDefeatMonth,
-      bestDefeatMonthCount: monthDefeats[bestDefeatMonth] || 0,
+      bestDefeatMonthCount: bestDefeatMonth !== 'N/A' ? 
+        (defeatMonthEntries.find(([month, count]) => month === bestDefeatMonth)?.[1] || 0) : 0,
       mostCommonScore,
       winPercentage: ((victories.length / data.length) * 100).toFixed(1),
       averageGoals,
