@@ -113,6 +113,8 @@ function App() {
     const dayDefeats = {};
     const dayByNumber = {};
     const monthStats = {};
+    const monthVictories = {};
+    const monthDefeats = {};
     const scoreStats = {};
     const minuteStats = {};
     let totalScGoals = 0;
@@ -150,11 +152,13 @@ function App() {
         dayVictories[dayName] = (dayVictories[dayName] || 0) + 1;
         dayByNumber[dayNumber] = (dayByNumber[dayNumber] || {victories: 0, defeats: 0});
         dayByNumber[dayNumber].victories++;
+        monthVictories[monthName] = (monthVictories[monthName] || 0) + 1;
       } else if (scGoals < opponentGoals) {
         defeats.push(match);
         dayDefeats[dayName] = (dayDefeats[dayName] || 0) + 1;
         dayByNumber[dayNumber] = (dayByNumber[dayNumber] || {victories: 0, defeats: 0});
         dayByNumber[dayNumber].defeats++;
+        monthDefeats[monthName] = (monthDefeats[monthName] || 0) + 1;
       } else {
         draws.push(match);
       }
@@ -162,7 +166,7 @@ function App() {
       monthStats[monthName] = (monthStats[monthName] || 0) + 1;
       scoreStats[match.Marcador] = (scoreStats[match.Marcador] || 0) + 1;
       
-      // Analyze minutes
+      // Analyze minutes (exclude minute 0)
       if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
         const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\\(([^)]+)\\)/g)]
           .map(m => m[1]);
@@ -173,7 +177,9 @@ function App() {
             const numericalMinuteMatch = minuteStr.match(/^(\\d+\\+?\\d*)/);
             if (numericalMinuteMatch) {
               const minute = parseInt(numericalMinuteMatch[1], 10);
-              minuteStats[minute] = (minuteStats[minute] || 0) + 1;
+              if (minute > 0) { // Exclude minute 0
+                minuteStats[minute] = (minuteStats[minute] || 0) + 1;
+              }
             }
           });
         });
@@ -220,6 +226,12 @@ function App() {
     
     const bestDay = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
     const bestMonth = Object.keys(monthStats).reduce((a, b) => monthStats[a] > monthStats[b] ? a : b);
+    const bestVictoryMonth = Object.keys(monthVictories).length > 0 
+      ? Object.keys(monthVictories).reduce((a, b) => monthVictories[a] > monthVictories[b] ? a : b)
+      : 'N/A';
+    const bestDefeatMonth = Object.keys(monthDefeats).length > 0
+      ? Object.keys(monthDefeats).reduce((a, b) => monthDefeats[a] > monthDefeats[b] ? a : b)
+      : 'N/A';
     const mostCommonScore = Object.keys(scoreStats).reduce((a, b) => scoreStats[a] > scoreStats[b] ? a : b);
     
     const averageGoals = (totalScGoals / data.length).toFixed(2);
@@ -231,6 +243,11 @@ function App() {
       draws: draws.length,
       bestDay,
       bestMonth,
+      bestMonthMatches: monthStats[bestMonth] || 0,
+      bestVictoryMonth,
+      bestVictoryMonthCount: monthVictories[bestVictoryMonth] || 0,
+      bestDefeatMonth,
+      bestDefeatMonthCount: monthDefeats[bestDefeatMonth] || 0,
       mostCommonScore,
       winPercentage: ((victories.length / data.length) * 100).toFixed(1),
       averageGoals,
@@ -243,9 +260,13 @@ function App() {
       bestDefeatDay,
       worstDefeatDay,
       bestVictoryDayNumber: dayNumberVictories[0]?.day || 'N/A',
+      bestVictoryDayNumberCount: dayNumberVictories[0]?.victories || 0,
       worstVictoryDayNumber: dayNumberVictories[dayNumberVictories.length - 1]?.day || 'N/A',
+      worstVictoryDayNumberCount: dayNumberVictories[dayNumberVictories.length - 1]?.victories || 0,
       bestDefeatDayNumber: dayNumberDefeats[0]?.day || 'N/A',
+      bestDefeatDayNumberCount: dayNumberDefeats[0]?.defeats || 0,
       worstDefeatDayNumber: dayNumberDefeats[dayNumberDefeats.length - 1]?.day || 'N/A',
+      worstDefeatDayNumberCount: dayNumberDefeats[dayNumberDefeats.length - 1]?.defeats || 0,
       mostGoalsMinute: mostGoalsMinute.minute,
       mostGoalsMinuteCount: mostGoalsMinute.goals,
       leastGoalsMinute: leastGoalsMinute.minute,
@@ -276,8 +297,8 @@ function App() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl p-6 shadow-lg">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-          Resultados de Sporting Cristal en el siglo XXI
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2" style={{fontFamily: 'Bebas Neue, cursive'}}>
+          Sebiche Celeste
         </h1>
         <p className="text-lg text-sky-100">Explora 25 años de historia celeste</p>
       </header>
@@ -637,21 +658,25 @@ function App() {
                 <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-emerald-800 mb-1">Día con + Victorias</h4>
                   <p className="text-2xl font-bold text-emerald-900">{curiosidades.bestVictoryDayNumber}</p>
+                  <p className="text-xs text-emerald-700">{curiosidades.bestVictoryDayNumberCount} victorias</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-red-800 mb-1">Día con - Victorias</h4>
                   <p className="text-2xl font-bold text-red-900">{curiosidades.worstVictoryDayNumber}</p>
+                  <p className="text-xs text-red-700">{curiosidades.worstVictoryDayNumberCount} victorias</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-rose-800 mb-1">Día con + Derrotas</h4>
                   <p className="text-2xl font-bold text-rose-900">{curiosidades.bestDefeatDayNumber}</p>
+                  <p className="text-xs text-rose-700">{curiosidades.bestDefeatDayNumberCount} derrotas</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-teal-100 to-teal-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-teal-800 mb-1">Día con - Derrotas</h4>
                   <p className="text-2xl font-bold text-teal-900">{curiosidades.worstDefeatDayNumber}</p>
+                  <p className="text-xs text-teal-700">{curiosidades.worstDefeatDayNumberCount} derrotas</p>
                 </div>
               </div>
             </div>
@@ -659,10 +684,23 @@ function App() {
             {/* Estadísticas Temporales */}
             <div className="mb-6">
               <h3 className="text-xl font-semibold mb-4 text-sky-600">🗓️ Estadísticas Temporales</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-lg p-4 text-center shadow-lg">
                   <h4 className="text-sm font-bold text-indigo-800 mb-1">Mes con Más Partidos</h4>
                   <p className="text-xl font-bold text-indigo-900">{curiosidades.bestMonth}</p>
+                  <p className="text-xs text-indigo-700">{curiosidades.bestMonthMatches} partidos</p>
+                </div>
+                
+                <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-4 text-center shadow-lg">
+                  <h4 className="text-sm font-bold text-green-800 mb-1">Mes con Más Victorias</h4>
+                  <p className="text-xl font-bold text-green-900">{curiosidades.bestVictoryMonth}</p>
+                  <p className="text-xs text-green-700">{curiosidades.bestVictoryMonthCount} victorias</p>
+                </div>
+                
+                <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-4 text-center shadow-lg">
+                  <h4 className="text-sm font-bold text-red-800 mb-1">Mes con Más Derrotas</h4>
+                  <p className="text-xl font-bold text-red-900">{curiosidades.bestDefeatMonth}</p>
+                  <p className="text-xs text-red-700">{curiosidades.bestDefeatMonthCount} derrotas</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg p-4 text-center shadow-lg">
