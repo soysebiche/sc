@@ -1,22 +1,20 @@
 import { useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
 import analyticsService from '../services/analyticsService';
 
 // Hook personalizado para analytics
 export const useAnalytics = () => {
-  const location = useLocation();
 
   // Inicializar analytics al montar el componente
   useEffect(() => {
     analyticsService.init();
   }, []);
 
-  // Trackear cambios de página
+  // Trackear vista inicial
   useEffect(() => {
     if (analyticsService.isInitialized) {
-      analyticsService.pageView('Sporting Cristal Stats', location.pathname);
+      analyticsService.pageView('Sporting Cristal Stats', '/');
     }
-  }, [location]);
+  }, []);
 
   // Funciones de tracking
   const trackTabNavigation = useCallback((tabName) => {

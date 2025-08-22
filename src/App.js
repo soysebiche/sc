@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import { useAnalytics } from './hooks/useAnalytics';
+import RivalHistory from './components/RivalHistory';
 
 function App() {
   const [data, setData] = useState([]);
@@ -539,6 +540,18 @@ function App() {
             >
               <span className="hidden sm:inline">Análisis por Año</span>
               <span className="sm:hidden">Años</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('rivales');
+                analytics.trackTabNavigation('rivales');
+              }}
+              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
+                activeTab === 'rivales' ? 'tab-active' : ''
+              }`}
+            >
+              <span className="hidden sm:inline">Historial vs Rivales</span>
+              <span className="sm:hidden">Rivales</span>
             </button>
           </nav>
         </div>
@@ -1099,6 +1112,11 @@ function App() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Contenido de Historial vs Rivales */}
+        {activeTab === 'rivales' && (
+          <RivalHistory data={data} />
         )}
       </div>
     </div>
