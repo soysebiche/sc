@@ -45,6 +45,10 @@ export const useAnalytics = () => {
     analyticsService.trackUserInteraction(interactionType, details);
   }, []);
 
+  const trackEvent = useCallback((eventName, parameters = {}) => {
+    analyticsService.trackEvent(eventName, parameters);
+  }, []);
+
   return {
     trackTabNavigation,
     trackFilter,
@@ -52,6 +56,7 @@ export const useAnalytics = () => {
     trackStatsView,
     trackError,
     trackLoadTime,
-    trackUserInteraction
+    trackUserInteraction,
+    trackEvent
   };
 };
