@@ -224,10 +224,21 @@ function extractMatches() {
                           (trimmed.includes('Cristal') && !trimmed.includes('Sporting') && 
                            !trimmed.match(/\bCristal\s+(de|del|de la)/)); // Evitar falsos positivos
     
+    // Ignorar líneas de tablas de clasificación (empiezan con número y punto, ej: "1.Sporting Cristal")
+    if (trimmed.match(/^\d+\.\s/)) {
+      continue; // Es una línea de tabla, no un partido
+    }
+    
     if (currentYear && isCristalMatch) {
       const marcadorMatch = trimmed.match(/(\d+-\d+)/);
       if (marcadorMatch && currentRoundDate && currentRoundNum > 0) {
         const marcador = marcadorMatch[1];
+        
+        // Validar que el marcador sea razonable (no más de 20 goles por lado)
+        const [golesLocal, golesVisita] = marcador.split('-').map(Number);
+        if (golesLocal > 20 || golesVisita > 20) {
+          continue; // Probablemente es una línea de tabla, no un marcador
+        }
         
         // Dividir la línea
         let parts = trimmed.split(/\t+/);
@@ -245,6 +256,17 @@ function extractMatches() {
         if (parts.length >= 3) {
           let equipoLocal = parts[0].trim();
           let equipoVisita = parts[2].trim();
+          
+          // Validar que los equipos tengan nombres razonables (no solo números o muy cortos)
+          if (equipoLocal.match(/^\d+$/) || equipoVisita.match(/^\d+$/) || 
+              equipoLocal.length < 3 || equipoVisita.length < 3) {
+            continue; // No es un partido válido
+          }
+          
+          // Ignorar si el equipo local empieza con número y punto (tabla de clasificación)
+          if (equipoLocal.match(/^\d+\./)) {
+            continue;
+          }
           
           // Determinar fecha
           let fecha = currentRoundDate.fecha;
