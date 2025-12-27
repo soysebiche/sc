@@ -18,7 +18,19 @@ function RivalHistory({ data }) {
         ? match["Equipo Visita"] 
         : match["Equipo Local"];
       rivalSet.add(rival);
-      yearSet.add(new Date(match.Fecha).getFullYear());
+      
+      // Usar campo Año directamente o extraer de fecha si no está disponible
+      let year;
+      if (match.Año && typeof match.Año === 'number') {
+        year = match.Año;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        year = !isNaN(date.getTime()) ? date.getFullYear() : null;
+      }
+      
+      if (year) {
+        yearSet.add(year);
+      }
     });
 
     setRivals([...rivalSet].sort());
@@ -34,11 +46,27 @@ function RivalHistory({ data }) {
         ? match["Equipo Visita"] 
         : match["Equipo Local"];
       
+      // Usar campo Año directamente o extraer de fecha si no está disponible
+      let matchYear;
+      if (match.Año && typeof match.Año === 'number') {
+        matchYear = match.Año;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        matchYear = !isNaN(date.getTime()) ? date.getFullYear() : null;
+      }
+      
       const yearMatch = selectedYear ? 
-        new Date(match.Fecha).getFullYear().toString() === selectedYear : true;
+        (matchYear && matchYear.toString() === selectedYear) : true;
 
       return rival === selectedRival && yearMatch;
-    }).sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+    }).sort((a, b) => {
+      // Ordenar por fecha, manejando TBD
+      const dateA = a.Fecha === 'TBD' ? new Date(0) : new Date(a.Fecha);
+      const dateB = b.Fecha === 'TBD' ? new Date(0) : new Date(b.Fecha);
+      if (isNaN(dateA.getTime())) return 1;
+      if (isNaN(dateB.getTime())) return -1;
+      return dateB - dateA;
+    });
   }, [data, selectedRival, selectedYear]);
 
   // Calcular estadísticas del historial
@@ -235,7 +263,15 @@ function RivalHistory({ data }) {
             {filteredMatches.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredMatches.map((match, index) => {
-                  const matchDate = new Date(match.Fecha);
+                  // Obtener año de manera segura
+                  let matchYear;
+                  if (match.Año && typeof match.Año === 'number') {
+                    matchYear = match.Año;
+                  } else if (match.Fecha && match.Fecha !== 'TBD') {
+                    const date = new Date(match.Fecha);
+                    matchYear = !isNaN(date.getTime()) ? date.getFullYear() : null;
+                  }
+                  
                   const scGoals = match["Equipo Local"] === "Sporting Cristal" 
                     ? parseInt(match.Marcador.split('-')[0]) 
                     : parseInt(match.Marcador.split('-')[1]);
@@ -274,7 +310,7 @@ function RivalHistory({ data }) {
                       
                       <div className="text-center text-sm text-gray-600 mb-2">
                         <p className="font-medium">{match.Torneo}</p>
-                        <p>{matchDate.getFullYear()}</p>
+                        <p>{matchYear || 'TBD'}</p>
                       </div>
                       
                       {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (

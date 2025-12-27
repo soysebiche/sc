@@ -22,6 +22,27 @@ function App() {
   // Analytics hook
   const analytics = useAnalytics();
 
+  // Helper function para obtener año de manera segura
+  const getYearFromMatch = (match) => {
+    if (match.Año && typeof match.Año === 'number') {
+      return match.Año;
+    }
+    if (match.Fecha && match.Fecha !== 'TBD') {
+      const date = new Date(match.Fecha);
+      return !isNaN(date.getTime()) ? date.getFullYear() : null;
+    }
+    return null;
+  };
+
+  // Helper function para obtener fecha de manera segura (para ordenamiento)
+  const getDateForSorting = (match) => {
+    if (match.Fecha && match.Fecha !== 'TBD') {
+      const date = new Date(match.Fecha);
+      return !isNaN(date.getTime()) ? date : new Date(0); // Usar fecha muy antigua para TBD
+    }
+    return new Date(0); // Fecha muy antigua para ordenar al final
+  };
+
   useEffect(() => {
     // Cargar datos automáticamente al iniciar
     loadData();
@@ -49,13 +70,13 @@ function App() {
         ...allData.completo,
         ...allData.inca,
         ...allData.conmebol
-      ].sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
+      ].sort((a, b) => getDateForSorting(a) - getDateForSorting(b));
       
       console.log('Loading Combined JSON Data from Vercel Functions:', combinedData);
       setData(combinedData);
 
-      // Extract unique years
-      const uniqueYears = [...new Set(combinedData.map(match => new Date(match.Fecha).getFullYear()))].sort((a, b) => b - a);
+      // Extract unique years - usar campo Año directamente o extraer de fecha si no está disponible
+      const uniqueYears = [...new Set(combinedData.map(match => getYearFromMatch(match)).filter(year => year !== null))].sort((a, b) => b - a);
       console.log('Unique Years:', uniqueYears);
       setYears(uniqueYears);
       if (uniqueYears.length > 0) {
@@ -66,9 +87,19 @@ function App() {
       const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const uniqueMonths = [...new Set(combinedData.map(match => {
-        const date = new Date(match.Fecha);
-        return monthNames[date.getMonth()];
-      }))];
+        // Usar campo Mes si está disponible
+        if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
+          return match.Mes;
+        }
+        // Si no, intentar extraer de la fecha
+        if (match.Fecha && match.Fecha !== 'TBD') {
+          const date = new Date(match.Fecha);
+          if (!isNaN(date.getTime())) {
+            return monthNames[date.getMonth()];
+          }
+        }
+        return null;
+      }).filter(month => month !== null))];
       const sortedMonths = monthNames.filter(month => uniqueMonths.includes(month));
       setMonths(sortedMonths);
 
@@ -124,12 +155,28 @@ function App() {
 
   // Filter functions
   const filteredMatches = data.filter(match => {
-    const matchDate = new Date(match.Fecha);
-    const yearMatch = selectedYear ? matchDate.getFullYear().toString() === selectedYear : true;
-    const monthMatch = selectedMonth ? {
-      'Enero': 0, 'Febrero': 1, 'Marzo': 2, 'Abril': 3, 'Mayo': 4, 'Junio': 5,
-      'Julio': 6, 'Agosto': 7, 'Septiembre': 8, 'Octubre': 9, 'Noviembre': 10, 'Diciembre': 11
-    }[selectedMonth] === matchDate.getMonth() : true;
+    const matchYear = getYearFromMatch(match);
+    const yearMatch = selectedYear ? (matchYear && matchYear.toString() === selectedYear) : true;
+    
+    // Para el mes, usar campo Mes si está disponible
+    let monthMatch = true;
+    if (selectedMonth) {
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const monthIndex = monthNames.indexOf(selectedMonth);
+      if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
+        monthMatch = monthNames.indexOf(match.Mes) === monthIndex;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const matchDate = new Date(match.Fecha);
+        if (!isNaN(matchDate.getTime())) {
+          monthMatch = matchDate.getMonth() === monthIndex;
+        } else {
+          monthMatch = false;
+        }
+      } else {
+        monthMatch = false; // Si no hay fecha válida, no coincide
+      }
+    }
     return yearMatch && monthMatch;
   });
 
@@ -215,10 +262,37 @@ function App() {
         minScGoalsMatch = match;
       }
       
-      const date = new Date(match.Fecha);
-      const dayName = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][date.getDay()];
-      const dayNumber = date.getDate();
-      const monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][date.getMonth()];
+      // Usar campos del match si están disponibles, o extraer de fecha
+      let dayName, dayNumber, monthName;
+      if (match['Día de la Semana'] && match['Día de la Semana'] !== 'TBD') {
+        dayName = match['Día de la Semana'];
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        if (!isNaN(date.getTime())) {
+          dayName = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][date.getDay()];
+        }
+      }
+      
+      if (match.Dia && match.Dia !== null) {
+        dayNumber = match.Dia;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        if (!isNaN(date.getTime())) {
+          dayNumber = date.getDate();
+        }
+      }
+      
+      if (match.Mes && match.Mes !== 'TBD') {
+        monthName = match.Mes;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        if (!isNaN(date.getTime())) {
+          monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][date.getMonth()];
+        }
+      }
+      
+      // Saltar si no hay información de fecha válida
+      if (!dayName || !dayNumber || !monthName) return;
       
       if (scGoals > opponentGoals) {
         victories.push(match);
@@ -380,7 +454,18 @@ function App() {
     const yearlyData = {};
     
     filteredData.forEach(match => {
-      const year = new Date(match.Fecha).getFullYear();
+      // Usar campo Año directamente o extraer de fecha si no está disponible
+      let year;
+      if (match.Año && typeof match.Año === 'number') {
+        year = match.Año;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        year = !isNaN(date.getTime()) ? date.getFullYear() : null;
+      } else {
+        return; // Saltar partidos sin año válido
+      }
+      
+      if (!year) return; // Saltar si no se pudo obtener el año
       const scGoals = match["Equipo Local"] === "Sporting Cristal" 
         ? parseInt(match.Marcador.split('-')[0]) 
         : parseInt(match.Marcador.split('-')[1]);
@@ -599,7 +684,7 @@ function App() {
                   </h3>
                   <div className="space-y-4">
                     {getMatchesForDate(selectedDate).map((match, index) => {
-                      const matchDate = new Date(match.Fecha);
+                      const matchYear = getYearFromMatch(match);
                       const scGoals = match["Equipo Local"] === "Sporting Cristal" 
                         ? parseInt(match.Marcador.split('-')[0]) 
                         : parseInt(match.Marcador.split('-')[1]);
@@ -614,7 +699,7 @@ function App() {
                         <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
                           <div className="flex justify-between items-center mb-2">
                             <p className="text-sm text-gray-500">
-                              {matchDate.getFullYear()} - {match.Torneo}
+                              {matchYear || 'TBD'} - {match.Torneo}
                             </p>
                             <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
                               {result}
@@ -689,7 +774,6 @@ function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredMatches.map((match, index) => {
-                const matchDate = new Date(match.Fecha);
                 const scGoals = match["Equipo Local"] === "Sporting Cristal" 
                   ? parseInt(match.Marcador.split('-')[0]) 
                   : parseInt(match.Marcador.split('-')[1]);
@@ -703,7 +787,9 @@ function App() {
                 return (
                   <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
                     <div className="flex justify-between items-center mb-2">
-                      <p className="text-sm text-gray-500">{formatDate(match.Fecha)}</p>
+                      <p className="text-sm text-gray-500">
+                        {match.Fecha === 'TBD' ? 'Fecha TBD' : formatDate(match.Fecha)}
+                      </p>
                       <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
                         {result}
                       </span>
