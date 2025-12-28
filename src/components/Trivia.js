@@ -109,12 +109,12 @@ function Trivia() {
         <h3 className="text-lg font-semibold mb-4 text-center text-sky-600">
           📊 Selecciona la época
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
           {decadeOptions.map((option) => (
             <button
               key={option.value}
               onClick={() => handleDecadeChange(option.value)}
-              className={`p-3 rounded-lg font-medium text-sm transition-all duration-200 ${
+              className={`p-2 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200 ${
                 selectedDecade === option.value
                   ? 'bg-sky-500 text-white shadow-lg transform scale-105'
                   : 'bg-gray-100 text-gray-700 hover:bg-sky-100 hover:text-sky-700'
