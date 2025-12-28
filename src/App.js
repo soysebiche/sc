@@ -569,7 +569,7 @@ function App() {
             className="h-16 md:h-20"
           />
         </div>
-        <p className="text-lg text-sky-100">Explora 25 años de historia celeste</p>
+        <p className="text-lg text-sky-100">Desde 1993, toda la historia celeste</p>
       </header>
 
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
