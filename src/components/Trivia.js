@@ -252,7 +252,7 @@ function Trivia() {
             💡 ¿Sabías que...?
           </h4>
           <p className="text-sky-700 text-sm leading-relaxed">
-            Esta trivia contiene <strong>60 preguntas únicas</strong> basadas en datos reales del histórico de Sporting Cristal desde 1993. 
+            Esta trivia contiene <strong>1324 preguntas únicas</strong> basadas en partidos específicos del histórico de Sporting Cristal (1993-2025). Incluye resultados, días de la semana, goleadores (2000+) y torneos. 
             Las preguntas están categorizadas por décadas y dificultad para ofrecerte el mejor desafío.
           </p>
         </div>
