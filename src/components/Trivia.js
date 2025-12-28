@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getRandomQuestion, getQuestionsByDecade } from '../data/triviaQuestions';
 
 function Trivia() {
-  const [selectedDecade, setSelectedDecade] = useState('00-24');
+  const [selectedDecade, setSelectedDecade] = useState('93-25');
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [showAnswer, setShowAnswer] = useState(false);
   const [questionCount, setQuestionCount] = useState(0);
@@ -10,10 +10,11 @@ function Trivia() {
 
   // Opciones de décadas
   const decadeOptions = [
-    { value: '00-24', label: 'Todas las épocas (2000-2024)' },
-    { value: '00-10', label: 'Primera década (2000-2010)' },
-    { value: '11-20', label: 'Segunda década (2011-2020)' },
-    { value: '21-24', label: 'Época actual (2021-2024)' }
+    { value: '93-25', label: 'Todas las épocas (1993-2025)' },
+    { value: '93-99', label: '90s (1993-1999)' },
+    { value: '00-10', label: '00s (2000-2010)' },
+    { value: '11-20', label: '10s (2011-2020)' },
+    { value: '21-25', label: '20s (2021-2025)' }
   ];
 
   // Cargar primera pregunta al iniciar
