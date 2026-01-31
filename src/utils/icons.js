@@ -342,7 +342,7 @@ export const getDifficultyIcon = (difficulty) => {
 };
 
 // Exportación por defecto
-export default {
+const icons = {
   navigation: navigationIcons,
   football: footballIcons,
   stats: statsIcons,
@@ -356,3 +356,5 @@ export default {
   getResult: getResultIcon,
   getDifficulty: getDifficultyIcon,
 };
+
+export default icons;

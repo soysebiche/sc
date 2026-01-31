@@ -72,4 +72,5 @@ class VercelDataService {
   }
 }
 
-export default new VercelDataService();
+const vercelDataService = new VercelDataService();
+export default vercelDataService;
