@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import { useAnalytics } from './hooks/useAnalytics';
+import { getIcon, getResultIcon } from './utils/icons';
 import RivalHistory from './components/RivalHistory';
 import Trivia from './components/Trivia';
 
@@ -528,31 +529,40 @@ function App() {
     );
   }
 
-  // Si está cargando, mostrar spinner
+  // Loading State Premium
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-400 via-sky-500 to-navy-600 text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-xl">Cargando estadísticas...</p>
+      <div className="min-h-screen bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-700 text-white flex items-center justify-center">
+        <div className="text-center animate-fadeInUp">
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            <div className="absolute inset-0 border-4 border-white/20 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-white rounded-full border-t-transparent animate-spin"></div>
+            <span className="absolute inset-0 flex items-center justify-center text-3xl">
+              {getIcon('ball')}
+            </span>
+          </div>
+          <p className="text-xl font-medium">Cargando estadísticas...</p>
+          <p className="text-sm text-sky-200 mt-2">Preparando la historia celeste</p>
         </div>
       </div>
     );
   }
 
-  // Si hay error, mostrar mensaje de error
+  // Error State Premium
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-400 via-sky-500 to-navy-600 text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-400 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold mb-2">Error al cargar datos</h2>
-          <p className="text-lg mb-4">{error.message}</p>
+      <div className="min-h-screen bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-700 text-white flex items-center justify-center p-4">
+        <div className="card card-glass p-8 max-w-md w-full text-center animate-scaleIn">
+          <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">{getIcon('error')}</span>
+          </div>
+          <h2 className="text-2xl font-bold mb-2 text-red-100">Error al cargar datos</h2>
+          <p className="text-lg mb-6 text-sky-100">{error.message}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="bg-white text-sky-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            className="btn btn-primary btn-lg"
           >
-            🔄 Recargar página
+            {getIcon('refresh')} Recargar página
           </button>
         </div>
       </div>
@@ -561,108 +571,90 @@ function App() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <header className="text-center mb-8 bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl p-6 shadow-lg">
-          <div className="flex justify-center mb-4">
-          <img 
-            src="/SebicheCeleste logo copy.png" 
-            alt="Sebiche Celeste Logo" 
-            className="h-16 md:h-20"
-          />
+      {/* Header Premium */}
+      <header className="text-center mb-8 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+        {/* Efectos de fondo */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-1/4 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-sky-300 rounded-full blur-3xl"></div>
         </div>
-        <p className="text-lg text-sky-100">Desde 1993, toda la historia celeste</p>
+        
+        <div className="relative z-10">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30">
+              <img 
+                src="/SebicheCeleste logo copy.png" 
+                alt="Sebiche Celeste Logo" 
+                className="h-16 md:h-20 drop-shadow-lg"
+              />
+            </div>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">
+            Sebiche Celeste
+          </h1>
+          <p className="text-lg text-sky-100 flex items-center justify-center gap-2">
+            <span>{getIcon('calendar')}</span>
+            Desde 1993, toda la historia celeste
+            <span>{getIcon('trophy')}</span>
+          </p>
+        </div>
       </header>
 
-      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-1 sm:space-x-6 overflow-x-auto" aria-label="Tabs">
-            <button
-              onClick={() => {
-                setActiveTab('efemerides');
-                analytics.trackTabNavigation('efemerides');
-              }}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'efemerides' ? 'tab-active' : ''
-              }`}
-            >
-              Efemérides
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('temporadas');
-                analytics.trackTabNavigation('temporadas');
-              }}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'temporadas' ? 'tab-active' : ''
-              }`}
-            >
-              Temporadas
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('minutos');
-                analytics.trackTabNavigation('minutos');
-              }}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'minutos' ? 'tab-active' : ''
-              }`}
-            >
-              <span className="hidden sm:inline">Goles por Minuto</span>
-              <span className="sm:hidden">Minutos</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('curiosidades')}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'curiosidades' ? 'tab-active' : ''
-              }`}
-            >
-              <span className="hidden sm:inline">Datos Curiosos</span>
-              <span className="sm:hidden">Datos</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('analisis-anual')}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'analisis-anual' ? 'tab-active' : ''
-              }`}
-            >
-              <span className="hidden sm:inline">Análisis por Año</span>
-              <span className="sm:hidden">Años</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('rivales');
-                analytics.trackTabNavigation('rivales');
-              }}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'rivales' ? 'tab-active' : ''
-              }`}
-            >
-              <span className="hidden sm:inline">Historial vs Rivales</span>
-              <span className="sm:hidden">Rivales</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('trivia');
-                analytics.trackTabNavigation('trivia');
-              }}
-              className={`tab whitespace-nowrap py-3 px-2 sm:py-4 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'trivia' ? 'tab-active' : ''
-              }`}
-            >
-              <span className="hidden sm:inline">Trivia Celeste</span>
-              <span className="sm:hidden">Trivia</span>
-            </button>
+      {/* Tabs Premium */}
+      <div className="card card-elevated p-2 sm:p-4 mb-8">
+        <div className="border-b border-gray-200/60">
+          <nav className="-mb-px flex space-x-1 overflow-x-auto scrollbar-hide" aria-label="Tabs">
+            {[
+              { id: 'efemerides', label: 'Efemérides', icon: 'calendar', mobileLabel: 'Efemérides' },
+              { id: 'temporadas', label: 'Temporadas', icon: 'ball', mobileLabel: 'Temporadas' },
+              { id: 'minutos', label: 'Goles por Minuto', icon: 'timer', mobileLabel: 'Minutos' },
+              { id: 'curiosidades', label: 'Datos Curiosos', icon: 'chart', mobileLabel: 'Datos' },
+              { id: 'analisis-anual', label: 'Análisis por Año', icon: 'statistics', mobileLabel: 'Años' },
+              { id: 'rivales', label: 'Historial vs Rivales', icon: 'rivals', mobileLabel: 'Rivales' },
+              { id: 'trivia', label: 'Trivia Celeste', icon: 'star', mobileLabel: 'Trivia' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  analytics.trackTabNavigation(tab.id);
+                }}
+                className={`group relative whitespace-nowrap py-3 px-3 sm:py-4 sm:px-4 border-b-2 font-semibold text-xs sm:text-sm flex-shrink-0 transition-all duration-200 ${
+                  activeTab === tab.id 
+                    ? 'border-sky-500 text-sky-600' 
+                    : 'border-transparent text-gray-500 hover:text-sky-500 hover:border-sky-200'
+                }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                    {getIcon(tab.icon)}
+                  </span>
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.mobileLabel}</span>
+                </span>
+                {activeTab === tab.id && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full"></span>
+                )}
+              </button>
+            ))}
           </nav>
         </div>
 
         {/* Contenido de Efemérides */}
         {activeTab === 'efemerides' && (
-          <div className="py-6">
-            <div className="text-center mb-6">
+          <div className="py-6 animate-fadeInUp">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-lg mb-4">
+                <span className="text-3xl">{getIcon('calendar')}</span>
+              </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                ¡Hola Sebichero, feliz {getCurrentDateText()}!
+                ¡Hola Sebichero! {getIcon('celeste')}
               </h2>
-              <p className="text-lg text-gray-600">
-                Descubre qué partidos se jugaron en esta fecha
+              <p className="text-lg text-sky-600 font-medium">
+                {getCurrentDateText()}
+              </p>
+              <p className="text-gray-600 mt-2">
+                Descubre qué partidos se jugaron en esta fecha histórica
               </p>
             </div>
             
@@ -731,9 +723,12 @@ function App() {
 
         {/* Contenido de Temporadas */}
         {activeTab === 'temporadas' && (
-          <div className="py-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-              <h2 className="text-2xl font-semibold mb-2 sm:mb-0">Resultados de Sporting Cristal</h2>
+          <div className="py-6 animate-fadeInUp">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+              <div className="flex items-center gap-3 mb-4 sm:mb-0">
+                <span className="text-3xl">{getIcon('ball')}</span>
+                <h2 className="text-2xl font-bold text-gray-900">Resultados de Sporting Cristal</h2>
+              </div>
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <div className="flex items-center space-x-2">
                   <label htmlFor="year-select" className="text-sm font-medium">Año:</label>
@@ -894,100 +889,128 @@ function App() {
 
         {/* Contenido de Datos Curiosos */}
         {activeTab === 'curiosidades' && (
-          <div className="py-6">
-            <h2 className="text-2xl font-semibold mb-6">Datos Curiosos de Sporting Cristal</h2>
+          <div className="py-6 animate-fadeInUp">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-3xl">{getIcon('chart')}</span>
+              <h2 className="text-2xl font-bold text-gray-900">Datos Curiosos de Sporting Cristal</h2>
+            </div>
             
             {/* Estadísticas Generales */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">📊 Estadísticas Generales</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('chart')} Estadísticas Generales
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-sky-800 mb-1">Total de Partidos</h4>
-                  <p className="text-2xl font-bold text-sky-900">{curiosidades.totalMatches}</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-green-800 mb-1">Victorias</h4>
-                  <p className="text-2xl font-bold text-green-900">{curiosidades.victories}</p>
-                  <p className="text-xs text-green-700">{curiosidades.winPercentage}%</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-red-800 mb-1">Derrotas</h4>
-                  <p className="text-2xl font-bold text-red-900">{curiosidades.defeats}</p>
-                  <p className="text-xs text-red-700">{curiosidades.defeatPercentage}%</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-yellow-800 mb-1">Empates</h4>
-                  <p className="text-2xl font-bold text-yellow-900">{curiosidades.draws}</p>
-                  <p className="text-xs text-yellow-700">{curiosidades.drawPercentage}%</p>
-                </div>
+                <StatCard 
+                  title="Total de Partidos" 
+                  value={curiosidades.totalMatches} 
+                  icon={getIcon('ball')} 
+                  color="sky" 
+                />
+                <StatCard 
+                  title="Victorias" 
+                  value={curiosidades.victories} 
+                  subtitle={`${curiosidades.winPercentage}%`}
+                  icon={getIcon('victory')} 
+                  color="success" 
+                />
+                <StatCard 
+                  title="Derrotas" 
+                  value={curiosidades.defeats} 
+                  subtitle={`${curiosidades.defeatPercentage}%`}
+                  icon={getIcon('defeat')} 
+                  color="error" 
+                />
+                <StatCard 
+                  title="Empates" 
+                  value={curiosidades.draws} 
+                  subtitle={`${curiosidades.drawPercentage}%`}
+                  icon={getIcon('draw')} 
+                  color="warning" 
+                />
               </div>
             </div>
 
             {/* Estadísticas de Goles */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">⚽ Estadísticas de Goles</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('goal')} Estadísticas de Goles
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-blue-800 mb-1">Promedio de Goles Anotados</h4>
-                  <p className="text-2xl font-bold text-blue-900">{curiosidades.averageGoals}</p>
-                  <p className="text-xs text-blue-700">por partido</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-emerald-800 mb-1">Máxima Goleada</h4>
-                  <p className="text-2xl font-bold text-emerald-900">{curiosidades.maxGoals}</p>
-                  <p className="text-xs text-emerald-700">goles en un partido</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-orange-800 mb-1">Promedio de Goles Recibidos</h4>
-                  <p className="text-2xl font-bold text-orange-900">{curiosidades.averageGoalsAgainst}</p>
-                  <p className="text-xs text-orange-700">por partido</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-cyan-800 mb-1">Marcador Más Común</h4>
-                  <p className="text-xl font-bold text-cyan-900">{curiosidades.mostCommonScore}</p>
-                </div>
+                <StatCard 
+                  title="Promedio GF" 
+                  value={curiosidades.averageGoals} 
+                  subtitle="por partido"
+                  icon={getIcon('chartUp')} 
+                  color="blue" 
+                />
+                <StatCard 
+                  title="Máxima Goleada" 
+                  value={curiosidades.maxGoals} 
+                  subtitle="goles en un partido"
+                  icon={getIcon('trophy')} 
+                  color="emerald" 
+                />
+                <StatCard 
+                  title="Promedio GC" 
+                  value={curiosidades.averageGoalsAgainst} 
+                  subtitle="por partido"
+                  icon={getIcon('chartDown')} 
+                  color="orange" 
+                />
+                <StatCard 
+                  title="Marcador más común" 
+                  value={curiosidades.mostCommonScore} 
+                  icon={getIcon('data')} 
+                  color="cyan" 
+                />
               </div>
             </div>
 
             {/* Estadísticas por Minutos */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">⏱️ Análisis por Minutos</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('timer')} Análisis por Minutos
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-violet-100 to-violet-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-violet-800 mb-2">Minuto con Más Goles</h4>
-                  <p className="text-2xl font-bold text-violet-900">Minuto {curiosidades.mostGoalsMinute}</p>
-                  <p className="text-xs text-violet-700">{curiosidades.mostGoalsMinuteCount} goles anotados</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-pink-800 mb-2">Minuto con Menos Goles</h4>
-                  <p className="text-2xl font-bold text-pink-900">Minuto {curiosidades.leastGoalsMinute}</p>
-                  <p className="text-xs text-pink-700">{curiosidades.leastGoalsMinuteCount} goles anotados</p>
-                </div>
+                <StatCard 
+                  title="Minuto con más goles" 
+                  value={`Min ${curiosidades.mostGoalsMinute}`} 
+                  subtitle={`${curiosidades.mostGoalsMinuteCount} goles`}
+                  icon={getIcon('clock')} 
+                  color="violet" 
+                />
+                <StatCard 
+                  title="Minuto con menos goles" 
+                  value={`Min ${curiosidades.leastGoalsMinute}`} 
+                  subtitle={`${curiosidades.leastGoalsMinuteCount} goles`}
+                  icon={getIcon('stopwatch')} 
+                  color="pink" 
+                />
               </div>
             </div>
 
             {/* Estadísticas por Días de la Semana */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">📅 Análisis por Días de la Semana</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('calendar')} Análisis por Días de la Semana
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold mb-3 text-green-600">🏆 Victorias</h4>
+                  <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-green-600">
+                    {getIcon('victory')} Victorias
+                  </h4>
                   <div className="grid grid-cols-1 gap-2">
                     <div className="bg-gradient-to-r from-green-100 to-green-200 rounded-lg p-3 shadow">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-green-800">Mejor día:</span>
-                        <span className="text-sm font-bold text-green-900">{curiosidades.bestVictoryDay}</span>
+                        <span className="text-sm font-bold text-green-900 flex items-center gap-1">
+                          {getIcon('trophy')} {curiosidades.bestVictoryDay}
+                        </span>
                       </div>
                     </div>
                     <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-3 shadow">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-green-700">Peor día:</span>
                         <span className="text-sm font-bold text-green-800">{curiosidades.worstVictoryDay}</span>
                       </div>
@@ -996,16 +1019,18 @@ function App() {
                 </div>
                 
                 <div>
-                  <h4 className="text-lg font-semibold mb-3 text-red-600">❌ Derrotas</h4>
+                  <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-red-600">
+                    {getIcon('defeat')} Derrotas
+                  </h4>
                   <div className="grid grid-cols-1 gap-2">
                     <div className="bg-gradient-to-r from-red-100 to-red-200 rounded-lg p-3 shadow">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-red-800">Más derrotas:</span>
                         <span className="text-sm font-bold text-red-900">{curiosidades.bestDefeatDay}</span>
                       </div>
                     </div>
                     <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-lg p-3 shadow">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-red-700">Menos derrotas:</span>
                         <span className="text-sm font-bold text-red-800">{curiosidades.worstDefeatDay}</span>
                       </div>
@@ -1017,61 +1042,75 @@ function App() {
 
             {/* Estadísticas por Día del Mes */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">📊 Análisis por Día del Mes</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('statistics')} Análisis por Día del Mes
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-emerald-800 mb-1">Día con + Victorias</h4>
-                  <p className="text-2xl font-bold text-emerald-900">{curiosidades.bestVictoryDayNumber}</p>
-                  <p className="text-xs text-emerald-700">{curiosidades.bestVictoryDayNumberCount} victorias</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-red-800 mb-1">Día con - Victorias</h4>
-                  <p className="text-2xl font-bold text-red-900">{curiosidades.worstVictoryDayNumber}</p>
-                  <p className="text-xs text-red-700">{curiosidades.worstVictoryDayNumberCount} victorias</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-rose-800 mb-1">Día con + Derrotas</h4>
-                  <p className="text-2xl font-bold text-rose-900">{curiosidades.bestDefeatDayNumber}</p>
-                  <p className="text-xs text-rose-700">{curiosidades.bestDefeatDayNumberCount} derrotas</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-teal-100 to-teal-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-teal-800 mb-1">Día con - Derrotas</h4>
-                  <p className="text-2xl font-bold text-teal-900">{curiosidades.worstDefeatDayNumber}</p>
-                  <p className="text-xs text-teal-700">{curiosidades.worstDefeatDayNumberCount} derrotas</p>
-                </div>
+                <StatCard 
+                  title="Día con + Victorias" 
+                  value={curiosidades.bestVictoryDayNumber} 
+                  subtitle={`${curiosidades.bestVictoryDayNumberCount} victorias`}
+                  icon={getIcon('chartUp')} 
+                  color="emerald" 
+                />
+                <StatCard 
+                  title="Día con - Victorias" 
+                  value={curiosidades.worstVictoryDayNumber} 
+                  subtitle={`${curiosidades.worstVictoryDayNumberCount} victorias`}
+                  icon={getIcon('chartDown')} 
+                  color="red" 
+                />
+                <StatCard 
+                  title="Día con + Derrotas" 
+                  value={curiosidades.bestDefeatDayNumber} 
+                  subtitle={`${curiosidades.bestDefeatDayNumberCount} derrotas`}
+                  icon={getIcon('trendDown')} 
+                  color="rose" 
+                />
+                <StatCard 
+                  title="Día con - Derrotas" 
+                  value={curiosidades.worstDefeatDayNumber} 
+                  subtitle={`${curiosidades.worstDefeatDayNumberCount} derrotas`}
+                  icon={getIcon('trendUp')} 
+                  color="teal" 
+                />
               </div>
             </div>
 
             {/* Estadísticas Temporales */}
             <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">🗓️ Estadísticas Temporales</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('calendar')} Estadísticas Temporales
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-indigo-800 mb-1">Mes con Más Partidos</h4>
-                  <p className="text-xl font-bold text-indigo-900">{curiosidades.bestMonth}</p>
-                  <p className="text-xs text-indigo-700">{curiosidades.bestMonthMatches} partidos</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-green-800 mb-1">Mes con Más Victorias</h4>
-                  <p className="text-xl font-bold text-green-900">{curiosidades.bestVictoryMonth}</p>
-                  <p className="text-xs text-green-700">{curiosidades.bestVictoryMonthCount} victorias</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-red-800 mb-1">Mes con Más Derrotas</h4>
-                  <p className="text-xl font-bold text-red-900">{curiosidades.bestDefeatMonth}</p>
-                  <p className="text-xs text-red-700">{curiosidades.bestDefeatMonthCount} derrotas</p>
-                </div>
-                
-                <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg p-4 text-center shadow-lg">
-                  <h4 className="text-sm font-bold text-purple-800 mb-1">Mes con Menos Derrotas</h4>
-                  <p className="text-xl font-bold text-purple-900">{curiosidades.worstDefeatMonth}</p>
-                  <p className="text-xs text-purple-700">{curiosidades.worstDefeatMonthCount} derrotas</p>
-                </div>
+                <StatCard 
+                  title="Mes con más partidos" 
+                  value={curiosidades.bestMonth} 
+                  subtitle={`${curiosidades.bestMonthMatches} partidos`}
+                  icon={getIcon('ball')} 
+                  color="indigo" 
+                />
+                <StatCard 
+                  title="Mes con más victorias" 
+                  value={curiosidades.bestVictoryMonth} 
+                  subtitle={`${curiosidades.bestVictoryMonthCount} victorias`}
+                  icon={getIcon('victory')} 
+                  color="success" 
+                />
+                <StatCard 
+                  title="Mes con más derrotas" 
+                  value={curiosidades.bestDefeatMonth} 
+                  subtitle={`${curiosidades.bestDefeatMonthCount} derrotas`}
+                  icon={getIcon('defeat')} 
+                  color="error" 
+                />
+                <StatCard 
+                  title="Mes con menos derrotas" 
+                  value={curiosidades.worstDefeatMonth} 
+                  subtitle={`${curiosidades.worstDefeatMonthCount} derrotas`}
+                  icon={getIcon('shield')} 
+                  color="purple" 
+                />
               </div>
             </div>
           </div>
@@ -1079,9 +1118,12 @@ function App() {
 
         {/* Contenido de Análisis por Año */}
         {activeTab === 'analisis-anual' && (
-          <div className="py-6">
+          <div className="py-6 animate-fadeInUp">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-              <h2 className="text-2xl font-semibold mb-2 sm:mb-0">Análisis por Año de Sporting Cristal</h2>
+              <div className="flex items-center gap-3 mb-4 sm:mb-0">
+                <span className="text-3xl">{getIcon('statistics')}</span>
+                <h2 className="text-2xl font-bold text-gray-900">Análisis por Año de Sporting Cristal</h2>
+              </div>
               <div className="flex items-center space-x-2">
                 <label htmlFor="tournament-filter" className="text-sm font-medium">Filtro:</label>
                 <select
@@ -1140,13 +1182,17 @@ function App() {
 
             {/* Gráfico simple de tendencias */}
             <div className="mt-8">
-              <h3 className="text-xl font-semibold mb-4 text-sky-600">📈 Tendencias por Año</h3>
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
+                {getIcon('chartUp')} Tendencias por Año
+              </h3>
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   
                   {/* Victorias por año */}
                   <div>
-                    <h4 className="text-lg font-semibold mb-3 text-green-600">🏆 Victorias</h4>
+                    <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-green-600">
+                      {getIcon('victory')} Victorias
+                    </h4>
                     <div className="space-y-2">
                       {yearlyStats.map(yearData => (
                         <div key={`v-${yearData.year}`} className="flex items-center">
@@ -1167,7 +1213,9 @@ function App() {
 
                   {/* Empates por año */}
                   <div>
-                    <h4 className="text-lg font-semibold mb-3 text-yellow-600">🤝 Empates</h4>
+                    <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-yellow-600">
+                      {getIcon('draw')} Empates
+                    </h4>
                     <div className="space-y-2">
                       {yearlyStats.map(yearData => (
                         <div key={`e-${yearData.year}`} className="flex items-center">
@@ -1188,7 +1236,9 @@ function App() {
 
                   {/* Derrotas por año */}
                   <div>
-                    <h4 className="text-lg font-semibold mb-3 text-red-600">❌ Derrotas</h4>
+                    <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-red-600">
+                      {getIcon('defeat')} Derrotas
+                    </h4>
                     <div className="space-y-2">
                       {yearlyStats.map(yearData => (
                         <div key={`d-${yearData.year}`} className="flex items-center">
@@ -1223,6 +1273,35 @@ function App() {
           <Trivia />
         )}
       </div>
+    </div>
+  );
+}
+
+// Componente StatCard reutilizable
+function StatCard({ title, value, subtitle, icon, color }) {
+  const colorSchemes = {
+    sky: 'from-sky-100 to-sky-200 text-sky-800',
+    success: 'from-green-100 to-green-200 text-green-800',
+    error: 'from-red-100 to-red-200 text-red-800',
+    warning: 'from-yellow-100 to-yellow-200 text-yellow-800',
+    blue: 'from-blue-100 to-blue-200 text-blue-800',
+    emerald: 'from-emerald-100 to-emerald-200 text-emerald-800',
+    orange: 'from-orange-100 to-orange-200 text-orange-800',
+    cyan: 'from-cyan-100 to-cyan-200 text-cyan-800',
+    violet: 'from-violet-100 to-violet-200 text-violet-800',
+    pink: 'from-pink-100 to-pink-200 text-pink-800',
+    indigo: 'from-indigo-100 to-indigo-200 text-indigo-800',
+    purple: 'from-purple-100 to-purple-200 text-purple-800',
+    teal: 'from-teal-100 to-teal-200 text-teal-800',
+    rose: 'from-rose-100 to-rose-200 text-rose-800',
+  };
+  
+  return (
+    <div className={`bg-gradient-to-br ${colorSchemes[color]} rounded-xl p-4 text-center shadow-lg animate-scaleIn`}>
+      <div className="text-2xl mb-1">{icon}</div>
+      <h4 className="text-xs font-bold uppercase tracking-wider opacity-75 mb-1">{title}</h4>
+      <p className="text-2xl font-bold">{value}</p>
+      {subtitle && <p className="text-xs opacity-75">{subtitle}</p>}
     </div>
   );
 }
