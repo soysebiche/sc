@@ -22,6 +22,7 @@ function Trivia() {
   // Cargar primera pregunta al iniciar
   useEffect(() => {
     loadNewQuestion();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDecade]);
 
   const loadNewQuestion = () => {

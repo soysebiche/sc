@@ -69,12 +69,6 @@ export const MatchCard = ({
   const resultClass = result === 'Victoria' ? 'victory' : 
                      result === 'Derrota' ? 'defeat' : 'draw';
   
-  const resultColors = {
-    victory: 'bg-green-100 border-green-500',
-    defeat: 'bg-red-100 border-red-500',
-    draw: 'bg-yellow-100 border-yellow-500',
-  };
-  
   const resultBadgeColors = {
     victory: 'bg-green-200 text-green-800',
     defeat: 'bg-red-200 text-red-800',

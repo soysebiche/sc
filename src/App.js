@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import { useAnalytics } from './hooks/useAnalytics';
-import { getIcon, getResultIcon } from './utils/icons';
+import { getIcon } from './utils/icons';
 import RivalHistory from './components/RivalHistory';
 import Trivia from './components/Trivia';
 
@@ -47,6 +47,7 @@ function App() {
   useEffect(() => {
     // Cargar datos automáticamente al iniciar
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -183,7 +184,7 @@ function App() {
 
   const getMatchesForDate = (date) => {
     if (!date) return [];
-    const [year, month, day] = date.split('-');
+    const [, month, day] = date.split('-');
     const searchMonthDay = `${month}-${day}`;
     return data.filter(match => match.Fecha.substring(5) === searchMonthDay);
   };
@@ -202,7 +203,7 @@ function App() {
             const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
             if (numericalMinuteMatch) {
               const parsedMinute = parseInt(numericalMinuteMatch[1], 10);
-              if (parsedMinute == minute) {
+              if (parsedMinute === parseInt(minute, 10)) {
                 goals.push({
                   fecha: match.Fecha,
                   equipoLocal: match["Equipo Local"],
@@ -838,7 +839,6 @@ function App() {
                   </h3>
                   <div className="space-y-4">
                     {getGoalsForMinute(selectedMinute).map((goal, index) => {
-                      const matchDate = new Date(goal.fecha);
                       const scGoals = goal.equipoLocal === "Sporting Cristal" 
                         ? parseInt(goal.marcador.split('-')[0]) 
                         : parseInt(goal.marcador.split('-')[1]);
