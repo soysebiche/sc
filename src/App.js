@@ -50,118 +50,7 @@ function App() {
     return monthNames.filter(month => uniqueMonths.includes(month));
   };
 
-  // Inicializar años y meses desde los datos iniciales
-  const [years] = useState(() => getUniqueYears(initialData));
-  const [months] = useState(() => getUniqueMonths(initialData));
-  const [selectedYear, setSelectedYear] = useState(() => {
-    const uniqueYears = getUniqueYears(initialData);
-    return uniqueYears.length > 0 ? uniqueYears[0].toString() : '';
-  });
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  });
-  const [curiosidades] = useState(() => calculateCuriosidades(initialData));
-
-  useEffect(() => {
-    if (data.length > 0) {
-      setYearlyStats(calculateYearlyStats(data, tournamentFilter));
-    }
-  }, [data, tournamentFilter]);
-
-  // Datos ya inicializados, sin loading
-
-  const formatDate = (dateString) => {
-    const options = { month: 'long', day: 'numeric' };
-    return new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', options);
-  };
-
-  const getDayName = () => {
-    const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-    const today = new Date();
-    return days[today.getDay()];
-  };
-
-  const getCurrentDateText = () => {
-    const today = new Date();
-    const day = today.getDate();
-    const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
-                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-    const month = months[today.getMonth()];
-    return `${getDayName()} ${day} de ${month}`;
-  };
-
-  const filteredMatches = data.filter(match => {
-    const matchYear = getYearFromMatch(match);
-    const yearMatch = selectedYear ? (matchYear && matchYear.toString() === selectedYear) : true;
-    
-    let monthMatch = true;
-    if (selectedMonth) {
-      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      const monthIndex = monthNames.indexOf(selectedMonth);
-      if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
-        monthMatch = monthNames.indexOf(match.Mes) === monthIndex;
-      } else if (match.Fecha && match.Fecha !== 'TBD') {
-        const matchDate = new Date(match.Fecha);
-        if (!isNaN(matchDate.getTime())) {
-          monthMatch = matchDate.getMonth() === monthIndex;
-        } else {
-          monthMatch = false;
-        }
-      } else {
-        monthMatch = false;
-      }
-    }
-    return yearMatch && monthMatch;
-  });
-
-  const getMatchesForDate = (date) => {
-    if (!date) return [];
-    const [, month, day] = date.split('-');
-    const searchMonthDay = `${month}-${day}`;
-    return data.filter(match => match.Fecha.substring(5) === searchMonthDay);
-  };
-
-  const getGoalsForMinute = (minute) => {
-    if (!minute) return [];
-    const goals = [];
-    data.forEach(match => {
-      if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
-        const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\(([^)]+)\)/g)]
-          .map(m => m[1]);
-        
-        allParenthesizedContents.forEach(content => {
-          const individualMinuteStrings = content.split(/,\s*/);
-          individualMinuteStrings.forEach(minuteStr => {
-            const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
-            if (numericalMinuteMatch) {
-              const parsedMinute = parseInt(numericalMinuteMatch[1], 10);
-              if (parsedMinute === parseInt(minute, 10)) {
-                goals.push({
-                  fecha: match.Fecha,
-                  equipoLocal: match["Equipo Local"],
-                  equipoVisita: match["Equipo Visita"],
-                  marcador: match.Marcador,
-                  torneo: match.Torneo,
-                  año: match.Año,
-                  goles: match["Goles (Solo SC)"],
-                  resultado: match.Resultado,
-                  rival: match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"],
-                  minuto: parsedMinute
-                });
-              }
-            }
-          });
-        });
-      }
-    });
-    return goals;
-  };
-
+  // Helper functions - move before useState calls
   const calculateCuriosidades = (data) => {
     const victories = [];
     const defeats = [];
@@ -278,6 +167,116 @@ function App() {
         avgGoalsFor: (yearData.goalsFor / yearData.total).toFixed(2),
         avgGoalsAgainst: (yearData.goalsAgainst / yearData.total).toFixed(2)
       }));
+  };
+
+  // Inicializar años y meses desde los datos iniciales
+  const uniqueYears = getUniqueYears(initialData);
+  const [years] = useState(uniqueYears);
+  const [months] = useState(getUniqueMonths(initialData));
+  const [selectedYear, setSelectedYear] = useState(uniqueYears.length > 0 ? uniqueYears[0].toString() : '');
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  });
+  const [curiosidades] = useState(calculateCuriosidades(initialData));
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setYearlyStats(calculateYearlyStats(data, tournamentFilter));
+    }
+  }, [data, tournamentFilter]);
+
+  // Datos ya inicializados, sin loading
+
+  const formatDate = (dateString) => {
+    const options = { month: 'long', day: 'numeric' };
+    return new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', options);
+  };
+
+  const getDayName = () => {
+    const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const today = new Date();
+    return days[today.getDay()];
+  };
+
+  const getCurrentDateText = () => {
+    const today = new Date();
+    const day = today.getDate();
+    const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const month = months[today.getMonth()];
+    return `${getDayName()} ${day} de ${month}`;
+  };
+
+  const filteredMatches = data.filter(match => {
+    const matchYear = getYearFromMatch(match);
+    const yearMatch = selectedYear ? (matchYear && matchYear.toString() === selectedYear) : true;
+    
+    let monthMatch = true;
+    if (selectedMonth) {
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const monthIndex = monthNames.indexOf(selectedMonth);
+      if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
+        monthMatch = monthNames.indexOf(match.Mes) === monthIndex;
+      } else if (match.Fecha && match.Fecha !== 'TBD') {
+        const matchDate = new Date(match.Fecha);
+        if (!isNaN(matchDate.getTime())) {
+          monthMatch = matchDate.getMonth() === monthIndex;
+        } else {
+          monthMatch = false;
+        }
+      } else {
+        monthMatch = false;
+      }
+    }
+    return yearMatch && monthMatch;
+  });
+
+  const getMatchesForDate = (date) => {
+    if (!date) return [];
+    const [, month, day] = date.split('-');
+    const searchMonthDay = `${month}-${day}`;
+    return data.filter(match => match.Fecha.substring(5) === searchMonthDay);
+  };
+
+  const getGoalsForMinute = (minute) => {
+    if (!minute) return [];
+    const goals = [];
+    data.forEach(match => {
+      if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
+        const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\(([^)]+)\)/g)]
+          .map(m => m[1]);
+        
+        allParenthesizedContents.forEach(content => {
+          const individualMinuteStrings = content.split(/,\s*/);
+          individualMinuteStrings.forEach(minuteStr => {
+            const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
+            if (numericalMinuteMatch) {
+              const parsedMinute = parseInt(numericalMinuteMatch[1], 10);
+              if (parsedMinute === parseInt(minute, 10)) {
+                goals.push({
+                  fecha: match.Fecha,
+                  equipoLocal: match["Equipo Local"],
+                  equipoVisita: match["Equipo Visita"],
+                  marcador: match.Marcador,
+                  torneo: match.Torneo,
+                  año: match.Año,
+                  goles: match["Goles (Solo SC)"],
+                  resultado: match.Resultado,
+                  rival: match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"],
+                  minuto: parsedMinute
+                });
+              }
+            }
+          });
+        });
+      }
+    });
+    return goals;
   };
 
   const tabs = [
