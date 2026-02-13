@@ -1,30 +1,13 @@
 /**
- * ╔══════════════════════════════════════════════════════════════╗
- * ║         COMPONENTE BUTTON PREMIUM 2026                       ║
- * ║         Sporting Cristal Stats Viewer                        ║
- * ╚══════════════════════════════════════════════════════════════╝
+ * ╔══════════════════════════════════════════════════════════════════╗
+ * ║         BUTTON COMPONENT - Editorial Luxury Style                ║
+ * ║         Cristal Archive 2026                                     ║
+ * ╚══════════════════════════════════════════════════════════════════╝
  */
 
 import React from 'react';
-import { getIcon } from '../../utils/icons';
+import PropTypes from 'prop-types';
 
-/**
- * Componente Button profesional con múltiples variantes y estados
- * 
- * @param {Object} props
- * @param {React.ReactNode} props.children - Contenido del botón
- * @param {string} props.variant - Variante visual: 'primary' | 'secondary' | 'success' | 'error' | 'ghost' | 'glass'
- * @param {string} props.size - Tamaño: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
- * @param {string} props.icon - Nombre del icono (del sistema de iconos)
- * @param {string} props.iconPosition - Posición del icono: 'left' | 'right'
- * @param {boolean} props.isLoading - Estado de carga
- * @param {boolean} props.isFullWidth - Ocupa todo el ancho disponible
- * @param {boolean} props.isDisabled - Estado deshabilitado
- * @param {boolean} props.hasRipple - Efecto ripple al hacer click
- * @param {Function} props.onClick - Handler del click
- * @param {string} props.className - Clases CSS adicionales
- * @param {Object} props.rest - Props adicionales
- */
 const Button = ({
   children,
   variant = 'primary',
@@ -39,20 +22,22 @@ const Button = ({
   className = '',
   ...rest
 }) => {
-  // Construir clases base
+  // Base classes
   const baseClasses = 'btn';
   
-  // Clases de variante
+  // Variant classes
   const variantClasses = {
     primary: 'btn-primary',
     secondary: 'btn-secondary',
-    success: 'btn-success',
-    error: 'btn-error',
-    ghost: 'btn-ghost',
+    tertiary: 'btn-tertiary',
+    dark: 'btn-dark',
+    win: 'btn-win',
+    loss: 'btn-loss',
+    draw: 'btn-draw',
     glass: 'btn-glass',
   };
   
-  // Clases de tamaño
+  // Size classes
   const sizeClasses = {
     xs: 'btn-xs',
     sm: 'btn-sm',
@@ -61,14 +46,14 @@ const Button = ({
     xl: 'btn-xl',
   };
   
-  // Estados
+  // State classes
   const stateClasses = [
     isLoading && 'btn-loading',
     isFullWidth && 'btn-full',
     hasRipple && 'btn-ripple',
   ].filter(Boolean).join(' ');
   
-  // Combinar todas las clases
+  // Combine all classes
   const buttonClasses = [
     baseClasses,
     variantClasses[variant] || variantClasses.primary,
@@ -77,13 +62,6 @@ const Button = ({
     className,
   ].filter(Boolean).join(' ');
   
-  // Obtener el icono
-  const iconContent = icon && !isLoading ? (
-    <span className="btn-icon-content" aria-hidden="true">
-      {getIcon(icon)}
-    </span>
-  ) : null;
-  
   return (
     <button
       className={buttonClasses}
@@ -91,19 +69,35 @@ const Button = ({
       disabled={isDisabled || isLoading}
       {...rest}
     >
-      {iconPosition === 'left' && iconContent}
+      {iconPosition === 'left' && icon && !isLoading && (
+        <span className="btn-icon-content">{icon}</span>
+      )}
       {children}
-      {iconPosition === 'right' && iconContent}
+      {iconPosition === 'right' && icon && !isLoading && (
+        <span className="btn-icon-content">{icon}</span>
+      )}
     </button>
   );
 };
 
-/**
- * Botón de Icono (solo icono, sin texto)
- */
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'dark', 'win', 'loss', 'draw', 'glass']),
+  size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
+  icon: PropTypes.node,
+  iconPosition: PropTypes.oneOf(['left', 'right']),
+  isLoading: PropTypes.bool,
+  isFullWidth: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  hasRipple: PropTypes.bool,
+  onClick: PropTypes.func,
+  className: PropTypes.string,
+};
+
+// Icon Button Component
 export const IconButton = ({
   icon,
-  variant = 'ghost',
+  variant = 'tertiary',
   size = 'md',
   isLoading = false,
   isDisabled = false,
@@ -118,9 +112,8 @@ export const IconButton = ({
   const variantClasses = {
     primary: 'btn-primary',
     secondary: 'btn-secondary',
-    success: 'btn-success',
-    error: 'btn-error',
-    ghost: 'btn-ghost',
+    tertiary: 'btn-tertiary',
+    dark: 'btn-dark',
     glass: 'btn-glass',
   };
   
@@ -138,7 +131,7 @@ export const IconButton = ({
   
   const buttonClasses = [
     baseClasses,
-    variantClasses[variant] || variantClasses.ghost,
+    variantClasses[variant] || variantClasses.tertiary,
     sizeClasses[size],
     stateClasses,
     className,
@@ -152,14 +145,24 @@ export const IconButton = ({
       aria-label={ariaLabel}
       {...rest}
     >
-      {!isLoading && <span aria-hidden="true">{getIcon(icon)}</span>}
+      {!isLoading && icon}
     </button>
   );
 };
 
-/**
- * Grupo de botones
- */
+IconButton.propTypes = {
+  icon: PropTypes.node.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'dark', 'glass']),
+  size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg']),
+  isLoading: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  hasRipple: PropTypes.bool,
+  onClick: PropTypes.func,
+  className: PropTypes.string,
+  ariaLabel: PropTypes.string.isRequired,
+};
+
+// Button Group Component
 export const ButtonGroup = ({
   children,
   attached = false,
@@ -178,9 +181,13 @@ export const ButtonGroup = ({
   );
 };
 
-/**
- * Botón con estado de toggle
- */
+ButtonGroup.propTypes = {
+  children: PropTypes.node.isRequired,
+  attached: PropTypes.bool,
+  className: PropTypes.string,
+};
+
+// Toggle Button Component
 export const ToggleButton = ({
   children,
   isActive = false,
@@ -211,6 +218,18 @@ export const ToggleButton = ({
       {children}
     </Button>
   );
+};
+
+ToggleButton.propTypes = {
+  children: PropTypes.node.isRequired,
+  isActive: PropTypes.bool,
+  activeVariant: PropTypes.string,
+  inactiveVariant: PropTypes.string,
+  size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
+  icon: PropTypes.node,
+  iconActive: PropTypes.node,
+  onToggle: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default Button;

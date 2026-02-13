@@ -1,10 +1,22 @@
+// Datos locales para desarrollo
+import completoData from '../data/historico_completo_sc.json';
+import incaData from '../data/historico_inca_sc.json';
+import conmebolData from '../data/historico_conmebol_sc.json';
+
 class VercelDataService {
   constructor() {
     this.apiBaseUrl = '/api/data';
+    this.isDevelopment = process.env.NODE_ENV === 'development';
   }
 
   // Obtener datos de Conmebol
   async fetchConmebolData() {
+    // En desarrollo, usar datos locales
+    if (this.isDevelopment) {
+      console.log('📦 Usando datos locales de Conmebol');
+      return conmebolData;
+    }
+
     try {
       const response = await fetch(`${this.apiBaseUrl}?type=conmebol`);
 
@@ -21,6 +33,12 @@ class VercelDataService {
 
   // Obtener datos de Copa del Inca
   async fetchIncaData() {
+    // En desarrollo, usar datos locales
+    if (this.isDevelopment) {
+      console.log('📦 Usando datos locales de Inca');
+      return incaData;
+    }
+
     try {
       const response = await fetch(`${this.apiBaseUrl}?type=inca`);
 
@@ -37,6 +55,12 @@ class VercelDataService {
 
   // Obtener datos completos
   async fetchCompleteData() {
+    // En desarrollo, usar datos locales
+    if (this.isDevelopment) {
+      console.log('📦 Usando datos locales completos');
+      return completoData;
+    }
+
     try {
       const response = await fetch(`${this.apiBaseUrl}?type=completo`);
 

@@ -4,6 +4,7 @@ import { useAnalytics } from './hooks/useAnalytics';
 import { getIcon } from './utils/icons';
 import RivalHistory from './components/RivalHistory';
 import Trivia from './components/Trivia';
+import { Card, StatCard } from './components/ui';
 
 function App() {
   const [data, setData] = useState([]);
@@ -20,10 +21,8 @@ function App() {
   const [yearlyStats, setYearlyStats] = useState([]);
   const [tournamentFilter, setTournamentFilter] = useState('todos');
   
-  // Analytics hook
   const analytics = useAnalytics();
 
-  // Helper function para obtener año de manera segura
   const getYearFromMatch = (match) => {
     if (match.Año && typeof match.Año === 'number') {
       return match.Año;
@@ -35,24 +34,20 @@ function App() {
     return null;
   };
 
-  // Helper function para obtener fecha de manera segura (para ordenamiento)
   const getDateForSorting = (match) => {
     if (match.Fecha && match.Fecha !== 'TBD') {
       const date = new Date(match.Fecha);
-      return !isNaN(date.getTime()) ? date : new Date(0); // Usar fecha muy antigua para TBD
+      return !isNaN(date.getTime()) ? date : new Date(0);
     }
-    return new Date(0); // Fecha muy antigua para ordenar al final
+    return new Date(0);
   };
 
   useEffect(() => {
-    // Cargar datos automáticamente al iniciar
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (data.length > 0) {
-      // Calculate yearly statistics when data or filter changes
       setYearlyStats(calculateYearlyStats(data, tournamentFilter));
     }
   }, [data, tournamentFilter]);
@@ -64,36 +59,28 @@ function App() {
       setLoading(true);
       setError(null);
       
-      // Cargar todos los datos usando el servicio de Vercel Functions
       const allData = await vercelDataService.fetchAllData();
       
-      // Combinar y ordenar los datos por fecha
       const combinedData = [
         ...allData.completo,
         ...allData.inca,
         ...allData.conmebol
       ].sort((a, b) => getDateForSorting(a) - getDateForSorting(b));
       
-      console.log('Loading Combined JSON Data from Vercel Functions:', combinedData);
       setData(combinedData);
 
-      // Extract unique years - usar campo Año directamente o extraer de fecha si no está disponible
       const uniqueYears = [...new Set(combinedData.map(match => getYearFromMatch(match)).filter(year => year !== null))].sort((a, b) => b - a);
-      console.log('Unique Years:', uniqueYears);
       setYears(uniqueYears);
       if (uniqueYears.length > 0) {
         setSelectedYear(uniqueYears[0].toString());
       }
 
-      // Extract unique months
       const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const uniqueMonths = [...new Set(combinedData.map(match => {
-        // Usar campo Mes si está disponible
         if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
           return match.Mes;
         }
-        // Si no, intentar extraer de la fecha
         if (match.Fecha && match.Fecha !== 'TBD') {
           const date = new Date(match.Fecha);
           if (!isNaN(date.getTime())) {
@@ -105,17 +92,14 @@ function App() {
       const sortedMonths = monthNames.filter(month => uniqueMonths.includes(month));
       setMonths(sortedMonths);
 
-      // Set today's date for efemérides
       const today = new Date();
       const yyyy = today.getFullYear();
       const mm = String(today.getMonth() + 1).padStart(2, '0');
       const dd = String(today.getDate()).padStart(2, '0');
       setSelectedDate(`${yyyy}-${mm}-${dd}`);
 
-      // Calculate curiosidades
       setCuriosidades(calculateCuriosidades(combinedData));
 
-      // Trackear tiempo de carga exitoso
       const loadTime = performance.now() - startTime;
       analytics.trackLoadTime(loadTime);
       analytics.trackEvent('data_load_success', {
@@ -126,15 +110,12 @@ function App() {
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error);
-      
-      // Trackear error
       analytics.trackError('data_load_error', error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Helper functions
   const formatDate = (dateString) => {
     const options = { month: 'long', day: 'numeric' };
     return new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', options);
@@ -155,12 +136,10 @@ function App() {
     return `${getDayName()} ${day} de ${month}`;
   };
 
-  // Filter functions
   const filteredMatches = data.filter(match => {
     const matchYear = getYearFromMatch(match);
     const yearMatch = selectedYear ? (matchYear && matchYear.toString() === selectedYear) : true;
     
-    // Para el mes, usar campo Mes si está disponible
     let monthMatch = true;
     if (selectedMonth) {
       const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -176,7 +155,7 @@ function App() {
           monthMatch = false;
         }
       } else {
-        monthMatch = false; // Si no hay fecha válida, no coincide
+        monthMatch = false;
       }
     }
     return yearMatch && monthMatch;
@@ -264,7 +243,6 @@ function App() {
         minScGoalsMatch = match;
       }
       
-      // Usar campos del match si están disponibles, o extraer de fecha
       let dayName, dayNumber, monthName;
       if (match['Día de la Semana'] && match['Día de la Semana'] !== 'TBD') {
         dayName = match['Día de la Semana'];
@@ -293,7 +271,6 @@ function App() {
         }
       }
       
-      // Saltar si no hay información de fecha válida
       if (!dayName || !dayNumber || !monthName) return;
       
       if (scGoals > opponentGoals) {
@@ -315,7 +292,6 @@ function App() {
       monthStats[monthName] = (monthStats[monthName] || 0) + 1;
       scoreStats[match.Marcador] = (scoreStats[match.Marcador] || 0) + 1;
       
-      // Analyze minutes (exclude minute 0)
       if (match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-') {
         const allParenthesizedContents = [...match["Goles (Solo SC)"].matchAll(/\(([^)]+)\)/g)]
           .map(m => m[1]);
@@ -326,7 +302,7 @@ function App() {
             const numericalMinuteMatch = minuteStr.match(/^(\d+\+?\d*)/);
             if (numericalMinuteMatch) {
               const minute = parseInt(numericalMinuteMatch[1], 10);
-              if (minute >= 1 && minute <= 90) { // Only count minutes 1-90
+              if (minute >= 1 && minute <= 90) {
                 minuteStats[minute] = (minuteStats[minute] || 0) + 1;
               }
             }
@@ -335,7 +311,6 @@ function App() {
       }
     });
 
-    // Find best and worst performing days
     const bestVictoryDay = Object.keys(dayVictories).length > 0 
       ? Object.keys(dayVictories).reduce((a, b) => dayVictories[a] > dayVictories[b] ? a : b)
       : 'N/A';
@@ -349,7 +324,6 @@ function App() {
       ? Object.keys(dayDefeats).reduce((a, b) => dayDefeats[a] < dayDefeats[b] ? a : b)
       : 'N/A';
     
-    // Find best and worst performing day numbers
     const dayNumberVictories = Object.keys(dayByNumber).map(day => ({
       day: parseInt(day),
       victories: dayByNumber[day].victories
@@ -360,7 +334,6 @@ function App() {
       defeats: dayByNumber[day].defeats
     })).sort((a, b) => b.defeats - a.defeats);
     
-    // Find minutes with most and least goals
     const minuteEntries = Object.keys(minuteStats).map(minute => ({
       minute: parseInt(minute),
       goals: minuteStats[minute]
@@ -442,7 +415,6 @@ function App() {
   };
 
   const calculateYearlyStats = (data, filter = 'todos') => {
-    // Filter data based on tournament type
     let filteredData = data;
     if (filter === 'local') {
       filteredData = data.filter(match => 
@@ -456,7 +428,6 @@ function App() {
     const yearlyData = {};
     
     filteredData.forEach(match => {
-      // Usar campo Año directamente o extraer de fecha si no está disponible
       let year;
       if (match.Año && typeof match.Año === 'number') {
         year = match.Año;
@@ -464,10 +435,10 @@ function App() {
         const date = new Date(match.Fecha);
         year = !isNaN(date.getTime()) ? date.getFullYear() : null;
       } else {
-        return; // Saltar partidos sin año válido
+        return;
       }
       
-      if (!year) return; // Saltar si no se pudo obtener el año
+      if (!year) return;
       const scGoals = match["Equipo Local"] === "Sporting Cristal" 
         ? parseInt(match.Marcador.split('-')[0]) 
         : parseInt(match.Marcador.split('-')[1]);
@@ -512,9 +483,11 @@ function App() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-4 md:p-8">
-        <div className="text-center">
-          <p className="text-lg text-gray-600">Cargando datos...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Cargando estadísticas...</p>
+          <p className="text-body-sm text-gray-500 mt-2">Preparando la historia celeste</p>
         </div>
       </div>
     );
@@ -522,786 +495,540 @@ function App() {
 
   if (error) {
     return (
-      <div className="container mx-auto p-4 md:p-8">
-        <div className="text-center">
-          <p className="text-lg text-red-600">Error al cargar los datos: {error.message}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Loading State Premium
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-700 text-white flex items-center justify-center">
-        <div className="text-center animate-fadeInUp">
-          <div className="relative w-24 h-24 mx-auto mb-6">
-            <div className="absolute inset-0 border-4 border-white/20 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-white rounded-full border-t-transparent animate-spin"></div>
-            <span className="absolute inset-0 flex items-center justify-center text-3xl">
-              {getIcon('ball')}
-            </span>
-          </div>
-          <p className="text-xl font-medium">Cargando estadísticas...</p>
-          <p className="text-sm text-sky-200 mt-2">Preparando la historia celeste</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error State Premium
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-700 text-white flex items-center justify-center p-4">
-        <div className="card card-glass p-8 max-w-md w-full text-center animate-scaleIn">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <Card variant="glass" className="p-8 max-w-md w-full text-center">
           <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-4xl">{getIcon('error')}</span>
           </div>
-          <h2 className="text-2xl font-bold mb-2 text-red-100">Error al cargar datos</h2>
-          <p className="text-lg mb-6 text-sky-100">{error.message}</p>
+          <h2 className="title-card text-red-600 mb-2">Error al cargar datos</h2>
+          <p className="text-body mb-6">{error.message}</p>
           <button 
             onClick={() => window.location.reload()}
             className="btn btn-primary btn-lg"
           >
             {getIcon('refresh')} Recargar página
           </button>
-        </div>
+        </Card>
       </div>
     );
   }
 
+  const tabs = [
+    { id: 'efemerides', label: 'Efemérides', icon: 'calendar', mobileLabel: 'Efemérides' },
+    { id: 'temporadas', label: 'Temporadas', icon: 'ball', mobileLabel: 'Temporadas' },
+    { id: 'minutos', label: 'Goles por Minuto', icon: 'timer', mobileLabel: 'Minutos' },
+    { id: 'curiosidades', label: 'Datos Curiosos', icon: 'chart', mobileLabel: 'Datos' },
+    { id: 'analisis-anual', label: 'Análisis por Año', icon: 'statistics', mobileLabel: 'Años' },
+    { id: 'rivales', label: 'Historial vs Rivales', icon: 'rivals', mobileLabel: 'Rivales' },
+    { id: 'trivia', label: 'Trivia Celeste', icon: 'star', mobileLabel: 'Trivia' },
+  ];
+
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="app-wrapper">
       {/* Header Premium */}
-      <header className="text-center mb-8 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
-        {/* Efectos de fondo */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-1/4 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-sky-300 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="relative z-10">
-          <div className="flex justify-center mb-4">
-            <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30">
-              <img 
-                src="/SebicheCeleste logo copy.png" 
-                alt="Sebiche Celeste Logo" 
-                className="h-16 md:h-20 drop-shadow-lg"
-              />
-            </div>
+      <header className="hero-section">
+        <div className="hero-content">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl glass mb-6">
+            <span className="text-5xl">{getIcon('celeste')}</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">
-            Sebiche Celeste
+          <h1 className="hero-title">
+            CRISTAL
+            <span className="hero-title-accent">ARCHIVE</span>
           </h1>
-          <p className="text-lg text-sky-100 flex items-center justify-center gap-2">
-            <span>{getIcon('calendar')}</span>
-            Desde 1993, toda la historia celeste
-            <span>{getIcon('trophy')}</span>
+          <div className="hero-line"></div>
+          <p className="hero-subtitle">
+            {getIcon('calendar')} Desde 1993, toda la historia celeste {getIcon('trophy')}
           </p>
         </div>
       </header>
 
-      {/* Tabs Premium */}
-      <div className="card card-elevated p-2 sm:p-4 mb-8">
-        <div className="border-b border-gray-200/60">
-          <nav className="-mb-px flex space-x-1 overflow-x-auto scrollbar-hide" aria-label="Tabs">
-            {[
-              { id: 'efemerides', label: 'Efemérides', icon: 'calendar', mobileLabel: 'Efemérides' },
-              { id: 'temporadas', label: 'Temporadas', icon: 'ball', mobileLabel: 'Temporadas' },
-              { id: 'minutos', label: 'Goles por Minuto', icon: 'timer', mobileLabel: 'Minutos' },
-              { id: 'curiosidades', label: 'Datos Curiosos', icon: 'chart', mobileLabel: 'Datos' },
-              { id: 'analisis-anual', label: 'Análisis por Año', icon: 'statistics', mobileLabel: 'Años' },
-              { id: 'rivales', label: 'Historial vs Rivales', icon: 'rivals', mobileLabel: 'Rivales' },
-              { id: 'trivia', label: 'Trivia Celeste', icon: 'star', mobileLabel: 'Trivia' },
-            ].map((tab) => (
+      <main className="content-section">
+        {/* Tabs Navigation */}
+        <Card variant="elevated" className="p-2 mb-8">
+          <nav className="tabs">
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => {
                   setActiveTab(tab.id);
                   analytics.trackTabNavigation(tab.id);
                 }}
-                className={`group relative whitespace-nowrap py-3 px-3 sm:py-4 sm:px-4 border-b-2 font-semibold text-xs sm:text-sm flex-shrink-0 transition-all duration-200 ${
-                  activeTab === tab.id 
-                    ? 'border-sky-500 text-sky-600' 
-                    : 'border-transparent text-gray-500 hover:text-sky-500 hover:border-sky-200'
-                }`}
+                className={`tab ${activeTab === tab.id ? 'tab-active' : ''}`}
               >
-                <span className="flex items-center gap-1.5">
-                  <span className="opacity-70 group-hover:opacity-100 transition-opacity">
-                    {getIcon(tab.icon)}
-                  </span>
+                <span className="flex items-center gap-2">
+                  <span>{getIcon(tab.icon)}</span>
                   <span className="hidden sm:inline">{tab.label}</span>
                   <span className="sm:hidden">{tab.mobileLabel}</span>
                 </span>
-                {activeTab === tab.id && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full"></span>
-                )}
               </button>
             ))}
           </nav>
-        </div>
 
-        {/* Contenido de Efemérides */}
-        {activeTab === 'efemerides' && (
-          <div className="py-6 animate-fadeInUp">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-lg mb-4">
-                <span className="text-3xl">{getIcon('calendar')}</span>
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                ¡Hola Sebichero! {getIcon('celeste')}
-              </h2>
-              <p className="text-lg text-sky-600 font-medium">
-                {getCurrentDateText()}
-              </p>
-              <p className="text-gray-600 mt-2">
-                Descubre qué partidos se jugaron en esta fecha histórica
-              </p>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
-              <p className="text-sm font-medium">Busca partidos en una fecha específica:</p>
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
-              />
-            </div>
-
-            <div>
-              {getMatchesForDate(selectedDate).length > 0 ? (
-                <>
-                  <h3 className="text-xl font-semibold mb-3 text-sky-600">
-                    El {formatDate(selectedDate)} se jugaron {getMatchesForDate(selectedDate).length} partidos
-                  </h3>
-                  <div className="space-y-4">
-                    {getMatchesForDate(selectedDate).map((match, index) => {
-                      const matchYear = getYearFromMatch(match);
-                      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
-                        ? parseInt(match.Marcador.split('-')[0]) 
-                        : parseInt(match.Marcador.split('-')[1]);
-                      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
-                        ? parseInt(match.Marcador.split('-')[1]) 
-                        : parseInt(match.Marcador.split('-')[0]);
-                      const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
-                      const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
-                                         (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
-
-                      return (
-                        <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
-                          <div className="flex justify-between items-center mb-2">
-                            <p className="text-sm text-gray-500">
-                              {matchYear || 'TBD'} - {match.Torneo}
-                            </p>
-                            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
-                              {result}
-                            </span>
-                          </div>
-                          <p className="font-bold text-lg">
-                            {match["Equipo Local"]} <span className="font-normal">vs</span> {match["Equipo Visita"]}
-                          </p>
-                          <p className="text-3xl font-bold text-center my-2">{match.Marcador}</p>
-                          {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
-                            <div>
-                              <h4 className="font-semibold text-sm mb-1">Goles de Sporting Cristal:</h4>
-                              <p className="text-sm text-gray-700">{match["Goles (Solo SC)"]}</p>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              ) : (
-                <p className="text-gray-500 text-center">
-                  No se encontraron partidos de Sporting Cristal para esta fecha.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Contenido de Temporadas */}
-        {activeTab === 'temporadas' && (
-          <div className="py-6 animate-fadeInUp">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-              <div className="flex items-center gap-3 mb-4 sm:mb-0">
-                <span className="text-3xl">{getIcon('ball')}</span>
-                <h2 className="text-2xl font-bold text-gray-900">Resultados de Sporting Cristal</h2>
-              </div>
-              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <div className="flex items-center space-x-2">
-                  <label htmlFor="year-select" className="text-sm font-medium">Año:</label>
-                  <select
-                    id="year-select"
-                    value={selectedYear}
-                    onChange={(e) => {
-                      setSelectedYear(e.target.value);
-                      analytics.trackFilter('year', e.target.value);
-                    }}
-                    className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
-                  >
-                    <option value="">Todos</option>
-                    {years.map(year => (
-                      <option key={year} value={year}>{year}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <label htmlFor="month-select" className="text-sm font-medium">Mes:</label>
-                  <select
-                    id="month-select"
-                    value={selectedMonth}
-                    onChange={(e) => {
-                      setSelectedMonth(e.target.value);
-                      analytics.trackFilter('month', e.target.value);
-                    }}
-                    className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
-                  >
-                    <option value="">Todos</option>
-                    {months.map(month => (
-                      <option key={month} value={month}>{month}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredMatches.map((match, index) => {
-                const scGoals = match["Equipo Local"] === "Sporting Cristal" 
-                  ? parseInt(match.Marcador.split('-')[0]) 
-                  : parseInt(match.Marcador.split('-')[1]);
-                const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
-                  ? parseInt(match.Marcador.split('-')[1]) 
-                  : parseInt(match.Marcador.split('-')[0]);
-                const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
-                const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
-                                   (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
-
-                return (
-                  <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
-                    <div className="flex justify-between items-center mb-2">
-                      <p className="text-sm text-gray-500">
-                        {match.Fecha === 'TBD' ? 'Fecha TBD' : formatDate(match.Fecha)}
-                      </p>
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
-                        {result}
-                      </span>
-                    </div>
-                    <p className="font-bold text-lg">
-                      {match["Equipo Local"]} <span className="font-normal">vs</span> {match["Equipo Visita"]}
-                    </p>
-                    <p className="text-3xl font-bold text-center my-2">{match.Marcador}</p>
-                    <p className="text-sm text-gray-600 mb-1">{match.Torneo}</p>
-                    {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
-                      <div>
-                        <h4 className="font-semibold text-sm mb-1">Goles de Sporting Cristal:</h4>
-                        <p className="text-sm text-gray-700">{match["Goles (Solo SC)"]}</p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Contenido de Goles por Minuto */}
-        {activeTab === 'minutos' && (
+          {/* Tab Content */}
           <div className="py-6">
-            <h2 className="text-2xl font-semibold mb-4">Goles por Minuto de Sporting Cristal</h2>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
-              <p className="text-sm font-medium">Busca goles anotados en un minuto específico:</p>
-              <input
-                type="number"
-                min="1"
-                max="120"
-                placeholder="Ej: 15"
-                value={selectedMinute}
-                onChange={(e) => setSelectedMinute(e.target.value)}
-                className="w-24 rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
-              />
-              <button
-                onClick={() => {/* trigger search */}}
-                className="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-md transition duration-300"
-              >
-                Buscar
-              </button>
-            </div>
-
-            <div>
-              {selectedMinute && getGoalsForMinute(selectedMinute).length > 0 ? (
-                <>
-                  <h3 className="text-xl font-semibold mb-3 text-sky-600">
-                    En el minuto {selectedMinute} se anotaron {getGoalsForMinute(selectedMinute).length} goles
-                  </h3>
-                  <div className="space-y-4">
-                    {getGoalsForMinute(selectedMinute).map((goal, index) => {
-                      const scGoals = goal.equipoLocal === "Sporting Cristal" 
-                        ? parseInt(goal.marcador.split('-')[0]) 
-                        : parseInt(goal.marcador.split('-')[1]);
-                      const opponentGoals = goal.equipoLocal === "Sporting Cristal" 
-                        ? parseInt(goal.marcador.split('-')[1]) 
-                        : parseInt(goal.marcador.split('-')[0]);
-                      const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
-                      const resultClass = result === 'Victoria' ? 'bg-green-100 border-green-500' : 
-                                         (result === 'Derrota' ? 'bg-red-100 border-red-500' : 'bg-yellow-100 border-yellow-500');
-
-                      return (
-                        <div key={index} className={`card bg-white rounded-lg shadow p-4 border-l-4 ${resultClass}`}>
-                          <div className="flex justify-between items-center mb-2">
-                            <p className="text-sm text-gray-500">
-                              {goal.año} - {goal.torneo}
-                            </p>
-                            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${resultClass.replace('border-', 'bg-').replace('100', '200')} text-gray-800`}>
-                              {result}
-                            </span>
-                          </div>
-                          <p className="font-bold text-lg">
-                            {goal.equipoLocal} <span className="font-normal">vs</span> {goal.equipoVisita}
-                          </p>
-                          <p className="text-3xl font-bold text-center my-2">{goal.marcador}</p>
-                          {goal.goles && goal.goles !== '-' && (
-                            <div>
-                              <h4 className="font-semibold text-sm mb-1">Goles de Sporting Cristal:</h4>
-                              <p className="text-sm text-gray-700">{goal.goles}</p>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+            {activeTab === 'efemerides' && (
+              <div className="animate-fadeInUp">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-lg mb-4">
+                    <span className="text-3xl">{getIcon('calendar')}</span>
                   </div>
-                </>
-              ) : selectedMinute ? (
-                <p className="text-gray-500">
-                  No se encontraron goles de Sporting Cristal en el minuto {selectedMinute}.
-                </p>
-              ) : (
-                <p className="text-gray-500">
-                  Ingresa un minuto para buscar goles.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Contenido de Datos Curiosos */}
-        {activeTab === 'curiosidades' && (
-          <div className="py-6 animate-fadeInUp">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl">{getIcon('chart')}</span>
-              <h2 className="text-2xl font-bold text-gray-900">Datos Curiosos de Sporting Cristal</h2>
-            </div>
-            
-            {/* Estadísticas Generales */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('chart')} Estadísticas Generales
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard 
-                  title="Total de Partidos" 
-                  value={curiosidades.totalMatches} 
-                  icon={getIcon('ball')} 
-                  color="sky" 
-                />
-                <StatCard 
-                  title="Victorias" 
-                  value={curiosidades.victories} 
-                  subtitle={`${curiosidades.winPercentage}%`}
-                  icon={getIcon('victory')} 
-                  color="success" 
-                />
-                <StatCard 
-                  title="Derrotas" 
-                  value={curiosidades.defeats} 
-                  subtitle={`${curiosidades.defeatPercentage}%`}
-                  icon={getIcon('defeat')} 
-                  color="error" 
-                />
-                <StatCard 
-                  title="Empates" 
-                  value={curiosidades.draws} 
-                  subtitle={`${curiosidades.drawPercentage}%`}
-                  icon={getIcon('draw')} 
-                  color="warning" 
-                />
-              </div>
-            </div>
-
-            {/* Estadísticas de Goles */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('goal')} Estadísticas de Goles
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard 
-                  title="Promedio GF" 
-                  value={curiosidades.averageGoals} 
-                  subtitle="por partido"
-                  icon={getIcon('chartUp')} 
-                  color="blue" 
-                />
-                <StatCard 
-                  title="Máxima Goleada" 
-                  value={curiosidades.maxGoals} 
-                  subtitle="goles en un partido"
-                  icon={getIcon('trophy')} 
-                  color="emerald" 
-                />
-                <StatCard 
-                  title="Promedio GC" 
-                  value={curiosidades.averageGoalsAgainst} 
-                  subtitle="por partido"
-                  icon={getIcon('chartDown')} 
-                  color="orange" 
-                />
-                <StatCard 
-                  title="Marcador más común" 
-                  value={curiosidades.mostCommonScore} 
-                  icon={getIcon('data')} 
-                  color="cyan" 
-                />
-              </div>
-            </div>
-
-            {/* Estadísticas por Minutos */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('timer')} Análisis por Minutos
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <StatCard 
-                  title="Minuto con más goles" 
-                  value={`Min ${curiosidades.mostGoalsMinute}`} 
-                  subtitle={`${curiosidades.mostGoalsMinuteCount} goles`}
-                  icon={getIcon('clock')} 
-                  color="violet" 
-                />
-                <StatCard 
-                  title="Minuto con menos goles" 
-                  value={`Min ${curiosidades.leastGoalsMinute}`} 
-                  subtitle={`${curiosidades.leastGoalsMinuteCount} goles`}
-                  icon={getIcon('stopwatch')} 
-                  color="pink" 
-                />
-              </div>
-            </div>
-
-            {/* Estadísticas por Días de la Semana */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('calendar')} Análisis por Días de la Semana
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-green-600">
-                    {getIcon('victory')} Victorias
-                  </h4>
-                  <div className="grid grid-cols-1 gap-2">
-                    <div className="bg-gradient-to-r from-green-100 to-green-200 rounded-lg p-3 shadow">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-green-800">Mejor día:</span>
-                        <span className="text-sm font-bold text-green-900 flex items-center gap-1">
-                          {getIcon('trophy')} {curiosidades.bestVictoryDay}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-3 shadow">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-green-700">Peor día:</span>
-                        <span className="text-sm font-bold text-green-800">{curiosidades.worstVictoryDay}</span>
-                      </div>
-                    </div>
-                  </div>
+                  <h2 className="title-section mb-2">
+                    ¡Hola Sebichero! {getIcon('celeste')}
+                  </h2>
+                  <p className="text-label text-celeste mb-2">
+                    {getCurrentDateText()}
+                  </p>
+                  <p className="text-body-lg">
+                    Descubre qué partidos se jugaron en esta fecha histórica
+                  </p>
                 </div>
                 
+                <div className="year-selector-editorial mb-8">
+                  <label className="year-label">Busca partidos en una fecha específica</label>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="year-select"
+                  />
+                </div>
+
                 <div>
-                  <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-red-600">
-                    {getIcon('defeat')} Derrotas
-                  </h4>
-                  <div className="grid grid-cols-1 gap-2">
-                    <div className="bg-gradient-to-r from-red-100 to-red-200 rounded-lg p-3 shadow">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-red-800">Más derrotas:</span>
-                        <span className="text-sm font-bold text-red-900">{curiosidades.bestDefeatDay}</span>
+                  {getMatchesForDate(selectedDate).length > 0 ? (
+                    <>
+                      <h3 className="title-card text-center mb-6">
+                        El {formatDate(selectedDate)} se jugaron {getMatchesForDate(selectedDate).length} partidos
+                      </h3>
+                      <div className="grid-matches">
+                        {getMatchesForDate(selectedDate).map((match, index) => {
+                          const matchYear = getYearFromMatch(match);
+                          const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+                            ? parseInt(match.Marcador.split('-')[0]) 
+                            : parseInt(match.Marcador.split('-')[1]);
+                          const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+                            ? parseInt(match.Marcador.split('-')[1]) 
+                            : parseInt(match.Marcador.split('-')[0]);
+                          const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
+
+                          return (
+                            <Card
+                              key={index}
+                              variant={result.toLowerCase()}
+                              isAnimated={true}
+                              animationDelay={index % 5}
+                              className="match-card-premium"
+                            >
+                              <div className="match-header">
+                                <div className="text-label">
+                                  {matchYear || 'TBD'} • {match.Torneo}
+                                </div>
+                                <span className={`badge badge-${result.toLowerCase()}`}>
+                                  {result}
+                                </span>
+                              </div>
+                              <p className="match-teams">
+                                {match["Equipo Local"]} vs {match["Equipo Visita"]}
+                              </p>
+                              <div className="match-score">
+                                {match.Marcador}
+                              </div>
+                              {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
+                                <div className="mt-4 pt-4 border-t border-gray-100">
+                                  <p className="text-label mb-2">Goles SC</p>
+                                  <p className="text-body-sm">{match["Goles (Solo SC)"]}</p>
+                                </div>
+                              )}
+                            </Card>
+                          );
+                        })}
                       </div>
+                    </>
+                  ) : (
+                    <p className="text-body text-center">
+                      No se encontraron partidos de Sporting Cristal para esta fecha.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'temporadas' && (
+              <div className="animate-fadeInUp">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                  <h2 className="title-card mb-4 sm:mb-0">Resultados de Sporting Cristal</h2>
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="year-selector-editorial">
+                      <label className="year-label">Año</label>
+                      <select
+                        value={selectedYear}
+                        onChange={(e) => {
+                          setSelectedYear(e.target.value);
+                          analytics.trackFilter('year', e.target.value);
+                        }}
+                        className="year-select"
+                      >
+                        <option value="">Todos</option>
+                        {years.map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
                     </div>
-                    <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-lg p-3 shadow">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-red-700">Menos derrotas:</span>
-                        <span className="text-sm font-bold text-red-800">{curiosidades.worstDefeatDay}</span>
-                      </div>
+                    <div className="year-selector-editorial">
+                      <label className="year-label">Mes</label>
+                      <select
+                        value={selectedMonth}
+                        onChange={(e) => {
+                          setSelectedMonth(e.target.value);
+                          analytics.trackFilter('month', e.target.value);
+                        }}
+                        className="year-select"
+                      >
+                        <option value="">Todos</option>
+                        {months.map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Estadísticas por Día del Mes */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('statistics')} Análisis por Día del Mes
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard 
-                  title="Día con + Victorias" 
-                  value={curiosidades.bestVictoryDayNumber} 
-                  subtitle={`${curiosidades.bestVictoryDayNumberCount} victorias`}
-                  icon={getIcon('chartUp')} 
-                  color="emerald" 
-                />
-                <StatCard 
-                  title="Día con - Victorias" 
-                  value={curiosidades.worstVictoryDayNumber} 
-                  subtitle={`${curiosidades.worstVictoryDayNumberCount} victorias`}
-                  icon={getIcon('chartDown')} 
-                  color="red" 
-                />
-                <StatCard 
-                  title="Día con + Derrotas" 
-                  value={curiosidades.bestDefeatDayNumber} 
-                  subtitle={`${curiosidades.bestDefeatDayNumberCount} derrotas`}
-                  icon={getIcon('trendDown')} 
-                  color="rose" 
-                />
-                <StatCard 
-                  title="Día con - Derrotas" 
-                  value={curiosidades.worstDefeatDayNumber} 
-                  subtitle={`${curiosidades.worstDefeatDayNumberCount} derrotas`}
-                  icon={getIcon('trendUp')} 
-                  color="teal" 
-                />
-              </div>
-            </div>
+                <div className="grid-matches">
+                  {filteredMatches.map((match, index) => {
+                    const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+                      ? parseInt(match.Marcador.split('-')[0]) 
+                      : parseInt(match.Marcador.split('-')[1]);
+                    const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+                      ? parseInt(match.Marcador.split('-')[1]) 
+                      : parseInt(match.Marcador.split('-')[0]);
+                    const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
 
-            {/* Estadísticas Temporales */}
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('calendar')} Estadísticas Temporales
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard 
-                  title="Mes con más partidos" 
-                  value={curiosidades.bestMonth} 
-                  subtitle={`${curiosidades.bestMonthMatches} partidos`}
-                  icon={getIcon('ball')} 
-                  color="indigo" 
-                />
-                <StatCard 
-                  title="Mes con más victorias" 
-                  value={curiosidades.bestVictoryMonth} 
-                  subtitle={`${curiosidades.bestVictoryMonthCount} victorias`}
-                  icon={getIcon('victory')} 
-                  color="success" 
-                />
-                <StatCard 
-                  title="Mes con más derrotas" 
-                  value={curiosidades.bestDefeatMonth} 
-                  subtitle={`${curiosidades.bestDefeatMonthCount} derrotas`}
-                  icon={getIcon('defeat')} 
-                  color="error" 
-                />
-                <StatCard 
-                  title="Mes con menos derrotas" 
-                  value={curiosidades.worstDefeatMonth} 
-                  subtitle={`${curiosidades.worstDefeatMonthCount} derrotas`}
-                  icon={getIcon('shield')} 
-                  color="purple" 
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Contenido de Análisis por Año */}
-        {activeTab === 'analisis-anual' && (
-          <div className="py-6 animate-fadeInUp">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-              <div className="flex items-center gap-3 mb-4 sm:mb-0">
-                <span className="text-3xl">{getIcon('statistics')}</span>
-                <h2 className="text-2xl font-bold text-gray-900">Análisis por Año de Sporting Cristal</h2>
-              </div>
-              <div className="flex items-center space-x-2">
-                <label htmlFor="tournament-filter" className="text-sm font-medium">Filtro:</label>
-                <select
-                  id="tournament-filter"
-                  value={tournamentFilter}
-                  onChange={(e) => setTournamentFilter(e.target.value)}
-                  className="rounded-md border-gray-300 shadow-sm focus:border-sky-400 focus:ring-sky-400"
-                >
-                  <option value="todos">Todos los torneos</option>
-                  <option value="local">Solo torneos locales</option>
-                  <option value="internacional">Solo torneos internacionales</option>
-                </select>
-              </div>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
-                <thead className="bg-sky-500 text-white">
-                  <tr>
-                    <th className="px-4 py-3 text-left">Año</th>
-                    <th className="px-4 py-3 text-center">PJ</th>
-                    <th className="px-4 py-3 text-center">V</th>
-                    <th className="px-4 py-3 text-center">E</th>
-                    <th className="px-4 py-3 text-center">D</th>
-                    <th className="px-4 py-3 text-center">%V</th>
-                    <th className="px-4 py-3 text-center">GF</th>
-                    <th className="px-4 py-3 text-center">GC</th>
-                    <th className="px-4 py-3 text-center">Dif</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {yearlyStats.map((yearData, index) => {
-                    const goalDifference = yearData.goalsFor - yearData.goalsAgainst;
-                    const isPositiveDiff = goalDifference > 0;
                     return (
-                      <tr key={yearData.year} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                        <td className="px-4 py-3 font-semibold text-sky-600">{yearData.year}</td>
-                        <td className="px-4 py-3 text-center">{yearData.total}</td>
-                        <td className="px-4 py-3 text-center text-green-600 font-semibold">{yearData.victories}</td>
-                        <td className="px-4 py-3 text-center text-yellow-600 font-semibold">{yearData.draws}</td>
-                        <td className="px-4 py-3 text-center text-red-600 font-semibold">{yearData.defeats}</td>
-                        <td className="px-4 py-3 text-center font-semibold">{yearData.winPercentage}%</td>
-                        <td className="px-4 py-3 text-center">{yearData.goalsFor}</td>
-                        <td className="px-4 py-3 text-center">{yearData.goalsAgainst}</td>
-                        <td className={`px-4 py-3 text-center font-semibold ${
-                          isPositiveDiff ? 'text-green-600' : goalDifference < 0 ? 'text-red-600' : 'text-gray-600'
-                        }`}>
-                          {goalDifference > 0 ? '+' : ''}{goalDifference}
-                        </td>
-                      </tr>
+                      <Card
+                        key={index}
+                        variant={result.toLowerCase()}
+                        isAnimated={true}
+                        animationDelay={index % 5}
+                        className="match-card-premium"
+                      >
+                        <div className="match-header">
+                          <div className="text-label">
+                            {match.Fecha === 'TBD' ? 'Fecha TBD' : formatDate(match.Fecha)}
+                          </div>
+                          <span className={`badge badge-${result.toLowerCase()}`}>
+                            {result}
+                          </span>
+                        </div>
+                        <p className="match-teams">
+                          {match["Equipo Local"]} vs {match["Equipo Visita"]}
+                        </p>
+                        <div className="match-score">
+                          {match.Marcador}
+                        </div>
+                        <p className="match-meta text-center mt-2">{match.Torneo}</p>
+                        
+                        {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
+                          <div className="mt-4 pt-4 border-t border-gray-100">
+                            <p className="text-label mb-2">Goles SC</p>
+                            <p className="text-body-sm">{match["Goles (Solo SC)"]}</p>
+                          </div>
+                        )}
+                      </Card>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Gráfico simple de tendencias */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-sky-600">
-                {getIcon('chartUp')} Tendencias por Año
-              </h3>
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  
-                  {/* Victorias por año */}
-                  <div>
-                    <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-green-600">
-                      {getIcon('victory')} Victorias
-                    </h4>
-                    <div className="space-y-2">
-                      {yearlyStats.map(yearData => (
-                        <div key={`v-${yearData.year}`} className="flex items-center">
-                          <span className="w-12 text-sm">{yearData.year}</span>
-                          <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2 overflow-hidden">
-                            <div 
-                              className="bg-green-500 h-4 rounded-full transition-all duration-500"
-                              style={{
-                                width: `${Math.max(5, (yearData.victories / Math.max(...yearlyStats.map(y => y.victories))) * 100)}%`
-                              }}
-                            ></div>
-                          </div>
-                          <span className="w-8 text-sm text-green-600 font-semibold">{yearData.victories}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Empates por año */}
-                  <div>
-                    <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-yellow-600">
-                      {getIcon('draw')} Empates
-                    </h4>
-                    <div className="space-y-2">
-                      {yearlyStats.map(yearData => (
-                        <div key={`e-${yearData.year}`} className="flex items-center">
-                          <span className="w-12 text-sm">{yearData.year}</span>
-                          <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2 overflow-hidden">
-                            <div 
-                              className="bg-yellow-500 h-4 rounded-full transition-all duration-500"
-                              style={{
-                                width: `${Math.max(5, (yearData.draws / Math.max(...yearlyStats.map(y => y.draws))) * 100)}%`
-                              }}
-                            ></div>
-                          </div>
-                          <span className="w-8 text-sm text-yellow-600 font-semibold">{yearData.draws}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Derrotas por año */}
-                  <div>
-                    <h4 className="text-lg font-semibold mb-3 flex items-center gap-2 text-red-600">
-                      {getIcon('defeat')} Derrotas
-                    </h4>
-                    <div className="space-y-2">
-                      {yearlyStats.map(yearData => (
-                        <div key={`d-${yearData.year}`} className="flex items-center">
-                          <span className="w-12 text-sm">{yearData.year}</span>
-                          <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2 overflow-hidden">
-                            <div 
-                              className="bg-red-500 h-4 rounded-full transition-all duration-500"
-                              style={{
-                                width: `${Math.max(5, (yearData.defeats / Math.max(...yearlyStats.map(y => y.defeats))) * 100)}%`
-                              }}
-                            ></div>
-                          </div>
-                          <span className="w-8 text-sm text-red-600 font-semibold">{yearData.defeats}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                 </div>
               </div>
-            </div>
+            )}
+
+            {activeTab === 'minutos' && (
+              <div className="animate-fadeInUp">
+                <h2 className="title-section mb-6">Goles por Minuto</h2>
+                
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
+                  <label htmlFor="minute-input" className="text-body">
+                    Busca goles anotados en un minuto específico:
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="minute-input"
+                      type="number"
+                      min="1"
+                      max="120"
+                      placeholder="Ej: 15"
+                      value={selectedMinute}
+                      onChange={(e) => setSelectedMinute(e.target.value)}
+                      className="form-input w-24"
+                      aria-label="Minuto del partido"
+                    />
+                    <button
+                      onClick={() => {}}
+                      className="btn btn-primary"
+                      aria-label="Buscar goles en este minuto"
+                    >
+                      Buscar
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  {selectedMinute && getGoalsForMinute(selectedMinute).length > 0 ? (
+                    <>
+                      <h3 className="title-card text-center mb-6">
+                        En el minuto {selectedMinute} se anotaron {getGoalsForMinute(selectedMinute).length} goles
+                      </h3>
+                      <div className="grid-matches">
+                        {getGoalsForMinute(selectedMinute).map((goal, index) => {
+                          const scGoals = goal.equipoLocal === "Sporting Cristal" 
+                            ? parseInt(goal.marcador.split('-')[0]) 
+                            : parseInt(goal.marcador.split('-')[1]);
+                          const opponentGoals = goal.equipoLocal === "Sporting Cristal" 
+                            ? parseInt(goal.marcador.split('-')[1]) 
+                            : parseInt(goal.marcador.split('-')[0]);
+                          const result = scGoals > opponentGoals ? 'Victoria' : (scGoals < opponentGoals ? 'Derrota' : 'Empate');
+
+                          return (
+                            <Card
+                              key={index}
+                              variant={result.toLowerCase()}
+                              isAnimated={true}
+                              animationDelay={index % 5}
+                              className="match-card-premium"
+                            >
+                              <div className="match-header">
+                                <div className="text-label">
+                                  {goal.año} • {goal.torneo}
+                                </div>
+                                <span className={`badge badge-${result.toLowerCase()}`}>
+                                  {result}
+                                </span>
+                              </div>
+                              <p className="match-teams">
+                                {goal.equipoLocal} vs {goal.equipoVisita}
+                              </p>
+                              <div className="match-score">
+                                {goal.marcador}
+                              </div>
+                              {goal.goles && goal.goles !== '-' && (
+                                <div className="mt-4 pt-4 border-t border-gray-100">
+                                  <p className="text-label mb-2">Goles SC</p>
+                                  <p className="text-body-sm">{goal.goles}</p>
+                                </div>
+                              )}
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    </>
+                  ) : selectedMinute ? (
+                    <p className="text-body text-center">
+                      No se encontraron goles de Sporting Cristal en el minuto {selectedMinute}.
+                    </p>
+                  ) : (
+                    <p className="text-body text-center">
+                      Ingresa un minuto para buscar goles.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'curiosidades' && (
+              <div className="animate-fadeInUp">
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="text-3xl">{getIcon('chart')}</span>
+                  <h2 className="title-section">Datos Curiosos</h2>
+                </div>                
+                <section className="editorial-card mb-8">
+                  <h3 className="editorial-card-title">{getIcon('chart')} Estadísticas Generales</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <StatCard 
+                      title="Total Partidos" 
+                      value={curiosidades.totalMatches} 
+                      icon={getIcon('ball')} 
+                      color="primary" 
+                    />
+                    <StatCard 
+                      title="Victorias" 
+                      value={curiosidades.victories} 
+                      subtitle={`${curiosidades.winPercentage}%`}
+                      icon={getIcon('victory')} 
+                      color="success" 
+                    />
+                    <StatCard 
+                      title="Derrotas" 
+                      value={curiosidades.defeats} 
+                      subtitle={`${curiosidades.defeatPercentage}%`}
+                      icon={getIcon('defeat')} 
+                      color="error" 
+                    />
+                    <StatCard 
+                      title="Empates" 
+                      value={curiosidades.draws} 
+                      subtitle={`${curiosidades.drawPercentage}%`}
+                      icon={getIcon('draw')} 
+                      color="warning" 
+                    />
+                  </div>
+                </section>
+
+                <section className="editorial-card mb-8">
+                  <h3 className="editorial-card-title">{getIcon('goal')} Estadísticas de Goles</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <StatCard 
+                      title="Promedio GF" 
+                      value={curiosidades.averageGoals} 
+                      subtitle="por partido"
+                      icon={getIcon('chartUp')} 
+                      color="blue" 
+                    />
+                    <StatCard 
+                      title="Máxima Goleada" 
+                      value={curiosidades.maxGoals} 
+                      subtitle="goles"
+                      icon={getIcon('trophy')} 
+                      color="emerald" 
+                    />
+                    <StatCard 
+                      title="Promedio GC" 
+                      value={curiosidades.averageGoalsAgainst} 
+                      subtitle="por partido"
+                      icon={getIcon('chartDown')} 
+                      color="orange" 
+                    />
+                    <StatCard 
+                      title="Marcador más común" 
+                      value={curiosidades.mostCommonScore} 
+                      icon={getIcon('data')} 
+                      color="cyan" 
+                    />
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {activeTab === 'analisis-anual' && (
+              <div className="animate-fadeInUp">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                  <div className="flex items-center gap-3 mb-4 sm:mb-0">
+                    <span className="text-3xl">{getIcon('statistics')}</span>
+                    <h2 className="title-section">Análisis por Año</h2>
+                  </div>
+                  <div className="year-selector-editorial">
+                    <label className="year-label">Filtro de Torneo</label>
+                    <select
+                      value={tournamentFilter}
+                      onChange={(e) => setTournamentFilter(e.target.value)}
+                      className="year-select"
+                    >
+                      <option value="todos">Todos los torneos</option>
+                      <option value="local">Solo locales</option>
+                      <option value="internacional">Solo internacionales</option>
+                    </select>
+                  </div>
+                </div>                
+                <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm relative">
+                  {/* Indicador de scroll en móvil */}
+                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-100/50 to-transparent pointer-events-none md:hidden z-10" />
+                  
+                  <table className="w-full min-w-[640px]">
+                    <caption className="sr-only">
+                      Estadísticas anuales de Sporting Cristal - Partidos jugados, ganados, empatados, perdidos, porcentaje de victorias, goles a favor y en contra
+                    </caption>
+                    
+                    <thead>
+                      <tr className="bg-biscay text-white">
+                        <th scope="col" className="px-4 py-4 text-left font-semibold rounded-tl-xl">
+                          <span className="cursor-help" title="Año de la temporada">Año</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold">
+                          <span className="cursor-help" title="Partidos Jugados">PJ</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold">
+                          <span className="cursor-help" title="Partidos Ganados">G</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold">
+                          <span className="cursor-help" title="Partidos Empatados">E</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold">
+                          <span className="cursor-help" title="Partidos Perdidos">P</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold">
+                          <span className="cursor-help" title="Porcentaje de Victorias">% G</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold">
+                          <span className="cursor-help" title="Goles a Favor">GF</span>
+                        </th>
+                        <th scope="col" className="px-4 py-4 text-center font-semibold rounded-tr-xl">
+                          <span className="cursor-help" title="Goles en Contra">GC</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      {yearlyStats.map((yearData) => (
+                        <tr 
+                          key={yearData.year}
+                          className="border-b border-gray-200 bg-white hover:bg-gray-50 transition-all duration-200 ease-out cursor-pointer focus-within:ring-2 focus-within:ring-celeste focus-within:ring-inset"
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Ver detalles del año ${yearData.year}: ${yearData.total} partidos, ${yearData.victories} victorias`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setSelectedYear(yearData.year.toString());
+                              setActiveTab('temporadas');
+                            }
+                          }}
+                          onClick={() => {
+                            setSelectedYear(yearData.year.toString());
+                            setActiveTab('temporadas');
+                          }}
+                        >
+                          <td className="px-4 py-4 font-bold text-biscay">{yearData.year}</td>
+                          <td className="px-4 py-4 text-center font-medium text-gray-700">{yearData.total}</td>
+                          <td className="px-4 py-4 text-center">
+                            <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-1 text-emerald-700 font-bold bg-emerald-50 rounded-lg">
+                              {yearData.victories}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 text-center">
+                            <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-1 text-amber-700 font-semibold bg-amber-50 rounded-lg">
+                              {yearData.draws}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 text-center">
+                            <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-1 text-red-700 font-semibold bg-red-50 rounded-lg">
+                              {yearData.defeats}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 text-center">
+                            <span className="inline-flex items-center justify-center min-w-[3rem] px-3 py-1 text-white font-bold bg-celeste rounded-lg">
+                              {yearData.winPercentage}%
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 text-center font-medium text-gray-700">{yearData.goalsFor}</td>
+                          <td className="px-4 py-4 text-center font-medium text-gray-700">{yearData.goalsAgainst}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'rivales' && (
+              <RivalHistory data={data} />
+            )}
+
+            {activeTab === 'trivia' && (
+              <Trivia />
+            )}
           </div>
-        )}
+        </Card>
+      </main>
 
-        {/* Contenido de Historial vs Rivales */}
-        {activeTab === 'rivales' && (
-          <RivalHistory data={data} />
-        )}
-
-        {/* Contenido de Trivia */}
-        {activeTab === 'trivia' && (
-          <Trivia />
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Componente StatCard reutilizable
-function StatCard({ title, value, subtitle, icon, color }) {
-  const colorSchemes = {
-    sky: 'from-sky-100 to-sky-200 text-sky-800',
-    success: 'from-green-100 to-green-200 text-green-800',
-    error: 'from-red-100 to-red-200 text-red-800',
-    warning: 'from-yellow-100 to-yellow-200 text-yellow-800',
-    blue: 'from-blue-100 to-blue-200 text-blue-800',
-    emerald: 'from-emerald-100 to-emerald-200 text-emerald-800',
-    orange: 'from-orange-100 to-orange-200 text-orange-800',
-    cyan: 'from-cyan-100 to-cyan-200 text-cyan-800',
-    violet: 'from-violet-100 to-violet-200 text-violet-800',
-    pink: 'from-pink-100 to-pink-200 text-pink-800',
-    indigo: 'from-indigo-100 to-indigo-200 text-indigo-800',
-    purple: 'from-purple-100 to-purple-200 text-purple-800',
-    teal: 'from-teal-100 to-teal-200 text-teal-800',
-    rose: 'from-rose-100 to-rose-200 text-rose-800',
-  };
-  
-  return (
-    <div className={`bg-gradient-to-br ${colorSchemes[color]} rounded-xl p-4 text-center shadow-lg animate-scaleIn`}>
-      <div className="text-2xl mb-1">{icon}</div>
-      <h4 className="text-xs font-bold uppercase tracking-wider opacity-75 mb-1">{title}</h4>
-      <p className="text-2xl font-bold">{value}</p>
-      {subtitle && <p className="text-xs opacity-75">{subtitle}</p>}
+      <footer className="app-footer">
+        <p>Cristal Archive 2026 — Editorial Luxury Design System</p>
+      </footer>
     </div>
   );
 }

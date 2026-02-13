@@ -1,12 +1,15 @@
 /**
- * ╔══════════════════════════════════════════════════════════════╗
- * ║         COMPONENTES UI PREMIUM 2026                          ║
- * ║         Sporting Cristal Stats Viewer                        ║
- * ╚══════════════════════════════════════════════════════════════╝
+ * ╔══════════════════════════════════════════════════════════════════╗
+ * ║         UI COMPONENTS INDEX                                    ║
+ * ║         Cristal Archive 2026                                   ║
+ * ╚══════════════════════════════════════════════════════════════════╝
  */
 
-// Botones
+// Buttons
 export { default as Button, IconButton, ButtonGroup, ToggleButton } from './Button';
 
-// Tarjetas
+// Cards
 export { default as Card, MatchCard, StatCard, TriviaCard } from './Card';
+
+// Badges
+export { default as Badge } from './Badge';
