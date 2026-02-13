@@ -341,7 +341,7 @@ function App() {
     { id: 'curiosidades', label: 'Datos Curiosos' },
     { id: 'analisis-anual', label: 'Analisis por Ano' },
     { id: 'rivales', label: 'Historial vs Rivales' },
-    { id: 'trivia', label: 'Trivia Celeste' },
+    // { id: 'trivia', label: 'Trivia Celeste' }, // Oculto temporalmente
   ];
 
   return (
@@ -686,7 +686,7 @@ function App() {
         )}
 
         {activeTab === 'rivales' && <RivalHistory data={data} />}
-        {activeTab === 'trivia' && <Trivia />}
+        {/* {activeTab === 'trivia' && <Trivia />} // Modulo oculto temporalmente */}
       </main>
 
       {/* Footer */}
