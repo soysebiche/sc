@@ -54,7 +54,7 @@ Se ha implementado un sistema **SIN autenticación** que protege los archivos JS
 ## 🔍 Verificación
 
 ### ✅ **Datos Protegidos**
-- Intenta acceder a: `https://tu-app.vercel.app/data/historico_completo_sc.json`
+- Intenta acceder a: `https://tu-app.vercel.app/src/data/historico_completo_sc.json`
 - Debería dar error 404 o no encontrar el archivo
 
 ### ✅ **API Funcionando**

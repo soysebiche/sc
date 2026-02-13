@@ -1,7 +1,7 @@
 // Script para agregar campos Condicion y Estadio a partidos 2000-2025
 const fs = require('fs');
 
-const historicoFile = './data/historico_completo_sc.json';
+const historicoFile = './src/data/historico_completo_sc.json';
 
 console.log('📖 Leyendo archivo histórico...\n');
 

@@ -3,7 +3,7 @@ const fs = require('fs');
 
 // Leer archivo matches-1992.json
 const matchesFile = './matches-1992.json';
-const historicoFile = './data/historico_completo_sc.json';
+const historicoFile = './src/data/historico_completo_sc.json';
 
 console.log('📖 Leyendo archivos...\n');
 

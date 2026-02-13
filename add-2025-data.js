@@ -171,7 +171,7 @@ function main() {
   
   // Agregar a historico_completo_sc.json (siempre)
   filesToUpdate.push({
-    path: './data/historico_completo_sc.json',
+    path: './src/data/historico_completo_sc.json',
     data: data2025,
     type: 'completo'
   });
@@ -179,7 +179,7 @@ function main() {
   // Agregar a historico_conmebol_sc.json (si hay partidos de Conmebol)
   if (conmebolMatches.length > 0) {
     filesToUpdate.push({
-      path: './data/historico_conmebol_sc.json',
+      path: './src/data/historico_conmebol_sc.json',
       data: conmebolMatches,
       type: 'conmebol'
     });
@@ -188,7 +188,7 @@ function main() {
   // Agregar a historico_inca_sc.json (si hay partidos de Copa del Inca)
   if (incaMatches.length > 0) {
     filesToUpdate.push({
-      path: './data/historico_inca_sc.json',
+      path: './src/data/historico_inca_sc.json',
       data: incaMatches,
       type: 'inca'
     });

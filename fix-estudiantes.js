@@ -58,9 +58,9 @@ function fixEstudiantes(filePath) {
 
 // Procesar todos los archivos
 const files = [
-  './data/historico_completo_sc.json',
-  './data/historico_conmebol_sc.json',
-  './data/historico_inca_sc.json'
+  './src/data/historico_completo_sc.json',
+  './src/data/historico_conmebol_sc.json',
+  './src/data/historico_inca_sc.json'
 ];
 
 let totalChanges = 0;

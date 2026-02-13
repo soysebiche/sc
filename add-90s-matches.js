@@ -332,9 +332,9 @@ function addMatchesToJSON(newMatches) {
   console.log('\n📝 Agregando partidos a los archivos JSON...\n');
   
   const files = {
-    completo: './data/historico_completo_sc.json',
-    conmebol: './data/historico_conmebol_sc.json',
-    inca: './data/historico_inca_sc.json'
+    completo: './src/data/historico_completo_sc.json',
+    conmebol: './src/data/historico_conmebol_sc.json',
+    inca: './src/data/historico_inca_sc.json'
   };
   
   // Separar partidos por tipo

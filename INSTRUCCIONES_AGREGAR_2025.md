@@ -133,7 +133,7 @@ Una vez que los datos estén agregados:
 
 - `data-2025-example.json`: Ejemplo de formato
 - `add-2025-data.js`: Script que procesa los datos
-- `data/historico_completo_sc.json`: Archivo principal (todos los partidos)
+- `src/data/historico_completo_sc.json`: Archivo principal (todos los partidos)
 
 ---
 

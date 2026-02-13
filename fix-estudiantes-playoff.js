@@ -2,7 +2,7 @@ const fs = require('fs');
 
 console.log('🔧 Corrigiendo partidos de Playoff Libertadores 2001...\n');
 
-const filePath = './data/historico_completo_sc.json';
+const filePath = './src/data/historico_completo_sc.json';
 const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 let changesCount = 0;
 

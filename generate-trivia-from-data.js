@@ -1,7 +1,7 @@
 // Script para generar preguntas de trivia basadas en datos reales del histórico
 const fs = require('fs');
 
-const historicoFile = './data/historico_completo_sc.json';
+const historicoFile = './src/data/historico_completo_sc.json';
 const historicoData = JSON.parse(fs.readFileSync(historicoFile, 'utf8'));
 
 // Analizar datos

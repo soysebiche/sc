@@ -1,9 +1,9 @@
 const fs = require('fs');
 
 // Leer los archivos JSON
-const completoData = JSON.parse(fs.readFileSync('./data/historico_completo_sc.json', 'utf8'));
-const conmebolData = JSON.parse(fs.readFileSync('./data/historico_conmebol_sc.json', 'utf8'));
-const incaData = JSON.parse(fs.readFileSync('./data/historico_inca_sc.json', 'utf8'));
+const completoData = JSON.parse(fs.readFileSync('./src/data/historico_completo_sc.json', 'utf8'));
+const conmebolData = JSON.parse(fs.readFileSync('./src/data/historico_conmebol_sc.json', 'utf8'));
+const incaData = JSON.parse(fs.readFileSync('./src/data/historico_inca_sc.json', 'utf8'));
 
 // Combinar todos los datos
 const allData = [...completoData, ...conmebolData, ...incaData];

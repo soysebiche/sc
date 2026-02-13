@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 // Leer el archivo completo
-const filePath = './data/historico_completo_sc.json';
+const filePath = './src/data/historico_completo_sc.json';
 const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 console.log(`📊 Total de partidos antes: ${data.length}`);
