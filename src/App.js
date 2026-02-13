@@ -286,44 +286,44 @@ function App() {
       }
     });
     
-    // Country stats (international only)
+    // Country stats (international only - exclude Peru)
     const intlCountries = Object.keys(countryStats).filter(c => c !== 'Perú');
     
-    // Best country (most wins)
+    // Best country (most wins) - only international
     let bestCountry = '';
     let maxCountryWins = 0;
     Object.entries(countryStats).forEach(([country, stats]) => {
-      if (stats.ganados > maxCountryWins) {
+      if (country !== 'Perú' && stats.ganados > maxCountryWins) {
         maxCountryWins = stats.ganados;
         bestCountry = country;
       }
     });
     
-    // Worst country (most losses)
+    // Worst country (most losses) - only international
     let worstCountry = '';
     let maxCountryLosses = 0;
     Object.entries(countryStats).forEach(([country, stats]) => {
-      if (stats.perdidos > maxCountryLosses) {
+      if (country !== 'Perú' && stats.perdidos > maxCountryLosses) {
         maxCountryLosses = stats.perdidos;
         worstCountry = country;
       }
     });
     
-    // Most played country
+    // Most played country - only international
     let mostPlayedCountry = '';
     let maxCountryMatches = 0;
     Object.entries(countryStats).forEach(([country, stats]) => {
-      if (stats.jugados > maxCountryMatches) {
+      if (country !== 'Perú' && stats.jugados > maxCountryMatches) {
         maxCountryMatches = stats.jugados;
         mostPlayedCountry = country;
       }
     });
     
-    // Least wins (among countries with matches)
+    // Least wins (among countries with matches) - only international
     let leastCountryWins = '';
     let minCountryWins = Infinity;
     Object.entries(countryStats).forEach(([country, stats]) => {
-      if (stats.ganados > 0 && stats.ganados < minCountryWins) {
+      if (country !== 'Perú' && stats.ganados > 0 && stats.ganados < minCountryWins) {
         minCountryWins = stats.ganados;
         leastCountryWins = country;
       }
@@ -333,11 +333,11 @@ function App() {
       minCountryWins = 0;
     }
     
-    // Least losses (among countries with matches)
+    // Least losses (among countries with matches) - only international
     let leastCountryLosses = '';
     let minCountryLosses = Infinity;
     Object.entries(countryStats).forEach(([country, stats]) => {
-      if (stats.perdidos > 0 && stats.perdidos < minCountryLosses) {
+      if (country !== 'Perú' && stats.perdidos > 0 && stats.perdidos < minCountryLosses) {
         minCountryLosses = stats.perdidos;
         leastCountryLosses = country;
       }
@@ -1193,27 +1193,6 @@ function App() {
                 <p className="text-sm text-gray-600">Países Diferentes</p>
                 <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.totalIntlCountries}</p>
                 <p className="text-sm text-gray-500">en partidos internacionales</p>
-              </Card>
-            </div>
-
-            {/* Years and Tournaments */}
-            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Temporadas y Torneos</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Card className="p-4 text-center">
-                <p className="text-sm text-gray-600">Años Jugados</p>
-                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.totalYears}</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-sm text-gray-600">Años con Victorias</p>
-                <p className="text-2xl font-bold text-green-600">{curiosidades.yearsWithWins}</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-sm text-gray-600">Años con Derrotas</p>
-                <p className="text-2xl font-bold text-red-600">{curiosidades.yearsWithLosses}</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-sm text-gray-600">Torneos Diferentes</p>
-                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.totalTournaments}</p>
               </Card>
             </div>
           </div>
