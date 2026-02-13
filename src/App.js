@@ -667,6 +667,30 @@ function App() {
                       <span>Derrotas ({defeats})</span>
                     </div>
                   </div>
+
+                  {/* Titulo o subcampenato del ano */}
+                  {selectedYear && (() => {
+                    const titulos = [1956, 1961, 1968, 1970, 1972, 1979, 1980, 1983, 1988, 1991, 1994, 1995, 1996, 2002, 2005, 2012, 2014, 2016, 2018, 2020];
+                    const subCampeones = [1962, 1963, 1967, 1973, 1977, 1989, 1992, 1997, 1998, 2000, 2003, 2004, 2015, 2021, 2024];
+                    const bicentenario = [2021];
+                    const libertadoresSub = [1997];
+                    
+                    const yearNum = parseInt(selectedYear);
+                    let title = '';
+                    if (titulos.includes(yearNum)) title = '🏆 Campeon Nacional';
+                    else if (bicentenario.includes(yearNum)) title = '🥇 Campeon Copa Bicentenario';
+                    else if (libertadoresSub.includes(yearNum)) title = '🌎 Subampeon Copa Libertadores';
+                    else if (subCampeones.includes(yearNum)) title = '🥈 Subampeon Nacional';
+                    
+                    if (title) {
+                      return (
+                        <div className="mt-4 pt-4 border-t-2 border-yellow-400">
+                          <p className="text-lg font-bold text-center text-yellow-700">{title}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </Card>
               );
             })()}
