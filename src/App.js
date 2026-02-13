@@ -542,7 +542,24 @@ function App() {
                 className="px-4 py-2 border rounded-lg"
               >
                 <option value="">Todos los anos</option>
-                {years.map(year => <option key={year} value={year}>{year}</option>)}
+                {years.map(year => {
+                  // Títulos nacionales (20)
+                  const titulos = [1956, 1961, 1968, 1970, 1972, 1979, 1980, 1983, 1988, 1991, 1994, 1995, 1996, 2002, 2005, 2012, 2014, 2016, 2018, 2020];
+                  // Subcampeonatos nacionales (15)
+                  const subCampeones = [1962, 1963, 1967, 1973, 1977, 1989, 1992, 1997, 1998, 2000, 2003, 2004, 2015, 2021, 2024];
+                  // Copa Bicentenario (1)
+                  const bicentenario = [2021];
+                  // Libertadores subcampeón (1)
+                  const libertadoresSub = [1997];
+                  
+                  let badge = '';
+                  if (titulos.includes(year)) badge = ' 🏆';
+                  else if (bicentenario.includes(year)) badge = ' 🥇';
+                  else if (libertadoresSub.includes(year)) badge = ' 🌎';
+                  else if (subCampeones.includes(year)) badge = ' 🥈';
+                  
+                  return <option key={year} value={year}>{year}{badge}</option>;
+                })}
               </select>
               
               <select
