@@ -357,7 +357,7 @@ function App() {
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex overflow-x-auto">
+          <div className="flex justify-center overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
