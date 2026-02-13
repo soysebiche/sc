@@ -182,8 +182,6 @@ function App() {
   }, [data, tournamentFilter, yearSortConfig]);
 
   const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { month: 'long', day: 'numeric' });
-  const getDayName = () => { const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']; return days[new Date().getDay()]; };
-  const getCurrentDateText = () => { const today = new Date(); const month = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][today.getMonth()]; return `${getDayName()} ${today.getDate()} de ${month}`; };
 
   const filteredMatches = data.filter(match => {
     const matchYear = getYearFromMatch(match);
@@ -200,8 +198,6 @@ function App() {
     }
     return yearMatch && monthMatch;
   }).sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
-
-  const todayMatch = data.find(m => m.Fecha === selectedDate);
 
   // Find all matches on the same day/month (any year)
   const getMatchesForDayMonth = (dateStr) => {
