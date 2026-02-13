@@ -1,78 +1,32 @@
-// Datos locales para desarrollo
+// Service para cargar datos históricos de Sporting Cristal
 import completoData from '../data/historico_completo_sc.json';
 import incaData from '../data/historico_inca_sc.json';
 import conmebolData from '../data/historico_conmebol_sc.json';
 
 class VercelDataService {
   constructor() {
-    this.apiBaseUrl = '/api/data';
-    this.isDevelopment = process.env.NODE_ENV === 'development';
+    // Los datos se cargan desde archivos JSON locales incluidos en el bundle
   }
 
   // Obtener datos de Conmebol
   async fetchConmebolData() {
-    // En desarrollo, usar datos locales
-    if (this.isDevelopment) {
-      console.log('📦 Usando datos locales de Conmebol');
-      return conmebolData;
-    }
-
-    try {
-      const response = await fetch(`${this.apiBaseUrl}?type=conmebol`);
-
-      if (response.ok) {
-        return await response.json();
-      } else {
-        throw new Error('Error al obtener datos de Conmebol');
-      }
-    } catch (error) {
-      console.error('Error fetching Conmebol data:', error);
-      throw error;
-    }
+    // Usar datos locales siempre (archivos JSON incluidos en el bundle)
+    console.log('📦 Usando datos locales de Conmebol');
+    return conmebolData;
   }
 
   // Obtener datos de Copa del Inca
   async fetchIncaData() {
-    // En desarrollo, usar datos locales
-    if (this.isDevelopment) {
-      console.log('📦 Usando datos locales de Inca');
-      return incaData;
-    }
-
-    try {
-      const response = await fetch(`${this.apiBaseUrl}?type=inca`);
-
-      if (response.ok) {
-        return await response.json();
-      } else {
-        throw new Error('Error al obtener datos de Copa del Inca');
-      }
-    } catch (error) {
-      console.error('Error fetching Inca data:', error);
-      throw error;
-    }
+    // Usar datos locales siempre (archivos JSON incluidos en el bundle)
+    console.log('📦 Usando datos locales de Inca');
+    return incaData;
   }
 
   // Obtener datos completos
   async fetchCompleteData() {
-    // En desarrollo, usar datos locales
-    if (this.isDevelopment) {
-      console.log('📦 Usando datos locales completos');
-      return completoData;
-    }
-
-    try {
-      const response = await fetch(`${this.apiBaseUrl}?type=completo`);
-
-      if (response.ok) {
-        return await response.json();
-      } else {
-        throw new Error('Error al obtener datos completos');
-      }
-    } catch (error) {
-      console.error('Error fetching complete data:', error);
-      throw error;
-    }
+    // Usar datos locales siempre (archivos JSON incluidos en el bundle)
+    console.log('📦 Usando datos locales completos');
+    return completoData;
   }
 
   // Obtener todos los tipos de datos
