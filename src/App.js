@@ -12,7 +12,6 @@ function App() {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [activeTab, setActiveTab] = useState('efemerides');
   const [selectedMinute, setSelectedMinute] = useState('');
-  const [yearlyStats, setYearlyStats] = useState([]);
   const [tournamentFilter, setTournamentFilter] = useState('todos');
 
   const getYearFromMatch = (match) => {
@@ -169,7 +168,7 @@ function App() {
       }));
   };
 
-  // Inicializar años y meses desde los datos iniciales
+  // Inicializar estados
   const uniqueYears = getUniqueYears(initialData);
   const [years] = useState(uniqueYears);
   const [months] = useState(getUniqueMonths(initialData));
@@ -181,12 +180,13 @@ function App() {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   });
-  const [curiosidades] = useState(calculateCuriosidades(initialData));
+  const [curiosidades, setCuriosidades] = useState({});
+  const [yearlyStats, setYearlyStats] = useState([]);
 
+  // Calcular stats al montar el componente y cuando cambie el filtro
   useEffect(() => {
-    if (data.length > 0) {
-      setYearlyStats(calculateYearlyStats(data, tournamentFilter));
-    }
+    setCuriosidades(calculateCuriosidades(data));
+    setYearlyStats(calculateYearlyStats(data, tournamentFilter));
   }, [data, tournamentFilter]);
 
   // Datos ya inicializados, sin loading
