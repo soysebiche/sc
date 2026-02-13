@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
 // import Trivia from './components/Trivia'; // Oculto temporalmente
@@ -8,7 +8,7 @@ import { Card } from './components/ui';
 const initialData = vercelDataService.fetchAllData().completo;
 
 function App() {
-  const [data, setData] = useState(initialData);
+  const [data] = useState(initialData);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [activeTab, setActiveTab] = useState('efemerides');
   const [selectedMinute, setSelectedMinute] = useState('');
@@ -24,14 +24,6 @@ function App() {
       return !isNaN(date.getTime()) ? date.getFullYear() : null;
     }
     return null;
-  };
-
-  const getDateForSorting = (match) => {
-    if (match.Fecha && match.Fecha !== 'TBD') {
-      const date = new Date(match.Fecha);
-      return !isNaN(date.getTime()) ? date : new Date(0);
-    }
-    return new Date(0);
   };
 
   // Función para obtener años únicos
@@ -59,8 +51,8 @@ function App() {
   };
 
   // Inicializar años y meses desde los datos iniciales
-  const [years, setYears] = useState(() => getUniqueYears(initialData));
-  const [months, setMonths] = useState(() => getUniqueMonths(initialData));
+  const [years] = useState(() => getUniqueYears(initialData));
+  const [months] = useState(() => getUniqueMonths(initialData));
   const [selectedYear, setSelectedYear] = useState(() => {
     const uniqueYears = getUniqueYears(initialData);
     return uniqueYears.length > 0 ? uniqueYears[0].toString() : '';
@@ -72,7 +64,7 @@ function App() {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   });
-  const [curiosidades, setCuriosidades] = useState(() => calculateCuriosidades(initialData));
+  const [curiosidades] = useState(() => calculateCuriosidades(initialData));
 
   useEffect(() => {
     if (data.length > 0) {
