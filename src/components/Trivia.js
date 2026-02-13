@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getRandomQuestion, getQuestionsByDecade } from '../data/triviaQuestions';
 import { getIcon } from '../utils/icons';
 import { Card } from './ui';
@@ -24,11 +24,7 @@ function Trivia() {
     'difícil': 'badge-loss',
   };
 
-  useEffect(() => {
-    loadNewQuestion();
-  }, [selectedDecade]);
-
-  const loadNewQuestion = () => {
+  const loadNewQuestion = useCallback(() => {
     setIsLoading(true);
     setShowAnswer(false);
     
@@ -38,7 +34,11 @@ function Trivia() {
       setQuestionCount(prev => prev + 1);
       setIsLoading(false);
     }, 300);
-  };
+  }, [selectedDecade]);
+
+  useEffect(() => {
+    loadNewQuestion();
+  }, [loadNewQuestion]);
 
   const handleDecadeChange = (decade) => {
     setSelectedDecade(decade);
