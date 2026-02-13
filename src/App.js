@@ -519,6 +519,12 @@ function App() {
                     <h3 className="font-semibold text-lg">{match["Equipo Local"]} vs {match["Equipo Visita"]}</h3>
                     <p className="text-2xl font-bold text-[#3CBEEF] text-center my-2">{match.Marcador}</p>
                     <p className="text-sm text-gray-600">{match.Torneo}</p>
+                    {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <p className="text-xs text-gray-500 mb-1">Goles SC:</p>
+                        <p className="text-sm font-medium text-gray-700">{match["Goles (Solo SC)"]}</p>
+                      </div>
+                    )}
                   </Card>
                 );
               })}
@@ -573,6 +579,12 @@ function App() {
                     <h3 className="font-semibold">{match["Equipo Local"]} vs {match["Equipo Visita"]}</h3>
                     <p className="text-xl font-bold text-[#3CBEEF] text-center my-2">{match.Marcador}</p>
                     <p className="text-sm text-gray-600">{match.Torneo}</p>
+                    {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <p className="text-xs text-gray-500 mb-1">Goles SC:</p>
+                        <p className="text-sm font-medium text-gray-700">{match["Goles (Solo SC)"]}</p>
+                      </div>
+                    )}
                   </Card>
                 );
               })}
