@@ -394,6 +394,108 @@ function App() {
               />
             </div>
 
+            {/* Estadísticas de la fecha */}
+            {(() => {
+              const matchesForDate = getMatchesForDate(selectedDate);
+              if (matchesForDate.length === 0) return null;
+              
+              let victories = 0;
+              let draws = 0;
+              let defeats = 0;
+              let goalsFor = 0;
+              let goalsAgainst = 0;
+              
+              matchesForDate.forEach(match => {
+                const scGoals = match["Equipo Local"] === "Sporting Cristal" 
+                  ? parseInt(match.Marcador.split('-')[0]) 
+                  : parseInt(match.Marcador.split('-')[1]);
+                const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
+                  ? parseInt(match.Marcador.split('-')[1]) 
+                  : parseInt(match.Marcador.split('-')[0]);
+                
+                goalsFor += scGoals;
+                goalsAgainst += opponentGoals;
+                
+                if (scGoals > opponentGoals) victories++;
+                else if (scGoals < opponentGoals) defeats++;
+                else draws++;
+              });
+              
+              const total = matchesForDate.length;
+              const winPercentage = ((victories / total) * 100).toFixed(1);
+              const drawPercentage = ((draws / total) * 100).toFixed(1);
+              const defeatPercentage = ((defeats / total) * 100).toFixed(1);
+              
+              return (
+                <Card className="p-6 mb-8">
+                  <h3 className="text-xl font-bold text-[#1B265C] mb-4 text-center">
+                    Balance en esta fecha
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                    <div className="bg-sky-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-sky-700 mb-1">Total</p>
+                      <p className="text-3xl font-bold text-sky-900">{total}</p>
+                      <p className="text-xs text-sky-600">partidos</p>
+                    </div>
+                    
+                    <div className="bg-green-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-green-700 mb-1">Ganados</p>
+                      <p className="text-3xl font-bold text-green-900">{victories}</p>
+                      <p className="text-xs text-green-600">{winPercentage}%</p>
+                    </div>
+                    
+                    <div className="bg-yellow-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-yellow-700 mb-1">Empatados</p>
+                      <p className="text-3xl font-bold text-yellow-900">{draws}</p>
+                      <p className="text-xs text-yellow-600">{drawPercentage}%</p>
+                    </div>
+                    
+                    <div className="bg-red-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-red-700 mb-1">Perdidos</p>
+                      <p className="text-3xl font-bold text-red-900">{defeats}</p>
+                      <p className="text-xs text-red-600">{defeatPercentage}%</p>
+                    </div>
+                    
+                    <div className="bg-violet-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-violet-700 mb-1">Goles</p>
+                      <p className="text-xl font-bold text-violet-900">{goalsFor} - {goalsAgainst}</p>
+                      <p className="text-xs text-violet-600">a favor - en contra</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-sm font-semibold mb-3 text-center">Distribucion de resultados</p>
+                    <div className="flex rounded-full overflow-hidden h-8">
+                      <div 
+                        className="bg-green-500 flex items-center justify-center text-white text-sm font-semibold"
+                        style={{ width: `${winPercentage}%` }}
+                      >
+                        {winPercentage > 15 && `${winPercentage}%`}
+                      </div>
+                      <div 
+                        className="bg-yellow-500 flex items-center justify-center text-white text-sm font-semibold"
+                        style={{ width: `${drawPercentage}%` }}
+                      >
+                        {drawPercentage > 15 && `${drawPercentage}%`}
+                      </div>
+                      <div 
+                        className="bg-red-500 flex items-center justify-center text-white text-sm font-semibold"
+                        style={{ width: `${defeatPercentage}%` }}
+                      >
+                        {defeatPercentage > 15 && `${defeatPercentage}%`}
+                      </div>
+                    </div>
+                    <div className="flex justify-between text-sm text-gray-600 mt-2">
+                      <span>Victorias ({victories})</span>
+                      <span>Empates ({draws})</span>
+                      <span>Derrotas ({defeats})</span>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })()}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {getMatchesForDate(selectedDate).map((match, index) => {
                 const scGoals = match["Equipo Local"] === "Sporting Cristal" 
