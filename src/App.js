@@ -12,6 +12,8 @@ function App() {
   const [selectedMinute, setSelectedMinute] = useState(''); // eslint-disable-line no-unused-vars
   const [tournamentFilter, setTournamentFilter] = useState('todos');
   const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
 
   const getYearFromMatch = (match) => {
     if (match.Año && typeof match.Año === 'number') return match.Año;
@@ -212,9 +214,6 @@ function App() {
     { id: 'rivales', label: 'RIVALES' },
     { id: 'paises', label: 'PAÍSES' }
   ];
-
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
