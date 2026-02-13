@@ -506,7 +506,7 @@ function App() {
 
       <footer className="card-static border-t-0 rounded-t-2xl py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p style={{ color: 'var(--text-secondary)' }}>CRISTAL ARCHIVE 2026</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Sebiche Celeste - 2026</p>
         </div>
       </footer>
     </div>
