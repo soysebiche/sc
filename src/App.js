@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
+import CountryHistory from './components/CountryHistory';
 // import Trivia from './components/Trivia'; // Oculto temporalmente
 import { Card } from './components/ui';
 
@@ -608,6 +609,7 @@ function App() {
     { id: 'curiosidades', label: 'Datos Curiosos' },
     { id: 'analisis-anual', label: 'Analisis por Ano' },
     { id: 'rivales', label: 'Historial vs Rivales' },
+    { id: 'paises', label: 'Historial vs Países' },
     // { id: 'trivia', label: 'Trivia Celeste' }, // Oculto temporalmente
   ];
 
@@ -1247,6 +1249,7 @@ function App() {
         )}
 
         {activeTab === 'rivales' && <RivalHistory data={data} />}
+        {activeTab === 'paises' && <CountryHistory data={data} />}
         {/* {activeTab === 'trivia' && <Trivia />} // Modulo oculto temporalmente */}
       </main>
 
