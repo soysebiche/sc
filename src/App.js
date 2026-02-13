@@ -58,35 +58,223 @@ function App() {
     let totalOpponentGoals = 0;
     let maxScGoals = 0;
     let minScGoals = Infinity;
+    let maxScGoalsAway = 0;
+    let maxScGoalsHome = 0;
+    let maxDefeatGoals = 0;
+    let maxDefeatGoalsAway = 0;
+    let maxDefeatGoalsHome = 0;
     
-    data.forEach(match => {
+    // Track day of week
+    const dayStats = {
+      'Domingo': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 },
+      'Lunes': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 },
+      'Martes': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 },
+      'Miércoles': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 },
+      'Jueves': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 },
+      'Viernes': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 },
+      'Sábado': { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 }
+    };
+    
+    // Track months
+    const monthStats = {};
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    monthNames.forEach(m => {
+      monthStats[m] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0, gf: 0, gc: 0 };
+    });
+    
+    // Track rivals
+    const rivalStats = {};
+    
+    // Track years
+    const yearStats = {};
+    
+    // Track streaks
+    let currentStreak = 0;
+    let bestWinStreak = 0;
+    let worstLoseStreak = 0;
+    let currentUnbeaten = 0;
+    let bestUnbeaten = 0;
+    let currentWinless = 0;
+    let worstWinless = 0;
+    
+    // Track years with wins/losses
+    const yearsWithWins = new Set();
+    const yearsWithLosses = new Set();
+    
+    data.forEach((match, index) => {
       const scGoals = match["Equipo Local"] === "Sporting Cristal" 
         ? parseInt(match.Marcador.split('-')[0]) 
         : parseInt(match.Marcador.split('-')[1]);
       const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
         ? parseInt(match.Marcador.split('-')[1]) 
         : parseInt(match.Marcador.split('-')[0]);
+      const isHome = match["Equipo Local"] === "Sporting Cristal";
+      const day = match["Día de la Semana"] || '';
+      const month = match["Mes"] || '';
+      const year = match.Año;
       
+      // Total goals
       totalScGoals += scGoals;
       totalOpponentGoals += opponentGoals;
       
-      if (scGoals > maxScGoals) {
-        maxScGoals = scGoals;
+      // Max goals
+      if (scGoals > maxScGoals) maxScGoals = scGoals;
+      if (scGoals > 0 && scGoals < minScGoals) minScGoals = scGoals;
+      if (isHome && scGoals > maxScGoalsHome) maxScGoalsHome = scGoals;
+      if (!isHome && scGoals > maxScGoalsAway) maxScGoalsAway = scGoals;
+      
+      // Max defeat
+      if (opponentGoals > maxDefeatGoals) maxDefeatGoals = opponentGoals;
+      if (isHome && opponentGoals > maxDefeatGoalsHome) maxDefeatGoalsHome = opponentGoals;
+      if (!isHome && opponentGoals > maxDefeatGoalsAway) maxDefeatGoalsAway = opponentGoals;
+      
+      // Day stats
+      if (dayStats[day]) {
+        dayStats[day].jugados++;
       }
-      if (scGoals < minScGoals && scGoals > 0) {
-        minScGoals = scGoals;
+      
+      // Month stats
+      if (monthStats[month]) {
+        monthStats[month].jugados++;
+        monthStats[month].gf += scGoals;
+        monthStats[month].gc += opponentGoals;
       }
-
+      
+      // Rival stats
+      const rival = isHome ? match["Equipo Visita"] : match["Equipo Local"];
+      if (!rivalStats[rival]) {
+        rivalStats[rival] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0, gf: 0, gc: 0 };
+      }
+      rivalStats[rival].jugados++;
+      rivalStats[rival].gf += scGoals;
+      rivalStats[rival].gc += opponentGoals;
+      
+      // Year stats
+      if (!yearStats[year]) {
+        yearStats[year] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 };
+      }
+      yearStats[year].jugados++;
+      
+      // Match result
       if (scGoals > opponentGoals) {
         victories.push(match);
+        if (dayStats[day]) dayStats[day].ganados++;
+        if (monthStats[month]) monthStats[month].ganados++;
+        rivalStats[rival].ganados++;
+        yearStats[year].ganados++;
+        yearsWithWins.add(year);
+        
+        currentStreak++;
+        currentWinless = 0;
+        if (currentStreak > bestWinStreak) bestWinStreak = currentStreak;
+        currentUnbeaten++;
+        if (currentUnbeaten > bestUnbeaten) bestUnbeaten = currentUnbeaten;
       } else if (scGoals < opponentGoals) {
         defeats.push(match);
+        if (dayStats[day]) dayStats[day].perdidos++;
+        if (monthStats[month]) monthStats[month].perdidos++;
+        rivalStats[rival].perdidos++;
+        yearStats[year].perdidos++;
+        yearsWithLosses.add(year);
+        
+        currentStreak = 0;
+        currentUnbeaten = 0;
+        currentWinless++;
+        if (currentWinless > worstWinless) worstWinless = currentWinless;
       } else {
         draws.push(match);
+        if (dayStats[day]) dayStats[day].empatados++;
+        if (monthStats[month]) monthStats[month].empatados++;
+        rivalStats[rival].empatados++;
+        yearStats[year].empatados++;
+        
+        currentStreak = 0;
+        currentUnbeaten++;
+        if (currentUnbeaten > bestUnbeaten) bestUnbeaten = currentUnbeaten;
+        currentWinless = 0;
       }
     });
     
+    // Find best day
+    let bestDay = '';
+    let maxWins = 0;
+    Object.entries(dayStats).forEach(([day, stats]) => {
+      if (stats.ganados > maxWins) {
+        maxWins = stats.ganados;
+        bestDay = day;
+      }
+    });
+    
+    // Find worst day
+    let worstDay = '';
+    let maxLosses = 0;
+    Object.entries(dayStats).forEach(([day, stats]) => {
+      if (stats.perdidos > maxLosses) {
+        maxLosses = stats.perdidos;
+        worstDay = day;
+      }
+    });
+    
+    // Find best month
+    let bestMonth = '';
+    let maxMonthWins = 0;
+    Object.entries(monthStats).forEach(([month, stats]) => {
+      if (stats.ganados > maxMonthWins) {
+        maxMonthWins = stats.ganados;
+        bestMonth = month;
+      }
+    });
+    
+    // Find worst month
+    let worstMonth = '';
+    let maxMonthLosses = 0;
+    Object.entries(monthStats).forEach(([month, stats]) => {
+      if (stats.perdidos > maxMonthLosses) {
+        maxMonthLosses = stats.perdidos;
+        worstMonth = month;
+      }
+    });
+    
+    // Find most played rival
+    let mostPlayedRival = '';
+    let maxMatches = 0;
+    Object.entries(rivalStats).forEach(([rival, stats]) => {
+      if (stats.jugados > maxMatches) {
+        maxMatches = stats.jugados;
+        mostPlayedRival = rival;
+      }
+    });
+    
+    // Find best rival (most wins)
+    let bestRival = '';
+    let maxRivalWins = 0;
+    Object.entries(rivalStats).forEach(([rival, stats]) => {
+      if (stats.ganados > maxRivalWins) {
+        maxRivalWins = stats.ganados;
+        bestRival = rival;
+      }
+    });
+    
+    // Find worst rival (most losses)
+    let worstRival = '';
+    let maxRivalLosses = 0;
+    Object.entries(rivalStats).forEach(([rival, stats]) => {
+      if (stats.perdidos > maxRivalLosses) {
+        maxRivalLosses = stats.perdidos;
+        worstRival = rival;
+      }
+    });
+    
+    // Count unique years with wins/losses
+    const yearsWithWinsCount = yearsWithWins.size;
+    const yearsWithLossesCount = yearsWithLosses.size;
+    
+    // Torneos unique
+    const tournaments = [...new Set(data.map(m => m.Torneo).filter(t => t))];
+    
     return {
+      // Basic stats
       totalMatches: data.length,
       victories: victories.length,
       defeats: defeats.length,
@@ -97,7 +285,47 @@ function App() {
       averageGoals: (totalScGoals / data.length).toFixed(2),
       averageGoalsAgainst: (totalOpponentGoals / data.length).toFixed(2),
       maxGoals: maxScGoals,
-      minGoals: minScGoals
+      maxGoalsHome: maxScGoalsHome,
+      maxGoalsAway: maxScGoalsAway,
+      minGoals: minScGoals === Infinity ? 0 : minScGoals,
+      maxDefeat: maxDefeatGoals,
+      maxDefeatHome: maxDefeatGoalsHome,
+      maxDefeatAway: maxDefeatGoalsAway,
+      
+      // Day stats
+      bestDay: bestDay || 'N/A',
+      bestDayWins: maxWins,
+      worstDay: worstDay || 'N/A',
+      worstDayLosses: maxLosses,
+      
+      // Month stats
+      bestMonth: bestMonth || 'N/A',
+      bestMonthWins: maxMonthWins,
+      worstMonth: worstMonth || 'N/A',
+      worstMonthLosses: maxMonthLosses,
+      
+      // Streaks
+      bestWinStreak: bestWinStreak,
+      worstLoseStreak: worstWinless,
+      bestUnbeatenStreak: bestUnbeaten,
+      worstWinlessStreak: worstWinless,
+      
+      // Rivals
+      mostPlayedRival: mostPlayedRival || 'N/A',
+      mostPlayedCount: maxMatches,
+      bestRival: bestRival || 'N/A',
+      bestRivalWins: maxRivalWins,
+      worstRival: worstRival || 'N/A',
+      worstRivalLosses: maxRivalLosses,
+      
+      // Years
+      yearsWithWins: yearsWithWinsCount,
+      yearsWithLosses: yearsWithLossesCount,
+      totalYears: Object.keys(yearStats).length,
+      
+      // Tournaments
+      totalTournaments: tournaments.length,
+      tournaments: tournaments.join(', ')
     };
   };
 
@@ -710,6 +938,7 @@ function App() {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-[#1B265C]">Datos Curiosos</h2>
             
+            {/* Basic Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Card className="p-4 text-center">
                 <p className="text-sm text-gray-600">Total Partidos</p>
@@ -729,6 +958,133 @@ function App() {
                 <p className="text-sm text-gray-600">Empates</p>
                 <p className="text-3xl font-bold text-yellow-600">{curiosidades.draws}</p>
                 <p className="text-sm text-gray-500">{curiosidades.drawPercentage}%</p>
+              </Card>
+            </div>
+
+            {/* Goals Stats */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Goles</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Goles a Favor (Total)</p>
+                <p className="text-2xl font-bold text-green-600">{curiosidades.victories > 0 ? (parseFloat(curiosidades.averageGoals) * curiosidades.totalMatches).toFixed(0) : 0}</p>
+                <p className="text-sm text-gray-500">Promedio: {curiosidades.averageGoals}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Goles en Contra (Total)</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.defeats > 0 ? (parseFloat(curiosidades.averageGoalsAgainst) * curiosidades.totalMatches).toFixed(0) : 0}</p>
+                <p className="text-sm text-gray-500">Promedio: {curiosidades.averageGoalsAgainst}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Max Goles (Local)</p>
+                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.maxGoalsHome}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Max Goles (Visitante)</p>
+                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.maxGoalsAway}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mayor Derrota (Local)</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.maxDefeatHome}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mayor Derrota (Visitante)</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.maxDefeatAway}</p>
+              </Card>
+            </div>
+
+            {/* Day of Week Stats */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Días de la Semana</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mejor Día (Victorias)</p>
+                <p className="text-2xl font-bold text-green-600">{curiosidades.bestDay}</p>
+                <p className="text-sm text-gray-500">{curiosidades.bestDayWins} victorias</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Peor Día (Derrotas)</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.worstDay}</p>
+                <p className="text-sm text-gray-500">{curiosidades.worstDayLosses} derrotas</p>
+              </Card>
+            </div>
+
+            {/* Month Stats */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Meses</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mejor Mes (Victorias)</p>
+                <p className="text-2xl font-bold text-green-600">{curiosidades.bestMonth}</p>
+                <p className="text-sm text-gray-500">{curiosidades.bestMonthWins} victorias</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Peor Mes (Derrotas)</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.worstMonth}</p>
+                <p className="text-sm text-gray-500">{curiosidades.worstMonthLosses} derrotas</p>
+              </Card>
+            </div>
+
+            {/* Streaks */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Rachas</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mejor Racha Victorias</p>
+                <p className="text-2xl font-bold text-green-600">{curiosidades.bestWinStreak}</p>
+                <p className="text-sm text-gray-500">partidos seguidos</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Peor Racha Derrotas</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.worstLoseStreak}</p>
+                <p className="text-sm text-gray-500">partidos seguidos</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mejor Racha Sin Perder</p>
+                <p className="text-2xl font-bold text-blue-600">{curiosidades.bestUnbeatenStreak}</p>
+                <p className="text-sm text-gray-500">partidos seguidos</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Peor Racha Sin Ganar</p>
+                <p className="text-2xl font-bold text-orange-600">{curiosidades.worstWinlessStreak}</p>
+                <p className="text-sm text-gray-500">partidos seguidos</p>
+              </Card>
+            </div>
+
+            {/* Rivals */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Rivales</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Rival Más Encontrado</p>
+                <p className="text-xl font-bold text-[#1B265C]">{curiosidades.mostPlayedRival}</p>
+                <p className="text-sm text-gray-500">{curiosidades.mostPlayedCount} partidos</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mejor Rival (Más Victorias)</p>
+                <p className="text-xl font-bold text-green-600">{curiosidades.bestRival}</p>
+                <p className="text-sm text-gray-500">{curiosidades.bestRivalWins} victorias</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Peor Rival (Más Derrotas)</p>
+                <p className="text-xl font-bold text-red-600">{curiosidades.worstRival}</p>
+                <p className="text-sm text-gray-500">{curiosidades.worstRivalLosses} derrotas</p>
+              </Card>
+            </div>
+
+            {/* Years and Tournaments */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Temporadas y Torneos</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Años Jugados</p>
+                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.totalYears}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Años con Victorias</p>
+                <p className="text-2xl font-bold text-green-600">{curiosidades.yearsWithWins}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Años con Derrotas</p>
+                <p className="text-2xl font-bold text-red-600">{curiosidades.yearsWithLosses}</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Torneos Diferentes</p>
+                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.totalTournaments}</p>
               </Card>
             </div>
           </div>
