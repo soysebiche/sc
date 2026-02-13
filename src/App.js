@@ -198,9 +198,7 @@ function App() {
     let totalScGoals = 0;
     let totalOpponentGoals = 0;
     let maxScGoals = 0;
-    let maxScGoalsMatch = null;
     let minScGoals = Infinity;
-    let minScGoalsMatch = null;
     
     data.forEach(match => {
       const scGoals = match["Equipo Local"] === "Sporting Cristal" 
@@ -215,11 +213,9 @@ function App() {
       
       if (scGoals > maxScGoals) {
         maxScGoals = scGoals;
-        maxScGoalsMatch = match;
       }
       if (scGoals < minScGoals && scGoals > 0) {
         minScGoals = scGoals;
-        minScGoalsMatch = match;
       }
 
       if (scGoals > opponentGoals) {
