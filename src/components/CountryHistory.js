@@ -255,7 +255,6 @@ function CountryHistory({ data }) {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredMatches.map((match, index) => {
                   const isHome = match["Equipo Local"] === "Sporting Cristal";
-                  const rival = isHome ? match["Equipo Visita"] : match["Equipo Local"];
                   const scGoals = isHome 
                     ? parseInt(match.Marcador.split('-')[0]) 
                     : parseInt(match.Marcador.split('-')[1]);
