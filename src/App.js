@@ -203,6 +203,22 @@ function App() {
 
   const todayMatch = data.find(m => m.Fecha === selectedDate);
 
+  // Find all matches on the same day/month (any year)
+  const getMatchesForDayMonth = (dateStr) => {
+    if (!dateStr || dateStr === 'TBD') return [];
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return [];
+    const month = parts[1];
+    const day = parts[2];
+    return data.filter(m => {
+      if (!m.Fecha || m.Fecha === 'TBD') return false;
+      const mParts = m.Fecha.split('-');
+      return mParts[1] === month && mParts[2] === day;
+    }).sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+  };
+  
+  const efemeridesMatches = getMatchesForDayMonth(selectedDate);
+
   const years = getUniqueYears(initialData);
   const months = getUniqueMonths(initialData);
 
@@ -358,7 +374,7 @@ function App() {
         {activeTab === 'efemerides' && (
           <div className="space-y-6 animate-fade-in">
             <div className="card-static p-6">
-              <h2 className="text-2xl font-bold text-white mb-4">Partido del Día</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Partidos Jugados en Esta Fecha</h2>
               <input
                 type="date"
                 value={selectedDate}
@@ -366,23 +382,29 @@ function App() {
                 className="w-full"
                 style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '12px' }}
               />
-              {todayMatch ? (
-                <div className="mt-6 p-6 rounded-xl" style={{ background: 'var(--bg-card-hover)' }}>
-                  <p className="text-lg font-semibold mb-4" style={{ color: 'var(--text-secondary)' }}>{getCurrentDateText()}</p>
-                  <div className="flex items-center justify-center gap-4 text-3xl font-bold mb-4">
-                    <span className="text-white">{todayMatch["Equipo Local"]}</span>
-                    <span className="text-cyan" style={{ color: 'var(--accent-cyan)' }}>{todayMatch.Marcador}</span>
-                    <span className="text-white">{todayMatch["Equipo Visita"]}</span>
-                  </div>
-                  <div className="text-center">
-                    <span className={`badge ${todayMatch.Resultado === 'V' ? 'badge-green' : todayMatch.Resultado === 'E' ? 'badge-yellow' : 'badge-red'}`}>
-                      {todayMatch.Resultado === 'V' ? 'VICTORIA' : todayMatch.Resultado === 'E' ? 'EMPATE' : 'DERROTA'}
-                    </span>
-                    <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>{todayMatch.Torneo} • {todayMatch.Año}</p>
-                    {todayMatch["Goles (Solo SC)"] && todayMatch["Goles (Solo SC)"] !== '-' && (
-                      <p className="mt-3 text-sm" style={{ color: 'var(--accent-cyan)' }}>Goles: {todayMatch["Goles (Solo SC)"]}</p>
-                    )}
-                  </div>
+              {efemeridesMatches.length > 0 ? (
+                <div className="mt-6 space-y-4">
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{efemeridesMatches.length} partido(s) jugados un {efemeridesMatches[0]?.Fecha ? new Date(efemeridesMatches[0].Fecha + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : ''}</p>
+                  {efemeridesMatches.map((match, idx) => {
+                    const isHome = match["Equipo Local"] === "Sporting Cristal";
+                    const scGoals = isHome ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
+                    const oppGoals = isHome ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
+                    const result = scGoals > oppGoals ? 'V' : scGoals < oppGoals ? 'P' : 'E';
+                    return (
+                      <div key={idx} className="p-4 rounded-xl" style={{ background: 'var(--bg-card-hover)' }}>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-bold" style={{ color: 'var(--accent-cyan)' }}>{match.Año}</span>
+                          <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
+                        </div>
+                        <div className="flex items-center justify-center gap-3 text-xl font-bold">
+                          <span className="text-white">{match["Equipo Local"]}</span>
+                          <span style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</span>
+                          <span className="text-white">{match["Equipo Visita"]}</span>
+                        </div>
+                        <p className="text-xs text-center mt-2" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="mt-4 text-center" style={{ color: 'var(--text-secondary)' }}>No hay partido registrado para esta fecha</p>
