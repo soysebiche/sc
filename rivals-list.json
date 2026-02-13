@@ -1,0 +1,380 @@
+{
+  "total": 131,
+  "rivals": [
+    "A.D.T.",
+    "Academia Cantolao",
+    "Académia Cantolao",
+    "Alianza Atl.",
+    "Alianza Atletico",
+    "Alianza Atlétic",
+    "Alianza Atlético",
+    "Alianza Lima",
+    "Alianza Unicachi",
+    "Alianza Universidad",
+    "Always Ready",
+    "América",
+    "América de Cali",
+    "Arsenal de Sarandí",
+    "Atl. Colegiales",
+    "Atlético Grau",
+    "Atlético Minero",
+    "Atlético Nacional",
+    "Atlético Paranaense",
+    "Atlético Universidad",
+    "Ayacucho FC",
+    "Barcelona",
+    "Boca Juniors",
+    "Bolognesi",
+    "Bolognesi FC",
+    "Bolívar",
+    "C.N.I.",
+    "CNI",
+    "Carlos A. Mannucci",
+    "Cerro Porteño",
+    "Cienciano",
+    "Club Nacional",
+    "Cobresol FBC",
+    "Comerciantes Unidos",
+    "Coopsol",
+    "Coopsol Trujillo",
+    "Coritiba FC",
+    "Coronel Bolognesi",
+    "Cruzeiro",
+    "Cusco FC",
+    "César Vallejo",
+    "Defensor La Bocana",
+    "Dep. Llacuabamba",
+    "Dep. Los Chankas",
+    "Dep. Municipal",
+    "Deportivo Cuenca",
+    "Deportivo Garcilaso",
+    "Deportivo Municipal",
+    "Deportivo Táchira",
+    "Deportivo U.P.A.O.",
+    "Deportivo Wanka",
+    "EMD Binacional",
+    "Emelec",
+    "Estudiantes",
+    "Estudiantes de Medicina",
+    "FBC Melgar",
+    "FC Carlos Stein",
+    "Flamengo",
+    "Fluminense FC",
+    "Godoy Cruz",
+    "Grau Estudiantes",
+    "Guaraní",
+    "Huracán",
+    "Indep. Santa Fe",
+    "Inti Gas",
+    "Inti Gas Deportes",
+    "Jose Galvez FBC",
+    "José Gálvez",
+    "José Gálvez FBC",
+    "Juan Aurich",
+    "Juan Pablo II",
+    "Kansas City Wizards",
+    "Lanús",
+    "Leon de Huanuco",
+    "León de Huánuco",
+    "Libertad",
+    "Los Caimanes",
+    "Melgar",
+    "Morelia",
+    "Nacional",
+    "Olimpia",
+    "Oriente Petrolero",
+    "Pachuca",
+    "Pachuca CF",
+    "Pacifico FC",
+    "Palmeiras",
+    "Paysandu",
+    "Peñarol",
+    "Pirata FC",
+    "Racing Club",
+    "Real Garcilaso",
+    "Rentistas",
+    "River Plate",
+    "Rosario Central",
+    "San Martín",
+    "San Simón",
+    "Santos",
+    "Santos Laguna",
+    "Sport Boys",
+    "Sport Huancayo",
+    "Sport Loreto",
+    "Sport Rosario",
+    "Sport Áncash",
+    "São Paulo",
+    "Talleres",
+    "The Strongest",
+    "Tigre",
+    "Total Chalaco",
+    "Total Clean",
+    "U.P.A.O.",
+    "U.T.C.",
+    "Union Comercio",
+    "Univ. Católica",
+    "Univ. Cesar Vallejo",
+    "Univ. César Vallejo",
+    "Univ. San Martín",
+    "Univ. San Martín de P.",
+    "Univ. de Concepción",
+    "Univ.Cesar Vallejo",
+    "Univ.San Martin de P.",
+    "Universidad César Vallejo",
+    "Universidad San Martín",
+    "Universidad San Martín de Porres",
+    "Universitario",
+    "Unión Comercio",
+    "Unión Española",
+    "Unión Huaral",
+    "Unión Minas",
+    "Vélez Sarsfield",
+    "Wanka",
+    "Zulia FC"
+  ],
+  "rivalsWithVariations": [
+    {
+      "name": "Alianza Atlétic",
+      "similar": [
+        "Alianza Atlético"
+      ]
+    },
+    {
+      "name": "Alianza Atlético",
+      "similar": [
+        "Alianza Atlétic"
+      ]
+    },
+    {
+      "name": "América",
+      "similar": [
+        "América de Cali"
+      ]
+    },
+    {
+      "name": "América de Cali",
+      "similar": [
+        "América"
+      ]
+    },
+    {
+      "name": "Atlético Nacional",
+      "similar": [
+        "Nacional"
+      ]
+    },
+    {
+      "name": "Bolognesi",
+      "similar": [
+        "Bolognesi FC",
+        "Coronel Bolognesi"
+      ]
+    },
+    {
+      "name": "Bolognesi FC",
+      "similar": [
+        "Bolognesi"
+      ]
+    },
+    {
+      "name": "Club Nacional",
+      "similar": [
+        "Nacional"
+      ]
+    },
+    {
+      "name": "Coopsol",
+      "similar": [
+        "Coopsol Trujillo"
+      ]
+    },
+    {
+      "name": "Coopsol Trujillo",
+      "similar": [
+        "Coopsol"
+      ]
+    },
+    {
+      "name": "Coronel Bolognesi",
+      "similar": [
+        "Bolognesi"
+      ]
+    },
+    {
+      "name": "César Vallejo",
+      "similar": [
+        "Univ. César Vallejo",
+        "Universidad César Vallejo"
+      ]
+    },
+    {
+      "name": "Deportivo U.P.A.O.",
+      "similar": [
+        "U.P.A.O."
+      ]
+    },
+    {
+      "name": "Deportivo Wanka",
+      "similar": [
+        "Wanka"
+      ]
+    },
+    {
+      "name": "Estudiantes",
+      "similar": [
+        "Estudiantes de Medicina",
+        "Grau Estudiantes"
+      ]
+    },
+    {
+      "name": "Estudiantes de Medicina",
+      "similar": [
+        "Estudiantes"
+      ]
+    },
+    {
+      "name": "FBC Melgar",
+      "similar": [
+        "Melgar"
+      ]
+    },
+    {
+      "name": "Grau Estudiantes",
+      "similar": [
+        "Estudiantes"
+      ]
+    },
+    {
+      "name": "Inti Gas",
+      "similar": [
+        "Inti Gas Deportes"
+      ]
+    },
+    {
+      "name": "Inti Gas Deportes",
+      "similar": [
+        "Inti Gas"
+      ]
+    },
+    {
+      "name": "José Gálvez",
+      "similar": [
+        "José Gálvez FBC"
+      ]
+    },
+    {
+      "name": "José Gálvez FBC",
+      "similar": [
+        "José Gálvez"
+      ]
+    },
+    {
+      "name": "Melgar",
+      "similar": [
+        "FBC Melgar"
+      ]
+    },
+    {
+      "name": "Nacional",
+      "similar": [
+        "Atlético Nacional",
+        "Club Nacional"
+      ]
+    },
+    {
+      "name": "Pachuca",
+      "similar": [
+        "Pachuca CF"
+      ]
+    },
+    {
+      "name": "Pachuca CF",
+      "similar": [
+        "Pachuca"
+      ]
+    },
+    {
+      "name": "San Martín",
+      "similar": [
+        "Univ. San Martín",
+        "Univ. San Martín de P.",
+        "Universidad San Martín",
+        "Universidad San Martín de Porres"
+      ]
+    },
+    {
+      "name": "Santos",
+      "similar": [
+        "Santos Laguna"
+      ]
+    },
+    {
+      "name": "Santos Laguna",
+      "similar": [
+        "Santos"
+      ]
+    },
+    {
+      "name": "U.P.A.O.",
+      "similar": [
+        "Deportivo U.P.A.O."
+      ]
+    },
+    {
+      "name": "Univ. Cesar Vallejo",
+      "similar": [
+        "Univ. César Vallejo"
+      ]
+    },
+    {
+      "name": "Univ. César Vallejo",
+      "similar": [
+        "César Vallejo",
+        "Univ. Cesar Vallejo",
+        "Universidad César Vallejo"
+      ]
+    },
+    {
+      "name": "Univ. San Martín",
+      "similar": [
+        "San Martín",
+        "Univ. San Martín de P."
+      ]
+    },
+    {
+      "name": "Univ. San Martín de P.",
+      "similar": [
+        "San Martín",
+        "Univ. San Martín"
+      ]
+    },
+    {
+      "name": "Universidad César Vallejo",
+      "similar": [
+        "César Vallejo",
+        "Univ. César Vallejo"
+      ]
+    },
+    {
+      "name": "Universidad San Martín",
+      "similar": [
+        "San Martín",
+        "Universidad San Martín de Porres"
+      ]
+    },
+    {
+      "name": "Universidad San Martín de Porres",
+      "similar": [
+        "San Martín",
+        "Universidad San Martín"
+      ]
+    },
+    {
+      "name": "Wanka",
+      "similar": [
+        "Deportivo Wanka"
+      ]
+    }
+  ]
+}

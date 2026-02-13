@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { getIcon } from '../utils/icons';
 import { Card } from './ui';
 
 function RivalHistory({ data }) {
@@ -128,28 +127,23 @@ function RivalHistory({ data }) {
   };
 
   return (
-    <div className="animate-fadeInUp">
+    <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-lg mb-4">
-          <span className="text-3xl">{getIcon('rivals')}</span>
-        </div>
-        <h2 className="title-section mb-2">Historial vs Rivales</h2>
-        <p className="text-body-lg">
-          Descubre el historial completo contra cualquier rival
-        </p>
+        <h2 className="text-3xl font-bold text-[#1B265C] mb-2">Historial vs Rivales</h2>
+        <p className="text-gray-600">Descubre el historial completo contra cualquier rival</p>
       </div>
 
       {/* Filtros */}
-      <Card variant="elevated" className="p-6 mb-8">
+      <Card className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="form-label">Seleccionar rival</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Seleccionar rival</label>
             <select
               value={selectedRival}
               onChange={(e) => setSelectedRival(e.target.value)}
-              className="form-input form-select"
+              className="w-full px-4 py-2 border rounded-lg"
             >
-              <option value="">-- Selecciona un equipo --</option>
+              <option value="">Selecciona un equipo</option>
               {rivals.map(rival => (
                 <option key={rival} value={rival}>{rival}</option>
               ))}
@@ -157,14 +151,14 @@ function RivalHistory({ data }) {
           </div>
 
           <div>
-            <label className="form-label">Filtrar por año (opcional)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Filtrar por ano (opcional)</label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="form-input form-select"
+              className="w-full px-4 py-2 border rounded-lg"
               disabled={!selectedRival}
             >
-              <option value="">Todos los años</option>
+              <option value="">Todos los anos</option>
               {years.map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
@@ -175,84 +169,83 @@ function RivalHistory({ data }) {
 
       {selectedRival && (
         <>
-          {/* Balance estadístico */}
-          <section className="editorial-card mb-8">
-            <h3 className="editorial-card-title">
+          {/* Balance estadistico */}
+          <Card className="p-6">
+            <h3 className="text-xl font-bold text-[#1B265C] mb-4">
               Balance vs {selectedRival}
               {selectedYear && ` (${selectedYear})`}
             </h3>            
+            
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-              <div className="bg-gradient-to-br from-sky-100 to-sky-200 rounded-xl p-4 text-center">
-                <h4 className="text-sm font-bold text-sky-800 mb-1">Total</h4>
-                <p className="text-3xl font-bold text-sky-900 font-editorial">{stats.total}</p>
-                <p className="text-xs text-sky-700">partidos</p>
+              <div className="bg-sky-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-sky-700 mb-1">Total</p>
+                <p className="text-3xl font-bold text-sky-900">{stats.total}</p>
+                <p className="text-xs text-sky-600">partidos</p>
               </div>
               
-              <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl p-4 text-center">
-                <h4 className="text-sm font-bold text-emerald-800 mb-1">Ganados</h4>
-                <p className="text-3xl font-bold text-emerald-900 font-editorial">{stats.victories}</p>
-                <p className="text-xs text-emerald-700">{stats.winPercentage}%</p>
+              <div className="bg-green-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-green-700 mb-1">Ganados</p>
+                <p className="text-3xl font-bold text-green-900">{stats.victories}</p>
+                <p className="text-xs text-green-600">{stats.winPercentage}%</p>
               </div>
               
-              <div className="bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl p-4 text-center">
-                <h4 className="text-sm font-bold text-amber-800 mb-1">Empatados</h4>
-                <p className="text-3xl font-bold text-amber-900 font-editorial">{stats.draws}</p>
-                <p className="text-xs text-amber-700">{stats.drawPercentage}%</p>
+              <div className="bg-yellow-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-yellow-700 mb-1">Empatados</p>
+                <p className="text-3xl font-bold text-yellow-900">{stats.draws}</p>
+                <p className="text-xs text-yellow-600">{stats.drawPercentage}%</p>
               </div>
               
-              <div className="bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl p-4 text-center">
-                <h4 className="text-sm font-bold text-rose-800 mb-1">Perdidos</h4>
-                <p className="text-3xl font-bold text-rose-900 font-editorial">{stats.defeats}</p>
-                <p className="text-xs text-rose-700">{stats.defeatPercentage}%</p>
+              <div className="bg-red-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-red-700 mb-1">Perdidos</p>
+                <p className="text-3xl font-bold text-red-900">{stats.defeats}</p>
+                <p className="text-xs text-red-600">{stats.defeatPercentage}%</p>
               </div>
               
-              <div className="bg-gradient-to-br from-violet-100 to-violet-200 rounded-xl p-4 text-center">
-                <h4 className="text-sm font-bold text-violet-800 mb-1">Goles</h4>
-                <p className="text-2xl font-bold text-violet-900 font-editorial">{stats.goalsFor} - {stats.goalsAgainst}</p>
-                <p className="text-xs text-violet-700">a favor - en contra</p>
+              <div className="bg-violet-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-violet-700 mb-1">Goles</p>
+                <p className="text-xl font-bold text-violet-900">{stats.goalsFor} - {stats.goalsAgainst}</p>
+                <p className="text-xs text-violet-600">a favor - en contra</p>
               </div>
             </div>
 
-            {/* Barra de progreso visual */}
             {stats.total > 0 && (
-              <div className="bg-gray-50 rounded-xl p-4">
-                <h4 className="text-sm font-semibold mb-3 text-center">Distribución de resultados</h4>
-                <div className="flex rounded-full overflow-hidden h-8 shadow-inner">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-sm font-semibold mb-3 text-center">Distribucion de resultados</p>
+                <div className="flex rounded-full overflow-hidden h-8">
                   <div 
-                    className="bg-emerald-500 flex items-center justify-center text-white text-sm font-semibold"
+                    className="bg-green-500 flex items-center justify-center text-white text-sm font-semibold"
                     style={{ width: `${stats.winPercentage}%` }}
                   >
                     {stats.winPercentage > 15 && `${stats.winPercentage}%`}
                   </div>
                   <div 
-                    className="bg-amber-500 flex items-center justify-center text-white text-sm font-semibold"
+                    className="bg-yellow-500 flex items-center justify-center text-white text-sm font-semibold"
                     style={{ width: `${stats.drawPercentage}%` }}
                   >
                     {stats.drawPercentage > 15 && `${stats.drawPercentage}%`}
                   </div>
                   <div 
-                    className="bg-rose-500 flex items-center justify-center text-white text-sm font-semibold"
+                    className="bg-red-500 flex items-center justify-center text-white text-sm font-semibold"
                     style={{ width: `${stats.defeatPercentage}%` }}
                   >
                     {stats.defeatPercentage > 15 && `${stats.defeatPercentage}%`}
                   </div>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600 mt-2">
-                  <span>{getIcon('victory')} Victorias ({stats.victories})</span>
-                  <span>{getIcon('draw')} Empates ({stats.draws})</span>
-                  <span>{getIcon('defeat')} Derrotas ({stats.defeats})</span>
+                  <span>Victorias ({stats.victories})</span>
+                  <span>Empates ({stats.draws})</span>
+                  <span>Derrotas ({stats.defeats})</span>
                 </div>
               </div>
             )}
-          </section>
+          </Card>
 
           {/* Lista de partidos */}
-          <section className="editorial-card">
-            <h3 className="editorial-card-title">
-              {getIcon('document')} Historial de encuentros ({filteredMatches.length} partidos)
-            </h3>            
+          <Card className="p-6">
+            <h3 className="text-xl font-bold text-[#1B265C] mb-4">Historial de encuentros ({filteredMatches.length} partidos)</h3>            
+            
             {filteredMatches.length > 0 ? (
-              <div className="grid-matches">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredMatches.map((match, index) => {
                   let matchYear;
                   if (match.Año && typeof match.Año === 'number') {
@@ -273,38 +266,30 @@ function RivalHistory({ data }) {
                                (scGoals < opponentGoals ? 'Derrota' : 'Empate');
 
                   return (
-                    <Card
-                      key={index}
-                      variant={result.toLowerCase()}
-                      isAnimated={true}
-                      animationDelay={index % 5}
-                      className="match-card-premium"
-                    >
-                      <div className="match-header">
-                        <div className="text-label">
-                          {formatDate(match.Fecha)}
-                        </div>
-                        <span className={`badge badge-${result.toLowerCase()}`}>
-                          {getIcon(result.toLowerCase())} {result}
+                    <Card key={index} className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-sm text-gray-500">{formatDate(match.Fecha)}</span>
+                        <span className={`px-2 py-1 text-xs rounded ${
+                          result === 'Victoria' ? 'bg-green-100 text-green-700' :
+                          result === 'Derrota' ? 'bg-red-100 text-red-700' :
+                          'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {result}
                         </span>
                       </div>
                       
-                      <p className="match-teams">
-                        {match["Equipo Local"]} vs {match["Equipo Visita"]}
-                      </p>
-                      <div className="match-score">
-                        {match.Marcador}
-                      </div>
+                      <p className="font-semibold">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
+                      <p className="text-xl font-bold text-[#3CBEEF] text-center my-2">{match.Marcador}</p>
                       
                       <div className="text-center mt-2">
-                        <p className="text-body-sm">{match.Torneo}</p>
-                        <p className="text-label">{matchYear || 'TBD'}</p>
+                        <p className="text-sm text-gray-600">{match.Torneo}</p>
+                        <p className="text-xs text-gray-400">{matchYear || 'TBD'}</p>
                       </div>
                       
                       {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
-                        <div className="mt-4 pt-4 border-t border-gray-100">
-                          <p className="text-label mb-2">{getIcon('goal')} Goles de Sporting Cristal:</p>
-                          <p className="text-body-sm">{match["Goles (Solo SC)"]}</p>
+                        <div className="mt-4 pt-4 border-t">
+                          <p className="text-sm font-medium text-gray-700 mb-1">Goles de Sporting Cristal:</p>
+                          <p className="text-sm text-gray-600">{match["Goles (Solo SC)"]}</p>
                         </div>
                       )}
                     </Card>
@@ -313,20 +298,19 @@ function RivalHistory({ data }) {
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-body">
+                <p className="text-gray-500">
                   No se encontraron partidos contra {selectedRival}
                   {selectedYear && ` en ${selectedYear}`}.
                 </p>
               </div>
             )}
-          </section>
+          </Card>
         </>
       )}
 
       {!selectedRival && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">{getIcon('stadium')}</div>
-          <p className="text-body-lg">
+          <p className="text-gray-500 text-lg">
             Selecciona un rival para ver el historial completo de enfrentamientos
           </p>
         </div>

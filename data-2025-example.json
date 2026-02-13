@@ -1,0 +1,41 @@
+[
+  {
+    "Fecha": "2025-01-15",
+    "Torneo": "Apertura",
+    "Número de Fecha": "1",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "Alianza Lima",
+    "Marcador": "2-1",
+    "Goles (Solo SC)": "Jugador1 (10'), Jugador2 (45')"
+  },
+  {
+    "Fecha": "2025-01-22",
+    "Torneo": "Apertura",
+    "Número de Fecha": "2",
+    "Equipo Local": "Universitario",
+    "Equipo Visita": "Sporting Cristal",
+    "Marcador": "1-2",
+    "Goles (Solo SC)": "Jugador3 (25'), Jugador4 (70')"
+  },
+  {
+    "Fecha": "2025-02-05",
+    "Torneo": "Copa Libertadores",
+    "Número de Fecha": "1",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "Equipo Internacional",
+    "Marcador": "3-0",
+    "Goles (Solo SC)": "Jugador5 (15'), Jugador6 (30'), Jugador7 (60')"
+  },
+  {
+    "Fecha": "2025-02-12",
+    "Torneo": "Copa del Inca",
+    "Número de Fecha": "1",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "Otro Equipo",
+    "Marcador": "1-1",
+    "Goles (Solo SC)": "Jugador8 (45')"
+  }
+]
+
+
+
