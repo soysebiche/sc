@@ -158,14 +158,14 @@ function CountryHistory({ data }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filtrar por ano (opcional)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Filtrar por año (opcional)</label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg"
               disabled={!selectedCountry}
             >
-              <option value="">Todos los anos</option>
+              <option value="">Todos los años</option>
               {years.map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}

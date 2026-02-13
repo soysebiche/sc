@@ -14,6 +14,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('efemerides');
   const [selectedMinute, setSelectedMinute] = useState('');
   const [tournamentFilter, setTournamentFilter] = useState('todos');
+  const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
 
   const getYearFromMatch = (match) => {
     if (match.Año && typeof match.Año === 'number') {
@@ -509,8 +510,17 @@ function App() {
   // Calcular stats al montar el componente y cuando cambie el filtro
   useEffect(() => {
     setCuriosidades(calculateCuriosidades(data));
-    setYearlyStats(calculateYearlyStats(data, tournamentFilter));
-  }, [data, tournamentFilter]);
+    const stats = calculateYearlyStats(data, tournamentFilter);
+    const sortedStats = [...stats].sort((a, b) => {
+      const aValue = a[yearSortConfig.key];
+      const bValue = b[yearSortConfig.key];
+      if (yearSortConfig.direction === 'asc') {
+        return aValue - bValue;
+      }
+      return bValue - aValue;
+    });
+    setYearlyStats(sortedStats);
+  }, [data, tournamentFilter, yearSortConfig]);
 
   // Datos ya inicializados, sin loading
 
@@ -811,7 +821,7 @@ function App() {
                 onChange={(e) => setSelectedYear(e.target.value)}
                 className="px-4 py-2 border rounded-lg"
               >
-                <option value="">Todos los anos</option>
+                <option value="">Todos los años</option>
                 {years.map(year => {
                   // Títulos nacionales (20)
                   const titulos = [1956, 1961, 1968, 1970, 1972, 1979, 1980, 1983, 1988, 1991, 1994, 1995, 1996, 2002, 2005, 2012, 2014, 2016, 2018, 2020];
@@ -938,7 +948,7 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Titulo o subcampenato del ano */}
+                  {/* Titulo o subcampenato del año */}
                   {selectedYear && (() => {
                     const titulos = [1956, 1961, 1968, 1970, 1972, 1979, 1980, 1983, 1988, 1991, 1994, 1995, 1996, 2002, 2005, 2012, 2014, 2016, 2018, 2020];
                     const subCampeones = [1962, 1963, 1967, 1973, 1977, 1989, 1992, 1997, 1998, 2000, 2003, 2004, 2015, 2021, 2024];
@@ -1203,7 +1213,7 @@ function App() {
         {activeTab === 'analisis-anual' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-[#1B265C]">Analisis por Ano</h2>
+              <h2 className="text-2xl font-bold text-[#1B265C]">Análisis por Año</h2>
               <select
                 value={tournamentFilter}
                 onChange={(e) => setTournamentFilter(e.target.value)}
@@ -1219,14 +1229,54 @@ function App() {
               <table className="w-full bg-white rounded-lg shadow">
                 <thead className="bg-[#1B265C] text-white">
                   <tr>
-                    <th className="px-4 py-3 text-left">Ano</th>
-                    <th className="px-4 py-3 text-center">PJ</th>
-                    <th className="px-4 py-3 text-center">G</th>
-                    <th className="px-4 py-3 text-center">E</th>
-                    <th className="px-4 py-3 text-center">P</th>
-                    <th className="px-4 py-3 text-center">% G</th>
-                    <th className="px-4 py-3 text-center">GF</th>
-                    <th className="px-4 py-3 text-center">GC</th>
+                    <th 
+                      className="px-4 py-3 text-left cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'year', direction: yearSortConfig.key === 'year' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      Año {yearSortConfig.key === 'year' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'total', direction: yearSortConfig.key === 'total' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      PJ {yearSortConfig.key === 'total' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'victories', direction: yearSortConfig.key === 'victories' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      G {yearSortConfig.key === 'victories' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'draws', direction: yearSortConfig.key === 'draws' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      E {yearSortConfig.key === 'draws' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'defeats', direction: yearSortConfig.key === 'defeats' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      P {yearSortConfig.key === 'defeats' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'winPercentage', direction: yearSortConfig.key === 'winPercentage' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      % G {yearSortConfig.key === 'winPercentage' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'goalsFor', direction: yearSortConfig.key === 'goalsFor' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      GF {yearSortConfig.key === 'goalsFor' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-center cursor-pointer hover:bg-blue-800"
+                      onClick={() => setYearSortConfig({ key: 'goalsAgainst', direction: yearSortConfig.key === 'goalsAgainst' && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                    >
+                      GC {yearSortConfig.key === 'goalsAgainst' && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
