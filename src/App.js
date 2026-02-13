@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
-import Trivia from './components/Trivia';
+// import Trivia from './components/Trivia'; // Oculto temporalmente
 import { Card } from './components/ui';
 
 function App() {
