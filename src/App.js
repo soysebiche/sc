@@ -49,12 +49,12 @@ function App() {
     }
   }, [data, tournamentFilter]);
 
-  const loadData = async () => {
+  const loadData = () => {
     try {
       setLoading(true);
       setError(null);
       
-      const allData = await vercelDataService.fetchAllData();
+      const allData = vercelDataService.fetchAllData();
       
       // Usar solo 'completo' que ya contiene todos los partidos (locales + internacionales)
       // Los archivos 'inca' y 'conmebol' son subconjuntos para uso específico, 
