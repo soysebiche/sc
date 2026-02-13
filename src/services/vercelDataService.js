@@ -4,9 +4,7 @@ import incaData from '../data/historico_inca_sc.json';
 import conmebolData from '../data/historico_conmebol_sc.json';
 
 class VercelDataService {
-  constructor() {
-    // Los datos se cargan desde archivos JSON locales incluidos en el bundle
-  }
+  // Los datos se cargan desde archivos JSON locales incluidos en el bundle
 
   // Obtener datos de Conmebol
   async fetchConmebolData() {
