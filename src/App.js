@@ -214,6 +214,32 @@ function App() {
   };
   
   const efemeridesMatches = getMatchesForDayMonth(selectedDate);
+  
+  // Calculate stats for efemerides
+  const efemeridesStats = (() => {
+    if (efemeridesMatches.length === 0) return { total: 0, victories: 0, draws: 0, defeats: 0, goalsFor: 0, goalsAgainst: 0 };
+    let victories = 0, draws = 0, defeats = 0, goalsFor = 0, goalsAgainst = 0;
+    efemeridesMatches.forEach(match => {
+      const scGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
+      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
+      goalsFor += scGoals;
+      goalsAgainst += opponentGoals;
+      if (scGoals > opponentGoals) victories++;
+      else if (scGoals < opponentGoals) defeats++;
+      else draws++;
+    });
+    return {
+      total: efemeridesMatches.length,
+      victories,
+      draws,
+      defeats,
+      goalsFor,
+      goalsAgainst,
+      winPercentage: ((victories / efemeridesMatches.length) * 100).toFixed(1),
+      drawPercentage: ((draws / efemeridesMatches.length) * 100).toFixed(1),
+      defeatPercentage: ((defeats / efemeridesMatches.length) * 100).toFixed(1)
+    };
+  })();
 
   const years = getUniqueYears(initialData);
   const months = getUniqueMonths(initialData);
@@ -378,34 +404,93 @@ function App() {
                 className="w-full"
                 style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '12px' }}
               />
-              {efemeridesMatches.length > 0 ? (
-                <div className="mt-6 space-y-4">
-                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{efemeridesMatches.length} partido(s) jugados un {efemeridesMatches[0]?.Fecha ? new Date(efemeridesMatches[0].Fecha + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : ''}</p>
-                  {efemeridesMatches.map((match, idx) => {
-                    const isHome = match["Equipo Local"] === "Sporting Cristal";
-                    const scGoals = isHome ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
-                    const oppGoals = isHome ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
-                    const result = scGoals > oppGoals ? 'V' : scGoals < oppGoals ? 'P' : 'E';
-                    return (
-                      <div key={idx} className="p-4 rounded-xl" style={{ background: 'var(--bg-card-hover)' }}>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-bold" style={{ color: 'var(--accent-cyan)' }}>{match.Año}</span>
-                          <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
-                        </div>
-                        <div className="flex items-center justify-center gap-3 text-xl font-bold">
-                          <span className="text-white">{match["Equipo Local"]}</span>
-                          <span style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</span>
-                          <span className="text-white">{match["Equipo Visita"]}</span>
-                        </div>
-                        <p className="text-xs text-center mt-2" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="mt-4 text-center" style={{ color: 'var(--text-secondary)' }}>No hay partido registrado para esta fecha</p>
-              )}
             </div>
+
+            {efemeridesMatches.length > 0 && (
+              <>
+                <div className="card-static p-6">
+                  <h3 className="text-xl font-bold text-white mb-6">Balance del Día</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                    <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-cyan)' }}>Total</p>
+                      <p className="text-3xl stat-number text-white">{efemeridesStats.total}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>partidos</p>
+                    </div>
+                    <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-green)' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-green)' }}>Ganados</p>
+                      <p className="text-3xl stat-number" style={{ color: 'var(--accent-green)' }}>{efemeridesStats.victories}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{efemeridesStats.winPercentage}%</p>
+                    </div>
+                    <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-yellow)' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-yellow)' }}>Empatados</p>
+                      <p className="text-3xl stat-number" style={{ color: 'var(--accent-yellow)' }}>{efemeridesStats.draws}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{efemeridesStats.drawPercentage}%</p>
+                    </div>
+                    <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-red)' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-red)' }}>Perdidos</p>
+                      <p className="text-3xl stat-number" style={{ color: 'var(--accent-red)' }}>{efemeridesStats.defeats}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{efemeridesStats.defeatPercentage}%</p>
+                    </div>
+                    <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-blue)' }}>Goles</p>
+                      <p className="text-xl stat-number text-white">{efemeridesStats.goalsFor} - {efemeridesStats.goalsAgainst}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>a favor - en contra</p>
+                    </div>
+                  </div>
+                  <div className="p-4" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
+                    <p className="text-sm font-semibold mb-3 text-center" style={{ color: 'var(--text-secondary)' }}>Distribución de resultados</p>
+                    <div className="flex rounded-xl overflow-hidden h-10" style={{ background: 'var(--border-subtle)' }}>
+                      <div className="flex items-center justify-center text-sm font-bold text-black" style={{ width: `${efemeridesStats.winPercentage}%`, background: 'var(--accent-green)' }}>
+                        {efemeridesStats.winPercentage > 10 && `${efemeridesStats.winPercentage}%`}
+                      </div>
+                      <div className="flex items-center justify-center text-sm font-bold text-black" style={{ width: `${efemeridesStats.drawPercentage}%`, background: 'var(--accent-yellow)' }}>
+                        {efemeridesStats.drawPercentage > 10 && `${efemeridesStats.drawPercentage}%`}
+                      </div>
+                      <div className="flex items-center justify-center text-sm font-bold text-white" style={{ width: `${efemeridesStats.defeatPercentage}%`, background: 'var(--accent-red)' }}>
+                        {efemeridesStats.defeatPercentage > 10 && `${efemeridesStats.defeatPercentage}%`}
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-3 text-sm">
+                      <span style={{ color: 'var(--accent-green)' }}>Victorias ({efemeridesStats.victories})</span>
+                      <span style={{ color: 'var(--accent-yellow)' }}>Empates ({efemeridesStats.draws})</span>
+                      <span style={{ color: 'var(--accent-red)' }}>Derrotas ({efemeridesStats.defeats})</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card-static p-6">
+                  <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>{efemeridesMatches.length} partido(s) jugados un {efemeridesMatches[0]?.Fecha ? new Date(efemeridesMatches[0].Fecha + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : ''}</p>
+                  <div className="space-y-4">
+                    {efemeridesMatches.map((match, idx) => {
+                      const isHome = match["Equipo Local"] === "Sporting Cristal";
+                      const scGoals = isHome ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
+                      const oppGoals = isHome ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
+                      const result = scGoals > oppGoals ? 'V' : scGoals < oppGoals ? 'P' : 'E';
+                      return (
+                        <div key={idx} className="p-4 rounded-xl" style={{ background: 'var(--bg-card-hover)' }}>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-bold" style={{ color: 'var(--accent-cyan)' }}>{match.Año}</span>
+                            <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-3 text-xl font-bold">
+                            <span className="text-white">{match["Equipo Local"]}</span>
+                            <span style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</span>
+                            <span className="text-white">{match["Equipo Visita"]}</span>
+                          </div>
+                          <p className="text-xs text-center mt-2" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {efemeridesMatches.length === 0 && (
+              <div className="card-static p-6">
+                <p className="mt-4 text-center" style={{ color: 'var(--text-secondary)' }}>No hay partido registrado para esta fecha</p>
+              </div>
+            )}
           </div>
         )}
 
