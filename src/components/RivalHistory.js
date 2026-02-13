@@ -6,11 +6,13 @@ function RivalHistory({ data }) {
   const [selectedYear, setSelectedYear] = useState('');
   const [rivals, setRivals] = useState([]);
   const [years, setYears] = useState([]);
+  const [rivalCountryMap, setRivalCountryMap] = useState({});
 
   useEffect(() => {
     if (!data || data.length === 0) return;
 
     const rivalSet = new Set();
+    const rivalCountryMap = {};
     const yearSet = new Set();
 
     data.forEach(match => {
@@ -18,6 +20,11 @@ function RivalHistory({ data }) {
         ? match["Equipo Visita"] 
         : match["Equipo Local"];
       rivalSet.add(rival);
+      
+      // Store country from match
+      if (match["País"]) {
+        rivalCountryMap[rival] = match["País"];
+      }
       
       let year;
       if (match.Año && typeof match.Año === 'number') {
@@ -34,6 +41,7 @@ function RivalHistory({ data }) {
 
     setRivals([...rivalSet].sort());
     setYears([...yearSet].sort((a, b) => b - a));
+    setRivalCountryMap(rivalCountryMap);
   }, [data]);
 
   const filteredMatches = useMemo(() => {
@@ -145,7 +153,9 @@ function RivalHistory({ data }) {
             >
               <option value="">Selecciona un equipo</option>
               {rivals.map(rival => (
-                <option key={rival} value={rival}>{rival}</option>
+                <option key={rival} value={rival}>
+                  {rival}{rivalCountryMap[rival] && rivalCountryMap[rival] !== 'Perú' ? ` (${rivalCountryMap[rival]})` : ''}
+                </option>
               ))}
             </select>
           </div>
