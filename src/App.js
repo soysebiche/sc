@@ -92,6 +92,7 @@ function App() {
     // Track streaks
     let currentStreak = 0;
     let bestWinStreak = 0;
+    let currentLoseStreak = 0;
     let worstLoseStreak = 0;
     let currentUnbeaten = 0;
     let bestUnbeaten = 0;
@@ -167,6 +168,7 @@ function App() {
         
         currentStreak++;
         currentWinless = 0;
+        currentLoseStreak = 0;
         if (currentStreak > bestWinStreak) bestWinStreak = currentStreak;
         currentUnbeaten++;
         if (currentUnbeaten > bestUnbeaten) bestUnbeaten = currentUnbeaten;
@@ -179,6 +181,8 @@ function App() {
         yearsWithLosses.add(year);
         
         currentStreak = 0;
+        currentLoseStreak++;
+        if (currentLoseStreak > worstLoseStreak) worstLoseStreak = currentLoseStreak;
         currentUnbeaten = 0;
         currentWinless++;
         if (currentWinless > worstWinless) worstWinless = currentWinless;
@@ -190,6 +194,7 @@ function App() {
         yearStats[year].empatados++;
         
         currentStreak = 0;
+        currentLoseStreak = 0;
         currentUnbeaten++;
         if (currentUnbeaten > bestUnbeaten) bestUnbeaten = currentUnbeaten;
         currentWinless = 0;
