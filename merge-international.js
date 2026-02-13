@@ -2,16 +2,36 @@ const fs = require('fs');
 const path = require('path');
 
 const historicoPath = path.join(__dirname, 'src/data/historico_completo_sc.json');
-const historico = JSON.parse(fs.readFileSync(historicoPath, 'utf8'));
+let historico = JSON.parse(fs.readFileSync(historicoPath, 'utf8'));
 
 const conmebolPath = path.join(__dirname, 'public/historico_conmebol_sc.json');
 const conmebol = JSON.parse(fs.readFileSync(conmebolPath, 'utf8'));
 
-// Create a key for each match to detect duplicates
-const existingKeys = new Set(historico.map(m => m.Año + '|' + m['Equipo Local'] + '|' + m['Equipo Visita'] + '|' + m.Marcador));
+// Filter out matches with broken scores (dates instead of scores)
+const validConmebol = conmebol.filter(m => {
+  if (!m.Marcador) return false;
+  const parts = m.Marcador.split('-');
+  if (parts.length !== 2) return false;
+  const g1 = parseInt(parts[0]);
+  const g2 = parseInt(parts[1]);
+  return !isNaN(g1) && !isNaN(g2) && g1 >= 0 && g2 >= 0 && g1 <= 20 && g2 <= 20;
+});
 
-// Filter new matches that don't exist
-const newMatches = conmebol.filter(m => !existingKeys.has(m.Año + '|' + m['Equipo Local'] + '|' + m['Equipo Visita'] + '|' + m.Marcador));
+console.log('Original conmebol:', conmebol.length);
+console.log('Valid conmebol:', validConmebol.length);
+
+// Create a key for each match
+const existingMap = {};
+historico.forEach(m => {
+  const key = m.Año + '|' + m['Equipo Local'] + '|' + m['Equipo Visita'];
+  existingMap[key] = m;
+});
+
+// Filter new matches
+const newMatches = validConmebol.filter(m => {
+  const key = m.Año + '|' + m['Equipo Local'] + '|' + m['Equipo Visita'];
+  return !existingMap[key];
+});
 
 console.log('Existing matches:', historico.length);
 console.log('New matches to add:', newMatches.length);
