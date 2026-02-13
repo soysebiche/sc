@@ -259,16 +259,14 @@ function App() {
       <header className="card-static border-b-0 rounded-b-2xl p-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <img 
-                src="/SebicheCeleste logo copy.png" 
-                alt="Sebiche Celeste" 
-                className="h-16 md:h-20 w-auto"
-              />
-              <div>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Archivo Histórico • {data.length} Partidos</p>
+            <div className="flex flex-col">
+                <img 
+                  src="/SebicheCeleste logo copy.png" 
+                  alt="Sebiche Celeste" 
+                  className="h-16 md:h-20 w-auto"
+                />
+                <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Archivo Histórico • {data.length} Partidos</p>
               </div>
-            </div>
             <div className="flex items-center gap-2 flex-wrap">
               {tabs.map(tab => (
                 <button
