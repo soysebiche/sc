@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
 // import Trivia from './components/Trivia'; // Oculto temporalmente
 import { Card } from './components/ui';
 
+// Cargar datos directamente al importar (sin delay)
+const initialData = vercelDataService.fetchAllData().completo;
+
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedYear, setSelectedYear] = useState('');
+  const [data, setData] = useState(initialData);
   const [selectedMonth, setSelectedMonth] = useState('');
-  const [years, setYears] = useState([]);
-  const [months, setMonths] = useState([]);
   const [activeTab, setActiveTab] = useState('efemerides');
-  const [selectedDate, setSelectedDate] = useState('');
   const [selectedMinute, setSelectedMinute] = useState('');
-  const [curiosidades, setCuriosidades] = useState({});
   const [yearlyStats, setYearlyStats] = useState([]);
   const [tournamentFilter, setTournamentFilter] = useState('todos');
 
@@ -38,10 +34,45 @@ function App() {
     return new Date(0);
   };
 
-  useEffect(() => {
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Función para obtener años únicos
+  const getUniqueYears = (data) => {
+    return [...new Set(data.map(match => getYearFromMatch(match)).filter(year => year !== null))].sort((a, b) => b - a);
+  };
+
+  // Función para obtener meses únicos
+  const getUniqueMonths = (data) => {
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const uniqueMonths = [...new Set(data.map(match => {
+      if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
+        return match.Mes;
+      }
+      if (match.Fecha && match.Fecha !== 'TBD') {
+        const date = new Date(match.Fecha);
+        if (!isNaN(date.getTime())) {
+          return monthNames[date.getMonth()];
+        }
+      }
+      return null;
+    }).filter(month => month !== null))];
+    return monthNames.filter(month => uniqueMonths.includes(month));
+  };
+
+  // Inicializar años y meses desde los datos iniciales
+  const [years, setYears] = useState(() => getUniqueYears(initialData));
+  const [months, setMonths] = useState(() => getUniqueMonths(initialData));
+  const [selectedYear, setSelectedYear] = useState(() => {
+    const uniqueYears = getUniqueYears(initialData);
+    return uniqueYears.length > 0 ? uniqueYears[0].toString() : '';
+  });
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  });
+  const [curiosidades, setCuriosidades] = useState(() => calculateCuriosidades(initialData));
 
   useEffect(() => {
     if (data.length > 0) {
@@ -49,58 +80,7 @@ function App() {
     }
   }, [data, tournamentFilter]);
 
-  const loadData = () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const allData = vercelDataService.fetchAllData();
-      
-      // Usar solo 'completo' que ya contiene todos los partidos (locales + internacionales)
-      // Los archivos 'inca' y 'conmebol' son subconjuntos para uso específico, 
-      // no deben combinarse con 'completo' para evitar duplicados
-      const combinedData = allData.completo.sort((a, b) => getDateForSorting(a) - getDateForSorting(b));
-      
-      setData(combinedData);
-
-      const uniqueYears = [...new Set(combinedData.map(match => getYearFromMatch(match)).filter(year => year !== null))].sort((a, b) => b - a);
-      setYears(uniqueYears);
-      if (uniqueYears.length > 0) {
-        setSelectedYear(uniqueYears[0].toString());
-      }
-
-      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      const uniqueMonths = [...new Set(combinedData.map(match => {
-        if (match.Mes && match.Mes !== 'TBD' && monthNames.includes(match.Mes)) {
-          return match.Mes;
-        }
-        if (match.Fecha && match.Fecha !== 'TBD') {
-          const date = new Date(match.Fecha);
-          if (!isNaN(date.getTime())) {
-            return monthNames[date.getMonth()];
-          }
-        }
-        return null;
-      }).filter(month => month !== null))];
-      const sortedMonths = monthNames.filter(month => uniqueMonths.includes(month));
-      setMonths(sortedMonths);
-
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      setSelectedDate(`${yyyy}-${mm}-${dd}`);
-
-      setCuriosidades(calculateCuriosidades(combinedData));
-
-    } catch (error) {
-      console.error('Error loading data:', error);
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Datos ya inicializados, sin loading
 
   const formatDate = (dateString) => {
     const options = { month: 'long', day: 'numeric' };
@@ -307,31 +287,6 @@ function App() {
         avgGoalsAgainst: (yearData.goalsAgainst / yearData.total).toFixed(2)
       }));
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Cargando estadisticas...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <Card variant="glass" className="p-8 max-w-md w-full text-center">
-          <h2 className="title-card text-red-600 mb-2">Error al cargar datos</h2>
-          <p className="text-body mb-6">{error.message}</p>
-          <button onClick={() => window.location.reload()} className="btn btn-primary btn-lg">
-            Recargar pagina
-          </button>
-        </Card>
-      </div>
-    );
-  }
 
   const tabs = [
     { id: 'efemerides', label: 'Efemerides' },
