@@ -56,11 +56,10 @@ function App() {
       
       const allData = await vercelDataService.fetchAllData();
       
-      const combinedData = [
-        ...allData.completo,
-        ...allData.inca,
-        ...allData.conmebol
-      ].sort((a, b) => getDateForSorting(a) - getDateForSorting(b));
+      // Usar solo 'completo' que ya contiene todos los partidos (locales + internacionales)
+      // Los archivos 'inca' y 'conmebol' son subconjuntos para uso específico, 
+      // no deben combinarse con 'completo' para evitar duplicados
+      const combinedData = allData.completo.sort((a, b) => getDateForSorting(a) - getDateForSorting(b));
       
       setData(combinedData);
 
