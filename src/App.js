@@ -86,6 +86,9 @@ function App() {
     // Track rivals
     const rivalStats = {};
     
+    // Track countries (for international matches)
+    const countryStats = {};
+    
     // Track years
     const yearStats = {};
     
@@ -151,6 +154,15 @@ function App() {
       rivalStats[rival].gf += scGoals;
       rivalStats[rival].gc += opponentGoals;
       
+      // Country stats (international matches only)
+      const country = match["País"] || 'Perú';
+      if (!countryStats[country]) {
+        countryStats[country] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0, gf: 0, gc: 0 };
+      }
+      countryStats[country].jugados++;
+      countryStats[country].gf += scGoals;
+      countryStats[country].gc += opponentGoals;
+      
       // Year stats
       if (!yearStats[year]) {
         yearStats[year] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 };
@@ -163,6 +175,7 @@ function App() {
         if (dayStats[day]) dayStats[day].ganados++;
         if (monthStats[month]) monthStats[month].ganados++;
         rivalStats[rival].ganados++;
+        countryStats[country].ganados++;
         yearStats[year].ganados++;
         yearsWithWins.add(year);
         
@@ -177,6 +190,7 @@ function App() {
         if (dayStats[day]) dayStats[day].perdidos++;
         if (monthStats[month]) monthStats[month].perdidos++;
         rivalStats[rival].perdidos++;
+        countryStats[country].perdidos++;
         yearStats[year].perdidos++;
         yearsWithLosses.add(year);
         
@@ -191,6 +205,7 @@ function App() {
         if (dayStats[day]) dayStats[day].empatados++;
         if (monthStats[month]) monthStats[month].empatados++;
         rivalStats[rival].empatados++;
+        countryStats[country].empatados++;
         yearStats[year].empatados++;
         
         currentStreak = 0;
@@ -271,6 +286,67 @@ function App() {
       }
     });
     
+    // Country stats (international only)
+    const intlCountries = Object.keys(countryStats).filter(c => c !== 'Perú');
+    
+    // Best country (most wins)
+    let bestCountry = '';
+    let maxCountryWins = 0;
+    Object.entries(countryStats).forEach(([country, stats]) => {
+      if (stats.ganados > maxCountryWins) {
+        maxCountryWins = stats.ganados;
+        bestCountry = country;
+      }
+    });
+    
+    // Worst country (most losses)
+    let worstCountry = '';
+    let maxCountryLosses = 0;
+    Object.entries(countryStats).forEach(([country, stats]) => {
+      if (stats.perdidos > maxCountryLosses) {
+        maxCountryLosses = stats.perdidos;
+        worstCountry = country;
+      }
+    });
+    
+    // Most played country
+    let mostPlayedCountry = '';
+    let maxCountryMatches = 0;
+    Object.entries(countryStats).forEach(([country, stats]) => {
+      if (stats.jugados > maxCountryMatches) {
+        maxCountryMatches = stats.jugados;
+        mostPlayedCountry = country;
+      }
+    });
+    
+    // Least wins (among countries with matches)
+    let leastCountryWins = '';
+    let minCountryWins = Infinity;
+    Object.entries(countryStats).forEach(([country, stats]) => {
+      if (stats.ganados > 0 && stats.ganados < minCountryWins) {
+        minCountryWins = stats.ganados;
+        leastCountryWins = country;
+      }
+    });
+    if (minCountryWins === Infinity) {
+      leastCountryWins = 'N/A';
+      minCountryWins = 0;
+    }
+    
+    // Least losses (among countries with matches)
+    let leastCountryLosses = '';
+    let minCountryLosses = Infinity;
+    Object.entries(countryStats).forEach(([country, stats]) => {
+      if (stats.perdidos > 0 && stats.perdidos < minCountryLosses) {
+        minCountryLosses = stats.perdidos;
+        leastCountryLosses = country;
+      }
+    });
+    if (minCountryLosses === Infinity) {
+      leastCountryLosses = 'N/A';
+      minCountryLosses = 0;
+    }
+    
     // Count unique years with wins/losses
     const yearsWithWinsCount = yearsWithWins.size;
     const yearsWithLossesCount = yearsWithLosses.size;
@@ -322,6 +398,19 @@ function App() {
       bestRivalWins: maxRivalWins,
       worstRival: worstRival || 'N/A',
       worstRivalLosses: maxRivalLosses,
+      
+      // Countries (international)
+      bestCountry: bestCountry || 'N/A',
+      bestCountryWins: maxCountryWins,
+      worstCountry: worstCountry || 'N/A',
+      worstCountryLosses: maxCountryLosses,
+      mostPlayedCountry: mostPlayedCountry || 'N/A',
+      mostPlayedCountryCount: maxCountryMatches,
+      leastCountryWins: leastCountryWins,
+      leastCountryWinsCount: minCountryWins,
+      leastCountryLosses: leastCountryLosses,
+      leastCountryLossesCount: minCountryLosses,
+      totalIntlCountries: intlCountries.length,
       
       // Years
       yearsWithWins: yearsWithWinsCount,
@@ -1069,6 +1158,41 @@ function App() {
                 <p className="text-sm text-gray-600">Peor Rival (Más Derrotas)</p>
                 <p className="text-xl font-bold text-red-600">{curiosidades.worstRival}</p>
                 <p className="text-sm text-gray-500">{curiosidades.worstRivalLosses} derrotas</p>
+              </Card>
+            </div>
+
+            {/* Countries (International) */}
+            <h3 className="text-xl font-semibold text-[#1B265C] mt-6">Países (Internacional)</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">País Más Jugado</p>
+                <p className="text-xl font-bold text-[#1B265C]">{curiosidades.mostPlayedCountry}</p>
+                <p className="text-sm text-gray-500">{curiosidades.mostPlayedCountryCount} partidos</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Mejor País (Más Victorias)</p>
+                <p className="text-xl font-bold text-green-600">{curiosidades.bestCountry}</p>
+                <p className="text-sm text-gray-500">{curiosidades.bestCountryWins} victorias</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Peor País (Más Derrotas)</p>
+                <p className="text-xl font-bold text-red-600">{curiosidades.worstCountry}</p>
+                <p className="text-sm text-gray-500">{curiosidades.worstCountryLosses} derrotas</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">País Menos Victorias</p>
+                <p className="text-xl font-bold text-yellow-600">{curiosidades.leastCountryWins}</p>
+                <p className="text-sm text-gray-500">{curiosidades.leastCountryWinsCount} victorias</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">País Menos Derrotas</p>
+                <p className="text-xl font-bold text-blue-600">{curiosidades.leastCountryLosses}</p>
+                <p className="text-sm text-gray-500">{curiosidades.leastCountryLossesCount} derrotas</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <p className="text-sm text-gray-600">Países Diferentes</p>
+                <p className="text-2xl font-bold text-[#1B265C]">{curiosidades.totalIntlCountries}</p>
+                <p className="text-sm text-gray-500">en partidos internacionales</p>
               </Card>
             </div>
 
