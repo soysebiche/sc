@@ -114,18 +114,18 @@ function CountryHistory({ data }) {
 
   const getResultClass = (result) => {
     switch (result) {
-      case 'G': return 'text-green-600 font-bold';
-      case 'E': return 'text-yellow-600 font-bold';
-      case 'P': return 'text-red-600 font-bold';
+      case 'Victoria': return 'text-green-600 font-bold';
+      case 'Empate': return 'text-yellow-600 font-bold';
+      case 'Derrota': return 'text-red-600 font-bold';
       default: return 'text-gray-600';
     }
   };
 
   const getResultText = (result) => {
     switch (result) {
-      case 'G': return 'G';
-      case 'E': return 'E';
-      case 'P': return 'P';
+      case 'Victoria': return 'V';
+      case 'Empate': return 'E';
+      case 'Derrota': return 'D';
       default: return '-';
     }
   };
@@ -223,6 +223,14 @@ function CountryHistory({ data }) {
                   filteredMatches.map((match, index) => {
                     const isHome = match["Equipo Local"] === "Sporting Cristal";
                     const rival = isHome ? match["Equipo Visita"] : match["Equipo Local"];
+                    const scGoals = isHome 
+                      ? parseInt(match.Marcador.split('-')[0]) 
+                      : parseInt(match.Marcador.split('-')[1]);
+                    const opponentGoals = isHome 
+                      ? parseInt(match.Marcador.split('-')[1]) 
+                      : parseInt(match.Marcador.split('-')[0]);
+                    const result = scGoals > opponentGoals ? 'Victoria' : 
+                                 (scGoals < opponentGoals ? 'Derrota' : 'Empate');
                     
                     return (
                       <tr key={index} className="border-b hover:bg-gray-50">
@@ -238,8 +246,8 @@ function CountryHistory({ data }) {
                         <td className="px-4 py-3 text-sm text-center font-bold">
                           {match.Marcador}
                         </td>
-                        <td className={`px-4 py-3 text-center ${getResultClass(match.Resultado)}`}>
-                          {getResultText(match.Resultado)}
+                        <td className={`px-4 py-3 text-center ${getResultClass(result)}`}>
+                          {getResultText(result)}
                         </td>
                         <td className="px-4 py-3 text-sm">{rival}</td>
                       </tr>
