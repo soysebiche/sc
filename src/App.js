@@ -614,7 +614,7 @@ function App() {
 
             {/* Stats del año seleccionado */}
             {selectedYearStats && (
-              <div className="card-static p-6">
+              <div className="card-static p-6" key={selectedYearStats.year}>
                 <h3 className="text-lg font-bold text-white mb-4">Stats {selectedYearStats.year}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                   <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
@@ -668,7 +668,15 @@ function App() {
                   </thead>
                   <tbody>
                     {yearlyStats.map((yearData) => (
-                      <tr key={yearData.year} onClick={() => setSelectedYearStats(yearData)} style={{ cursor: 'pointer' }}>
+                      <tr 
+                        key={yearData.year} 
+                        onClick={() => {
+                          console.log('Clicked year:', yearData.year);
+                          setSelectedYearStats({...yearData});
+                        }} 
+                        style={{ cursor: 'pointer' }}
+                        className="hover:bg-gray-800"
+                      >
                         <td className="font-bold text-white">{yearData.year}</td>
                         <td className="text-center text-white">{yearData.total}</td>
                         <td className="text-center font-semibold" style={{ color: 'var(--accent-green)' }}>{yearData.victories}</td>
