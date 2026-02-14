@@ -264,14 +264,16 @@ function App() {
     ? yearlyStats 
     : yearlyStats.filter(y => Math.floor(y.year / 10) * 10 === parseInt(selectedDecade));
   
-  // Chart data
-  const chartData = filteredYearlyStats.map(y => ({
-    year: y.year,
-    victories: y.victories,
-    draws: y.draws,
-    defeats: y.defeats,
-    winPercentage: parseFloat(y.winPercentage)
-  }));
+  // Chart data - sorted oldest to newest
+  const chartData = filteredYearlyStats
+    .sort((a, b) => a.year - b.year)
+    .map(y => ({
+      year: y.year,
+      victories: y.victories,
+      draws: y.draws,
+      defeats: y.defeats,
+      winPercentage: parseFloat(y.winPercentage)
+    }));
 
   const tabs = [
     { id: 'efemerides', label: 'EFEMÉRIDES' },
