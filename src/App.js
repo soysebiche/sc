@@ -8,7 +8,7 @@ const initialData = vercelDataService.fetchAllData().completo;
 function App() {
   const [data] = useState(initialData);
   const [selectedMonth, setSelectedMonth] = useState(''); // eslint-disable-line no-unused-vars
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('efemerides');
   const [selectedMinute, setSelectedMinute] = useState(''); // eslint-disable-line no-unused-vars
   const [tournamentFilter, setTournamentFilter] = useState('todos');
   const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
@@ -245,8 +245,8 @@ function App() {
   const months = getUniqueMonths(initialData);
 
   const tabs = [
-    { id: 'dashboard', label: 'DASHBOARD' },
     { id: 'efemerides', label: 'EFEMÉRIDES' },
+    { id: 'dashboard', label: 'DASHBOARD' },
     { id: 'partidos', label: 'PARTIDOS' },
     { id: 'analisis-anual', label: 'AÑO' },
     { id: 'rivales', label: 'RIVALES' },
