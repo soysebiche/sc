@@ -301,10 +301,16 @@ function App() {
               <div className="card-static p-6 hover-lift" style={{ borderColor: 'var(--accent-yellow)', borderWidth: '2px' }}>
                 <p className="text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--accent-yellow)' }}>Empates</p>
                 <p className="text-4xl stat-number" style={{ color: 'var(--accent-yellow)' }}>{curiosidades.draws || 0}</p>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                  {curiosidades.totalMatches > 0 ? ((curiosidades.draws / curiosidades.totalMatches) * 100).toFixed(1) : 0}%
+                </p>
               </div>
               <div className="card-static p-6 hover-lift" style={{ borderColor: 'var(--accent-red)', borderWidth: '2px' }}>
                 <p className="text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--accent-red)' }}>Derrotas</p>
                 <p className="text-4xl stat-number" style={{ color: 'var(--accent-red)' }}>{curiosidades.defeats || 0}</p>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                  {curiosidades.totalMatches > 0 ? ((curiosidades.defeats / curiosidades.totalMatches) * 100).toFixed(1) : 0}%
+                </p>
               </div>
             </div>
 
