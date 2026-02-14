@@ -194,13 +194,6 @@ function CountryHistory({ data }) {
                   const opponentGoals = isHome ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
                   const result = scGoals > opponentGoals ? 'Victoria' : scGoals < opponentGoals ? 'Derrota' : 'Empate';
 
-                  let matchYear;
-                  if (match.Año && typeof match.Año === 'number') matchYear = match.Año;
-                  else if (match.Fecha && match.Fecha !== 'TBD') {
-                    const date = new Date(match.Fecha);
-                    matchYear = !isNaN(date.getTime()) ? date.getFullYear() : null;
-                  }
-
                   return (
                     <div key={index} className="card p-4">
                       <div className="flex justify-between items-start mb-2">
