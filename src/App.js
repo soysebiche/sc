@@ -474,17 +474,17 @@ function App() {
                       const oppGoals = isHome ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
                       const result = scGoals > oppGoals ? 'V' : scGoals < oppGoals ? 'P' : 'E';
                       return (
-                        <div key={idx} className="p-4 rounded-xl" style={{ background: 'var(--bg-card-hover)' }}>
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-bold" style={{ color: 'var(--accent-cyan)' }}>{match.Año}</span>
+                        <div key={idx} className="card p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{formatDate(match.Fecha)}</span>
                             <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
                           </div>
-                          <div className="flex items-center justify-center gap-3 text-xl font-bold">
-                            <span className="text-white">{match["Equipo Local"]}</span>
-                            <span style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</span>
-                            <span className="text-white">{match["Equipo Visita"]}</span>
-                          </div>
-                          <p className="text-xs text-center mt-2" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
+                          <p className="font-semibold text-white">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
+                          <p className="text-2xl font-bold text-center my-2" style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</p>
+                          <p className="text-xs text-center mb-1" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
+                          {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
+                            <p className="text-xs" style={{ color: 'var(--accent-cyan)' }}>Goles: {match["Goles (Solo SC)"]}</p>
+                          )}
                         </div>
                       );
                     })}

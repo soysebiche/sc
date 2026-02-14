@@ -196,16 +196,16 @@ function RivalHistory({ data }) {
                 {filteredMatches.map((match, index) => {
                   const scGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
                   const opponentGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
-                  const result = scGoals > opponentGoals ? 'Victoria' : scGoals < opponentGoals ? 'Derrota' : 'Empate';
+                  const result = scGoals > opponentGoals ? 'V' : scGoals < opponentGoals ? 'P' : 'E';
 
                   return (
                     <div key={index} className="card p-4">
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{formatDate(match.Fecha)}</span>
-                        <span className={`badge ${result === 'Victoria' ? 'badge-green' : result === 'Empate' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
+                        <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
                       </div>
                       <p className="font-semibold text-white">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
-                      <p className="text-xl font-bold text-center my-2" style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</p>
+                      <p className="text-2xl font-bold text-center my-2" style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</p>
                       <p className="text-xs text-center mb-1" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
                       {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
                         <p className="text-xs" style={{ color: 'var(--accent-cyan)' }}>Goles: {match["Goles (Solo SC)"]}</p>
