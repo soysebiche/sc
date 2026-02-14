@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
 import CountryHistory from './components/CountryHistory';
@@ -184,11 +184,13 @@ function App() {
       return yearSortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
     });
     setYearlyStats(sortedStats);
-    // Set default selected year to most recent
-    if (sortedStats.length > 0 && !selectedYearStats) {
-      setSelectedYearStats(sortedStats[0]);
-    }
   }, [data, tournamentFilter, yearSortConfig]);
+
+  useEffect(() => {
+    if (yearlyStats.length > 0 && !selectedYearStats) {
+      setSelectedYearStats(yearlyStats[0]);
+    }
+  }, [yearlyStats]);
 
   const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
