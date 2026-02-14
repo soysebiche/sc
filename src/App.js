@@ -8,20 +8,8 @@ const initialData = vercelDataService.fetchAllData().completo;
 
 function App() {
   const [data] = useState(initialData);
-  const [selectedMonth, setSelectedMonth] = useState(''); // eslint-disable-line no-unused-vars
-  const [activeTab, setActiveTab] = useState('efemerides');
-  const [selectedMinute, setSelectedMinute] = useState(''); // eslint-disable-line no-unused-vars
-  const [tournamentFilter, setTournamentFilter] = useState('todos');
-  const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
-  const [selectedDecade, setSelectedDecade] = useState('all');
-  const [selectedYearForStats, setSelectedYearForStats] = useState(() => {
-    // Get the most recent year from data as default
-    const years = getUniqueYears(initialData);
-    return years.length > 0 ? years[0] : null;
-  });
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
-
+  
+  // Helper functions - defined before useState
   const getYearFromMatch = (match) => {
     if (match.Año && typeof match.Año === 'number') return match.Año;
     if (match.Fecha && match.Fecha !== 'TBD') {
@@ -34,6 +22,20 @@ function App() {
   const getUniqueYears = (data) => {
     return [...new Set(data.map(match => getYearFromMatch(match)).filter(year => year !== null))].sort((a, b) => b - a);
   };
+  
+  // Get initial year from data
+  const initialYears = getUniqueYears(initialData);
+  const initialSelectedYear = initialYears.length > 0 ? initialYears[0] : null;
+  
+  const [selectedMonth, setSelectedMonth] = useState(''); // eslint-disable-line no-unused-vars
+  const [activeTab, setActiveTab] = useState('efemerides');
+  const [selectedMinute, setSelectedMinute] = useState(''); // eslint-disable-line no-unused-vars
+  const [tournamentFilter, setTournamentFilter] = useState('todos');
+  const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
+  const [selectedDecade, setSelectedDecade] = useState('all');
+  const [selectedYearForStats, setSelectedYearForStats] = useState(initialSelectedYear);
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
 
   const getUniqueMonths = (data) => {
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
