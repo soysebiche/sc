@@ -14,7 +14,11 @@ function App() {
   const [tournamentFilter, setTournamentFilter] = useState('todos');
   const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
   const [selectedDecade, setSelectedDecade] = useState('all');
-  const [selectedYearStats, setSelectedYearStats] = useState(null);
+  const [selectedYearForStats, setSelectedYearForStats] = useState(() => {
+    // Get the most recent year from data as default
+    const years = getUniqueYears(initialData);
+    return years.length > 0 ? years[0] : null;
+  });
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
 
@@ -186,13 +190,6 @@ function App() {
     setYearlyStats(sortedStats);
   }, [data, tournamentFilter, yearSortConfig]);
 
-  useEffect(() => {
-    if (yearlyStats.length > 0 && !selectedYearStats) {
-      setSelectedYearStats(yearlyStats[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yearlyStats]);
-
   const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   const filteredMatches = data.filter(match => {
@@ -274,6 +271,11 @@ function App() {
       defeats: y.defeats,
       winPercentage: parseFloat(y.winPercentage)
     }));
+
+  // Get stats for selected year
+  const currentYearStats = selectedYearForStats 
+    ? yearlyStats.find(y => y.year === selectedYearForStats) || null
+    : (yearlyStats.length > 0 ? yearlyStats[0] : null);
 
   const tabs = [
     { id: 'efemerides', label: 'EFEMÉRIDES' },
@@ -613,36 +615,36 @@ function App() {
             </div>
 
             {/* Stats del año seleccionado */}
-            {selectedYearStats && (
-              <div className="card-static p-6" key={selectedYearStats.year}>
-                <h3 className="text-lg font-bold text-white mb-4">Stats {selectedYearStats.year}</h3>
+            {currentYearStats ? (
+              <div className="card-static p-6" key={currentYearStats.year}>
+                <h3 className="text-lg font-bold text-white mb-4">Stats {currentYearStats.year}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                   <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
                     <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-cyan)' }}>Partidos</p>
-                    <p className="text-3xl stat-number text-white">{selectedYearStats.total}</p>
+                    <p className="text-3xl stat-number text-white">{currentYearStats.total}</p>
                   </div>
                   <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-green)' }}>
                     <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-green)' }}>Victorias</p>
-                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-green)' }}>{selectedYearStats.victories}</p>
-                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{selectedYearStats.winPercentage}%</p>
+                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-green)' }}>{currentYearStats.victories}</p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{currentYearStats.winPercentage}%</p>
                   </div>
                   <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-yellow)' }}>
                     <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-yellow)' }}>Empates</p>
-                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-yellow)' }}>{selectedYearStats.draws}</p>
-                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{selectedYearStats.drawPercentage}%</p>
+                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-yellow)' }}>{currentYearStats.draws}</p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{currentYearStats.drawPercentage}%</p>
                   </div>
                   <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-red)' }}>
                     <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-red)' }}>Derrotas</p>
-                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-red)' }}>{selectedYearStats.defeats}</p>
-                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{selectedYearStats.defeatPercentage}%</p>
+                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-red)' }}>{currentYearStats.defeats}</p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{currentYearStats.defeatPercentage}%</p>
                   </div>
                   <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
                     <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-blue)' }}>Goles</p>
-                    <p className="text-xl stat-number text-white">{selectedYearStats.goalsFor} - {selectedYearStats.goalsAgainst}</p>
+                    <p className="text-xl stat-number text-white">{currentYearStats.goalsFor} - {currentYearStats.goalsAgainst}</p>
                   </div>
                 </div>
               </div>
-            )}
+            ) : null}
 
             {/* Tabla completa */}
             <div className="card-static overflow-hidden">
@@ -670,10 +672,7 @@ function App() {
                     {yearlyStats.map((yearData) => (
                       <tr 
                         key={yearData.year} 
-                        onClick={() => {
-                          console.log('Clicked year:', yearData.year);
-                          setSelectedYearStats({...yearData});
-                        }} 
+                        onClick={() => setSelectedYearForStats(yearData.year)}
                         style={{ cursor: 'pointer' }}
                         className="hover:bg-gray-800"
                       >
