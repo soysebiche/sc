@@ -528,7 +528,10 @@ function App() {
                       </div>
                       <p className="font-semibold text-white">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
                       <p className="text-2xl font-bold text-center my-2" style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</p>
-                      <p className="text-xs text-center" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
+                      <p className="text-xs text-center mb-1" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
+                      {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
+                        <p className="text-xs" style={{ color: 'var(--accent-cyan)' }}>Goles: {match["Goles (Solo SC)"]}</p>
+                      )}
                     </div>
                   );
                 })}
