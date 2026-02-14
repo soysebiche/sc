@@ -181,7 +181,7 @@ function App() {
     setYearlyStats(sortedStats);
   }, [data, tournamentFilter, yearSortConfig]);
 
-  const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { month: 'long', day: 'numeric' });
+  const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   const filteredMatches = data.filter(match => {
     const matchYear = getYearFromMatch(match);
