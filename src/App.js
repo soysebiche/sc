@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
 import CountryHistory from './components/CountryHistory';
@@ -12,6 +13,8 @@ function App() {
   const [selectedMinute, setSelectedMinute] = useState(''); // eslint-disable-line no-unused-vars
   const [tournamentFilter, setTournamentFilter] = useState('todos');
   const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
+  const [selectedDecade, setSelectedDecade] = useState('all');
+  const [selectedYearStats, setSelectedYearStats] = useState(null);
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
 
@@ -159,7 +162,9 @@ function App() {
     
     return Object.values(yearlyData).map(yearData => ({
       ...yearData,
-      winPercentage: ((yearData.victories / yearData.total) * 100).toFixed(1)
+      winPercentage: ((yearData.victories / yearData.total) * 100).toFixed(1),
+      drawPercentage: ((yearData.draws / yearData.total) * 100).toFixed(1),
+      defeatPercentage: ((yearData.defeats / yearData.total) * 100).toFixed(1)
     }));
   };
 
@@ -179,6 +184,10 @@ function App() {
       return yearSortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
     });
     setYearlyStats(sortedStats);
+    // Set default selected year to most recent
+    if (sortedStats.length > 0 && !selectedYearStats) {
+      setSelectedYearStats(sortedStats[0]);
+    }
   }, [data, tournamentFilter, yearSortConfig]);
 
   const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -243,6 +252,23 @@ function App() {
 
   const years = getUniqueYears(initialData);
   const months = getUniqueMonths(initialData);
+  
+  // Get unique decades
+  const decades = [...new Set(years.map(y => Math.floor(y / 10) * 10))].sort((a, b) => b - a);
+  
+  // Filter yearlyStats by decade
+  const filteredYearlyStats = selectedDecade === 'all' 
+    ? yearlyStats 
+    : yearlyStats.filter(y => Math.floor(y.year / 10) * 10 === parseInt(selectedDecade));
+  
+  // Chart data
+  const chartData = filteredYearlyStats.map(y => ({
+    year: y.year,
+    victories: y.victories,
+    draws: y.draws,
+    defeats: y.defeats,
+    winPercentage: parseFloat(y.winPercentage)
+  }));
 
   const tabs = [
     { id: 'efemerides', label: 'EFEMÉRIDES' },
@@ -547,13 +573,73 @@ function App() {
           <div className="space-y-6 animate-fade-in">
             <div className="flex flex-wrap gap-4 items-center justify-between">
               <h2 className="text-2xl font-bold text-white">ANÁLISIS POR AÑO</h2>
-              <select value={tournamentFilter} onChange={(e) => setTournamentFilter(e.target.value)}>
-                <option value="todos">Todos los torneos</option>
-                <option value="local">Solo locales</option>
-                <option value="internacional">Solo internacionales</option>
-              </select>
+              <div className="flex gap-4">
+                <select value={selectedDecade} onChange={(e) => setSelectedDecade(e.target.value)}>
+                  <option value="all">Todas las décadas</option>
+                  {decades.map(d => <option key={d} value={d}>{d}s</option>)}
+                </select>
+                <select value={tournamentFilter} onChange={(e) => setTournamentFilter(e.target.value)}>
+                  <option value="todos">Todos los torneos</option>
+                  <option value="local">Solo locales</option>
+                  <option value="internacional">Solo internacionales</option>
+                </select>
+              </div>
             </div>
-            
+
+            {/* Gráfico de barras */}
+            <div className="card-static p-6">
+              <h3 className="text-lg font-bold text-white mb-4">Evolución por Año</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="year" stroke="#666" tick={{ fill: '#666' }} />
+                  <YAxis stroke="#666" tick={{ fill: '#666' }} />
+                  <Tooltip 
+                    contentStyle={{ background: '#242424', border: '1px solid #444', borderRadius: '8px' }}
+                    labelStyle={{ color: '#fff' }}
+                    formatter={(value, name) => [value, name === 'victories' ? 'Victorias' : name === 'draws' ? 'Empates' : 'Derrotas']}
+                  />
+                  <Legend />
+                  <Bar dataKey="victories" name="Victorias" stackId="a" fill="#00ff88" />
+                  <Bar dataKey="draws" name="Empates" stackId="a" fill="#ffd93d" />
+                  <Bar dataKey="defeats" name="Derrotas" stackId="a" fill="#ff4757" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Stats del año seleccionado */}
+            {selectedYearStats && (
+              <div className="card-static p-6">
+                <h3 className="text-lg font-bold text-white mb-4">Stats {selectedYearStats.year}</h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
+                    <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-cyan)' }}>Partidos</p>
+                    <p className="text-3xl stat-number text-white">{selectedYearStats.total}</p>
+                  </div>
+                  <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-green)' }}>
+                    <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-green)' }}>Victorias</p>
+                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-green)' }}>{selectedYearStats.victories}</p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{selectedYearStats.winPercentage}%</p>
+                  </div>
+                  <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-yellow)' }}>
+                    <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-yellow)' }}>Empates</p>
+                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-yellow)' }}>{selectedYearStats.draws}</p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{selectedYearStats.drawPercentage}%</p>
+                  </div>
+                  <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-red)' }}>
+                    <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-red)' }}>Derrotas</p>
+                    <p className="text-3xl stat-number" style={{ color: 'var(--accent-red)' }}>{selectedYearStats.defeats}</p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{selectedYearStats.defeatPercentage}%</p>
+                  </div>
+                  <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
+                    <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-blue)' }}>Goles</p>
+                    <p className="text-xl stat-number text-white">{selectedYearStats.goalsFor} - {selectedYearStats.goalsAgainst}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tabla completa */}
             <div className="card-static overflow-hidden">
               <div className="overflow-x-auto">
                 <table>
@@ -577,7 +663,7 @@ function App() {
                   </thead>
                   <tbody>
                     {yearlyStats.map((yearData) => (
-                      <tr key={yearData.year}>
+                      <tr key={yearData.year} onClick={() => setSelectedYearStats(yearData)} style={{ cursor: 'pointer' }}>
                         <td className="font-bold text-white">{yearData.year}</td>
                         <td className="text-center text-white">{yearData.total}</td>
                         <td className="text-center font-semibold" style={{ color: 'var(--accent-green)' }}>{yearData.victories}</td>
