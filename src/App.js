@@ -190,6 +190,7 @@ function App() {
     if (yearlyStats.length > 0 && !selectedYearStats) {
       setSelectedYearStats(yearlyStats[0]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearlyStats]);
 
   const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
