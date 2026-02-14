@@ -209,15 +209,9 @@ function CountryHistory({ data }) {
                       </div>
                       <p className="font-semibold text-white">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
                       <p className="text-xl font-bold text-center my-2" style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</p>
-                      <div className="text-center mt-2">
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
-                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{matchYear || 'TBD'}</p>
-                      </div>
+                      <p className="text-xs text-center mb-1" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
                       {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
-                        <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-                          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>Goles de Sporting Cristal:</p>
-                          <p className="text-sm" style={{ color: 'var(--accent-cyan)' }}>{match["Goles (Solo SC)"]}</p>
-                        </div>
+                        <p className="text-xs" style={{ color: 'var(--accent-cyan)' }}>Goles: {match["Goles (Solo SC)"]}</p>
                       )}
                     </div>
                   );
