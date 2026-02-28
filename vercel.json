@@ -10,7 +10,7 @@
       "dest": "/static/$1"
     },
     {
-      "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|css|js))",
+      "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|css|js|html))",
       "dest": "/$1"
     },
     {
