@@ -95,7 +95,7 @@ function CountryHistory({ data }) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">HISTORIAL VS PAÍSES</h2>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>HISTORIAL VS PAÍSES</h2>
         <p style={{ color: 'var(--text-secondary)' }}>Descubre el historial completo contra selecciones y equipos de otros países</p>
       </div>
 
@@ -123,68 +123,68 @@ function CountryHistory({ data }) {
       {selectedCountry && (
         <>
           <div className="card-static p-6">
-            <h3 className="text-xl font-bold text-white mb-6">
+            <h3 className="text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
               Balance vs {selectedCountry}
               {selectedYear && ` (${selectedYear})`}
             </h3>            
             
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-              <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
-                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-cyan)' }}>Total</p>
-                <p className="text-3xl stat-number text-white">{stats.total}</p>
+              <div className="stat-tile" style={{ background: 'var(--bg-inset)', borderRadius: '8px' }}>
+                <p className="stat-label" style={{ color: 'var(--color-celeste)' }}>Total</p>
+                <p className="text-3xl stat-number" style={{ color: 'var(--text-primary)' }}>{stats.total}</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>partidos</p>
               </div>
               
-              <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-green)' }}>
-                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-green)' }}>Ganados</p>
-                <p className="text-3xl stat-number" style={{ color: 'var(--accent-green)' }}>{stats.victories}</p>
+              <div className="stat-tile stat-tile-win" style={{ background: 'var(--bg-inset)', borderRadius: '8px', borderLeft: '3px solid var(--color-win)' }}>
+                <p className="stat-label" style={{ color: 'var(--color-win)' }}>Ganados</p>
+                <p className="text-3xl stat-number" style={{ color: 'var(--color-win)' }}>{stats.victories}</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{stats.winPercentage}%</p>
               </div>
               
-              <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-yellow)' }}>
-                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-yellow)' }}>Empatados</p>
-                <p className="text-3xl stat-number" style={{ color: 'var(--accent-yellow)' }}>{stats.draws}</p>
+              <div className="stat-tile stat-tile-draw" style={{ background: 'var(--bg-inset)', borderRadius: '8px', borderLeft: '3px solid var(--color-draw)' }}>
+                <p className="stat-label" style={{ color: 'var(--color-draw)' }}>Empatados</p>
+                <p className="text-3xl stat-number" style={{ color: 'var(--color-draw)' }}>{stats.draws}</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{stats.drawPercentage}%</p>
               </div>
               
-              <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px', borderLeft: '3px solid var(--accent-red)' }}>
-                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-red)' }}>Perdidos</p>
-                <p className="text-3xl stat-number" style={{ color: 'var(--accent-red)' }}>{stats.defeats}</p>
+              <div className="stat-tile stat-tile-loss" style={{ background: 'var(--bg-inset)', borderRadius: '8px', borderLeft: '3px solid var(--color-loss)' }}>
+                <p className="stat-label" style={{ color: 'var(--color-loss)' }}>Perdidos</p>
+                <p className="text-3xl stat-number" style={{ color: 'var(--color-loss)' }}>{stats.defeats}</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{stats.defeatPercentage}%</p>
               </div>
               
-              <div className="p-4 text-center" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
-                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--accent-blue)' }}>Goles</p>
-                <p className="text-xl stat-number text-white">{stats.goalsFor} - {stats.goalsAgainst}</p>
+              <div className="stat-tile" style={{ background: 'var(--bg-inset)', borderRadius: '8px' }}>
+                <p className="stat-label" style={{ color: 'var(--color-celeste)' }}>Goles</p>
+                <p className="text-xl stat-number" style={{ color: 'var(--text-primary)' }}>{stats.goalsFor} - {stats.goalsAgainst}</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>a favor - en contra</p>
               </div>
             </div>
 
             {stats.total > 0 && (
-              <div className="p-4" style={{ background: 'var(--bg-card-hover)', borderRadius: '8px' }}>
+              <div className="p-4" style={{ background: 'var(--bg-inset)', borderRadius: '8px' }}>
                 <p className="text-sm font-semibold mb-3 text-center" style={{ color: 'var(--text-secondary)' }}>Distribución de resultados</p>
-                <div className="flex rounded-xl overflow-hidden h-10" style={{ background: 'var(--border-subtle)' }}>
-                  <div className="flex items-center justify-center text-sm font-bold text-black" style={{ width: `${stats.winPercentage}%`, background: 'var(--accent-green)' }}>
+                <div className="distribution-bar" style={{ background: 'var(--border-subtle)' }}>
+                  <div className="flex items-center justify-center text-sm font-bold text-white" style={{ width: `${stats.winPercentage}%`, background: 'var(--color-win)' }}>
                     {stats.winPercentage > 10 && `${stats.winPercentage}%`}
                   </div>
-                  <div className="flex items-center justify-center text-sm font-bold text-black" style={{ width: `${stats.drawPercentage}%`, background: 'var(--accent-yellow)' }}>
+                  <div className="flex items-center justify-center text-sm font-bold text-white" style={{ width: `${stats.drawPercentage}%`, background: 'var(--color-draw)' }}>
                     {stats.drawPercentage > 10 && `${stats.drawPercentage}%`}
                   </div>
-                  <div className="flex items-center justify-center text-sm font-bold text-white" style={{ width: `${stats.defeatPercentage}%`, background: 'var(--accent-red)' }}>
+                  <div className="flex items-center justify-center text-sm font-bold text-white" style={{ width: `${stats.defeatPercentage}%`, background: 'var(--color-loss)' }}>
                     {stats.defeatPercentage > 10 && `${stats.defeatPercentage}%`}
                   </div>
                 </div>
                 <div className="flex justify-between mt-3 text-sm">
-                  <span style={{ color: 'var(--accent-green)' }}>Victorias ({stats.victories})</span>
-                  <span style={{ color: 'var(--accent-yellow)' }}>Empates ({stats.draws})</span>
-                  <span style={{ color: 'var(--accent-red)' }}>Derrotas ({stats.defeats})</span>
+                  <span style={{ color: 'var(--color-win)' }}>Victorias ({stats.victories})</span>
+                  <span style={{ color: 'var(--color-draw)' }}>Empates ({stats.draws})</span>
+                  <span style={{ color: 'var(--color-loss)' }}>Derrotas ({stats.defeats})</span>
                 </div>
               </div>
             )}
           </div>
 
           <div className="card-static p-6">
-            <h3 className="text-xl font-bold text-white mb-4">Historial de encuentros ({filteredMatches.length} partidos)</h3>            
+            <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Historial de encuentros ({filteredMatches.length} partidos)</h3>            
             
             {filteredMatches.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -195,16 +195,16 @@ function CountryHistory({ data }) {
                   const result = scGoals > opponentGoals ? 'V' : scGoals < opponentGoals ? 'P' : 'E';
 
                   return (
-                    <div key={index} className="card p-4">
+                    <div key={index} className="match-card">
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{formatDate(match.Fecha)}</span>
                         <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
                       </div>
-                      <p className="font-semibold text-white">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
-                      <p className="text-2xl font-bold text-center my-2" style={{ color: 'var(--accent-cyan)' }}>{match.Marcador}</p>
+                      <p className="match-teams">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
+                      <p className="match-score text-center my-2" style={{ color: 'var(--color-celeste)' }}>{match.Marcador}</p>
                       <p className="text-xs text-center mb-1" style={{ color: 'var(--text-secondary)' }}>{match.Torneo}</p>
                       {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
-                        <p className="text-xs" style={{ color: 'var(--accent-cyan)' }}>Goles: {match["Goles (Solo SC)"]}</p>
+                        <p className="text-xs" style={{ color: 'var(--color-celeste)' }}>Goles: {match["Goles (Solo SC)"]}</p>
                       )}
                     </div>
                   );
