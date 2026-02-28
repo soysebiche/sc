@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sebiche Celeste - Case Study</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --surface: #ffffff;
+        --ink: #0f172a;
+        --muted: #475569;
+        --line: #dbe4f0;
+        --brand: #0b4cbf;
+        --brand-soft: #dbeafe;
+        --ok: #0f766e;
+        --shadow: 0 18px 40px rgba(9, 30, 66, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 0% 0%, #dbeafe 0%, transparent 45%),
+          radial-gradient(circle at 100% 20%, #e0f2fe 0%, transparent 35%),
+          var(--bg);
+        color: var(--ink);
+        font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      .wrap {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      section {
+        padding: 72px 0;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        margin-bottom: 10px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: var(--brand-soft);
+        color: var(--brand);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+      }
+
+      h1 {
+        font-size: clamp(36px, 6vw, 68px);
+        max-width: 760px;
+      }
+
+      h2 {
+        font-size: clamp(28px, 4vw, 44px);
+      }
+
+      .lead {
+        margin: 20px 0 28px;
+        max-width: 760px;
+        font-size: clamp(17px, 2vw, 22px);
+        color: var(--muted);
+      }
+
+      .impact {
+        display: inline-block;
+        margin: 12px 0 26px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: #0f172a;
+        color: #f8fafc;
+        font-size: clamp(22px, 3vw, 34px);
+        font-weight: 800;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .meta span {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        border-radius: 999px;
+        padding: 9px 14px;
+        font-size: 13px;
+        color: #1e293b;
+      }
+
+      .hero-visual {
+        position: relative;
+        margin-top: 28px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        background: rgba(255, 255, 255, 0.66);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 20px 34px rgba(15, 23, 42, 0.16);
+        overflow: hidden;
+        padding-top: 34px;
+      }
+
+      .hero-visual::before {
+        content: "";
+        position: absolute;
+        top: 11px;
+        left: 14px;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #ff5f57;
+        box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+        z-index: 2;
+      }
+
+      .hero-visual::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 24%;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.28), rgba(15, 23, 42, 0));
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 2;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .hero-visual img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        object-position: top;
+      }
+
+      .grid-2 {
+        display: grid;
+        gap: 22px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--surface);
+        padding: 20px;
+      }
+
+      .quote {
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
+      .timeline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .timeline span {
+        background: #0f172a;
+        color: #f8fafc;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .insight-list,
+      .learn-list {
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .insight-list li,
+      .learn-list li {
+        margin-bottom: 10px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid var(--line);
+      }
+
+      .gallery {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .shot {
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 14px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.66);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 20px 34px rgba(15, 23, 42, 0.16);
+        padding-top: 34px;
+      }
+
+      .shot::before {
+        content: "";
+        position: absolute;
+        top: 11px;
+        left: 14px;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #ff5f57;
+        box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+      }
+
+      .shot::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 30px;
+        height: 22%;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.28), rgba(15, 23, 42, 0));
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        pointer-events: none;
+      }
+
+      .shot img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        object-position: top;
+      }
+
+      .shot p {
+        margin: 0;
+        padding: 10px 12px;
+        font-size: 13px;
+        color: #334155;
+        border-top: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(255, 255, 255, 0.82);
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      .metric {
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 18px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: clamp(30px, 4vw, 52px);
+        line-height: 1;
+        color: var(--brand);
+      }
+
+      .metric span {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .note {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .next {
+        display: inline-block;
+        margin-top: 18px;
+        color: var(--ok);
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        section {
+          padding: 58px 0;
+        }
+
+        .grid-2,
+        .gallery,
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow">Case Study</span>
+        <h1>Sebiche Celeste: From Scattered Football Data to a Trusted Historical Source</h1>
+        <p class="lead">
+          I standardized and structured decades of Sporting Cristal match data, turning fragmented records
+          into a reliable system the community can actually use.
+        </p>
+        <div class="impact">Dispersed historical records -> clear answers in seconds</div>
+        <div class="meta">
+          <span>Timeline: 90s archive + consolidation through 2026</span>
+          <span>Role: Data curation, standardization, product execution</span>
+          <span>Tools: JSON, React, data visualization</span>
+          <span>Context: Independent initiative with real user value</span>
+        </div>
+        <div class="hero-visual">
+          <img src="./case-study-assets/screenshots/home-day.png" alt="Sebiche Celeste light mode" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>01 - The Challenge</h2>
+        <p class="lead">
+          Sporting Cristal's 90s history mattered, but the information was fragmented: outdated records,
+          mismatched match sheets, old magazines, and no single source of truth to answer simple questions fast.
+        </p>
+        <div class="grid-2">
+          <article class="card">
+            <h3>Primary user</h3>
+            <p>
+              Fans and community members who want trustworthy historical context: what happened on this date,
+              head-to-head performance, seasonal outcomes, and country-level match history.
+            </p>
+          </article>
+          <article class="card">
+            <p class="quote">
+              "There was no unified source of truth. The data existed, but it was disconnected and inconsistent."
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>02 - The Approach</h2>
+        <p class="lead">An iterative technical pipeline to clean, normalize, classify, and publish static historical data.</p>
+        <div class="timeline">
+          <span>Collect sources</span>
+          <span>Fix inconsistencies</span>
+          <span>Normalize teams and tournaments</span>
+          <span>Classify by analytical dimensions</span>
+          <span>Ship practical visual modules</span>
+        </div>
+        <ul class="insight-list">
+          <li><strong>Insight 1:</strong> Without taxonomy and standards, historical analysis does not scale.</li>
+          <li><strong>Insight 2:</strong> Strong data structure directly reduces friction for end users.</li>
+          <li><strong>Insight 3:</strong> Date-based and comparative views turn archives into recurring usage.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>03 - The Solution</h2>
+        <p class="lead">
+          A web product with dedicated historical modules and dual themes (light/dark), allowing users
+          to explore the same data through multiple perspectives.
+        </p>
+        <div class="gallery">
+          <figure class="shot">
+            <img src="./case-study-assets/screenshots/efemerides-day.png" alt="Efemerides day mode" />
+            <p>EFEMERIDES - Day</p>
+          </figure>
+          <figure class="shot">
+            <img src="./case-study-assets/screenshots/dashboard-night.png" alt="Dashboard night mode" />
+            <p>DASHBOARD - Night</p>
+          </figure>
+          <figure class="shot">
+            <img src="./case-study-assets/screenshots/ano-day.png" alt="Year module day mode" />
+            <p>AÑO - Day</p>
+          </figure>
+          <figure class="shot">
+            <img src="./case-study-assets/screenshots/rivales-filtered-night.png" alt="Rivals filtered night mode" />
+            <p>RIVALES (Alianza Lima, 2016) - Night</p>
+          </figure>
+          <figure class="shot">
+            <img src="./case-study-assets/screenshots/paises-filtered-day.png" alt="Countries filtered day mode" />
+            <p>PAISES (Argentina, 1997) - Day</p>
+          </figure>
+          <figure class="shot">
+            <img src="./case-study-assets/screenshots/paises-filtered-night.png" alt="Countries filtered night mode" />
+            <p>PAISES (Argentina, 1997) - Night</p>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>04 - The Impact</h2>
+        <p class="lead">
+          Measurable outcomes from turning fragmented archives into a structured, explorable historical product.
+        </p>
+        <div class="metrics">
+          <article class="metric">
+            <strong>1904</strong>
+            <span>historical matches structured into a queryable dataset</span>
+          </article>
+          <article class="metric">
+            <strong>6</strong>
+            <span>exploration modules built around real fan questions</span>
+          </article>
+          <article class="metric">
+            <strong>2</strong>
+            <span>visual themes (light and dark) for continuous usage</span>
+          </article>
+          <article class="metric">
+            <strong>1</strong>
+            <span>unified source of truth replacing fragmented records</span>
+          </article>
+        </div>
+        <article class="card">
+          <h3>Community validation</h3>
+          <p>
+            Sporting Cristal's community valued this work because it consolidated scattered historical information
+            into one clear, consistent, and trusted reference point.
+          </p>
+        </article>
+        <ul class="learn-list">
+          <li>Data normalization is a product advantage, not just backend housekeeping.</li>
+          <li>In historical products, traceability of criteria matters as much as data volume.</li>
+          <li>Reliable data plus clear storytelling turns archives into active community memory.</li>
+        </ul>
+        <p class="note">
+          This was not a formal company assignment, but it was executed as serious end-to-end product work
+          with measurable user impact.
+        </p>
+      </div>
+    </section>
+  </body>
+</html>
