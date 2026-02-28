@@ -84,6 +84,99 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
+   DARK MODE — Sophisticated Biscay-based dark theme
+   Applied via [data-theme="dark"] on <html>
+   ═══════════════════════════════════════════════════════════════════════ */
+
+[data-theme="dark"] {
+  --bg-primary: #0B1120;
+  --bg-secondary: #111827;
+  --bg-card: #151D30;
+  --bg-card-hover: #1C2640;
+  --bg-elevated: #1A2338;
+  --bg-inset: #111827;
+
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-on-dark: #FFFFFF;
+
+  --color-win: #34D399;
+  --color-win-light: rgba(52, 211, 153, 0.15);
+  --color-win-text: #6EE7B7;
+  --color-draw: #FBBF24;
+  --color-draw-light: rgba(251, 191, 36, 0.15);
+  --color-draw-text: #FCD34D;
+  --color-loss: #F87171;
+  --color-loss-light: rgba(248, 113, 113, 0.15);
+  --color-loss-text: #FCA5A5;
+
+  --border-subtle: #1E293B;
+  --border-medium: #334155;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  --color-celeste-soft: rgba(60, 190, 239, 0.12);
+  --color-celeste-muted: rgba(60, 190, 239, 0.2);
+}
+
+[data-theme="dark"] ::selection {
+  background: var(--color-celeste-muted);
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THEME TOGGLE BUTTON
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-smooth);
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(15deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   GLOBAL THEME TRANSITION
+   ═══════════════════════════════════════════════════════════════════════ */
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
    BASE STYLES
    ═══════════════════════════════════════════════════════════════════════ */
 
