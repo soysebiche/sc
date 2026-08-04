@@ -117,7 +117,7 @@ La calificación técnica combinada de frontend, calidad y rendimiento es **7.7/
 | Consultar rival | Input searchable + datalist | alias canónico | `rival`, `rivalYear` | Unit + deep link runtime | Solo aliases conocidos |
 | Consultar país | Selects nombrados | helpers compartidos | `country`, `countryYear` | Axe/runtime | Markup aún duplicado con Rival |
 | Tema | Toggle | tokens CSS | `localStorage` | Test + Axe claro/oscuro | No probado con AT real |
-| Calidad | CI declarativa | scripts npm | GitHub Actions | `npm ci && npm run check` | PR verde; falta merge a `main` |
+| Calidad | CI declarativa | scripts npm | GitHub Actions | `npm ci && npm run check` | PR #1 con gate remoto observado |
 
 Arquitectura activa: `URL/usuario → App/feature → helpers de dominio → import dinámico de JSON → DOM`; Recharts solo se descarga al abrir Año.
 
@@ -203,7 +203,7 @@ Arquitectura activa: `URL/usuario → App/feature → helpers de dominio → imp
 - Estado: **Completado**.
 - Evidencia: URL pública, deployment `Ready`, assets, deep links, endpoint, desktop/móvil, consola y logs verificados.
 - Flujo de cierre: preview Git del commit `32e453e` verificado y promovido al proyecto canónico `sc`.
-- Límite: el PR permanece en borrador; `main` aún no contiene el commit.
+- Trazabilidad: cambios y evidencia publicados mediante PR #1 hacia `main`.
 
 ### RESEARCH-01 — Campo
 
@@ -282,7 +282,7 @@ Escala de calidad: 0 = ausente, 4 = excelente. Ningún 4 se concede sin producci
 - Login/Trivia/auth/analytics y otros módulos no montados mantienen una arquitectura histórica ambigua.
 - CRA 5 y parte de su cadena están deprecados/vulnerables en contexto de build.
 - No hay RUM/alertas ni ensayo documentado de rollback; el smoke post-deploy sí quedó ejecutado.
-- El release está trazado al commit/preview, pero el PR aún no está fusionado a `main`.
+- GitHub y el proyecto Vercel canónico `sc` permanecen conectados para previews y releases futuros.
 
 Arquitectura objetivo incremental: `domain/selectors → features por vista → primitives semánticos → data adapter`, preservando URL y tests. No se justifica una reescritura total.
 
