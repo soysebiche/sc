@@ -4,8 +4,18 @@
 
 - Usar el calendario propietario llamado exactamente `Sporting Cristal` de la cuenta conectada.
 - No usar el calendario principal ni crear otro calendario con nombre parecido.
-- Guardar cada evento con zona `America/Lima`.
+- Mantener la zona general y de visualización de Google Calendar en `America/Chicago`.
+- Interpretar la programación publicada por las fuentes como `America/Lima`, salvo que la fuente declare expresamente otra zona.
+- Guardar cada evento con zona de evento `America/Lima`; Google Calendar hará la conversión para mostrarlo en Chicago.
+- Calcular automatizaciones pospartido en Lima y convertir el instante resultante a `America/Chicago` usando las reglas IANA de la fecha concreta.
+- No usar abreviaturas ambiguas (`CST`, `CDT`, `PET`) ni offsets fijos. Lima permanece en UTC-5; Chicago alterna entre UTC-5 y UTC-6.
 - Usar color de evento celeste cuando el conector permita elegirlo; no es requisito para publicar.
+
+Ejemplos:
+
+- Agosto: 20:00 Lima se muestra 20:00 Chicago porque ambas ciudades están en UTC-5.
+- Diciembre: 20:00 Lima se muestra 19:00 Chicago porque Chicago está en UTC-6.
+- Una comprobación a las 22:15 Lima en diciembre debe programarse a las 21:15 Chicago.
 
 ## Evento programado
 
@@ -23,7 +33,8 @@ Torneo: Clausura 2026
 Fecha: 4
 Estado: PROGRAMADO
 Duración estimada: 2 h 15 min
-Zona horaria: America/Lima
+Hora oficial: 20:00 America/Lima
+Vista del calendario: America/Chicago (conversión automática)
 Clave: 2026-08-07|Clausura|Universitario|Sporting Cristal
 
 Fuentes:

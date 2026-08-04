@@ -26,10 +26,11 @@ Leer antes de actuar:
 2. Incluir solo el primer equipo masculino y partidos competitivos: Apertura, Clausura, Liga 1 Playoff, Copa de la Liga, Libertadores y Sudamericana.
 3. Excluir amistosos, Tarde Celeste, reserva, juveniles y fútbol femenino.
 4. Resolver el calendario por perfil y nombre: cuenta conectada del usuario, calendario propietario llamado exactamente `Sporting Cristal`. No publicar en el calendario principal ni hardcodear credenciales.
-5. Usar `America/Lima` para interpretar y guardar la hora del partido. Convertir a la zona del programador solo al crear una automatización.
-6. Identificar un partido por fecha local, torneo, local y visitante. Guardar esta identidad estable en la descripción del evento.
-7. No duplicar. Buscar primero eventos del calendario en una ventana que cubra al menos 30 días alrededor del partido y actualizar el existente cuando coincida la identidad.
-8. Reportar fuentes consultadas, coincidencias, conflictos, escrituras y validaciones reales.
+5. Tratar `America/Lima` como zona de origen y `America/Chicago` como zona de visualización y del programador local. Guardar el evento en Lima; Google lo muestra convertido en Chicago.
+6. Convertir zonas con identificadores IANA y la fecha real. Nunca copiar la hora del reloj ni usar una diferencia fija: Lima no cambia por horario de verano y Chicago sí.
+7. Identificar un partido por la fecha local de Lima, torneo, local y visitante. Guardar esta identidad estable en la descripción del evento aunque en Chicago pudiera verse otra fecha.
+8. No duplicar. Buscar primero eventos del calendario en una ventana que cubra al menos 30 días alrededor del partido y actualizar el existente cuando coincida la identidad.
+9. Reportar fuentes consultadas, coincidencias, conflictos, escrituras y validaciones reales.
 
 ## Modo `sync-fixtures`
 
@@ -38,7 +39,7 @@ Leer antes de actuar:
 3. Crear un evento solo cuando fecha y hora estén confirmadas. Si existe únicamente una fecha o rango tentativo, reportarlo como `TBD` y volver a revisar en la siguiente ejecución.
 4. Si dos fuentes difieren, conservar el evento existente, añadir una advertencia al reporte y no cambiar la hora hasta resolver el conflicto con una fuente oficial más reciente.
 5. Crear o actualizar el evento según `references/calendar-contract.md`, incluyendo torneo, fecha, estadio, duración estimada y URLs directas.
-6. Para cada evento confirmado, garantizar una comprobación pospartido a la hora final estimada. La comprobación debe invocar este skill en modo `finalize-match` con la identidad y el identificador del evento.
+6. Para cada evento confirmado, garantizar una comprobación pospartido a la hora final estimada. Calcular primero ese instante en `America/Lima` y convertirlo después a `America/Chicago` para el programador; no reutilizar el mismo número de hora. La comprobación debe invocar este skill en modo `finalize-match` con la identidad y el identificador del evento.
 7. Cuando cambie fecha, hora o estadio, actualizar el evento y reprogramar la comprobación pospartido correspondiente.
 
 ## Modo `finalize-match`
