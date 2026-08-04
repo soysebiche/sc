@@ -1,0 +1,5 @@
+interface:
+  display_name: "Seguir partidos de Sporting Cristal"
+  short_description: "Programa partidos y publica resultados verificados"
+  brand_color: "#46D6DB"
+  default_prompt: "Usa $track-cristal-matches para sincronizar la programación de Sporting Cristal, cerrar partidos terminados y publicar resultados verificados."
