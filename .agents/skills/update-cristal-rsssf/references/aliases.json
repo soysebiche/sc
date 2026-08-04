@@ -1,0 +1,26 @@
+{
+  "team_aliases": {
+    "Alianza Atletico": "Alianza Atlético",
+    "Alianza Atlético Sullana": "Alianza Atlético",
+    "Asociación Deportiva Tarma": "A.D.T.",
+    "Asoc. Dep. Tarma": "A.D.T.",
+    "Atlético Grau (Piura)": "Atlético Grau",
+    "Comerciantes Unidos (Cutervo)": "Comerciantes Unidos",
+    "Dep. Garcilaso": "Deportivo Garcilaso",
+    "Dep. Los Chankas (Andahuaylas)": "Dep. Los Chankas",
+    "Sporting Cristal (Lima)": "Sporting Cristal",
+    "Union Comercio": "Unión Comercio",
+    "Univ. Tecnica de Cajamarca": "U.T.C.",
+    "Universidad Técnica de Cajamarca": "U.T.C."
+  },
+  "player_aliases": {
+    "Irven Avila": "Irven Ávila",
+    "Írven Ávila": "Irven Ávila",
+    "Martin Cauteruccio": "Martín Cauteruccio",
+    "Martin Tavara": "Gerald Távara",
+    "Martín Távara": "Gerald Távara",
+    "Rafael Lútiger": "Rafael Lutiger",
+    "Santiago Emanuel González": "Santiago González",
+    "Yoshimar Yotun": "Yoshimar Yotún"
+  }
+}

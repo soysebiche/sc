@@ -1,0 +1,4 @@
+interface:
+  display_name: "Actualizar Cristal desde RSSSF"
+  short_description: "Audita y prepara resultados históricos de Cristal"
+  default_prompt: "Usa $update-cristal-rsssf para revisar RSSSF, validar los resultados recientes de Sporting Cristal y preparar un cambio para revisión."
