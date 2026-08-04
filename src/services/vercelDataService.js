@@ -1,14 +1,13 @@
-// Service para cargar datos históricos de Sporting Cristal
-import completoData from '../data/historico_completo_sc.json';
-
 class VercelDataService {
-  fetchCompleteData() {
-    return completoData;
+  async fetchCompleteData() {
+    const module = await import('../data/historico_completo_sc.json');
+    return module.default;
   }
 
-  fetchAllData() {
+  async fetchAllData() {
+    const completo = await this.fetchCompleteData();
     return {
-      completo: completoData
+      completo,
     };
   }
 }

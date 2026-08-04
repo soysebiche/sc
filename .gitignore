@@ -5,6 +5,7 @@
 
 # Testing
 /coverage
+/output/
 __pycache__/
 *.py[cod]
 
@@ -49,3 +50,4 @@ pids
 
 # Yarn Integrity file
 .yarn-integrity
+.vercel

@@ -8,13 +8,10 @@
    Palette: Picton Blue #3CBEEF | Biscay #1B265C | White #FFFFFF
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* Font imports — Clash Display (display) + Satoshi (body) + Spline Sans Mono (data) */
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700,500&f[]=satoshi@400,500,700&f[]=spline-sans-mono@400,500&display=swap');
-
 :root {
   /* === BRAND COLORS === */
-  --color-celeste: #3CBEEF;
-  --color-celeste-dark: #2BA0D1;
+  --color-celeste: #08769A;
+  --color-celeste-dark: #066B8E;
   --color-celeste-light: #6DD4F7;
   --color-celeste-soft: rgba(60, 190, 239, 0.08);
   --color-celeste-muted: rgba(60, 190, 239, 0.15);
@@ -33,21 +30,25 @@
 
   /* === TEXT === */
   --text-primary: #1B265C;
-  --text-secondary: #64748B;
-  --text-muted: #94A3B8;
+  --text-secondary: #475569;
+  --text-muted: #475569;
   --text-on-dark: #FFFFFF;
   --text-on-accent: #FFFFFF;
 
   /* === SEMANTIC RESULT COLORS (desaturated, refined) === */
-  --color-win: #059669;
+  --color-win: #047857;
   --color-win-light: #D1FAE5;
   --color-win-text: #065F46;
-  --color-draw: #D97706;
+  --color-draw: #92400E;
   --color-draw-light: #FEF3C7;
   --color-draw-text: #92400E;
-  --color-loss: #DC2626;
+  --color-loss: #B91C1C;
   --color-loss-light: #FEE2E2;
   --color-loss-text: #991B1B;
+  --color-win-bar: #047857;
+  --color-draw-bar: #92400E;
+  --color-loss-bar: #B91C1C;
+  --text-on-result: #FFFFFF;
 
   /* === BORDERS === */
   --border-subtle: #E2E8F0;
@@ -71,9 +72,9 @@
   --radius-full: 9999px;
 
   /* === TYPOGRAPHY === */
-  --font-display: 'Clash Display', 'Georgia', serif;
-  --font-body: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'Spline Sans Mono', 'SF Mono', monospace;
+  --font-display: 'Avenir Next Condensed', 'Arial Narrow', 'Avenir Next', sans-serif;
+  --font-body: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SFMono-Regular', 'SF Mono', 'Roboto Mono', monospace;
 
   /* === TRANSITIONS === */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -89,6 +90,8 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 [data-theme="dark"] {
+  --color-celeste: #3CBEEF;
+  --color-celeste-dark: #6DD4F7;
   --bg-primary: #0B1120;
   --bg-secondary: #111827;
   --bg-card: #151D30;
@@ -98,8 +101,9 @@
 
   --text-primary: #F1F5F9;
   --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-muted: #94A3B8;
   --text-on-dark: #FFFFFF;
+  --text-on-accent: #111940;
 
   --color-win: #34D399;
   --color-win-light: rgba(52, 211, 153, 0.15);
@@ -110,6 +114,9 @@
   --color-loss: #F87171;
   --color-loss-light: rgba(248, 113, 113, 0.15);
   --color-loss-text: #FCA5A5;
+  --color-win-bar: #047857;
+  --color-draw-bar: #92400E;
+  --color-loss-bar: #B91C1C;
 
   --border-subtle: #1E293B;
   --border-medium: #334155;
@@ -257,6 +264,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tab {
+  min-height: 44px;
   padding: 10px 18px;
   border-radius: var(--radius-full);
   font-family: var(--font-body);
@@ -279,7 +287,7 @@ h1, h2, h3, h4, h5, h6 {
 .tab-active {
   background: var(--color-celeste);
   color: var(--text-on-accent);
-  box-shadow: 0 2px 8px rgba(60, 190, 239, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .tab-inactive {
@@ -334,7 +342,8 @@ h1, h2, h3, h4, h5, h6 {
    SELECT / FORM ELEMENTS
    ═══════════════════════════════════════════════════════════════════════ */
 
-select {
+select,
+input[type="search"] {
   font-family: var(--font-body);
   background: var(--bg-card);
   color: var(--text-primary);
@@ -347,11 +356,13 @@ select {
   box-shadow: var(--shadow-sm);
 }
 
-select:hover {
+select:hover,
+input[type="search"]:hover {
   border-color: var(--border-medium);
 }
 
-select:focus {
+select:focus,
+input[type="search"]:focus {
   outline: none;
   border-color: var(--color-celeste);
   box-shadow: 0 0 0 3px var(--color-celeste-soft);
@@ -474,7 +485,7 @@ tr:hover td {
   font-size: 12px;
   font-weight: 700;
   font-family: var(--font-mono);
-  transition: width var(--duration-slow) var(--ease-out-expo);
+  color: var(--text-on-result);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -491,7 +502,6 @@ tr:hover td {
 .progress-bar-fill {
   height: 100%;
   border-radius: 3px;
-  transition: width 0.5s var(--ease-out-expo);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -574,6 +584,66 @@ tr:hover td {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 20;
+  transform: translateY(-150%);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.table-sort-button,
+.year-select-button {
+  width: 100%;
+  min-height: 44px;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.pagination .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.table-sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+
+.year-select-button {
+  padding: 0;
+  font-weight: 700;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════

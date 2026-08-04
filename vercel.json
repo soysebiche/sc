@@ -1,21 +1,12 @@
 {
-  "version": 2,
-  "routes": [
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "create-react-app",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "rewrites": [
     {
-      "src": "/api/data",
-      "dest": "/api/data"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|css|js|html))",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
