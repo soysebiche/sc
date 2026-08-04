@@ -14,7 +14,7 @@
 
 ## 1. Veredicto ejecutivo
 
-**Sebiche Celeste pasó de una beta frágil de 5.4/10 a un producto público competente de 7.5/10.** Las tareas esenciales ya no dependen de Tailwind o tipografías externas, los filtros y vistas se pueden compartir por URL, el análisis anual es coherente, los aliases de rivales se reconcilian y las listas largas tienen búsqueda/paginación. El gate único `npm run check` quedó verde después de `npm ci`: lint sin warnings, 8/8 tests y build correcto. La misma entrega quedó desplegada y verificada en `https://sebiche-celeste.vercel.app`.
+**Sebiche Celeste pasó de una beta frágil de 5.4/10 a un producto público competente de 7.5/10.** Las tareas esenciales ya no dependen de Tailwind o tipografías externas, los filtros y vistas se pueden compartir por URL, el análisis anual es coherente, los aliases de rivales se reconcilian y las listas largas tienen búsqueda/paginación. El gate único `npm run check` quedó verde después de `npm ci`: lint sin warnings, 8/8 tests y build correcto. La misma entrega quedó desplegada y verificada en `https://celeste.sebiche.com`.
 
 La mayor fortaleza sigue siendo la especificidad del archivo: 1,936 partidos y consultas propias del dominio. El mayor riesgo ya no es el deploy: son la procedencia editorial, Web Vitals de campo y el comportamiento con usuarios o lector de pantalla. El toolchain CRA también conserva 54 advisories en dependencias de desarrollo/build, aunque `npm audit --omit=dev` confirma cero vulnerabilidades en las dependencias que llegan al runtime.
 
@@ -32,7 +32,7 @@ La calificación técnica combinada de frontend, calidad y rendimiento es **7.7/
 | Tests, lint, build y audit | Sí | Sí | E3 | Workflow CI creado; ejecución remota de GitHub no verificada |
 | Axe y Lighthouse | Sí | Sí | E3 | No certifican WCAG ni Web Vitals de campo |
 | Detector `impeccable` | Sí | Sí | E3 | Findings revisados manualmente |
-| Producción pública | Sí | Sí | E4 | URL, deployment, HTTP, API y navegador verificados; Vercel aún no enlazado a CI remota |
+| Producción pública | Sí | Sí | E4 | Dominio canónico, commit, CI, preview, promoción, HTTP, API y navegador verificados |
 | Analítica, RUM, usuarios y SUS | No hay evidencia | No | E0–E2 | No se inventan métricas de campo |
 | Lector de pantalla, zoom 200% y dispositivo real | No | No | E0 | Claims de accesibilidad limitados a DOM, Axe, teclado focal y responsive |
 
@@ -49,7 +49,8 @@ La calificación técnica combinada de frontend, calidad y rendimiento es **7.7/
 - Teclado → primer Tab enfoca “Saltar al contenido”; Enter mueve foco a `#main-content`.
 - Reduced motion → media query activa y duración efectiva `0.00001 s`; sin overflow a 390 px.
 - `impeccable` → 0 findings en los cuatro módulos visuales activos; el scan completo conserva 2 warnings en Login/Trivia no montados.
-- Producción Vercel → deployment `dpl_93LwL1DhyAi8bTM9zYk7cRNDhZDh`, target `production`, estado `Ready` y alias `https://sebiche-celeste.vercel.app`.
+- Producción Vercel → commit `32e453e`, deployment `sc-ev0oz0wzn-sebbs21s-projects.vercel.app`, target `production`, estado `Ready` y dominio `https://celeste.sebiche.com`.
+- GitHub → PR borrador #1, rama `agent/ux-production-readiness`; Actions `quality` completó el gate remoto en 49 s y Vercel creó un preview ligado al mismo commit.
 - Smoke HTTP → `/`, logo WebP y manifest 200; `/api/data?type=completo` 200 con 1,936 registros; tipo inválido 400 y método POST 405.
 - Smoke de navegador en producción → Efemérides 4 resultados; Partidos 2024, página 2, 18 de 36; rival canónico `Unión Comercio`, 32; Año con gráfica y tabla; consola 0 errores/0 warnings y sin overflow en 1280 o 390 px.
 - Logs del deployment después del smoke → cero eventos de nivel error en la ventana consultada.
@@ -85,7 +86,7 @@ La calificación técnica combinada de frontend, calidad y rendimiento es **7.7/
 | Gate | Estado | Cap | Evidencia para cerrarlo |
 |---|---|---:|---|
 | Runtime local relevante | Cerrado | — | Build y flujos desktop/móvil ejecutados |
-| Gate principal reproducible | Cerrado local | — | `npm ci && npm run check` verde; GitHub Actions aún no ejecutado remotamente |
+| Gate principal reproducible | Cerrado local y remoto | — | `npm ci && npm run check` verde; GitHub Actions `quality` verde en PR #1 |
 | Accesibilidad crítica dinámica | Cerrado para laboratorio | — | Axe claro/oscuro + teclado focal; no equivale a certificación |
 | Cobertura 76.5% | Cerrado | — | Producción añadió evidencia E4; aún faltan AT y campo |
 | Evidencia de campo | Abierto | 8.4 | Protocolo de cinco tareas y RUM con muestra/ventana |
@@ -116,7 +117,7 @@ La calificación técnica combinada de frontend, calidad y rendimiento es **7.7/
 | Consultar rival | Input searchable + datalist | alias canónico | `rival`, `rivalYear` | Unit + deep link runtime | Solo aliases conocidos |
 | Consultar país | Selects nombrados | helpers compartidos | `country`, `countryYear` | Axe/runtime | Markup aún duplicado con Rival |
 | Tema | Toggle | tokens CSS | `localStorage` | Test + Axe claro/oscuro | No probado con AT real |
-| Calidad | CI declarativa | scripts npm | GitHub Actions | `npm ci && npm run check` | CI remota no observada |
+| Calidad | CI declarativa | scripts npm | GitHub Actions | `npm ci && npm run check` | PR verde; falta merge a `main` |
 
 Arquitectura activa: `URL/usuario → App/feature → helpers de dominio → import dinámico de JSON → DOM`; Recharts solo se descarga al abrir Año.
 
@@ -157,8 +158,8 @@ Arquitectura activa: `URL/usuario → App/feature → helpers de dominio → imp
 ### QUALITY-01 — Gate de calidad rojo
 
 - Prioridad / severidad: P1 / 3 de 4.
-- Estado: **Completado local; CI remota no verificada**.
-- Evidencia de cierre: 8/8 tests, lint 0 warnings, build correcto, script `check` y workflow `.github/workflows/ci.yml`.
+- Estado: **Completado local y remoto**.
+- Evidencia de cierre: 8/8 tests, lint 0 warnings, build correcto, script `check` y GitHub Actions `quality` verde en PR #1.
 
 ### TECH-02 — CRA 5 conserva deuda de build
 
@@ -201,8 +202,8 @@ Arquitectura activa: `URL/usuario → App/feature → helpers de dominio → imp
 - Prioridad: P2.
 - Estado: **Completado**.
 - Evidencia: URL pública, deployment `Ready`, assets, deep links, endpoint, desktop/móvil, consola y logs verificados.
-- Límite: el release salió directamente con target `production`; no se creó un preview separado para promoción.
-- Higiene pendiente: enlazar cada futuro deployment a su commit y ejecución de CI remota; este release se construyó con Vercel CLI.
+- Flujo de cierre: preview Git del commit `32e453e` verificado y promovido al proyecto canónico `sc`.
+- Límite: el PR permanece en borrador; `main` aún no contiene el commit.
 
 ### RESEARCH-01 — Campo
 
@@ -281,7 +282,7 @@ Escala de calidad: 0 = ausente, 4 = excelente. Ningún 4 se concede sin producci
 - Login/Trivia/auth/analytics y otros módulos no montados mantienen una arquitectura histórica ambigua.
 - CRA 5 y parte de su cadena están deprecados/vulnerables en contexto de build.
 - No hay RUM/alertas ni ensayo documentado de rollback; el smoke post-deploy sí quedó ejecutado.
-- El release público todavía no está enlazado automáticamente a una ejecución de GitHub Actions.
+- El release está trazado al commit/preview, pero el PR aún no está fusionado a `main`.
 
 Arquitectura objetivo incremental: `domain/selectors → features por vista → primitives semánticos → data adapter`, preservando URL y tests. No se justifica una reescritura total.
 
@@ -321,7 +322,7 @@ Arquitectura objetivo incremental: `domain/selectors → features por vista → 
 | UX-01 | P1 | Sort/filtro anual coherente | Completado | Test + runtime asc/desc |
 | A11Y-01 | P1 | Nombres, semántica y teclado | Completado lab | Axe + skip/table runtime |
 | A11Y-02 | P1 | Contraste por tema | Completado | Axe 0 claro/oscuro |
-| QUALITY-01 | P1 | Tests y CI | Completado local | `npm ci && npm run check`; CI remota pendiente |
+| QUALITY-01 | P1 | Tests y CI | Completado | Gate local y GitHub Actions verdes |
 | TECH-02 | P1 | Migrar/asegurar toolchain CRA | En progreso | Runtime audit 0; dev audit 54 |
 | DATA-01 | P2 | Canonizar aliases conocidos | Completado | Unit + 157 opciones únicas |
 | UX-02 | P2 | URL/deep link/back | Completado | Runtime |

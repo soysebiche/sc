@@ -68,8 +68,9 @@ El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos
 
 Producción verificada el 2026-08-04:
 
-- URL: <https://sebiche-celeste.vercel.app>
-- Deployment: `dpl_93LwL1DhyAi8bTM9zYk7cRNDhZDh`
+- URL canónica: <https://celeste.sebiche.com>
+- Commit desplegado: `32e453e336a4c5e15373eddb87e442026239cec8`
+- Deployment Vercel: `sc-ev0oz0wzn-sebbs21s-projects.vercel.app`
 - Smoke: documento, logo, manifest, deep links y `/api/data?type=completo` respondieron correctamente.
 - Navegador: Efemérides, Partidos, Año y Rivales cargaron sin errores de consola ni overflow a 390 px.
 
