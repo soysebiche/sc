@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { Suspense, useState, useEffect } from 'react';
 import vercelDataService from './services/vercelDataService';
 import RivalHistory from './components/RivalHistory';
 import CountryHistory from './components/CountryHistory';
+import { canonicalizeRival, formatMatchDate, getResultCode, getScore, getUniqueYears, getYearFromMatch } from './domain/matches';
+import { useUrlState } from './hooks/useUrlState';
 
-const initialData = vercelDataService.fetchAllData().completo;
+const YearChart = React.lazy(() => import('./components/YearChart'));
+
+const TABS = [
+  { id: 'efemerides', label: 'EFEMÉRIDES' },
+  { id: 'dashboard', label: 'DASHBOARD' },
+  { id: 'partidos', label: 'PARTIDOS' },
+  { id: 'analisis-anual', label: 'AÑO' },
+  { id: 'rivales', label: 'RIVALES' },
+  { id: 'paises', label: 'PAÍSES' },
+];
+
+const TAB_IDS = new Set(TABS.map(tab => tab.id));
+const isValidTab = value => TAB_IDS.has(value);
+const MATCHES_PER_PAGE = 18;
 
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -27,7 +41,28 @@ const MoonIcon = () => (
 );
 
 function App() {
-  const [data] = useState(initialData);
+  const [data, setData] = useState([]);
+  const [dataStatus, setDataStatus] = useState('loading');
+  const [loadAttempt, setLoadAttempt] = useState(0);
+
+  useEffect(() => {
+    let isActive = true;
+    setDataStatus('loading');
+
+    vercelDataService.fetchAllData()
+      .then(result => {
+        if (!isActive) return;
+        setData(result.completo);
+        setDataStatus('ready');
+      })
+      .catch(() => {
+        if (isActive) setDataStatus('error');
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [loadAttempt]);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('sc-theme');
@@ -46,31 +81,17 @@ function App() {
     setTimeout(() => document.documentElement.classList.remove('theme-transition'), 350);
   };
   
-  const getYearFromMatch = (match) => {
-    if (match.Año && typeof match.Año === 'number') return match.Año;
-    if (match.Fecha && match.Fecha !== 'TBD') {
-      const date = new Date(match.Fecha);
-      return !isNaN(date.getTime()) ? date.getFullYear() : null;
-    }
-    return null;
-  };
-
-  const getUniqueYears = (data) => {
-    return [...new Set(data.map(match => getYearFromMatch(match)).filter(year => year !== null))].sort((a, b) => b - a);
-  };
-  
-  const initialYears = getUniqueYears(initialData);
+  const initialYears = getUniqueYears(data);
   const initialSelectedYear = initialYears.length > 0 ? initialYears[0] : null;
   
-  const [selectedMonth, setSelectedMonth] = useState(''); // eslint-disable-line no-unused-vars
-  const [activeTab, setActiveTab] = useState('efemerides');
-  const [selectedMinute, setSelectedMinute] = useState(''); // eslint-disable-line no-unused-vars
-  const [tournamentFilter, setTournamentFilter] = useState('todos');
+  const [activeTab, setActiveTab] = useUrlState('view', 'efemerides', { validate: isValidTab, history: 'push' });
+  const [tournamentFilter, setTournamentFilter] = useUrlState('tournament', 'todos');
   const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
-  const [selectedDecade, setSelectedDecade] = useState('all');
+  const [selectedDecade, setSelectedDecade] = useUrlState('decade', 'all');
   const [selectedYearForStats, setSelectedYearForStats] = useState(initialSelectedYear);
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedMonthLocal, setSelectedMonthLocal] = useState('');
+  const [selectedYear, setSelectedYear] = useUrlState('year', '');
+  const [selectedMonthLocal, setSelectedMonthLocal] = useUrlState('month', '');
+  const [matchesPage, setMatchesPage] = useUrlState('page', '1');
 
   const getUniqueMonths = (data) => {
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -93,12 +114,7 @@ function App() {
     const rivalStats = {};
     
     data.forEach(match => {
-      const scGoals = match["Equipo Local"] === "Sporting Cristal" 
-        ? parseInt(match.Marcador.split('-')[0]) 
-        : parseInt(match.Marcador.split('-')[1]);
-      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" 
-        ? parseInt(match.Marcador.split('-')[1]) 
-        : parseInt(match.Marcador.split('-')[0]);
+      const { scGoals, opponentGoals } = getScore(match);
       
       if (scGoals > opponentGoals) victories++;
       else if (scGoals < opponentGoals) defeats++;
@@ -109,7 +125,7 @@ function App() {
       
       if (scGoals > maxScGoals) { maxScGoals = scGoals; }
       
-      const rival = match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"];
+      const rival = canonicalizeRival(match["Equipo Local"] === "Sporting Cristal" ? match["Equipo Visita"] : match["Equipo Local"]);
       if (!rivalStats[rival]) rivalStats[rival] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 };
       rivalStats[rival].jugados++;
       if (scGoals > opponentGoals) rivalStats[rival].ganados++;
@@ -167,8 +183,7 @@ function App() {
       } else return;
       if (!year) return;
       
-      const scGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
-      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
+      const { scGoals, opponentGoals } = getScore(match);
       
       if (!yearlyData[year]) yearlyData[year] = { year, victories: 0, draws: 0, defeats: 0, total: 0, goalsFor: 0, goalsAgainst: 0 };
       yearlyData[year].total++;
@@ -187,10 +202,10 @@ function App() {
     }));
   };
 
-  const [selectedDate, setSelectedDate] = useState(() => {
+  const [selectedDate, setSelectedDate] = useUrlState('date', (() => {
     const today = new Date();
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  });
+  })());
   const [curiosidades, setCuriosidades] = useState({});
   const [yearlyStats, setYearlyStats] = useState([]);
 
@@ -205,7 +220,7 @@ function App() {
     setYearlyStats(sortedStats);
   }, [data, tournamentFilter, yearSortConfig]);
 
-  const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const formatDate = formatMatchDate;
 
   const filteredMatches = data.filter(match => {
     const matchYear = getYearFromMatch(match);
@@ -222,6 +237,14 @@ function App() {
     }
     return yearMatch && monthMatch;
   }).sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+
+  const totalMatchPages = Math.max(1, Math.ceil(filteredMatches.length / MATCHES_PER_PAGE));
+  const requestedMatchPage = Number.parseInt(matchesPage, 10) || 1;
+  const currentMatchPage = Math.min(Math.max(requestedMatchPage, 1), totalMatchPages);
+  const paginatedMatches = filteredMatches.slice(
+    (currentMatchPage - 1) * MATCHES_PER_PAGE,
+    currentMatchPage * MATCHES_PER_PAGE
+  );
 
   const getMatchesForDayMonth = (dateStr) => {
     if (!dateStr || dateStr === 'TBD') return [];
@@ -242,8 +265,7 @@ function App() {
     if (efemeridesMatches.length === 0) return { total: 0, victories: 0, draws: 0, defeats: 0, goalsFor: 0, goalsAgainst: 0 };
     let victories = 0, draws = 0, defeats = 0, goalsFor = 0, goalsAgainst = 0;
     efemeridesMatches.forEach(match => {
-      const scGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
-      const opponentGoals = match["Equipo Local"] === "Sporting Cristal" ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
+      const { scGoals, opponentGoals } = getScore(match);
       goalsFor += scGoals;
       goalsAgainst += opponentGoals;
       if (scGoals > opponentGoals) victories++;
@@ -259,15 +281,15 @@ function App() {
     };
   })();
 
-  const years = getUniqueYears(initialData);
-  const months = getUniqueMonths(initialData);
+  const years = getUniqueYears(data);
+  const months = getUniqueMonths(data);
   const decades = [...new Set(years.map(y => Math.floor(y / 10) * 10))].sort((a, b) => b - a);
   
   const filteredYearlyStats = selectedDecade === 'all' 
     ? yearlyStats 
     : yearlyStats.filter(y => Math.floor(y.year / 10) * 10 === parseInt(selectedDecade));
   
-  const chartData = filteredYearlyStats
+  const chartData = [...filteredYearlyStats]
     .sort((a, b) => a.year - b.year)
     .map(y => ({
       year: y.year,
@@ -278,28 +300,23 @@ function App() {
     }));
 
   const currentYearStats = selectedYearForStats 
-    ? yearlyStats.find(y => y.year === selectedYearForStats) || null
-    : (yearlyStats.length > 0 ? yearlyStats[0] : null);
+    ? filteredYearlyStats.find(y => y.year === selectedYearForStats) || null
+    : (filteredYearlyStats.length > 0 ? filteredYearlyStats[0] : null);
 
-  const tabs = [
-    { id: 'efemerides', label: 'EFEMERIDES' },
-    { id: 'dashboard', label: 'DASHBOARD' },
-    { id: 'partidos', label: 'PARTIDOS' },
-    { id: 'analisis-anual', label: 'AÑO' },
-    { id: 'rivales', label: 'RIVALES' },
-    { id: 'paises', label: 'PAISES' }
-  ];
+  useEffect(() => {
+    if (filteredYearlyStats.length > 0 && !filteredYearlyStats.some(item => item.year === selectedYearForStats)) {
+      setSelectedYearForStats(filteredYearlyStats[0].year);
+    }
+  }, [filteredYearlyStats, selectedYearForStats]);
 
   const MatchCard = ({ match }) => {
-    const isHome = match["Equipo Local"] === "Sporting Cristal";
-    const scGoals = isHome ? parseInt(match.Marcador.split('-')[0]) : parseInt(match.Marcador.split('-')[1]);
-    const oppGoals = isHome ? parseInt(match.Marcador.split('-')[1]) : parseInt(match.Marcador.split('-')[0]);
-    const result = scGoals > oppGoals ? 'V' : scGoals < oppGoals ? 'P' : 'E';
+    const result = getResultCode(match);
+    const resultLabel = result === 'V' ? 'Victoria' : result === 'E' ? 'Empate' : 'Derrota';
     return (
-      <div className="match-card">
+      <article className="match-card">
         <div className="flex justify-between items-start mb-2">
           <span className="match-meta">{formatDate(match.Fecha)}</span>
-          <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`}>{result}</span>
+          <span className={`badge ${result === 'V' ? 'badge-green' : result === 'E' ? 'badge-yellow' : 'badge-red'}`} aria-label={resultLabel} title={resultLabel}>{result}</span>
         </div>
         <p className="match-teams">{match["Equipo Local"]} vs {match["Equipo Visita"]}</p>
         <p className="match-score text-center my-2">{match.Marcador}</p>
@@ -307,12 +324,12 @@ function App() {
         {match["Goles (Solo SC)"] && match["Goles (Solo SC)"] !== '-' && match["Goles (Solo SC)"] !== null && (
           <p className="match-goals">Goles: {match["Goles (Solo SC)"]}</p>
         )}
-      </div>
+      </article>
     );
   };
 
-  const StatTile = ({ label, value, sub, colorVar, borderClass }) => (
-    <div className={`stat-tile ${borderClass || ''}`}>
+  const StatTile = ({ label, value, sub, colorVar }) => (
+    <div className="stat-tile">
       <p className="stat-label" style={{ color: colorVar || 'var(--text-muted)' }}>{label}</p>
       <p className="text-3xl stat-number" style={{ color: colorVar || 'var(--text-primary)' }}>{value}</p>
       {sub && <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>{sub}</p>}
@@ -327,13 +344,13 @@ function App() {
     return (
       <div>
         <div className="distribution-bar">
-          <div style={{ width: `${wPct}%`, background: 'var(--color-win)', color: '#fff' }}>
+          <div style={{ width: `${wPct}%`, background: 'var(--color-win-bar)' }}>
             {wPct > 10 && `${wPct}%`}
           </div>
-          <div style={{ width: `${dPct}%`, background: 'var(--color-draw)', color: '#fff' }}>
+          <div style={{ width: `${dPct}%`, background: 'var(--color-draw-bar)' }}>
             {dPct > 10 && `${dPct}%`}
           </div>
-          <div style={{ width: `${lPct}%`, background: 'var(--color-loss)', color: '#fff' }}>
+          <div style={{ width: `${lPct}%`, background: 'var(--color-loss-bar)' }}>
             {lPct > 10 && `${lPct}%`}
           </div>
         </div>
@@ -348,6 +365,7 @@ function App() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      <a className="skip-link" href="#main-content">Saltar al contenido</a>
       {/* Header */}
       <header className="app-header p-6">
         <div className="max-w-7xl mx-auto">
@@ -363,37 +381,57 @@ function App() {
               </button>
               <div className="flex flex-col">
                 <img 
-                  src="/SebicheCeleste logo copy.png" 
+                  src="/sebiche-celeste-logo.webp"
                   alt="Sebiche Celeste" 
-                  className="h-16 md:h-20 w-auto"
+                  width="512"
+                  height="233"
+                  fetchPriority="high"
+                  className="w-60 md:w-64 h-auto"
                 />
-                <p className="header-subtitle mt-2">Archivo Historico &middot; {data.length} Partidos</p>
+                <p className="header-subtitle mt-2">
+                  Archivo Histórico &middot; 1936 Partidos
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              {tabs.map(tab => (
+            <nav className="flex items-center gap-2 flex-wrap" aria-label="Secciones principales">
+              {TABS.map(tab => (
                 <button
+                  type="button"
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`tab ${activeTab === tab.id ? 'tab-active' : 'tab-inactive'}`}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
                 >
                   {tab.label}
                 </button>
               ))}
-            </div>
+            </nav>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 py-8" tabIndex="-1">
+        <h1 className="sr-only">Sebiche Celeste — Archivo Histórico de Sporting Cristal</h1>
+        {dataStatus === 'loading' && (
+          <div className="archive-skeleton" role="status" aria-label="Cargando archivo histórico">
+            <span>Cargando archivo histórico…</span>
+          </div>
+        )}
+        {dataStatus === 'error' && (
+          <div className="card-static p-8 text-center" role="alert">
+            <h2 className="section-title">No pudimos cargar el archivo</h2>
+            <p className="mt-3" style={{ color: 'var(--text-secondary)' }}>El contenido local no respondió. Puedes intentarlo de nuevo.</p>
+            <button type="button" className="btn btn-primary mt-5" onClick={() => setLoadAttempt(attempt => attempt + 1)}>Reintentar</button>
+          </div>
+        )}
         {/* DASHBOARD */}
-        {activeTab === 'dashboard' && (
+        {dataStatus === 'ready' && activeTab === 'dashboard' && (
           <div className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <StatTile label="Partidos" value={curiosidades.totalMatches || 0} colorVar="var(--color-celeste)" />
-              <StatTile label="Victorias" value={curiosidades.victories || 0} sub={`${curiosidades.totalMatches > 0 ? ((curiosidades.victories / curiosidades.totalMatches) * 100).toFixed(1) : 0}%`} colorVar="var(--color-win)" borderClass="stat-tile-win" />
-              <StatTile label="Empates" value={curiosidades.draws || 0} sub={`${curiosidades.totalMatches > 0 ? ((curiosidades.draws / curiosidades.totalMatches) * 100).toFixed(1) : 0}%`} colorVar="var(--color-draw)" borderClass="stat-tile-draw" />
-              <StatTile label="Derrotas" value={curiosidades.defeats || 0} sub={`${curiosidades.totalMatches > 0 ? ((curiosidades.defeats / curiosidades.totalMatches) * 100).toFixed(1) : 0}%`} colorVar="var(--color-loss)" borderClass="stat-tile-loss" />
+              <StatTile label="Victorias" value={curiosidades.victories || 0} sub={`${curiosidades.totalMatches > 0 ? ((curiosidades.victories / curiosidades.totalMatches) * 100).toFixed(1) : 0}%`} colorVar="var(--color-win)" />
+              <StatTile label="Empates" value={curiosidades.draws || 0} sub={`${curiosidades.totalMatches > 0 ? ((curiosidades.draws / curiosidades.totalMatches) * 100).toFixed(1) : 0}%`} colorVar="var(--color-draw)" />
+              <StatTile label="Derrotas" value={curiosidades.defeats || 0} sub={`${curiosidades.totalMatches > 0 ? ((curiosidades.defeats / curiosidades.totalMatches) * 100).toFixed(1) : 0}%`} colorVar="var(--color-loss)" />
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -402,7 +440,7 @@ function App() {
               <div className="stat-tile col-span-2 md:col-span-1">
                 <p className="stat-label" style={{ color: 'var(--color-celeste)' }}>Diferencia de Goles</p>
                 <p className="text-3xl stat-number" style={{ color: 'var(--color-celeste)' }}>
-                  +{(curiosidades.totalScGoals || 0) - (curiosidades.totalOpponentGoals || 0)}
+                  {((curiosidades.totalScGoals || 0) - (curiosidades.totalOpponentGoals || 0)) > 0 ? '+' : ''}{(curiosidades.totalScGoals || 0) - (curiosidades.totalOpponentGoals || 0)}
                 </p>
               </div>
             </div>
@@ -416,32 +454,36 @@ function App() {
                 </p>
               </div>
               <div className="stat-tile text-left">
-                <p className="stat-label" style={{ color: 'var(--text-muted)' }}>Rival mas Dificil</p>
+                <p className="stat-label" style={{ color: 'var(--text-muted)' }}>Rival más difícil</p>
                 <p className="text-lg font-bold mt-2" style={{ color: 'var(--text-primary)' }}>{curiosidades.worstRival?.name || '-'}</p>
                 <p className="text-sm mt-1" style={{ color: 'var(--color-loss)' }}>
                   {curiosidades.worstRival ? `${curiosidades.worstRival.ganados}V · ${curiosidades.worstRival.empatados}E · ${curiosidades.worstRival.perdidos}P` : '-'}
                 </p>
               </div>
               <div className="stat-tile text-left">
-                <p className="stat-label" style={{ color: 'var(--text-muted)' }}>Paises Jugados</p>
+                <p className="stat-label" style={{ color: 'var(--text-muted)' }}>Países jugados</p>
                 <p className="text-lg font-bold mt-2" style={{ color: 'var(--text-primary)' }}>{curiosidades.totalIntlCountries || 0}</p>
                 <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>selecciones y equipos</p>
               </div>
             </div>
 
             <div className="card-static p-6">
-              <p className="stat-label mb-4" style={{ color: 'var(--text-muted)' }}>Distribucion de Resultados</p>
+              <p className="stat-label mb-4" style={{ color: 'var(--text-muted)' }}>Distribución de resultados</p>
               <DistributionBar wins={curiosidades.victories} draws={curiosidades.draws} losses={curiosidades.defeats} total={curiosidades.totalMatches} />
             </div>
           </div>
         )}
 
         {/* EFEMERIDES */}
-        {activeTab === 'efemerides' && (
+        {dataStatus === 'ready' && activeTab === 'efemerides' && (
           <div className="space-y-6 animate-fade-in">
             <div className="card-static p-6">
               <h2 className="section-title mb-4">Partidos Jugados en Esta Fecha</h2>
+              <label htmlFor="efemerides-date" className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Fecha para consultar
+              </label>
               <input
+                id="efemerides-date"
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
@@ -452,12 +494,12 @@ function App() {
             {efemeridesMatches.length > 0 && (
               <>
                 <div className="card-static p-6">
-                  <h3 className="text-lg font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Balance del Dia</h3>
+                  <h3 className="text-lg font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Balance del día</h3>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                     <StatTile label="Total" value={efemeridesStats.total} sub="partidos" colorVar="var(--color-celeste)" />
-                    <StatTile label="Ganados" value={efemeridesStats.victories} sub={`${efemeridesStats.winPercentage}%`} colorVar="var(--color-win)" borderClass="stat-tile-win" />
-                    <StatTile label="Empatados" value={efemeridesStats.draws} sub={`${efemeridesStats.drawPercentage}%`} colorVar="var(--color-draw)" borderClass="stat-tile-draw" />
-                    <StatTile label="Perdidos" value={efemeridesStats.defeats} sub={`${efemeridesStats.defeatPercentage}%`} colorVar="var(--color-loss)" borderClass="stat-tile-loss" />
+                    <StatTile label="Ganados" value={efemeridesStats.victories} sub={`${efemeridesStats.winPercentage}%`} colorVar="var(--color-win)" />
+                    <StatTile label="Empatados" value={efemeridesStats.draws} sub={`${efemeridesStats.drawPercentage}%`} colorVar="var(--color-draw)" />
+                    <StatTile label="Perdidos" value={efemeridesStats.defeats} sub={`${efemeridesStats.defeatPercentage}%`} colorVar="var(--color-loss)" />
                     <StatTile label="Goles" value={`${efemeridesStats.goalsFor} - ${efemeridesStats.goalsAgainst}`} sub="a favor - en contra" colorVar="var(--color-celeste)" />
                   </div>
                   <DistributionBar wins={efemeridesStats.victories} draws={efemeridesStats.draws} losses={efemeridesStats.defeats} total={efemeridesStats.total} />
@@ -483,77 +525,100 @@ function App() {
         )}
 
         {/* PARTIDOS */}
-        {activeTab === 'partidos' && (
+        {dataStatus === 'ready' && activeTab === 'partidos' && (
           <div className="space-y-6 animate-fade-in">
             <div className="card-static p-6">
               <div className="flex flex-wrap gap-4 mb-6">
-                <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="flex-1 min-w-[150px]">
-                  <option value="">Todos los años</option>
-                  {years.map(year => <option key={year} value={year}>{year}</option>)}
-                </select>
-                <select value={selectedMonthLocal} onChange={(e) => setSelectedMonthLocal(e.target.value)} className="flex-1 min-w-[150px]">
-                  <option value="">Todos los meses</option>
-                  {months.map(month => <option key={month} value={month}>{month}</option>)}
-                </select>
+                <div className="flex-1 min-w-[150px]">
+                  <label htmlFor="matches-year" className="block text-sm font-medium mb-2">Año</label>
+                  <select id="matches-year" value={selectedYear} onChange={(e) => { setSelectedYear(e.target.value); setMatchesPage('1'); }} className="w-full">
+                    <option value="">Todos los años</option>
+                    {years.map(year => <option key={year} value={year}>{year}</option>)}
+                  </select>
+                </div>
+                <div className="flex-1 min-w-[150px]">
+                  <label htmlFor="matches-month" className="block text-sm font-medium mb-2">Mes</label>
+                  <select id="matches-month" value={selectedMonthLocal} onChange={(e) => { setSelectedMonthLocal(e.target.value); setMatchesPage('1'); }} className="w-full">
+                    <option value="">Todos los meses</option>
+                    {months.map(month => <option key={month} value={month}>{month}</option>)}
+                  </select>
+                </div>
               </div>
+              <p className="text-sm mb-4" aria-live="polite" style={{ color: 'var(--text-secondary)' }}>
+                {filteredMatches.length} partido{filteredMatches.length === 1 ? '' : 's'} encontrado{filteredMatches.length === 1 ? '' : 's'} · página {currentMatchPage} de {totalMatchPages}
+              </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredMatches.slice(0, 50).map((match, index) => (
-                  <MatchCard key={index} match={match} />
+                {paginatedMatches.map((match) => (
+                  <MatchCard key={`${match.Fecha}-${match['Equipo Local']}-${match['Equipo Visita']}`} match={match} />
                 ))}
               </div>
-              {filteredMatches.length > 50 && (
-                <p className="text-center mt-4 text-sm" style={{ color: 'var(--text-secondary)' }}>Mostrando 50 de {filteredMatches.length} partidos</p>
+              {filteredMatches.length === 0 && (
+                <div className="text-center py-12">
+                  <h3 className="text-lg font-bold">No hay partidos con esos filtros</h3>
+                  <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Prueba otro año o mes.</p>
+                </div>
+              )}
+              {totalMatchPages > 1 && (
+                <nav className="pagination" aria-label="Paginación de partidos">
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={currentMatchPage === 1}
+                    onClick={() => setMatchesPage(String(currentMatchPage - 1))}
+                  >
+                    Anterior
+                  </button>
+                  <span aria-live="polite">Página {currentMatchPage} de {totalMatchPages}</span>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={currentMatchPage === totalMatchPages}
+                    onClick={() => setMatchesPage(String(currentMatchPage + 1))}
+                  >
+                    Siguiente
+                  </button>
+                </nav>
               )}
             </div>
           </div>
         )}
 
         {/* ANALISIS ANUAL */}
-        {activeTab === 'analisis-anual' && (
+        {dataStatus === 'ready' && activeTab === 'analisis-anual' && (
           <div className="space-y-6 animate-fade-in">
             <div className="flex flex-wrap gap-4 items-center justify-between">
-              <h2 className="section-title">Analisis por Año</h2>
+              <h2 className="section-title">Análisis por año</h2>
               <div className="flex gap-4">
-                <select value={selectedDecade} onChange={(e) => setSelectedDecade(e.target.value)}>
-                  <option value="all">Todas las decadas</option>
+                <div>
+                  <label htmlFor="year-decade" className="block text-sm font-medium mb-2">Década</label>
+                  <select id="year-decade" value={selectedDecade} onChange={(e) => setSelectedDecade(e.target.value)}>
+                  <option value="all">Todas las décadas</option>
                   {decades.map(d => <option key={d} value={d}>{d}s</option>)}
-                </select>
-                <select value={tournamentFilter} onChange={(e) => setTournamentFilter(e.target.value)}>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="year-tournament" className="block text-sm font-medium mb-2">Torneo</label>
+                  <select id="year-tournament" value={tournamentFilter} onChange={(e) => setTournamentFilter(e.target.value)}>
                   <option value="todos">Todos los torneos</option>
                   <option value="local">Solo locales</option>
                   <option value="internacional">Solo internacionales</option>
-                </select>
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div className="chart-container">
-              <h3 className="text-base font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Evolucion por Año</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
-                  <XAxis dataKey="year" stroke="var(--text-muted)" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
-                  <YAxis stroke="var(--text-muted)" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
-                  <Tooltip 
-                    contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}
-                    labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
-                    formatter={(value, name) => [value, name === 'victories' ? 'Victorias' : name === 'draws' ? 'Empates' : 'Derrotas']}
-                  />
-                  <Legend />
-                  <Bar dataKey="victories" name="Victorias" stackId="a" fill="var(--color-win)" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="draws" name="Empates" stackId="a" fill="var(--color-draw)" />
-                  <Bar dataKey="defeats" name="Derrotas" stackId="a" fill="var(--color-loss)" radius={[2, 2, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <Suspense fallback={<div className="chart-skeleton" role="status" aria-label="Cargando gráfico anual" />}>
+              <YearChart data={chartData} />
+            </Suspense>
 
             {currentYearStats ? (
               <div className="card-static p-6" key={currentYearStats.year}>
                 <h3 className="text-base font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Stats {currentYearStats.year}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                   <StatTile label="Partidos" value={currentYearStats.total} colorVar="var(--color-celeste)" />
-                  <StatTile label="Victorias" value={currentYearStats.victories} sub={`${currentYearStats.winPercentage}%`} colorVar="var(--color-win)" borderClass="stat-tile-win" />
-                  <StatTile label="Empates" value={currentYearStats.draws} sub={`${currentYearStats.drawPercentage}%`} colorVar="var(--color-draw)" borderClass="stat-tile-draw" />
-                  <StatTile label="Derrotas" value={currentYearStats.defeats} sub={`${currentYearStats.defeatPercentage}%`} colorVar="var(--color-loss)" borderClass="stat-tile-loss" />
+                  <StatTile label="Victorias" value={currentYearStats.victories} sub={`${currentYearStats.winPercentage}%`} colorVar="var(--color-win)" />
+                  <StatTile label="Empates" value={currentYearStats.draws} sub={`${currentYearStats.drawPercentage}%`} colorVar="var(--color-draw)" />
+                  <StatTile label="Derrotas" value={currentYearStats.defeats} sub={`${currentYearStats.defeatPercentage}%`} colorVar="var(--color-loss)" />
                   <StatTile label="Goles" value={`${currentYearStats.goalsFor} - ${currentYearStats.goalsAgainst}`} colorVar="var(--color-celeste)" />
                 </div>
               </div>
@@ -574,20 +639,36 @@ function App() {
                         { key: 'goalsFor', label: 'GF' },
                         { key: 'goalsAgainst', label: 'GC' }
                       ].map(col => (
-                        <th key={col.key} onClick={() => setYearSortConfig({ key: col.key, direction: yearSortConfig.key === col.key && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}>
-                          {col.label} {yearSortConfig.key === col.key && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                        <th key={col.key} scope="col" aria-sort={yearSortConfig.key === col.key ? (yearSortConfig.direction === 'desc' ? 'descending' : 'ascending') : 'none'}>
+                          <button
+                            type="button"
+                            className="table-sort-button"
+                            onClick={() => setYearSortConfig({ key: col.key, direction: yearSortConfig.key === col.key && yearSortConfig.direction === 'desc' ? 'asc' : 'desc' })}
+                            aria-label={`Ordenar por ${col.label}${yearSortConfig.key === col.key ? `, orden ${yearSortConfig.direction === 'desc' ? 'descendente' : 'ascendente'}` : ''}`}
+                          >
+                            {col.label} {yearSortConfig.key === col.key && (yearSortConfig.direction === 'desc' ? '↓' : '↑')}
+                          </button>
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {yearlyStats.map((yearData) => (
+                    {filteredYearlyStats.map((yearData) => (
                       <tr 
                         key={yearData.year} 
-                        onClick={() => setSelectedYearForStats(yearData.year)}
-                        style={{ cursor: 'pointer', background: selectedYearForStats === yearData.year ? 'var(--color-celeste-soft)' : undefined }}
+                        style={{ background: selectedYearForStats === yearData.year ? 'var(--color-celeste-soft)' : undefined }}
                       >
-                        <td className="font-bold" style={{ color: 'var(--text-primary)' }}>{yearData.year}</td>
+                        <td style={{ color: 'var(--text-primary)' }}>
+                          <button
+                            type="button"
+                            className="year-select-button"
+                            onClick={() => setSelectedYearForStats(yearData.year)}
+                            aria-pressed={selectedYearForStats === yearData.year}
+                            aria-label={`Mostrar resumen de ${yearData.year}`}
+                          >
+                            {yearData.year}
+                          </button>
+                        </td>
                         <td className="text-center">{yearData.total}</td>
                         <td className="text-center font-semibold" style={{ color: 'var(--color-win)' }}>{yearData.victories}</td>
                         <td className="text-center" style={{ color: 'var(--color-draw)' }}>{yearData.draws}</td>
@@ -604,8 +685,8 @@ function App() {
           </div>
         )}
 
-        {activeTab === 'rivales' && <RivalHistory data={data} />}
-        {activeTab === 'paises' && <CountryHistory data={data} />}
+        {dataStatus === 'ready' && activeTab === 'rivales' && <RivalHistory data={data} />}
+        {dataStatus === 'ready' && activeTab === 'paises' && <CountryHistory data={data} />}
       </main>
 
       <footer className="app-footer py-8 mt-16">

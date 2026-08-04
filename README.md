@@ -1,162 +1,84 @@
-# 🏆 Sporting Cristal Stats Viewer
+# Sebiche Celeste
 
-Una aplicación web moderna para visualizar las estadísticas históricas del Club Sporting Cristal, diseñada con React y un estilo visual del 2025.
+Archivo público y estático para consultar 1,936 partidos y estadísticas históricas de Sporting Cristal.
 
-<!-- Rollback completado a commit 7130cba - 2024 -->
+## Capacidades
 
-## ✨ Características
+- Efemérides por día y mes.
+- Resumen histórico de resultados y goles.
+- Partidos filtrados por año y mes, con paginación.
+- Análisis anual por década y tipo de torneo.
+- Historial consolidado por rival y país.
+- Vistas y filtros compartibles mediante parámetros de URL.
+- Tema claro/oscuro y soporte para reduced motion.
 
-- 📊 **Estadísticas Interactivas**: Visualización de datos históricos completos del club
-- 🎨 **Diseño Moderno**: UI/UX del 2025 con efectos glassmorphism y gradientes
-- 📱 **Responsive**: Adaptado para móviles, tablets y desktop
-- 🔍 **Filtros**: Navegación por años para análisis específicos
-- ⚡ **Performance**: Optimizado con React 19 y hooks modernos
+## Arquitectura
 
-## 🎯 Funcionalidades
+- React 19 y Create React App 5.
+- Tailwind CSS 3 compilado localmente.
+- Recharts cargado solo al abrir la vista Año.
+- Dataset cargado como chunk diferido desde `src/data/historico_completo_sc.json`.
+- Helpers de dominio en `src/domain/matches.js`.
+- Estado compartible en `src/hooks/useUrlState.js`.
 
-### Estadísticas Disponibles
-- Goles por minuto de juego
-- Victorias y derrotas por día de la semana
-- Rendimiento por meses del año
-- Marcadores más comunes
-- Máximo goleador histórico
-- Curiosidades y datos únicos del club
+El dataset es público: el navegador debe recibirlo para ejecutar las consultas. No se requiere autenticación ni backend. `/api/data?type=completo` es un endpoint público opcional para compatibilidad; la UI no depende de él.
 
-### Diseño Visual
-- **Colores**: Sky Blue (#00BFFF), Navy (#293146), White (#FFFFFF)
-- **Tipografía**: Roboto (Google Fonts)
-- **Efectos**: Sombras modernas, animaciones suaves, hover effects
+## Desarrollo local
 
-## 🚀 Deployment Automático en Vercel
+Requisitos: Node.js 20 o posterior y npm.
 
-### Configuración Recomendada
-
-**Opción 1: Deployment desde GitHub (Recomendado)**
-
-1. Ve a [vercel.com](https://vercel.com) e inicia sesión
-2. Haz clic en "New Project"
-3. Importa tu repositorio de GitHub: `https://github.com/soysebiche/sc`
-4. Vercel detectará automáticamente que es un proyecto React
-5. Configura el proyecto:
-   - **Framework Preset**: Create React App
-   - **Root Directory**: `./` (o deja vacío)
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `build`
-6. Haz clic en "Deploy"
-
-### Variables de Entorno (Opcional)
-Si necesitas configurar variables de entorno, agrégalas en Vercel Dashboard:
-```
-REACT_APP_API_URL=tu_api_url_aqui
-```
-
-### Configuración Vercel (vercel.json)
-El proyecto incluye un archivo `vercel.json` optimizado para SPA React:
-
-```json
-{
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
-}
-```
-
-### Deploy Automático
-- ✅ **Auto-deploy**: Cada push a `main` despliega automáticamente
-- ✅ **Preview**: Las pull requests generan deploys de preview
-- ✅ **Rollback**: Fácil rollback a versiones anteriores
-
-## 💻 Desarrollo Local
-
-### Prerequisitos
-- Node.js 16+ 
-- npm o yarn
-
-### Instalación
-
-1. **Clona el repositorio**
 ```bash
-git clone https://github.com/soysebiche/sc.git
-cd sc
-```
-
-2. **Instala las dependencias**
-```bash
-npm install
-```
-
-3. **Inicia el servidor de desarrollo**
-```bash
+npm ci
 npm start
 ```
 
-4. **Abre tu navegador**
-Ve a [http://localhost:3000](http://localhost:3000)
+La aplicación de desarrollo abre en `http://localhost:3000`.
 
-### Scripts Disponibles
+## Gates de calidad
 
-### `npm start`
+```bash
+npm run lint
+npm run test:ci
+npm run build
+npm run check
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`npm run check` ejecuta lint, las 8 pruebas actuales y el build de producción. El mismo gate está declarado en `.github/workflows/ci.yml`.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Para distinguir riesgo servido de deuda del toolchain:
 
-### `npm test`
+```bash
+npm audit --omit=dev
+npm audit
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+El primer comando audita las dependencias de runtime. El segundo incluye CRA y todas las herramientas de build. No se recomienda `npm audit fix --force` sin una migración probada.
 
-### `npm run build`
+## Variables de entorno
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+No hay variables obligatorias. `REACT_APP_GA_MEASUREMENT_ID` está documentada en `env.example`, pero solo tendrá efecto si se conecta explícitamente una integración de analítica.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Deployment
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos y el fallback SPA. Configuración esperada:
 
-### `npm run eject`
+- Build: `npm run build`
+- Output: `build`
+- Framework: Create React App
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Producción verificada el 2026-08-04:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- URL canónica: <https://celeste.sebiche.com>
+- Commit desplegado: `32e453e336a4c5e15373eddb87e442026239cec8`
+- Deployment Vercel: `sc-ev0oz0wzn-sebbs21s-projects.vercel.app`
+- Smoke: documento, logo, manifest, deep links y `/api/data?type=completo` respondieron correctamente.
+- Navegador: Efemérides, Partidos, Año y Rivales cargaron sin errores de consola ni overflow a 390 px.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+El estado `Ready` del proveedor no sustituye estas comprobaciones. Repetir el smoke después de cada release.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Documentación
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `AUDITORIA_UX_UI_Y_PLAN_MEJORA.md`: auditoría y backlog vivo.
+- `DESIGN_SYSTEM.md`: tokens y patrones activos.
+- `SETUP_SIMPLE.md`: contrato de datos actual.
+- `SETUP_VERCEL_FUNCTIONS.md`: alcance del endpoint opcional.

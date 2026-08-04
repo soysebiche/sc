@@ -14,7 +14,7 @@ header.app-header {
 }
 
 .app-header .header-subtitle {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
@@ -83,22 +83,6 @@ header.app-header {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   STAT TILES (Dashboard metrics)
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.stat-tile-win {
-  border-left: 3px solid var(--color-win);
-}
-
-.stat-tile-draw {
-  border-left: 3px solid var(--color-draw);
-}
-
-.stat-tile-loss {
-  border-left: 3px solid var(--color-loss);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
    CHART AREA
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -110,13 +94,39 @@ header.app-header {
   padding: 1.5rem;
 }
 
+.chart-skeleton {
+  min-height: 350px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-inset) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: chart-skeleton 1.2s var(--ease-smooth) infinite;
+}
+
+.archive-skeleton {
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-inset) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: chart-skeleton 1.2s var(--ease-smooth) infinite;
+}
+
+@keyframes chart-skeleton {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════════════════════════════════ */
 
 footer.app-footer {
   background: #1B265C !important;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.78);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.04em;

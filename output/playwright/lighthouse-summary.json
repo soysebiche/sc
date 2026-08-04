@@ -1,0 +1,27 @@
+{
+  "tool": "Lighthouse 12.8.2",
+  "target": "http://127.0.0.1:4173/?view=efemerides&date=2024-08-04",
+  "runs": [
+    {"performance": 72, "lcp_ms": 5800, "tbt_ms": 217.5},
+    {"performance": 98, "lcp_ms": 2400, "tbt_ms": 0},
+    {"performance": 98, "lcp_ms": 2400, "tbt_ms": 0}
+  ],
+  "median": {
+    "performance": 98,
+    "accessibility": 100,
+    "best_practices": 100,
+    "seo": 100,
+    "lcp_ms": 2400,
+    "tbt_ms": 0
+  },
+  "representative_run": {
+    "performance": 98,
+    "accessibility": 100,
+    "best_practices": 100,
+    "seo": 100,
+    "lcp_ms": 2401.733,
+    "tbt_ms": 0,
+    "cls": 0.04738760631834751
+  },
+  "note": "Laboratory evidence only; not field Web Vitals."
+}
