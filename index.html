@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1b265c" />
+    <meta name="description" content="Archivo histórico de Sporting Cristal: 1,936 partidos, efemérides, rivales, países y análisis anual." />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preload" as="image" href="/sebiche-celeste-logo.webp" fetchpriority="high" />
+    <title>Sebiche Celeste | Archivo Histórico Sporting Cristal</title>
+    <script>
+      (function () {
+        var theme = localStorage.getItem('sc-theme');
+        if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <style>
+      body { margin: 0; min-height: 100dvh; background: #edf2f7; color: #1b265c; font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      [data-theme="dark"] body { background: #0b1120; color: #f1f5f9; }
+      #root { min-height: 100dvh; }
+    </style>
+  </head>
+  <body>
+    <noscript>Necesitas habilitar JavaScript para consultar el archivo histórico.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>

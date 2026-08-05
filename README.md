@@ -14,12 +14,15 @@ Archivo público y estático para consultar 1,936 partidos y estadísticas hist�
 
 ## Arquitectura
 
-- React 19 y Create React App 5.
-- Tailwind CSS 3 compilado localmente.
+- React 19 sobre Vite 7.
+- Tailwind CSS 3 y Autoprefixer compilados localmente con PostCSS.
 - Recharts cargado solo al abrir la vista Año.
 - Dataset cargado como chunk diferido desde `src/data/historico_completo_sc.json`.
-- Helpers de dominio en `src/domain/matches.js`.
+- Metadata editorial en `src/data/archive-metadata.json` y auditor reproducible en `scripts/audit-data.mjs`.
+- Helpers y agregaciones de dominio en `src/domain/matches.js`.
+- Seis vistas separadas por feature; balances, paginación y filas de partido compartidos.
 - Estado compartible en `src/hooks/useUrlState.js`.
+- Web Vitals opcionales y consentidos hacia `/api/vitals`; no se envían identificadores personales ni el contenido de consultas.
 
 El dataset es público: el navegador debe recibirlo para ejecutar las consultas. No se requiere autenticación ni backend. `/api/data?type=completo` es un endpoint público opcional para compatibilidad; la UI no depende de él.
 
@@ -32,7 +35,7 @@ npm ci
 npm start
 ```
 
-La aplicación de desarrollo abre en `http://localhost:3000`.
+La aplicación de desarrollo abre en `http://localhost:5173` salvo que Vite elija otro puerto disponible.
 
 ## Gates de calidad
 
@@ -43,7 +46,7 @@ npm run build
 npm run check
 ```
 
-`npm run check` ejecuta lint, las 8 pruebas actuales y el build de producción. El mismo gate está declarado en `.github/workflows/ci.yml`.
+`npm run check` ejecuta lint, auditoría y pruebas del dataset, pruebas de interfaz/dominio y el build de producción. El mismo gate está declarado en `.github/workflows/ci.yml`.
 
 Para distinguir riesgo servido de deuda del toolchain:
 
@@ -52,19 +55,19 @@ npm audit --omit=dev
 npm audit
 ```
 
-El primer comando audita las dependencias de runtime. El segundo incluye CRA y todas las herramientas de build. No se recomienda `npm audit fix --force` sin una migración probada.
+El primer comando audita las dependencias de runtime. El segundo incluye las herramientas de build y testing. Ambos deben mantenerse sin vulnerabilidades altas o críticas alcanzables.
 
 ## Variables de entorno
 
-No hay variables obligatorias. `REACT_APP_GA_MEASUREMENT_ID` está documentada en `env.example`, pero solo tendrá efecto si se conecta explícitamente una integración de analítica.
+No hay variables obligatorias. La aplicación no activa analítica de terceros. La medición de rendimiento propia requiere consentimiento explícito del visitante.
 
 ## Deployment
 
 El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos y el fallback SPA. Configuración esperada:
 
 - Build: `npm run build`
-- Output: `build`
-- Framework: Create React App
+- Output: `dist`
+- Framework: Vite
 
 Producción verificada el 2026-08-04:
 
@@ -74,7 +77,7 @@ Producción verificada el 2026-08-04:
 - Smoke: documento, logo, manifest, deep links y `/api/data?type=completo` respondieron correctamente.
 - Navegador: Efemérides, Partidos, Año y Rivales cargaron sin errores de consola ni overflow a 390 px.
 
-El estado `Ready` del proveedor no sustituye estas comprobaciones. Repetir el smoke después de cada release.
+La referencia anterior documenta el último release público comprobado antes de la migración a Vite. El estado `Ready` del proveedor no sustituye estas comprobaciones: repetir el smoke HTTP, los journeys, la consola y los logs después de cada release.
 
 ## Documentación
 
@@ -82,3 +85,4 @@ El estado `Ready` del proveedor no sustituye estas comprobaciones. Repetir el sm
 - `DESIGN_SYSTEM.md`: tokens y patrones activos.
 - `SETUP_SIMPLE.md`: contrato de datos actual.
 - `SETUP_VERCEL_FUNCTIONS.md`: alcance del endpoint opcional.
+- `VALIDACION_CAMPO_9.md`: protocolo y registro obligatorio para confirmar el 9.0.

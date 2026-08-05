@@ -1,0 +1,14 @@
+{
+  "status": "not-mounted",
+  "reason": "Prototypes retained for historical reference; excluded from lint, build imports and production navigation.",
+  "entries": [
+    "components/Login.js",
+    "components/Trivia.js",
+    "components/ui/",
+    "data/triviaQuestions.js",
+    "hooks/useAnalytics.js",
+    "services/analyticsService.js",
+    "services/authService.js",
+    "utils/icons.js"
+  ]
+}

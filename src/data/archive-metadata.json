@@ -1,0 +1,32 @@
+{
+  "lastUpdated": "2026-08-04",
+  "datasetRevision": "2026.08.04",
+  "recordCount": 1936,
+  "firstMatchDate": "1956-08-05",
+  "latestMatchDate": "2026-08-02",
+  "canonicalFile": "src/data/historico_completo_sc.json",
+  "sources": [
+    {
+      "name": "RSSSF Perú",
+      "url": "https://www.rsssf.org/tablesp/peru2026.html",
+      "scope": "Fuente primaria de extracción para temporadas domésticas recientes."
+    },
+    {
+      "name": "Liga 1, FPF o Sporting Cristal",
+      "url": "",
+      "scope": "Segunda fuente obligatoria para confirmar fecha, localía, rival y marcador antes de publicar altas recientes."
+    }
+  ],
+  "methodology": [
+    "El archivo reúne partidos oficiales registrados de Sporting Cristal y calcula el resultado desde el marcador, la localía y, cuando corresponde, la definición por penales documentada.",
+    "El campo Año representa la temporada; una temporada puede terminar en enero del año calendario siguiente.",
+    "Las altas recientes se comparan por fecha, torneo, equipo local y equipo visitante; las discrepancias requieren revisión manual.",
+    "Los nombres equivalentes de rivales se normalizan en la consulta sin reescribir silenciosamente el registro histórico."
+  ],
+  "limitations": [
+    "La procedencia documental partido por partido del archivo anterior al flujo RSSSF todavía no está catalogada.",
+    "Goleadores y denominaciones históricas pueden requerir correcciones editoriales adicionales.",
+    "El dataset es un archivo curado y no representa una publicación oficial del club."
+  ],
+  "correctionsUrl": "https://github.com/soysebiche/sc/issues/new?template=data-correction.md"
+}
