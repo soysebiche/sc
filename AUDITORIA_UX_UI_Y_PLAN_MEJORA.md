@@ -4,7 +4,7 @@
 >
 > Alcance: producto completo, seis áreas, temas claro/oscuro y viewports 320/390/1440
 >
-> Estado: candidato integrado en preview con CI remoto verde; validación humana, AT real y RUM de campo pendientes
+> Estado: candidato desplegado y verificado en producción; validación humana, AT real y ventana RUM pendientes
 >
 > Puntaje bruto: **8.5/10**
 >
@@ -37,8 +37,9 @@ La interfaz y el sistema visual ya califican **9.0**, y la calificación técnic
 | Navegación por teclado | Primer Tab llega al skip link; Enter mueve foco a `#main-content` | E3 |
 | RUM consentido | 0 requests antes de consentimiento; payload anónimo validado y endpoint cubierto por tests | E3 |
 | Detector visual | `impeccable` devuelve 0 findings en App, features y componentes activos | E3 |
-| GitHub | Commit de aplicación `f73726d`, PR draft #2 y job `quality` verde | E3 |
-| Preview Vercel | Build `Ready`; raíz y datos 200; inválido 400; RUM válido 202/inválido 400; logs sin errores | E3 |
+| GitHub | Commit desplegado `7c9ed54`, PR draft #2 y job `quality` verde | E3 |
+| Producción Vercel | `celeste.sebiche.com`; deployment `dpl_5js3ZiqXxYWbko1tHQJKo3a6crgv`; raíz/datos 200; RUM 202; inválidos 400; logs sin errores | E4 |
+| Navegador de producción | Seis áreas a 390 px, 0 overflow, 0 errores/warnings; claro/oscuro y targets de 44 px en desktop | E4 |
 | Usuarios, AT y campo | Protocolo preparado, sin sesiones ejecutadas | E0 |
 
 Bundle de producción:
@@ -75,9 +76,9 @@ La entrada de cálculo está en `output/playwright/gates-score-input.json` y se 
 | 2. Confianza editorial y datos | **Cerrado** | Fuente, fecha, cobertura, método, límites, canal de corrección y auditor canónico | Procedencia partido por partido es una mejora futura, no un bloqueo declarado |
 | 3. Arquitectura y toolchain | **Cerrado** | CRA→Vite, features, dominio, primitives, 0 advisories y CI Node 22 verde en PR #2 | Nada técnico |
 | 4. Usuarios y accesibilidad profunda | **Parcial** | Axe, teclado focal, responsive y protocolo completo | 5 participantes, zoom nativo 200%, VoiceOver desktop y VoiceOver/TalkBack móvil |
-| 5. Release y evidencia operativa | **Parcial** | Preview trazable, HTTP/API/logs limpios, Lighthouse estable, consentimiento y endpoint RUM | Cerrar Gate 4; promover ese commit a producción; smoke de navegador y ventana RUM con volumen/sesgo |
+| 5. Release y evidencia operativa | **Parcial** | Producción trazable, HTTP/API/journeys/logs limpios, Lighthouse estable, consentimiento y endpoint RUM | Completar una ventana RUM con volumen, p75 y sesgo declarados |
 
-Los Gates 4 y 5 no se marcan cerrados porque exigen evidencia externa. El archivo `VALIDACION_CAMPO_9.md` contiene la matriz que debe completarse.
+Los Gates 4 y 5 no se marcan cerrados porque todavía exigen evidencia de campo. El archivo `VALIDACION_CAMPO_9.md` contiene la matriz que debe completarse.
 
 ## 5. Nielsen
 
@@ -151,6 +152,7 @@ La mejora de autenticidad proviene de información y jerarquía, no de añadir a
 - Se aceptan exclusivamente CLS, INP y LCP; strings están acotados y no se recibe identidad/contenido de consulta.
 - El endpoint responde 202 a payload válido, 400 a payload inválido y 405 a métodos no permitidos.
 - La inserción tardía del footer fue corregida: CLS pasó de 0.0914 a 0 en tres corridas finales.
+- El commit `7c9ed54` fue promovido a producción y validado en `celeste.sebiche.com` con seis journeys, API, consola y logs.
 
 ## 8. Hallazgos abiertos
 
@@ -172,15 +174,14 @@ La mejora de autenticidad proviene de información y jerarquía, no de añadir a
 - Estado: instrumentado, sin campo.
 - Cierre: declarar ventana, navegaciones válidas, sesgo y p75; LCP <2.5 s, INP <200 ms y CLS <0.1.
 
-No hay P0/P1 técnicos o visuales abiertos en el candidato local.
+No hay P0/P1 técnicos o visuales abiertos en producción.
 
 ## 9. Plan exacto para confirmar 9.0
 
-1. Usar el preview trazable ya publicado y ejecutar las cinco tareas con cinco participantes.
+1. Usar la producción trazable ya publicada y ejecutar las cinco tareas con cinco participantes.
 2. Completar VoiceOver/TalkBack y zoom nativo; corregir y repetir cualquier bloqueo.
-3. Congelar el commit que cierre Gate 4 y promover exactamente ese artefacto a producción.
-4. Repetir smoke en 390/1440, claro/oscuro, consola, API y logs.
-5. Observar una ventana RUM declarada y recalcular con evidencia E4.
+3. Corregir y desplegar cualquier hallazgo del Gate 4 usando el mismo gate CI y smoke.
+4. Observar una ventana RUM declarada y recalcular con evidencia E4.
 
 Con Gate 4 cerrado, el puntaje bruto actual de 8.5 puede subir hacia 8.8–8.9 por evidencia, no por cosmética. El 9.0 se confirma cuando producción y RUM demuestran que el mismo candidato sostiene la calidad. El 9.5 requiere varias ventanas/releases sin regresión y evidencia longitudinal de utilidad.
 
@@ -194,6 +195,9 @@ Con Gate 4 cerrado, el puntaje bruto actual de 8.5 puede subir hacia 8.8–8.9 p
 - `output/playwright/gates-lighthouse-final-2.json`
 - `output/playwright/gates-lighthouse-final-3.json`
 - `output/playwright/gates-score-input.json`
+- `output/playwright/production-gates-mobile-390.png`
+- `output/playwright/production-gates-desktop-1440.png`
+- `output/playwright/production-gates-desktop-dark.png`
 - `VALIDACION_CAMPO_9.md`
 
 ## 11. Límites de la auditoría

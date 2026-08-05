@@ -72,12 +72,13 @@ El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos
 Producción verificada el 2026-08-04:
 
 - URL canónica: <https://celeste.sebiche.com>
-- Commit desplegado: `32e453e336a4c5e15373eddb87e442026239cec8`
-- Deployment Vercel: `sc-ev0oz0wzn-sebbs21s-projects.vercel.app`
-- Smoke: documento, logo, manifest, deep links y `/api/data?type=completo` respondieron correctamente.
-- Navegador: Efemérides, Partidos, Año y Rivales cargaron sin errores de consola ni overflow a 390 px.
+- Commit desplegado: `7c9ed5481324f5146fe4786f49603f40eeaf2bd2`
+- Deployment Vercel: `sc-km7dhudv9-sebbs21s-projects.vercel.app` (`dpl_5js3ZiqXxYWbko1tHQJKo3a6crgv`)
+- Smoke: documento y dataset respondieron 200; dataset inválido 400; RUM válido 202 e inválido 400.
+- Navegador: las seis áreas cargaron a 390 px sin overflow ni errores/warnings de consola; claro/oscuro y targets de 44 px verificados en desktop.
+- Logs: cero eventos de nivel error después del smoke; el payload RUM de prueba quedó registrado con la revisión correcta.
 
-La referencia anterior documenta el último release público comprobado antes de la migración a Vite. El estado `Ready` del proveedor no sustituye estas comprobaciones: repetir el smoke HTTP, los journeys, la consola y los logs después de cada release.
+El estado `Ready` del proveedor no sustituye estas comprobaciones: repetir el smoke HTTP, los journeys, la consola y los logs después de cada release.
 
 ## Documentación
 
