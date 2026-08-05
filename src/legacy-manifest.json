@@ -6,8 +6,6 @@
     "components/Trivia.js",
     "components/ui/",
     "data/triviaQuestions.js",
-    "hooks/useAnalytics.js",
-    "services/analyticsService.js",
     "services/authService.js",
     "utils/icons.js"
   ]

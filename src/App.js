@@ -198,7 +198,10 @@ function App() {
         <footer className="app-footer mt-10"><div className="footer-inner">
           <MeasurementConsent choice={measurementChoice} onChange={setMeasurementChoice} />
           <ArchiveProvenance metadata={archiveMetadata} />
-          <p className="footer-signature">Sebiche Celeste &middot; {archiveMetadata.datasetRevision}</p>
+          <div className="footer-meta">
+            <p className="footer-signature">Sebiche Celeste &middot; {archiveMetadata.datasetRevision}</p>
+            <a href="/privacidad.html">Privacidad y medición</a>
+          </div>
         </div></footer>
       )}
     </div>

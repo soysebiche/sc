@@ -41,10 +41,26 @@ test('queues only sanitized page and allowlisted filter data when configured', (
   trackUrlControl('token', true);
 
   const serialized = JSON.stringify(window.dataLayer);
+  expect(Array.isArray(window.dataLayer.at(-1))).toBe(false);
+  expect(Array.from(window.dataLayer.at(-1))).toEqual([
+    'event',
+    'archive_filter',
+    { filter_name: 'rival', is_active: true },
+  ]);
   expect(serialized).toContain('archive_filter');
   expect(serialized).toContain('page_location');
   expect(serialized).not.toContain('Texto%20privado');
   expect(serialized).not.toContain('token');
+});
+
+test('restores analytics consent after a visitor re-enables measurement', () => {
+  vi.stubEnv('VITE_GA_MEASUREMENT_ID', 'G-6H6LMJ1E37');
+  enableAnalytics();
+  disableAnalytics();
+  enableAnalytics();
+
+  const lastCommand = Array.from(window.dataLayer.at(-1));
+  expect(lastCommand).toEqual(['consent', 'update', { analytics_storage: 'granted' }]);
 });
 
 afterEach(() => vi.unstubAllEnvs());

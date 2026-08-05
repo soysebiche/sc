@@ -23,10 +23,11 @@ let analyticsInitialized = false;
 const measurementId = () => String(import.meta.env.VITE_GA_MEASUREMENT_ID || '').trim();
 const hasValidMeasurementId = () => MEASUREMENT_ID_PATTERN.test(measurementId());
 
-const gtag = (...args) => {
+function gtag() {
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push(args);
-};
+  // gtag.js distinguishes command arguments from ordinary nested arrays.
+  window.dataLayer.push(arguments);
+}
 
 const cleanLocation = () => `${window.location.origin}${window.location.pathname}`;
 
@@ -41,7 +42,12 @@ const removeAnalyticsCookies = () => {
 
 export function enableAnalytics() {
   analyticsEnabled = true;
-  if (analyticsInitialized || !hasValidMeasurementId() || typeof document === 'undefined') return analyticsInitialized;
+  if (!hasValidMeasurementId() || typeof document === 'undefined') return false;
+
+  if (analyticsInitialized) {
+    gtag('consent', 'update', { analytics_storage: 'granted' });
+    return true;
+  }
 
   const gaId = measurementId();
   gtag('consent', 'default', {

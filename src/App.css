@@ -682,10 +682,29 @@ footer.app-footer {
   font-weight: 700;
 }
 
-.footer-signature {
+.footer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-meta a {
+  color: #8bdcf7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+@media (max-width: 520px) {
+  .footer-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
