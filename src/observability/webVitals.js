@@ -1,7 +1,9 @@
 const ENDPOINT = '/api/vitals';
 let started = false;
+let consentGranted = false;
 
 const sendMetric = metric => {
+  if (!consentGranted) return;
   const payload = JSON.stringify({
     name: metric.name,
     value: metric.value,
@@ -26,6 +28,10 @@ const sendMetric = metric => {
     credentials: 'same-origin',
   }).catch(() => {});
 };
+
+export function setWebVitalsConsent(granted) {
+  consentGranted = Boolean(granted);
+}
 
 export async function startWebVitals() {
   if (started || typeof window === 'undefined') return;

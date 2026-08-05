@@ -15,6 +15,20 @@ test('renders the historical archive with a named date control', async () => {
   })).toBeInTheDocument();
   expect(await screen.findByText(/Archivo Histórico · 1936 Partidos/i)).toBeInTheDocument();
   expect(await screen.findByLabelText('Fecha para consultar')).toHaveAttribute('type', 'date');
+  expect(screen.getByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
+  expect(screen.getAllByText(/Universitario/).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
+});
+
+test('requires explicit consent before enabling anonymous measurement', async () => {
+  render(<App />);
+  await screen.findByRole('heading', { name: 'Próximos encuentros' });
+
+  expect(screen.getByRole('heading', { name: 'Ayúdanos a mejorar Sebiche Celeste' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Solo lo necesario' }));
+
+  expect(window.localStorage.getItem('sc-measurement-consent')).toBe('declined');
+  expect(screen.getByRole('button', { name: /Medición anónima: inactiva/ })).toBeInTheDocument();
 });
 
 test('keeps annual table, summary and sort direction consistent', async () => {

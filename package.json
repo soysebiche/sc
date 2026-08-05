@@ -11,12 +11,14 @@
   "scripts": {
     "start": "vite --host 0.0.0.0",
     "dev": "vite --host 0.0.0.0",
+    "generate:calendar": "node scripts/generate-calendar.mjs",
+    "prebuild": "npm run generate:calendar",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint src/ api/",
     "test": "vitest",
     "test:ci": "vitest run",
-    "test:data": "node scripts/audit-data.mjs && node --test scripts/audit-data.test.mjs",
+    "test:data": "node scripts/audit-data.mjs && node --test scripts/audit-data.test.mjs scripts/generate-calendar.test.mjs",
     "check": "npm run lint && npm run test:data && npm run test:ci && npm run build"
   },
   "devDependencies": {

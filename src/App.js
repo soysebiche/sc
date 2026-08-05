@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import ArchiveProvenance from './components/ArchiveProvenance';
 import CountryHistory from './components/CountryHistory';
-import PerformanceConsent from './components/PerformanceConsent';
+import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
 import RivalHistory from './components/RivalHistory';
+import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
 import {
   calculateArchiveOverview,
@@ -19,7 +20,9 @@ import DashboardView from './features/DashboardView';
 import EfemeridesView from './features/EfemeridesView';
 import MatchesView from './features/MatchesView';
 import { useUrlState } from './hooks/useUrlState';
+import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackThemeChange } from './services/analytics';
 import vercelDataService from './services/vercelDataService';
+import { setWebVitalsConsent, startWebVitals } from './observability/webVitals';
 
 const TABS = [
   { id: 'efemerides', label: 'EFEMÉRIDES' },
@@ -62,6 +65,7 @@ function App() {
   const [data, setData] = useState([]);
   const [dataStatus, setDataStatus] = useState('loading');
   const [loadAttempt, setLoadAttempt] = useState(0);
+  const [measurementChoice, setMeasurementChoice] = useState(() => localStorage.getItem(MEASUREMENT_STORAGE_KEY));
   const [theme, setTheme] = useState(() => localStorage.getItem('sc-theme')
     || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
 
@@ -84,7 +88,10 @@ function App() {
         setDataStatus('ready');
       })
       .catch(() => {
-        if (isActive) setDataStatus('error');
+        if (isActive) {
+          setDataStatus('error');
+          trackDataLoadError();
+        }
       });
     return () => { isActive = false; };
   }, [loadAttempt]);
@@ -94,6 +101,18 @@ function App() {
     document.documentElement.dataset.revision = archiveMetadata.datasetRevision;
     localStorage.setItem('sc-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (measurementChoice === 'accepted') {
+      enableAnalytics();
+      setWebVitalsConsent(true);
+      startWebVitals();
+      trackPageView(activeTab);
+    } else {
+      setWebVitalsConsent(false);
+      disableAnalytics();
+    }
+  }, [activeTab, measurementChoice]);
 
   const overview = useMemo(() => calculateArchiveOverview(data), [data]);
   const years = useMemo(() => getUniqueYears(data), [data]);
@@ -119,7 +138,11 @@ function App() {
 
   const toggleTheme = () => {
     document.documentElement.classList.add('theme-transition');
-    setTheme(current => current === 'light' ? 'dark' : 'light');
+    setTheme(current => {
+      const nextTheme = current === 'light' ? 'dark' : 'light';
+      trackThemeChange(nextTheme);
+      return nextTheme;
+    });
     window.setTimeout(() => document.documentElement.classList.remove('theme-transition'), 350);
   };
 
@@ -149,6 +172,7 @@ function App() {
               </button>
             ))}
           </nav>
+          <CalendarSubscribeLink compact />
         </div></div>
       </header>
 
@@ -172,7 +196,7 @@ function App() {
 
       {dataStatus !== 'loading' && (
         <footer className="app-footer mt-10"><div className="footer-inner">
-          <PerformanceConsent />
+          <MeasurementConsent choice={measurementChoice} onChange={setMeasurementChoice} />
           <ArchiveProvenance metadata={archiveMetadata} />
           <p className="footer-signature">Sebiche Celeste &middot; {archiveMetadata.datasetRevision}</p>
         </div></footer>

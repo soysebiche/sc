@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { trackUrlControl } from '../services/analytics';
 
 const readValue = (key, defaultValue, validate) => {
   const value = new URLSearchParams(window.location.search).get(key);
@@ -27,6 +28,7 @@ export function useUrlState(key, defaultValue = '', options = {}) {
     const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
     window.history[history === 'push' ? 'pushState' : 'replaceState']({}, '', nextUrl);
     setValue(resolved);
+    trackUrlControl(key, resolved !== '' && resolved !== null && resolved !== defaultValue);
   }, [defaultValue, history, key, value]);
 
   return [value, updateValue];

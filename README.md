@@ -59,7 +59,7 @@ El primer comando audita las dependencias de runtime. El segundo incluye las her
 
 ## Variables de entorno
 
-No hay variables obligatorias. La aplicación no activa analítica de terceros. La medición de rendimiento propia requiere consentimiento explícito del visitante.
+No hay variables obligatorias para ejecutar el archivo. `VITE_GA_MEASUREMENT_ID` activa GA4 únicamente después del consentimiento explícito del visitante; la medición de rendimiento propia usa la misma preferencia.
 
 ## Deployment
 
@@ -74,11 +74,20 @@ Producción verificada el 2026-08-04:
 - URL canónica: <https://celeste.sebiche.com>
 - Commit desplegado: `9ac541a7c1a23327d6a40f0863f28c9a348478dd`
 - Deployment Vercel: `sc-p1rwbuzxf-sebbs21s-projects.vercel.app` (`dpl_6jS8BTfZS72gpocY6eLKN2tZcLvM`)
+
 - Smoke: documento y dataset respondieron 200; dataset inválido 400; RUM válido 202 e inválido 400.
 - Navegador: las seis áreas cargaron a 390 px sin overflow ni errores/warnings de consola; claro/oscuro y targets de 44 px verificados en desktop.
 - Logs: cero eventos de nivel error después del smoke; el payload RUM de prueba quedó registrado con la revisión correcta.
 
 El estado `Ready` del proveedor no sustituye estas comprobaciones: repetir el smoke HTTP, los journeys, la consola y los logs después de cada release.
+
+### Próximos partidos y calendario
+
+Los partidos confirmados viven en `src/data/upcoming-fixtures.json`. `npm run generate:calendar` valida esos datos y publica `public/sporting-cristal.ics`, un feed iCalendar de solo lectura que no depende de una cuenta de Google ni expone calendarios personales. Solo deben añadirse partidos del primer equipo con fecha, hora y estadio confirmados por la autoridad de la competencia.
+
+### Medición anónima
+
+GA4 se carga únicamente después del consentimiento explícito y solo si existe `VITE_GA_MEASUREMENT_ID`. Los eventos usan una lista cerrada de secciones, filtros y paginaciones; nunca se envían textos escritos ni valores de búsqueda. La preferencia puede revocarse desde el pie de página.
 
 ## Documentación
 

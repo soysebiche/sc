@@ -1,0 +1,66 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sebiche Celeste//Partidos de Sporting Cristal//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Sporting Cristal — próximos partidos
+X-WR-CALDESC:Partidos confirmados del primer equipo de Sporting Cristal. 
+ La programación puede cambiar por decisión del organizador.
+X-WR-TIMEZONE:America/Lima
+REFRESH-INTERVAL;VALUE=DURATION:PT6H
+X-PUBLISHED-TTL:PT6H
+BEGIN:VTIMEZONE
+TZID:America/Lima
+X-LIC-LOCATION:America/Lima
+BEGIN:STANDARD
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0500
+TZNAME:-05
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:liga1-clausura-2026-f4-universitario-sporting-cristal@celeste.sebiche
+ .com
+DTSTAMP:20260805T020000Z
+LAST-MODIFIED:20260805T020000Z
+DTSTART;TZID=America/Lima:20260807T200000
+DTEND;TZID=America/Lima:20260807T220000
+SUMMARY:Universitario vs. Sporting Cristal
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 4. Programación sujeta a
+  cambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Monumental U
+URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
+ 026/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:liga1-clausura-2026-f5-sporting-cristal-sport-huancayo@celeste.sebich
+ e.com
+DTSTAMP:20260805T020000Z
+LAST-MODIFIED:20260805T020000Z
+DTSTART;TZID=America/Lima:20260816T110000
+DTEND;TZID=America/Lima:20260816T130000
+SUMMARY:Sporting Cristal vs. Sport Huancayo
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 5. Programación sujeta a
+  cambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Alberto Gallardo
+URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
+ 026/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+END:VCALENDAR
