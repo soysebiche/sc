@@ -37,8 +37,8 @@ La interfaz y el sistema visual ya califican **9.0**, y la calificación técnic
 | Navegación por teclado | Primer Tab llega al skip link; Enter mueve foco a `#main-content` | E3 |
 | RUM consentido | 0 requests antes de consentimiento; payload anónimo validado y endpoint cubierto por tests | E3 |
 | Detector visual | `impeccable` devuelve 0 findings en App, features y componentes activos | E3 |
-| GitHub | Commit desplegado `7c9ed54`, PR draft #2 y job `quality` verde | E3 |
-| Producción Vercel | `celeste.sebiche.com`; deployment `dpl_5js3ZiqXxYWbko1tHQJKo3a6crgv`; raíz/datos 200; RUM 202; inválidos 400; logs sin errores | E4 |
+| GitHub | Commit desplegado `9ac541a`, PR draft #2 y job `quality` verde | E3 |
+| Producción Vercel | `celeste.sebiche.com`; deployment `dpl_6jS8BTfZS72gpocY6eLKN2tZcLvM`; raíz/datos 200; RUM 202; inválidos 400; logs sin errores | E4 |
 | Navegador de producción | Seis áreas a 390 px, 0 overflow, 0 errores/warnings; claro/oscuro y targets de 44 px en desktop | E4 |
 | Usuarios, AT y campo | Protocolo preparado, sin sesiones ejecutadas | E0 |
 
@@ -152,7 +152,7 @@ La mejora de autenticidad proviene de información y jerarquía, no de añadir a
 - Se aceptan exclusivamente CLS, INP y LCP; strings están acotados y no se recibe identidad/contenido de consulta.
 - El endpoint responde 202 a payload válido, 400 a payload inválido y 405 a métodos no permitidos.
 - La inserción tardía del footer fue corregida: CLS pasó de 0.0914 a 0 en tres corridas finales.
-- El commit `7c9ed54` fue promovido a producción y validado en `celeste.sebiche.com` con seis journeys, API, consola y logs.
+- El commit `9ac541a` fue promovido a producción y validado en `celeste.sebiche.com` con seis journeys, API, consola y logs.
 
 ## 8. Hallazgos abiertos
 

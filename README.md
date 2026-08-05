@@ -72,8 +72,8 @@ El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos
 Producción verificada el 2026-08-04:
 
 - URL canónica: <https://celeste.sebiche.com>
-- Commit desplegado: `7c9ed5481324f5146fe4786f49603f40eeaf2bd2`
-- Deployment Vercel: `sc-km7dhudv9-sebbs21s-projects.vercel.app` (`dpl_5js3ZiqXxYWbko1tHQJKo3a6crgv`)
+- Commit desplegado: `9ac541a7c1a23327d6a40f0863f28c9a348478dd`
+- Deployment Vercel: `sc-p1rwbuzxf-sebbs21s-projects.vercel.app` (`dpl_6jS8BTfZS72gpocY6eLKN2tZcLvM`)
 - Smoke: documento y dataset respondieron 200; dataset inválido 400; RUM válido 202 e inválido 400.
 - Navegador: las seis áreas cargaron a 390 px sin overflow ni errores/warnings de consola; claro/oscuro y targets de 44 px verificados en desktop.
 - Logs: cero eventos de nivel error después del smoke; el payload RUM de prueba quedó registrado con la revisión correcta.
