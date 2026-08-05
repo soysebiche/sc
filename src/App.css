@@ -352,9 +352,8 @@ header.app-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(17rem, 25rem);
   gap: 1.5rem;
-  align-items: end;
+  align-items: center;
   padding: 1rem 1.25rem;
-  border-inline-start: 4px solid var(--color-celeste);
 }
 
 .filter-bar {
