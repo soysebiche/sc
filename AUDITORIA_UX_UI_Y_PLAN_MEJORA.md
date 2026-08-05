@@ -4,7 +4,7 @@
 >
 > Alcance: producto completo, seis áreas, temas claro/oscuro y viewports 320/390/1440
 >
-> Estado: candidato integrado validado en laboratorio; validación humana, AT real y RUM de campo pendientes
+> Estado: candidato integrado en preview con CI remoto verde; validación humana, AT real y RUM de campo pendientes
 >
 > Puntaje bruto: **8.5/10**
 >
@@ -37,6 +37,8 @@ La interfaz y el sistema visual ya califican **9.0**, y la calificación técnic
 | Navegación por teclado | Primer Tab llega al skip link; Enter mueve foco a `#main-content` | E3 |
 | RUM consentido | 0 requests antes de consentimiento; payload anónimo validado y endpoint cubierto por tests | E3 |
 | Detector visual | `impeccable` devuelve 0 findings en App, features y componentes activos | E3 |
+| GitHub | Commit de aplicación `f73726d`, PR draft #2 y job `quality` verde | E3 |
+| Preview Vercel | Build `Ready`; raíz y datos 200; inválido 400; RUM válido 202/inválido 400; logs sin errores | E3 |
 | Usuarios, AT y campo | Protocolo preparado, sin sesiones ejecutadas | E0 |
 
 Bundle de producción:
@@ -71,9 +73,9 @@ La entrada de cálculo está en `output/playwright/gates-score-input.json` y se 
 |---|---|---|---|
 | 1. Densidad y eficiencia responsive | **Cerrado** | Header 191 px; toggle 44 px; 18 filas; URL/foco; 320 sin overflow | Nada local |
 | 2. Confianza editorial y datos | **Cerrado** | Fuente, fecha, cobertura, método, límites, canal de corrección y auditor canónico | Procedencia partido por partido es una mejora futura, no un bloqueo declarado |
-| 3. Arquitectura y toolchain | **Cerrado local** | CRA→Vite, features, dominio, primitives, 0 advisories, tests y CI configurada en Node 22 | Confirmar CI remoto sobre el commit publicado |
+| 3. Arquitectura y toolchain | **Cerrado** | CRA→Vite, features, dominio, primitives, 0 advisories y CI Node 22 verde en PR #2 | Nada técnico |
 | 4. Usuarios y accesibilidad profunda | **Parcial** | Axe, teclado focal, responsive y protocolo completo | 5 participantes, zoom nativo 200%, VoiceOver desktop y VoiceOver/TalkBack móvil |
-| 5. Release y evidencia operativa | **Parcial** | Lighthouse estable, consentimiento, contrato y endpoint RUM | Desplegar el commit que pase Gate 4; smoke, logs y ventana RUM con volumen/sesgo |
+| 5. Release y evidencia operativa | **Parcial** | Preview trazable, HTTP/API/logs limpios, Lighthouse estable, consentimiento y endpoint RUM | Cerrar Gate 4; promover ese commit a producción; smoke de navegador y ventana RUM con volumen/sesgo |
 
 Los Gates 4 y 5 no se marcan cerrados porque exigen evidencia externa. El archivo `VALIDACION_CAMPO_9.md` contiene la matriz que debe completarse.
 
@@ -174,7 +176,7 @@ No hay P0/P1 técnicos o visuales abiertos en el candidato local.
 
 ## 9. Plan exacto para confirmar 9.0
 
-1. Publicar el candidato en preview y ejecutar las cinco tareas con cinco participantes.
+1. Usar el preview trazable ya publicado y ejecutar las cinco tareas con cinco participantes.
 2. Completar VoiceOver/TalkBack y zoom nativo; corregir y repetir cualquier bloqueo.
 3. Congelar el commit que cierre Gate 4 y promover exactamente ese artefacto a producción.
 4. Repetir smoke en 390/1440, claro/oscuro, consola, API y logs.
