@@ -11,6 +11,8 @@ Jerarquía por competición:
 
 Una sola fuente oficial reciente permite crear el evento, pero conviene contrastarla. Si una fuente estructurada difiere de la autoridad, prevalece la autoridad más reciente y se conserva la discrepancia en el reporte.
 
+Dentro de las 48 horas anteriores al partido, volver a consultar la autoridad y al menos dos proveedores estructurados. Si dos proveedores independientes y actuales coinciden en una nueva hora mientras la página de la autoridad conserva una programación anterior, tratar la autoridad como posiblemente desactualizada: sincronizar la nueva hora, documentar el conflicto y reprogramar el cierre. Una sola fuente alternativa nunca basta.
+
 No crear eventos con rangos tentativos, fechas de fixture sin hora, snippets aislados, publicaciones sin fecha visible o calendarios que no indiquen zona horaria.
 
 ## Resultado final

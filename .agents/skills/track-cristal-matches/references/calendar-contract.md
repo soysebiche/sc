@@ -7,7 +7,8 @@
 - Mantener la zona general y de visualización de Google Calendar en `America/Chicago`.
 - Interpretar la programación publicada por las fuentes como `America/Lima`, salvo que la fuente declare expresamente otra zona.
 - Guardar cada evento con zona de evento `America/Lima`; Google Calendar hará la conversión para mostrarlo en Chicago.
-- Calcular automatizaciones pospartido en Lima y convertir el instante resultante a `America/Chicago` usando las reglas IANA de la fecha concreta.
+- Calcular automatizaciones pospartido en Lima, convertir el instante resultante a `America/Chicago` para comunicarlo y a UTC para codificar el RRULE. El motor cron observado interpreta `BYHOUR` y `BYMINUTE` en UTC.
+- Verificar tras cada escritura que `automation.toml` conserva la fecha/hora UTC esperada y `COUNT=1`; una llamada sin respuesta o sin persistencia no prueba que exista la automatización.
 - No usar abreviaturas ambiguas (`CST`, `CDT`, `PET`) ni offsets fijos. Lima permanece en UTC-5; Chicago alterna entre UTC-5 y UTC-6.
 - Usar color de evento celeste cuando el conector permita elegirlo; no es requisito para publicar.
 
@@ -45,7 +46,7 @@ Fuentes:
 ## Evento finalizado
 
 - Título: `FINAL · Local X–Y Visita`.
-- Mantener inicio, fin y ubicación originales.
+- Mantener ubicación original. Mantener inicio y fin salvo que dos fuentes estructuradas independientes coincidan en una hora real distinta; en ese caso corregir inicio y fin, conservar la hora programada anterior en la descripción y enlazar ambas fuentes.
 - Estado: `PUBLICADO` solo después de verificar web de producción.
 - Añadir resultado desde la perspectiva de Cristal, goleadores confirmados, URL de producción y hash del commit.
 
