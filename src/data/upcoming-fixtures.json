@@ -5,22 +5,11 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-08-05T02:00:00Z",
+    "lastVerifiedAt": "2026-08-08T06:37:01Z",
     "sourceName": "Liga 1 Te Apuesto",
     "sourceUrl": "https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2026/"
   },
   "fixtures": [
-    {
-      "id": "liga1-clausura-2026-f4-universitario-sporting-cristal",
-      "competition": "Liga 1 — Torneo Clausura",
-      "round": "Fecha 4",
-      "homeTeam": "Universitario",
-      "awayTeam": "Sporting Cristal",
-      "start": "2026-08-07T20:00:00-05:00",
-      "end": "2026-08-07T22:00:00-05:00",
-      "venue": "Estadio Monumental U",
-      "status": "confirmed"
-    },
     {
       "id": "liga1-clausura-2026-f5-sporting-cristal-sport-huancayo",
       "competition": "Liga 1 — Torneo Clausura",
@@ -28,8 +17,19 @@
       "homeTeam": "Sporting Cristal",
       "awayTeam": "Sport Huancayo",
       "start": "2026-08-16T11:00:00-05:00",
-      "end": "2026-08-16T13:00:00-05:00",
+      "end": "2026-08-16T13:15:00-05:00",
       "venue": "Estadio Alberto Gallardo",
+      "status": "confirmed"
+    },
+    {
+      "id": "liga1-clausura-2026-f6-alianza-atletico-sporting-cristal",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 6",
+      "homeTeam": "Alianza Atlético",
+      "awayTeam": "Sporting Cristal",
+      "start": "2026-08-21T15:00:00-05:00",
+      "end": "2026-08-21T17:15:00-05:00",
+      "venue": "Estadio Campeones del 36",
       "status": "confirmed"
     }
   ]

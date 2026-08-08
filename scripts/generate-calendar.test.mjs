@@ -11,8 +11,11 @@ test('publica únicamente partidos confirmados sin datos de cuenta', async () =>
 
   assert.match(calendar, /METHOD:PUBLISH/);
   assert.match(calendar, /BEGIN:VTIMEZONE\r\nTZID:America\/Lima/);
-  assert.match(calendar, /DTSTART;TZID=America\/Lima:20260807T200000/);
+  assert.doesNotMatch(calendar, /20260807T200000|Universitario vs\. Sporting Cristal/);
+  assert.match(calendar, /DTSTART;TZID=America\/Lima:20260816T110000/);
+  assert.match(calendar, /DTEND;TZID=America\/Lima:20260816T131500/);
   assert.match(calendar, /Sporting Cristal vs\. Sport Huancayo/);
+  assert.match(calendar, /Alianza Atlético vs\. Sporting Cristal/);
   assert.doesNotMatch(calendar, /@gmail\.com|calendar\.google\.com\/calendar\/ical\/.*private/i);
   assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 2);
 });

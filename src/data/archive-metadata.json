@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-08-04",
-  "datasetRevision": "2026.08.04",
-  "recordCount": 1936,
+  "lastUpdated": "2026-08-08",
+  "datasetRevision": "2026.08.08",
+  "recordCount": 1937,
   "firstMatchDate": "1956-08-05",
-  "latestMatchDate": "2026-08-02",
+  "latestMatchDate": "2026-08-07",
   "canonicalFile": "src/data/historico_completo_sc.json",
   "sources": [
     {
