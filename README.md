@@ -14,12 +14,15 @@ Archivo público y estático para consultar 1,936 partidos y estadísticas hist�
 
 ## Arquitectura
 
-- React 19 y Create React App 5.
-- Tailwind CSS 3 compilado localmente.
+- React 19 sobre Vite 7.
+- Tailwind CSS 3 y Autoprefixer compilados localmente con PostCSS.
 - Recharts cargado solo al abrir la vista Año.
 - Dataset cargado como chunk diferido desde `src/data/historico_completo_sc.json`.
-- Helpers de dominio en `src/domain/matches.js`.
+- Metadata editorial en `src/data/archive-metadata.json` y auditor reproducible en `scripts/audit-data.mjs`.
+- Helpers y agregaciones de dominio en `src/domain/matches.js`.
+- Seis vistas separadas por feature; balances, paginación y filas de partido compartidos.
 - Estado compartible en `src/hooks/useUrlState.js`.
+- Web Vitals opcionales y consentidos hacia `/api/vitals`; no se envían identificadores personales ni el contenido de consultas.
 
 El dataset es público: el navegador debe recibirlo para ejecutar las consultas. No se requiere autenticación ni backend. `/api/data?type=completo` es un endpoint público opcional para compatibilidad; la UI no depende de él.
 
@@ -32,7 +35,7 @@ npm ci
 npm start
 ```
 
-La aplicación de desarrollo abre en `http://localhost:3000`.
+La aplicación de desarrollo abre en `http://localhost:5173` salvo que Vite elija otro puerto disponible.
 
 ## Gates de calidad
 
@@ -43,7 +46,7 @@ npm run build
 npm run check
 ```
 
-`npm run check` ejecuta lint, las 8 pruebas actuales y el build de producción. El mismo gate está declarado en `.github/workflows/ci.yml`.
+`npm run check` ejecuta lint, auditoría y pruebas del dataset, pruebas de interfaz/dominio y el build de producción. El mismo gate está declarado en `.github/workflows/ci.yml`.
 
 Para distinguir riesgo servido de deuda del toolchain:
 
@@ -52,29 +55,39 @@ npm audit --omit=dev
 npm audit
 ```
 
-El primer comando audita las dependencias de runtime. El segundo incluye CRA y todas las herramientas de build. No se recomienda `npm audit fix --force` sin una migración probada.
+El primer comando audita las dependencias de runtime. El segundo incluye las herramientas de build y testing. Ambos deben mantenerse sin vulnerabilidades altas o críticas alcanzables.
 
 ## Variables de entorno
 
-No hay variables obligatorias. `REACT_APP_GA_MEASUREMENT_ID` está documentada en `env.example`, pero solo tendrá efecto si se conecta explícitamente una integración de analítica.
+No hay variables obligatorias para ejecutar el archivo. `VITE_GA_MEASUREMENT_ID` activa GA4 únicamente después del consentimiento explícito del visitante; la medición de rendimiento propia usa la misma preferencia.
 
 ## Deployment
 
 El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos y el fallback SPA. Configuración esperada:
 
 - Build: `npm run build`
-- Output: `build`
-- Framework: Create React App
+- Output: `dist`
+- Framework: Vite
 
 Producción verificada el 2026-08-04:
 
 - URL canónica: <https://celeste.sebiche.com>
-- Commit desplegado: `32e453e336a4c5e15373eddb87e442026239cec8`
-- Deployment Vercel: `sc-ev0oz0wzn-sebbs21s-projects.vercel.app`
-- Smoke: documento, logo, manifest, deep links y `/api/data?type=completo` respondieron correctamente.
-- Navegador: Efemérides, Partidos, Año y Rivales cargaron sin errores de consola ni overflow a 390 px.
+- Commit desplegado: `9ac541a7c1a23327d6a40f0863f28c9a348478dd`
+- Deployment Vercel: `sc-p1rwbuzxf-sebbs21s-projects.vercel.app` (`dpl_6jS8BTfZS72gpocY6eLKN2tZcLvM`)
 
-El estado `Ready` del proveedor no sustituye estas comprobaciones. Repetir el smoke después de cada release.
+- Smoke: documento y dataset respondieron 200; dataset inválido 400; RUM válido 202 e inválido 400.
+- Navegador: las seis áreas cargaron a 390 px sin overflow ni errores/warnings de consola; claro/oscuro y targets de 44 px verificados en desktop.
+- Logs: cero eventos de nivel error después del smoke; el payload RUM de prueba quedó registrado con la revisión correcta.
+
+El estado `Ready` del proveedor no sustituye estas comprobaciones: repetir el smoke HTTP, los journeys, la consola y los logs después de cada release.
+
+### Próximos partidos y calendario
+
+Los partidos confirmados viven en `src/data/upcoming-fixtures.json`. `npm run generate:calendar` valida esos datos y publica `public/sporting-cristal.ics`, un feed iCalendar de solo lectura que no depende de una cuenta de Google ni expone calendarios personales. Solo deben añadirse partidos del primer equipo con fecha, hora y estadio confirmados por la autoridad de la competencia.
+
+### Medición anónima
+
+GA4 se carga únicamente después del consentimiento explícito y solo si existe `VITE_GA_MEASUREMENT_ID`. Los eventos usan una lista cerrada de secciones, filtros y paginaciones; nunca se envían textos escritos ni valores de búsqueda. La preferencia puede revocarse desde el pie de página.
 
 ## Documentación
 
@@ -82,3 +95,4 @@ El estado `Ready` del proveedor no sustituye estas comprobaciones. Repetir el sm
 - `DESIGN_SYSTEM.md`: tokens y patrones activos.
 - `SETUP_SIMPLE.md`: contrato de datos actual.
 - `SETUP_VERCEL_FUNCTIONS.md`: alcance del endpoint opcional.
+- `VALIDACION_CAMPO_9.md`: protocolo y registro obligatorio para confirmar el 9.0.

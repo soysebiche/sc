@@ -6,11 +6,13 @@
 # Testing
 /coverage
 /output/
+/.playwright-cli/
 __pycache__/
 *.py[cod]
 
 # Production
 /build
+/dist
 
 # Data files (protected - but will be deployed)
 # Los archivos JSON se incluyen en el deploy pero no en GitHub

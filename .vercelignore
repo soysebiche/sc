@@ -1,6 +1,7 @@
 # Local dependencies and generated builds
 node_modules/
 build/
+dist/
 .cache/
 
 # Local and secret environment files

@@ -1,396 +1,209 @@
-# Auditoría UX/UI, arquitectura y plan de mejora de Sebiche Celeste
+# Auditoría UX/UI y cierre de los cinco gates — Sebiche Celeste
 
-> Documento vivo.
+> Fecha: 2026-08-04
 >
-> Fecha de línea base: 2026-08-04
-> Última actualización: 2026-08-04 — ejecución de Fases 0–2 y cierre de PROD-01
-> Alcance: estándar
-> Estado observado: producción pública verificada en Vercel
-> Puntaje bruto: 7.5/10
-> Puntaje confirmado: 7.5/10
-> Confianza: media-alta — cobertura de evidencia 76.5%
-> Meta recomendada: 8.6/10
-> Gate activo: ausencia de evidencia de campo, AT y RUM (cap 8.4)
+> Alcance: producto completo, seis áreas, temas claro/oscuro y viewports 320/390/1440
+>
+> Estado: candidato desplegado y verificado en producción; validación humana, AT real y ventana RUM pendientes
+>
+> Puntaje bruto: **8.5/10**
+>
+> Puntaje confirmado: **8.4/10**
+>
+> Cap activo: **8.4** por ausencia de evidencia de campo y cobertura 73.3%
+> Meta: **9.0 confirmado**, no estimado
 
 ## 1. Veredicto ejecutivo
 
-**Sebiche Celeste pasó de una beta frágil de 5.4/10 a un producto público competente de 7.5/10.** Las tareas esenciales ya no dependen de Tailwind o tipografías externas, los filtros y vistas se pueden compartir por URL, el análisis anual es coherente, los aliases de rivales se reconcilian y las listas largas tienen búsqueda/paginación. El gate único `npm run check` quedó verde después de `npm ci`: lint sin warnings, 8/8 tests y build correcto. La misma entrega quedó desplegada y verificada en `https://celeste.sebiche.com`.
+El rediseño ya resolvió la crítica visual principal. La aplicación dejó de sentirse como una suma de tarjetas grandes y planas: ahora usa filas editoriales compactas, bandas comparables, fondos con jerarquía y paginación consistente. El header móvil mide 191 px a 320, el toggle alcanza 44×44 px y Rivales/Países montan un máximo de 18 partidos por página.
 
-La mayor fortaleza sigue siendo la especificidad del archivo: 1,936 partidos y consultas propias del dominio. El mayor riesgo ya no es el deploy: son la procedencia editorial, Web Vitals de campo y el comportamiento con usuarios o lector de pantalla. El toolchain CRA también conserva 54 advisories en dependencias de desarrollo/build, aunque `npm audit --omit=dev` confirma cero vulnerabilidades en las dependencias que llegan al runtime.
+También cambió la base técnica: CRA 5 fue sustituido por Vite 7, `App.js` se redujo a un orquestador de 179 líneas, las seis vistas viven por feature, el dataset tiene metadata y auditor propio, y el audit completo de npm queda en cero vulnerabilidades. El build, 17 pruebas de aplicación/API, dos pruebas del auditor de datos y el lint están verdes.
 
-La calificación técnica combinada de frontend, calidad y rendimiento es **7.7/10**. Nielsen suma **31.3/40**. El riesgo de AI Slop baja a **3.3/10 (leve)** y la autenticidad visual sube a **6.7/10**. La próxima fase útil es pequeña y concreta: retirar código residual, migrar gradualmente fuera de CRA, añadir procedencia/fecha de actualización y observar tareas reales. No conviene hacer un rebranding ni usar `npm audit fix --force`.
+La interfaz y el sistema visual ya califican **9.0**, y la calificación técnica combinada es **9.1**. La nota global no puede declararse 9 todavía porque faltan las cinco sesiones con usuarios, VoiceOver/TalkBack en dispositivos reales y una ventana de RUM posterior al despliegue. Esas evidencias no pueden fabricarse ni sustituirse con Lighthouse.
 
-## 2. Alcance, método y límites
+## 2. Evidencia ejecutada
 
-| Fuente | Disponible | Inspeccionada | Nivel | Limitación |
-|---|---|---|---|---|
-| Código, CSS, configuración y documentación | Sí | Sí | E2 | Revisión centrada en superficies activas y contratos de mayor riesgo |
-| JSON histórico | Sí | Sí | E2 | Se validaron estructura y aliases conocidos; no cada partido contra fuentes primarias |
-| Runtime y build local | Sí | Sí | E3 | No equivale a producción pública |
-| Desktop 1440 px y móvil 390 px | Sí | Sí | E3 | Chromium; no dispositivo físico |
-| Temas claro/oscuro | Sí | Sí | E3 | Tres superficies representativas por tema |
-| Tests, lint, build y audit | Sí | Sí | E3 | Workflow CI creado; ejecución remota de GitHub no verificada |
-| Axe y Lighthouse | Sí | Sí | E3 | No certifican WCAG ni Web Vitals de campo |
-| Detector `impeccable` | Sí | Sí | E3 | Findings revisados manualmente |
-| Producción pública | Sí | Sí | E4 | Dominio canónico, commit, CI, preview, promoción, HTTP, API y navegador verificados |
-| Analítica, RUM, usuarios y SUS | No hay evidencia | No | E0–E2 | No se inventan métricas de campo |
-| Lector de pantalla, zoom 200% y dispositivo real | No | No | E0 | Claims de accesibilidad limitados a DOM, Axe, teclado focal y responsive |
+| Evidencia | Resultado | Nivel |
+|---|---|---:|
+| `npm run check` | Lint limpio; auditor de datos; 2/2 pruebas del auditor; 17/17 tests; build Vite correcto | E3 |
+| `npm audit` | 0 vulnerabilidades totales | E3 |
+| Auditor de archivo | 1,936 registros; 1956-08-05 a 2026-08-02; esquema, fecha, temporada, marcador, resultado, club, país, torneo, duplicados y metadata válidos | E3 |
+| Anomalía sembrada | El auditor falla ante incoherencia marcador/resultado | E3 |
+| Axe | 6 áreas × 2 temas; 12 corridas; 0 violaciones WCAG A/AA/2.1 AA | E3 |
+| Lighthouse móvil, 3 corridas | 97 Performance; 100 Accessibility; 100 Best Practices; 100 SEO en las tres | E3 |
+| Web Vitals de laboratorio | LCP 2.405/2.406/2.416 s; TBT 0 ms; CLS 0 | E3 |
+| Responsive extremo | 320 px, seis áreas y dos temas: 0 overflow; header 191 px; controles de acción ≥44 px | E3 |
+| Colecciones largas | Alianza Lima 18/140 y Argentina 18/60; página independiente en URL; foco queda en Siguiente | E3 |
+| Navegación por teclado | Primer Tab llega al skip link; Enter mueve foco a `#main-content` | E3 |
+| RUM consentido | 0 requests antes de consentimiento; payload anónimo validado y endpoint cubierto por tests | E3 |
+| Detector visual | `impeccable` devuelve 0 findings en App, features y componentes activos | E3 |
+| GitHub | Commit desplegado `9ac541a`, PR draft #2 y job `quality` verde | E3 |
+| Producción Vercel | `celeste.sebiche.com`; deployment `dpl_6jS8BTfZS72gpocY6eLKN2tZcLvM`; raíz/datos 200; RUM 202; inválidos 400; logs sin errores | E4 |
+| Navegador de producción | Seis áreas a 390 px, 0 overflow, 0 errores/warnings; claro/oscuro y targets de 44 px en desktop | E4 |
+| Usuarios, AT y campo | Protocolo preparado, sin sesiones ejecutadas | E0 |
 
-### Evidencia ejecutada actual
+Bundle de producción:
 
-- `npm ci && npm run check` → exit 0; lint sin warnings, 2 suites/8 tests verdes y build correcto.
-- Bundle: principal 67.94 kB gzip; datos 109.06 kB y Recharts 49.41 kB en chunks diferidos; CSS 6.95 kB.
-- `npm audit --omit=dev --json` → 0 vulnerabilidades de runtime. Audit completo → 54 del toolchain CRA: 11 bajas, 13 moderadas, 28 altas y 2 críticas.
-- Lighthouse 12.8.2, compatible con Node 22.15, tres corridas aisladas → Performance 72/98/98 (mediana 98), LCP 5.8/2.4/2.4 s (mediana 2.4), TBT 217.5/0/0 ms (mediana 0), Accessibility/Best Practices/SEO 100 en las tres. La dispersión impide tratar una sola corrida como campo.
-- Axe → 0 violaciones en Efemérides, Rivales y Año, en claro y oscuro.
-- Runtime → 18 partidos por página; deep links, paginación, sort anual y back/forward reproducidos.
-- Alias desde URL → `Union Comercio` se normaliza a `Unión Comercio` y muestra 32 partidos.
-- Red del happy path → solo requests a `127.0.0.1`; no Tailwind CDN, Fontshare ni otro tercero esencial.
-- Teclado → primer Tab enfoca “Saltar al contenido”; Enter mueve foco a `#main-content`.
-- Reduced motion → media query activa y duración efectiva `0.00001 s`; sin overflow a 390 px.
-- `impeccable` → 0 findings en los cuatro módulos visuales activos; el scan completo conserva 2 warnings en Login/Trivia no montados.
-- Producción Vercel → commit `32e453e`, deployment `sc-ev0oz0wzn-sebbs21s-projects.vercel.app`, target `production`, estado `Ready` y dominio `https://celeste.sebiche.com`.
-- GitHub → PR borrador #1, rama `agent/ux-production-readiness`; Actions `quality` completó el gate remoto en 49 s y Vercel creó un preview ligado al mismo commit.
-- Smoke HTTP → `/`, logo WebP y manifest 200; `/api/data?type=completo` 200 con 1,936 registros; tipo inválido 400 y método POST 405.
-- Smoke de navegador en producción → Efemérides 4 resultados; Partidos 2024, página 2, 18 de 36; rival canónico `Unión Comercio`, 32; Año con gráfica y tabla; consola 0 errores/0 warnings y sin overflow en 1280 o 390 px.
-- Logs del deployment después del smoke → cero eventos de nivel error en la ventana consultada.
+- App: 11.38 kB gzip.
+- CSS: 7.95 kB gzip.
+- Dataset diferido: 52.53 kB gzip.
+- Charts diferidos: 59.68 kB gzip.
+- Transferencia inicial observada por Lighthouse: 227 kB.
 
-### Evidencia visual
+## 3. Scorecard reproducible
 
-- [Después — desktop 1440](output/playwright/after-desktop-1440.png)
-- [Después — móvil 390](output/playwright/after-mobile-390.png)
-- [Resumen Lighthouse](output/playwright/lighthouse-summary.json)
-- [Línea base — fallo sin dependencias externas](output/playwright/mobile-external-deps-blocked.png)
-- [Producción — desktop](output/playwright/production-desktop.png)
-- [Producción — móvil 390](output/playwright/production-mobile.png)
+La entrada de cálculo está en `output/playwright/gates-score-input.json` y se procesa con el calculador del skill de auditoría.
 
-## 3. Scorecard
-
-`Backend` es N/A: el producto activo es un archivo público estático. El endpoint serverless se mantiene como fallback público, no como límite de seguridad.
-
-| Área | Peso normalizado | Score | Evidencia | Diagnóstico actual |
+| Área | Peso normalizado | Score | Evidencia | Lectura |
 |---|---:|---:|---:|---|
-| Estrategia de producto y módulos | 11.1% | 7.0 | E2 | Propuesta clara; faltan procedencia y usuarios observados |
-| Arquitectura de información y journeys | 13.3% | 8.0 | E3 | Seis áreas, deep links, back/forward, búsqueda y paginación |
-| Interacción y heurísticas | 13.3% | 8.1 | E3 | Flujos coherentes con loading/error/empty; queda ayuda contextual |
-| UI y sistema de diseño | 11.1% | 7.4 | E3 | Identidad consistente y tokens accesibles; aún card-heavy |
-| Accesibilidad y responsive | 13.3% | 8.4 | E3 | Axe 0, teclado focal, claro/oscuro y 390 px; falta AT/dispositivo |
-| Arquitectura frontend | 11.1% | 7.4 | E3 | Dominio/URL/data/chart separados; `App.js` aún concentra vistas |
-| Calidad, confiabilidad y seguridad | 11.1% | 7.4 | E3 | Gate reproducible y runtime audit limpio; CRA dev debt abierta |
-| Rendimiento y operabilidad | 8.9% | 8.5 | E3 | Mediana Lighthouse 98/LCP 2.4 s, con una muestra lenta; falta RUM |
-| Medición y evidencia de usuario | 6.7% | 3.0 | E2 | No hay eventos validados ni investigación de campo |
-| **Total** | **100%** | **7.5/10** |  | **Producto competente y publicado; campo aún no probado** |
+| Estrategia de producto y módulos | 11.1% | 8.2 | E3 | Archivo específico, procedencia y correcciones; faltan usuarios |
+| Arquitectura de información y journeys | 13.3% | 8.8 | E3 | Seis rutas, estado en URL y colecciones consistentes |
+| Interacción y heurísticas | 13.3% | 8.8 | E3 | Eficiencia, foco y recuperación sólidos en laboratorio |
+| UI y sistema de diseño | 11.1% | 9.0 | E3 | Densidad editorial, contraste y jerarquía ya distintivos |
+| Accesibilidad y responsive | 13.3% | 8.7 | E3 | Axe limpio y reflow; faltan dos stacks AT reales |
+| Arquitectura frontend | 11.1% | 9.1 | E3 | Vite, features, dominio y primitives compartidos |
+| Calidad, confiabilidad y seguridad | 11.1% | 9.2 | E3 | Gates verdes, datos auditables y supply chain limpia |
+| Rendimiento y operabilidad | 8.9% | 8.9 | E3 | Lighthouse estable y RUM listo; falta ventana real |
+| Medición y evidencia de usuario | 6.7% | 4.5 | E2 | Instrumentación/protocolo listos; no hay resultados de campo |
+| **Total bruto** | **100%** | **8.5/10** |  |  |
+| **Total confirmado** |  | **8.4/10** |  | **Cap de evidencia activo** |
 
-### Gates del score
+## 4. Estado de los cinco gates
 
-| Gate | Estado | Cap | Evidencia para cerrarlo |
-|---|---|---:|---|
-| Runtime local relevante | Cerrado | — | Build y flujos desktop/móvil ejecutados |
-| Gate principal reproducible | Cerrado local y remoto | — | `npm ci && npm run check` verde; GitHub Actions `quality` verde en PR #1 |
-| Accesibilidad crítica dinámica | Cerrado para laboratorio | — | Axe claro/oscuro + teclado focal; no equivale a certificación |
-| Cobertura 76.5% | Cerrado | — | Producción añadió evidencia E4; aún faltan AT y campo |
-| Evidencia de campo | Abierto | 8.4 | Protocolo de cinco tareas y RUM con muestra/ventana |
-
-## 4. Línea base preservada y avance
-
-| Indicador | Línea base | Actual | Estado |
-|---|---:|---:|---|
-| Puntaje confirmado | 5.4/10 | 7.5/10 | Mejoró 2.1 |
-| Calificación técnica | 4.7/10 | 7.7/10 | Gates y performance recuperados |
-| Nielsen | 22.8/40 | 31.3/40 | Control, consistencia y eficiencia mejoraron |
-| AI Slop | 4.6/10 | 3.3/10 | De moderado a leve |
-| Autenticidad | 5.4/10 | 6.7/10 | Dominio y sistema pesan más que los clichés |
-| Tests | 0/1 útiles; rojo | 8/8; verde | Completado local |
-| Lighthouse Performance | 57 | mediana 98 (72–98) | Gate mediano superado; variación documentada |
-| LCP laboratorio | 9.6 s | mediana 2.4 s (2.4–5.8) | Gate mediano superado; no equivale a campo |
-| Axe | Labels/contraste serious | 0 violaciones en 6 corridas | Gate automatizado superado |
-| Runtime audit | 54 mezcladas con CRA | 0 runtime; 54 dev/build | Riesgo clasificado, no eliminado |
-
-## 5. Mapa actual del producto
-
-| Tarea | UI/estado | Dominio/datos | Persistencia | Prueba | Riesgo restante |
-|---|---|---|---|---|---|
-| Efeméride | Fecha + loading/error/empty | helpers + JSON diferido | `date` en URL | App test + runtime | Sin fuente/actualización visible |
-| Resumen histórico | Dashboard | cálculo local canónico | `view` en URL | Runtime | Métricas aún muy card-like |
-| Explorar partidos | Año/mes + 18 por página | helpers | `year`, `month`, `page` | Runtime 36 resultados/2 páginas | Sin búsqueda de texto/torneo |
-| Analizar año | Década/torneo/sort/resumen/chart | stats consistentes + chart lazy | `decade`, `tournament` | Test + runtime asc/desc | `App.js` conserva agregación |
-| Consultar rival | Input searchable + datalist | alias canónico | `rival`, `rivalYear` | Unit + deep link runtime | Solo aliases conocidos |
-| Consultar país | Selects nombrados | helpers compartidos | `country`, `countryYear` | Axe/runtime | Markup aún duplicado con Rival |
-| Tema | Toggle | tokens CSS | `localStorage` | Test + Axe claro/oscuro | No probado con AT real |
-| Calidad | CI declarativa | scripts npm | GitHub Actions | `npm ci && npm run check` | PR #1 con gate remoto observado |
-
-Arquitectura activa: `URL/usuario → App/feature → helpers de dominio → import dinámico de JSON → DOM`; Recharts solo se descarga al abrir Año.
-
-## 6. Flujos críticos
-
-| Flujo | Resultado actual | Evidencia | Estado |
+| Gate | Estado | Qué quedó cerrado | Qué falta para salida formal |
 |---|---|---|---|
-| Primera visita → efeméride | Loading explícito, contenido o empty; error con reintento | Runtime/Axe | Correcto local |
-| Partidos 2024 → página 2 | 36 resultados, 18 por página, URL `page=2` | Runtime | Correcto |
-| Año 2020s → ordenar | 2026→2020 cambia a 2020→2026; tabla/chart usan filtro | Test/runtime | Correcto |
-| Abrir alias compartido | URL antigua se canoniza y conserva 32 resultados | Test/runtime | Correcto |
-| Cambiar vista → atrás | `aria-current=page` regresa a Partidos con filtros | Runtime | Correcto |
-| Navegar sin mouse | Skip link y acciones esenciales focusables | Teclado focal + DOM | Parcialmente probado |
-| Cargar sin terceros | Requests esenciales locales; layout sin overflow | Network/runtime | Correcto local |
+| 1. Densidad y eficiencia responsive | **Cerrado** | Header 191 px; toggle 44 px; 18 filas; URL/foco; 320 sin overflow | Nada local |
+| 2. Confianza editorial y datos | **Cerrado** | Fuente, fecha, cobertura, método, límites, canal de corrección y auditor canónico | Procedencia partido por partido es una mejora futura, no un bloqueo declarado |
+| 3. Arquitectura y toolchain | **Cerrado** | CRA→Vite, features, dominio, primitives, 0 advisories y CI Node 22 verde en PR #2 | Nada técnico |
+| 4. Usuarios y accesibilidad profunda | **Parcial** | Axe, teclado focal, responsive y protocolo completo | 5 participantes, zoom nativo 200%, VoiceOver desktop y VoiceOver/TalkBack móvil |
+| 5. Release y evidencia operativa | **Parcial** | Producción trazable, HTTP/API/journeys/logs limpios, Lighthouse estable, consentimiento y endpoint RUM | Completar una ventana RUM con volumen, p75 y sesgo declarados |
 
-## 7. Hallazgos y cierres
+Los Gates 4 y 5 no se marcan cerrados porque todavía exigen evidencia de campo. El archivo `VALIDACION_CAMPO_9.md` contiene la matriz que debe completarse.
 
-### TECH-01 — Layout dependiente de Tailwind CDN
+## 5. Nielsen
 
-- Prioridad / severidad: P1 / 4 de 4.
-- Estado: **Completado**.
-- Evidencia de cierre: Tailwind 3.4.17 compilado localmente; CDN retirado; red solo local; 390 px sin overflow; build verde.
-- Impacto residual: el CSS generado depende todavía de CRA/PostCSS, no de red externa.
+Escala 0–4. El total actual de laboratorio es **36.6/40**.
 
-### UX-01 — Orden y filtros anuales incoherentes
+| # | Heurística | Score | Evidencia |
+|---:|---|---:|---|
+| 1 | Visibilidad del estado | 3.8 | Loading, errores, rangos, página y selección explícitos |
+| 2 | Correspondencia con el mundo real | 3.7 | V/E/P, torneos, fuentes, método y limitaciones |
+| 3 | Control y libertad | 3.7 | URL, back/forward, filtros reversibles y páginas independientes |
+| 4 | Consistencia y estándares | 3.8 | Una representación compartida para partido, balance y paginación |
+| 5 | Prevención de errores | 3.5 | Valores restringidos, canonicalización y auditor de datos |
+| 6 | Reconocimiento antes que recuerdo | 3.8 | Labels, estados, datalist, badges y jerarquía estable |
+| 7 | Flexibilidad y eficiencia | 3.7 | Máximo 18 filas, filtros y deep links |
+| 8 | Diseño estético y minimalista | 3.8 | Densidad corregida sin decoración gratuita |
+| 9 | Diagnóstico y recuperación | 3.6 | Error humano y reintento probado |
+| 10 | Ayuda y documentación | 3.2 | Procedencia visible, README y canal de corrección |
 
-- Prioridad / severidad: P1 / 3 de 4.
-- Estado: **Completado**.
-- Evidencia de cierre: derivación inmutable; tabla usa el mismo filtro; 2026→2020 y 2020→2026 reproducidos; test de regresión verde.
+Ninguna heurística obtiene 4 sin observación de campo.
 
-### A11Y-01 / A11Y-02 — Equivalencia y contraste
+## 6. AI Slop y autenticidad visual
 
-- Prioridad / severidad: P1 / 3 de 4.
-- Estado: **Completado para el gate de laboratorio**.
-- Evidencia de cierre: labels programáticos, `nav`, `aria-current`, `aria-sort`, botones de año, articles, skip link, foco visible, tokens AA y 0 violaciones Axe en seis corridas.
-- Límite: no se ejecutó lector de pantalla ni dispositivo físico; no declarar conformidad WCAG total.
+- Riesgo AI Slop: **1.4/10 — bajo**.
+- Autenticidad visual/editorial: **8.6/10**.
+- Detector: 0 findings en la superficie activa.
 
-### QUALITY-01 — Gate de calidad rojo
+| Dimensión | Riesgo 0–2 | Lectura |
+|---|---:|---|
+| Composición genérica | 0.4 | Archivo editorial y bandas sustituyen el bento repetitivo |
+| Clichés visuales | 0.2 | No hay glass, orbs, gradientes decorativos ni motion gratuito |
+| Repetición de componentes | 0.3 | Repetición funcional y semántica, no una card universal |
+| Marca/copy genéricos | 0.3 | Sporting Cristal, cobertura y metodología son explícitos |
+| Falta de especificidad | 0.2 | Fecha, temporada, rival, país, torneo y procedencia dominan la UI |
 
-- Prioridad / severidad: P1 / 3 de 4.
-- Estado: **Completado local y remoto**.
-- Evidencia de cierre: 8/8 tests, lint 0 warnings, build correcto, script `check` y GitHub Actions `quality` verde en PR #1.
+La mejora de autenticidad proviene de información y jerarquía, no de añadir adornos ni noticias sensibles sin fuente.
 
-### TECH-02 — CRA 5 conserva deuda de build
+## 7. Cambios entregados por gate
 
-- Prioridad / severidad: P1 / 3 de 4.
-- Estado: **En progreso; no bloqueante para el bundle estático actual**.
-- Evidencia: dependencias runtime correctamente separadas y audit limpio; 54 advisories permanecen en dev/build y Browserslist está desactualizado.
-- Recomendación: migración incremental a Vite u otro build mantenido, protegida por el gate actual; no usar `--force`.
-- Aceptación: build equivalente, 8/8 tests y audit del toolchain sin críticas/altas alcanzables.
+### Gate 1
 
-### DATA-01 — Aliases fragmentaban rivales
+- `Pagination` y `PaginatedMatchList` unifican el contrato de 18 resultados.
+- `rivalPage` y `countryPage` preservan contexto sin colisionar con Partidos.
+- El header móvil usa una matriz 3×2 compacta y el logo deja de dominar la entrada.
+- Balance y Dashboard usan bandas/separadores; MatchRow concentra fecha, resultado, equipos, marcador, torneo y goleadores.
 
-- Prioridad / severidad: P2 / 3 de 4.
-- Estado: **Completado para aliases conocidos**.
-- Evidencia: helper canónico con unit tests; 157 opciones únicas; una opción por UTC, Unión Comercio, Cantolao y Los Chankas; alias de URL probado.
-- Riesgo residual: no existe pipeline editorial que detecte automáticamente nuevas variantes.
+### Gate 2
 
-### PERF-01 / UI-01 — Carga y tipografía externa
+- `archive-metadata.json` declara revisión, cobertura, fuentes, método y límites.
+- `ArchiveProvenance` aparece en las seis áreas.
+- La plantilla de issue formaliza correcciones de datos.
+- `scripts/audit-data.mjs` forma parte de `npm run check`.
+- El cálculo ya trata una tanda de penales documentada como resultado definitivo, corrigiendo el resumen histórico.
 
-- Prioridad / severidad: P2 / 2 de 4.
-- Estado: **Completado en laboratorio**.
-- Evidencia: system fonts sin requests/CORS; logo WebP 12 kB con preload; JSON/Recharts diferidos; mediana Lighthouse 98/LCP 2.4 s en tres muestras.
-- Límite: no hay p75 real.
+### Gate 3
 
-### UX-02 / UX-03 — Continuidad y listas largas
+- Vite 7 + Vitest 4 + ESLint 9 sustituyen CRA.
+- `App.js` orquesta; Dashboard, Efemérides, Partidos y Año viven en `src/features`.
+- Agregaciones y paginación son funciones puras con pruebas.
+- Los módulos no montados están declarados en `src/legacy-manifest.json`, fuera del grafo activo.
+- `vercel.json` sirve `dist`; CI usa Node 22.
 
-- Prioridad / severidad: P2 / 2 de 4.
-- Estado: **UX-02 completado; UX-03 en progreso**.
-- Evidencia: vista/filtros/deep link/back/forward en URL; rival searchable; Partidos paginado.
-- Falta: probar con usuarios la meta de consulta en tres interacciones y decidir búsqueda global/torneo.
+### Gate 4
 
-### ARCH-01 — Monolito y superficies residuales
+- Semántica, foco, skip link, contraste y targets se verificaron en las seis vistas y dos temas.
+- Axe quedó limpio en 12 corridas.
+- Las pruebas humanas y AT reales permanecen intencionalmente en blanco hasta ejecutarse.
 
-- Prioridad / severidad: P2 / 2 de 4.
-- Estado: **En progreso**.
-- Evidencia: `domain/matches`, `useUrlState`, `YearChart` y servicio de datos ya separados.
-- Falta: extraer agregaciones/vistas de `App.js` y retirar o aislar Login, Trivia, analytics y primitives no montados.
+### Gate 5
 
-### PROD-01 — Producción
+- Web Vitals se activa solo con consentimiento explícito.
+- Se aceptan exclusivamente CLS, INP y LCP; strings están acotados y no se recibe identidad/contenido de consulta.
+- El endpoint responde 202 a payload válido, 400 a payload inválido y 405 a métodos no permitidos.
+- La inserción tardía del footer fue corregida: CLS pasó de 0.0914 a 0 en tres corridas finales.
+- El commit `9ac541a` fue promovido a producción y validado en `celeste.sebiche.com` con seis journeys, API, consola y logs.
+
+## 8. Hallazgos abiertos
+
+### RESEARCH-01 — Cinco sesiones observadas
 
 - Prioridad: P2.
-- Estado: **Completado**.
-- Evidencia: URL pública, deployment `Ready`, assets, deep links, endpoint, desktop/móvil, consola y logs verificados.
-- Flujo de cierre: preview Git del commit `32e453e` verificado y promovido al proyecto canónico `sc`.
-- Trazabilidad: cambios y evidencia publicados mediante PR #1 hacia `main`.
+- Estado: pendiente externo.
+- Cierre: ≥23/25 tareas sin ayuda crítica, con tiempo, error, ayuda y evidencia.
 
-### RESEARCH-01 — Campo
+### RESEARCH-02 — Tecnologías asistivas reales
 
-- Prioridad: P3.
-- Estado: **Pendiente**.
-- Falta: RUM con consentimiento y cinco tareas observadas, incluyendo teclado/AT.
+- Prioridad: P2.
+- Estado: pendiente externo.
+- Cierre: seis áreas a 200% nativo, VoiceOver + Safari desktop y un stack móvil VoiceOver/TalkBack; cero bloqueos y cero critical/serious.
 
-## 8. Nielsen
+### OBS-01 — Ventana de RUM
 
-Escala de calidad: 0 = ausente, 4 = excelente. Ningún 4 se concede sin producción/casos límite.
+- Prioridad: P2.
+- Estado: instrumentado, sin campo.
+- Cierre: declarar ventana, navegaciones válidas, sesgo y p75; LCP <2.5 s, INP <200 ms y CLS <0.1.
 
-| # | Heurística | Score | Evidencia actual |
-|---:|---|---:|---|
-| 1 | Visibilidad del estado | 3.5 | Loading, error/retry, empty y conteos/página |
-| 2 | Correspondencia con el mundo real | 3.2 | Efemérides, torneos, V/E/P y copy corregido; falta metodología |
-| 3 | Control y libertad | 3.5 | URL, refresh, back/forward y filtros reversibles |
-| 4 | Consistencia y estándares | 3.2 | Una fuente de filtros/tabla, labels y docs alineadas |
-| 5 | Prevención de errores | 3.0 | Valores restringidos, validación de tab y aliases conocidos |
-| 6 | Reconocimiento antes que recuerdo | 3.5 | Labels, datalist, estados activos y ayuda breve |
-| 7 | Flexibilidad y eficiencia | 3.2 | Search, deep links, sort y paginación |
-| 8 | Diseño estético y minimalista | 3.2 | Jerarquía clara; repetición de tiles todavía visible |
-| 9 | Diagnóstico y recuperación | 3.0 | Error de datos con explicación y reintento; no se forzó en producción |
-| 10 | Ayuda y documentación | 2.0 | README mejorado; falta fuente, frescura y metodología dentro del producto |
-| **Total** |  | **31.3/40 (78.3%)** | **Buena usabilidad local con evidencia operativa limitada** |
+No hay P0/P1 técnicos o visuales abiertos en producción.
 
-## 9. Autenticidad visual y AI Slop
+## 9. Plan exacto para confirmar 9.0
 
-- Riesgo AI Slop: **3.3/10** — leve.
-- Autenticidad visual: **6.7/10**.
-- Evidencia/confianza: E3 / alta para runtime local.
+1. Usar la producción trazable ya publicada y ejecutar las cinco tareas con cinco participantes.
+2. Completar VoiceOver/TalkBack y zoom nativo; corregir y repetir cualquier bloqueo.
+3. Corregir y desplegar cualquier hallazgo del Gate 4 usando el mismo gate CI y smoke.
+4. Observar una ventana RUM declarada y recalcular con evidencia E4.
 
-| Dimensión | Riesgo | Lectura |
-|---|---:|---|
-| Composición genérica | 1.0 | Dashboard convencional, pero subordinado al archivo |
-| Clichés visuales | 0.3 | Se retiraron acentos laterales; no hay glass/orbs/decoración gratuita |
-| Repetición de componentes | 1.1 | Tiles/cards siguen dominando métricas e historiales |
-| Marca y copy genéricos | 0.6 | Logo/paleta/lenguaje propios; voz editorial aún breve |
-| Falta de especificidad del dominio | 0.3 | Efemérides, torneos, rivales y resultados sostienen autenticidad |
+Con Gate 4 cerrado, el puntaje bruto actual de 8.5 puede subir hacia 8.8–8.9 por evidencia, no por cosmética. El 9.0 se confirma cuando producción y RUM demuestran que el mismo candidato sostiene la calidad. El 9.5 requiere varias ventanas/releases sin regresión y evidencia longitudinal de utilidad.
 
-`impeccable` reporta 0 findings en App, RivalHistory, CountryHistory y YearChart. El scan completo conserva dos warnings contextuales en Login/Trivia, módulos no montados; son deuda de limpieza, no evidencia de la experiencia activa.
+## 10. Evidencia visual y artefactos
 
-**¿Sería inmediatamente creíble que la UI fue generada por IA?** Ya no de forma inmediata: la identidad y las tareas deportivas pesan más que los clichés. Aún podría parecer una plantilla de dashboard por la repetición de tiles. La mejora correcta es más provenance, cronología y narrativa de archivo, no más decoración.
+- `output/playwright/gates-mobile-320-fixed.png`
+- `output/playwright/gates-mobile-390-fixed.png`
+- `output/playwright/gates-desktop-1440-fixed.png`
+- `output/playwright/gates-desktop-dark-fixed.png`
+- `output/playwright/gates-lighthouse-cls-check.json`
+- `output/playwright/gates-lighthouse-final-2.json`
+- `output/playwright/gates-lighthouse-final-3.json`
+- `output/playwright/gates-score-input.json`
+- `output/playwright/production-gates-mobile-390.png`
+- `output/playwright/production-gates-desktop-1440.png`
+- `output/playwright/production-gates-desktop-dark.png`
+- `VALIDACION_CAMPO_9.md`
 
-## 10. Accesibilidad y responsive
+## 11. Límites de la auditoría
 
-### Confirmado
-
-- `h1`, landmarks, navegación nombrada, estado activo y skip link.
-- Inputs/selects nombrados; tabla sortable con `aria-sort`; selección anual por botón.
-- Resultados V/E/P tienen nombre textual y color con contraste suficiente.
-- Axe sin violaciones en tres vistas × dos temas; Lighthouse Accessibility 100.
-- 390 px sin overflow; targets principales de 44 px; reduced motion efectivo.
-- Skip link probado con teclado y foco trasladado a `main`.
-
-### No verificado
-
-- Lector de pantalla, zoom 200%, tablet y dispositivo físico.
-- Seis tareas completas con usuarios exclusivamente de teclado/AT.
-- WCAG completo o comportamiento con AT real en producción.
-
-## 11. Arquitectura y calidad técnica
-
-### Mejoras confirmadas
-
-- Contrato público estático explícito; endpoint serverless sirve solo dataset completo con cache.
-- Tailwind y system fonts locales; ninguna dependencia de layout externa.
-- Helpers canónicos para fecha, rival, marcador, resultado y años con tests.
-- Estado compartible mediante `useUrlState` y `popstate`.
-- Datos y Recharts fuera del bundle inicial; logo responsivo y prioritario.
-- Gate único `lint → test → build`; CI declarativa.
-- Dependencias de build/testing movidas a `devDependencies`, separando audit runtime de toolchain.
-
-### Deuda restante
-
-- `App.js` mantiene agregaciones y varias vistas; Rival/Country comparten markup pero no primitives.
-- Login/Trivia/auth/analytics y otros módulos no montados mantienen una arquitectura histórica ambigua.
-- CRA 5 y parte de su cadena están deprecados/vulnerables en contexto de build.
-- No hay RUM/alertas ni ensayo documentado de rollback; el smoke post-deploy sí quedó ejecutado.
-- GitHub y el proyecto Vercel canónico `sc` permanecen conectados para previews y releases futuros.
-
-Arquitectura objetivo incremental: `domain/selectors → features por vista → primitives semánticos → data adapter`, preservando URL y tests. No se justifica una reescritura total.
-
-## 12. Plan actualizado
-
-### Fase 0 — Verdad y línea base reproducible: completada localmente
-
-- Tailwind/fuentes locales, sort/filtros coherentes, contrato público, tests y gate.
-- Gate: `npm ci && npm run check` verde y runtime sin terceros esenciales.
-
-### Fase 1 — Flujos críticos y accesibilidad: completada en laboratorio
-
-- Labels, navegación, tabla, contraste, h1/skip, estados y reduced motion.
-- Gate: Axe 0 en seis corridas; Lighthouse Accessibility 100.
-
-### Fase 2 — Encontrabilidad y continuidad: completada parcialmente
-
-- URL state, back/forward, búsqueda de rival, paginación y aliases conocidos.
-- Pendiente: procedencia visible, detección de aliases nuevos y task test con usuarios.
-
-### Fase 3 — Modularidad y autenticidad: siguiente
-
-- Extraer agregaciones/vistas, retirar código residual y reducir repetición semántica.
-- Gate: un contrato por entidad, grafo activo limpio, AI Slop ≤3.0 y tests por feature.
-
-### Fase 4 — Toolchain y campo
-
-- Producción y smoke: completados con evidencia E4.
-- Pendiente: migrar CRA de forma incremental, activar RUM con consentimiento y observar cinco tareas.
-- Gate restante: toolchain sin riesgo alto alcanzable y evidencia de campo suficiente.
-
-## 13. Backlog priorizado
-
-| ID | Prioridad | Acción | Estado | Evidencia/criterio |
-|---|---|---|---|---|
-| TECH-01 | P1 | Tailwind local y layout autónomo | Completado | Network/build/390 px |
-| UX-01 | P1 | Sort/filtro anual coherente | Completado | Test + runtime asc/desc |
-| A11Y-01 | P1 | Nombres, semántica y teclado | Completado lab | Axe + skip/table runtime |
-| A11Y-02 | P1 | Contraste por tema | Completado | Axe 0 claro/oscuro |
-| QUALITY-01 | P1 | Tests y CI | Completado | Gate local y GitHub Actions verdes |
-| TECH-02 | P1 | Migrar/asegurar toolchain CRA | En progreso | Runtime audit 0; dev audit 54 |
-| DATA-01 | P2 | Canonizar aliases conocidos | Completado | Unit + 157 opciones únicas |
-| UX-02 | P2 | URL/deep link/back | Completado | Runtime |
-| UX-03 | P2 | Search/paginación/eficiencia | En progreso | Implementado; task test pendiente |
-| PERF-01 | P2 | LCP/bundle/terceros | Completado lab | Mediana Perf 98/LCP 2.4 s; rango preservado |
-| UI-01 | P2 | Tipografía y fuente normativa | Completado | System stack sin request externo |
-| ARCH-01 | P2 | Features y retiro de residuales | En progreso | Dominio/chart/hooks extraídos |
-| DATA-02 | P2 | Mostrar fuente y actualización | Pendiente | Provenance visible y auditable |
-| PROD-01 | P2 | Verificar producción y smoke | Completado | URL + datos + release E4 |
-| RESEARCH-01 | P3 | Observar cinco tareas | Pendiente | Éxito/tiempo/errores/ayuda |
-
-## 14. Objetivos y KRs
-
-### Objetivo 1 — Mantener confiable la consulta histórica
-
-- KR1: `npm run check` verde en cada cambio a main.
-- KR2: cero divergencias chart/resumen/tabla para la matriz década/torneo/sort.
-- KR3: cero aliases visibles duplicados para entidades incluidas en el diccionario.
-
-### Objetivo 2 — Acceso equivalente
-
-- KR1: cero violaciones Axe critical/serious en seis tabs y dos temas.
-- KR2: seis tareas completables solo con teclado en protocolo registrado.
-- KR3: prueba con lector de pantalla en al menos un stack de escritorio/móvil.
-
-### Objetivo 3 — Rendimiento y operación reales
-
-- KR1: mantener Lighthouse lab ≥90, LCP <2.5 s y TBT <200 ms.
-- KR2: LCP p75 de campo <2.5 s con ventana y muestra declaradas.
-- KR3: smoke de producción y rollback verificables por release.
-
-## 15. Meta de calidad
-
-| Hito | Score | Evidencia necesaria |
-|---|---:|---|
-| Línea base preservada | 5.4 | Auditoría inicial E2/E3 |
-| Actual | 7.5 | Gates locales + producción desktop/móvil + API + Axe/Lighthouse |
-| Fase 3 cerrada | 8.1–8.2 | Modularidad, deuda residual y autenticidad probadas |
-| Meta recomendada | 8.6 | Producción, AT/usuarios, RUM y cero P1 |
-
-Superar 9.0 exigiría resultados sostenidos en producción, accesibilidad profunda, procedencia editorial, operación madura y comparación real; no se justifica perseguir 10/10 por defecto.
-
-## 16. Continuidad
-
-### Log de decisiones
-
-| Fecha | Decisión | Motivo | Evidencia |
-|---|---|---|---|
-| 2026-08-04 | Línea base 5.4 y cap 7.4 | Layout/accessibilidad bloqueantes | Auditoría inicial |
-| 2026-08-04 | Elegir archivo público estático | El JSON ya se distribuye al navegador | Servicio activo + endpoint ajustado |
-| 2026-08-04 | Compilar Tailwind y usar system fonts | Eliminar terceros críticos/CORS | Network/build |
-| 2026-08-04 | Separar datos y chart | Reducir costo inicial sin reescritura | Chunks/build |
-| 2026-08-04 | Separar runtime de dev audit | CRA es toolchain, no código servido | `npm audit --omit=dev` = 0 |
-| 2026-08-04 | Confirmar 7.5, no potencial | Producción/campo siguen ausentes | Calculadora + gates |
-| 2026-08-04 | Cerrar PROD-01 sin subir el score | El deploy y smoke elevan confianza, pero no sustituyen campo | Vercel + HTTP + navegador + logs |
-
-### Próxima acción recomendada
-
-Tomar **ARCH-01 + TECH-02** como un bloque protegido por `npm run check`: inventariar y retirar módulos no montados, extraer agregaciones de `App.js` y preparar una migración incremental de CRA. En paralelo, resolver **DATA-02** dentro de la UI antes de ampliar features.
-
-### Qué desbloquea la siguiente décima
-
-Cerrar una parte observable de ARCH-01 —grafo activo sin Login/Trivia/auth residuales y agregaciones puras con tests— o añadir procedencia/fecha de actualización visible con contrato editorial. No se concede por decoración.
-
-### No verificado
-
-- RUM, alertas y rollback ensayado en producción.
-- Web Vitals de campo, tráfico, conversión, satisfacción o SUS.
-- Lector de pantalla, zoom 200% y dispositivo físico.
-- Exactitud y procedencia histórica partido por partido.
-- Reachability concreta de cada advisory del toolchain CRA.
+- No se declara conformidad WCAG completa sin AT real.
+- Lighthouse y Axe son evidencia de laboratorio, no comportamiento humano ni field data.
+- La exactitud partido por partido de 1,936 registros no fue contrastada individualmente contra una fuente primaria; el QA comprueba consistencia interna y metadata.
+- Una muestra RUM insuficiente debe seguir reportándose como “no verificada”.
+- Noticias o renuncias del club no entran al archivo sin fuente, fecha y contrato editorial explícito.
