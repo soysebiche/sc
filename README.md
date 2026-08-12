@@ -59,7 +59,7 @@ El primer comando audita las dependencias de runtime. El segundo incluye las her
 
 ## Variables de entorno
 
-No hay variables obligatorias para ejecutar el archivo. `VITE_GA_MEASUREMENT_ID` activa GA4 únicamente después del consentimiento explícito del visitante; la medición de rendimiento propia usa la misma preferencia.
+No hay variables obligatorias para ejecutar el archivo. Para overrides opcionales, copia `env.example` o `.env.example` a `.env.local`. `VITE_GA_MEASUREMENT_ID` activa GA4 únicamente después del consentimiento explícito del visitante; la medición de rendimiento propia usa la misma preferencia.
 
 ## Deployment
 
