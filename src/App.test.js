@@ -16,7 +16,7 @@ test('renders the historical archive with a named date control', async () => {
   expect(await screen.findByText(/Archivo Histórico · 1937 Partidos/i)).toBeInTheDocument();
   expect(await screen.findByLabelText('Fecha para consultar')).toHaveAttribute('type', 'date');
   expect(screen.getByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Universitario/).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Sport Huancayo|Alianza Atlético/).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 

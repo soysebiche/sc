@@ -2,23 +2,28 @@
 
 ## Cursor Cloud specific instructions
 
-This is a **Create React App** project (React 19) for viewing Sporting Cristal football club historical match statistics ("Sebiche Celeste"). All data is static JSON bundled at `src/data/historico_completo_sc.json` — no database or external API is needed for local development.
+This is a **Vite + React 19** project for viewing Sporting Cristal football club historical match statistics ("Sebiche Celeste"). All data is static JSON bundled at `src/data/historico_completo_sc.json` — no database or external API is needed for local development.
 
 ### Running the app
 
-- **Dev server:** `npm start` (port 3000)
-- **Build:** `npm run build`
-- **Tests:** `CI=true npm test` (use `CI=true` to run non-interactively)
-- **Lint:** `npx eslint src/`
+- **Install:** `npm ci` (npm + `package-lock.json`; Node.js 20+)
+- **Dev server:** `npm start` or `npm run dev` (Vite on port 5173, bound to `0.0.0.0`)
+- **Build:** `npm run build` (runs `generate:calendar` first, output in `dist/`)
+- **Preview:** `npm run preview`
+- **Lint:** `npm run lint`
+- **Tests:** `npm run test:ci` (non-interactive Vitest). Use `npm test` for watch mode.
+- **Full gate:** `npm run check` (lint + data audit + tests + build)
 
 See `README.md` for full script documentation.
 
-### Known issues
-
-- The default test in `src/App.test.js` fails because it still looks for the CRA boilerplate "learn react" text, which no longer exists in the customized app. This is a pre-existing issue, not a regression.
-- ESLint reports 1 pre-existing warning in `src/services/authService.js` (`import/no-anonymous-default-export`).
-
 ### Environment notes
 
-- No environment variables are required for local development. `API_SECRET_TOKEN` and `REACT_APP_GA_MEASUREMENT_ID` are optional (see `env.example`).
+- No environment variables are required for local development.
+- Optional: copy `env.example` to `.env.local` and set `VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX` to enable GA4 after visitor consent.
 - The Vercel serverless API (`/api/data`) is not needed locally; the app imports data directly from the bundled JSON file.
+
+### Cloud Agent notes
+
+- Preferred install command: `npm ci` (idempotent; do not rewrite the lockfile unless intentionally upgrading deps).
+- No secrets or Docker services are required for install, lint, tests, or the Vite app.
+- Upcoming-fixture assertions in UI tests must match `src/data/upcoming-fixtures.json` after calendar updates.
