@@ -21,7 +21,7 @@ See `README.md` for full script documentation.
 - The Vercel serverless routes (`/api/data`, `/api/vitals`) are optional. The UI loads the dataset with `loadArchive()` in `src/services/archive.js`, not `/api/data`.
 - Do not revive Login, Trivia, or `authService`. That tree was deleted.
 - P1–P5 of `PLAN_TECNICO_CODE_QUALITY.md` landed in #4. That plan is history, not a backlog. Do not re-execute it. Do not change the published JSON key contract or shareable URL param names.
-- Optional hygiene only (identity getters, Spanish rival-stat keys, App chrome SVGs). Do not reopen CSS or the URL store for that.
+- Optional leftover cleanup is `PLAN_HIGIENE_POST_AUDIT.md` (one PR: H1–H5). Do not reopen CSS or the URL store for that.
 
 ### Environment notes
 
