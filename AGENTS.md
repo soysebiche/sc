@@ -20,6 +20,7 @@ See `README.md` for full script documentation.
 - Shareable UI state lives in URL params via `src/hooks/useUrlState.js`.
 - The Vercel serverless routes (`/api/data`, `/api/vitals`) are optional. The UI loads the dataset with a dynamic import, not `/api/data`.
 - Files listed in `src/legacy-manifest.json` are **not mounted**. Do not revive Login, Trivia, or `authService` unless the task explicitly asks to restore them. Prefer deleting that tree over extending it.
+- Maintainability work follows `PLAN_TECNICO_CODE_QUALITY.md` (P1–P5). Do not mix those PRs. Do not change the published JSON key contract or shareable URL param names.
 
 ### Environment notes
 

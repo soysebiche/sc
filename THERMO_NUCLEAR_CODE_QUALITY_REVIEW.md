@@ -149,6 +149,8 @@ Rivales y Países viven en `components/` aunque son features del mismo rango que
 
 Los pasos 1–2 son mecánicos y seguros. El 3 es el que hace que el código se sienta inevitable. El 4 es el que evita el próximo bug de penales o de mes mal parseado.
 
+Plan de ejecución (cinco PRs, invariantes, APIs y tests): `PLAN_TECNICO_CODE_QUALITY.md`.
+
 ## Qué no es un hallazgo de esta rúbrica
 
 - Que el JSON use claves en español: es el contrato de publicación. El problema es filtrarlo a toda la UI.
