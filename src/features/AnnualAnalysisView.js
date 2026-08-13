@@ -1,5 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import StatTile from '../components/StatTile';
+import { calculateYearlyStats, getUniqueYears } from '../domain/matches';
+import { useUrlState } from '../hooks/useUrlState';
 
 const YearChart = lazy(() => import('../components/YearChart'));
 
@@ -14,20 +16,33 @@ const COLUMNS = [
   { key: 'goalsAgainst', label: 'GC' },
 ];
 
-function AnnualAnalysisView({
-  decades,
-  selectedDecade,
-  setSelectedDecade,
-  tournamentFilter,
-  setTournamentFilter,
-  chartData,
-  stats,
-  currentYearStats,
-  selectedYear,
-  setSelectedYear,
-  sortConfig,
-  setSortConfig,
-}) {
+function AnnualAnalysisView({ matches }) {
+  const [selectedDecade, setSelectedDecade] = useUrlState('decade', 'all');
+  const [tournamentFilter, setTournamentFilter] = useUrlState('tournament', 'todos');
+  const [sortConfig, setSortConfig] = useState({ key: 'year', direction: 'desc' });
+  const [selectedYearForStats, setSelectedYearForStats] = useState(null);
+
+  const years = useMemo(() => getUniqueYears(matches), [matches]);
+  const decades = useMemo(
+    () => [...new Set(years.map(year => Math.floor(year / 10) * 10))].sort((a, b) => b - a),
+    [years]
+  );
+  const yearlyStats = useMemo(() => calculateYearlyStats(matches, tournamentFilter).sort((a, b) => {
+    const aValue = a[sortConfig.key];
+    const bValue = b[sortConfig.key];
+    return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+  }), [matches, tournamentFilter, sortConfig]);
+  const stats = useMemo(() => (
+    selectedDecade === 'all'
+      ? yearlyStats
+      : yearlyStats.filter(item => Math.floor(item.year / 10) * 10 === Number.parseInt(selectedDecade, 10))
+  ), [selectedDecade, yearlyStats]);
+  const chartData = useMemo(() => [...stats].sort((a, b) => a.year - b.year), [stats]);
+  const selectedYear = stats.some(item => item.year === selectedYearForStats)
+    ? selectedYearForStats
+    : stats[0]?.year || null;
+  const currentYearStats = stats.find(item => item.year === selectedYear) || null;
+
   const sortBy = key => setSortConfig({
     key,
     direction: sortConfig.key === key && sortConfig.direction === 'desc' ? 'asc' : 'desc',
@@ -64,11 +79,11 @@ function AnnualAnalysisView({
         <section className="archive-section" key={currentYearStats.year}>
           <h3 className="balance-title">Resumen {currentYearStats.year}</h3>
           <div className="stat-strip stat-strip--5">
-            <StatTile label="Partidos" value={currentYearStats.total} color="var(--color-celeste)" />
-            <StatTile label="Victorias" value={currentYearStats.victories} detail={`${currentYearStats.winPercentage}%`} color="var(--color-win)" />
-            <StatTile label="Empates" value={currentYearStats.draws} detail={`${currentYearStats.drawPercentage}%`} color="var(--color-draw)" />
-            <StatTile label="Derrotas" value={currentYearStats.defeats} detail={`${currentYearStats.defeatPercentage}%`} color="var(--color-loss)" />
-            <StatTile label="Goles" value={`${currentYearStats.goalsFor} - ${currentYearStats.goalsAgainst}`} color="var(--color-celeste)" />
+            <StatTile label="Partidos" value={currentYearStats.total} tone="celeste" />
+            <StatTile label="Victorias" value={currentYearStats.victories} detail={`${currentYearStats.winPercentage}%`} tone="win" />
+            <StatTile label="Empates" value={currentYearStats.draws} detail={`${currentYearStats.drawPercentage}%`} tone="draw" />
+            <StatTile label="Derrotas" value={currentYearStats.defeats} detail={`${currentYearStats.defeatPercentage}%`} tone="loss" />
+            <StatTile label="Goles" value={`${currentYearStats.goalsFor} - ${currentYearStats.goalsAgainst}`} tone="celeste" />
           </div>
         </section>
       )}
@@ -83,8 +98,8 @@ function AnnualAnalysisView({
             </th>
           ))}</tr></thead>
           <tbody>{stats.map(yearData => (
-            <tr key={yearData.year} style={{ background: selectedYear === yearData.year ? 'var(--color-celeste-soft)' : undefined }}>
-              <td><button type="button" className="year-select-button" onClick={() => setSelectedYear(yearData.year)} aria-pressed={selectedYear === yearData.year} aria-label={`Mostrar resumen de ${yearData.year}`}>{yearData.year}</button></td>
+            <tr key={yearData.year} className={selectedYear === yearData.year ? 'year-row--selected' : undefined}>
+              <td><button type="button" className="year-select-button" onClick={() => setSelectedYearForStats(yearData.year)} aria-pressed={selectedYear === yearData.year} aria-label={`Mostrar resumen de ${yearData.year}`}>{yearData.year}</button></td>
               <td className="text-center">{yearData.total}</td>
               <td className="text-center font-semibold text-victory">{yearData.victories}</td>
               <td className="text-center text-draw">{yearData.draws}</td>

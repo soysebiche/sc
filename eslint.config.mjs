@@ -4,20 +4,8 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
-const legacyFiles = [
-  'src/components/Login.js',
-  'src/components/Trivia.js',
-  'src/components/ui/**',
-  'src/data/triviaQuestions.js',
-  'src/hooks/useAnalytics.js',
-  'src/reportWebVitals.js',
-  'src/services/analyticsService.js',
-  'src/services/authService.js',
-  'src/utils/icons.js',
-];
-
 export default [
-  { ignores: ['dist/**', 'build/**', 'coverage/**', 'node_modules/**', ...legacyFiles] },
+  { ignores: ['dist/**', 'build/**', 'coverage/**', 'node_modules/**'] },
   js.configs.recommended,
   {
     files: ['src/**/*.{js,jsx}', 'api/**/*.js'],

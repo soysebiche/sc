@@ -3,7 +3,7 @@
 Sebiche Celeste es una aplicación pública y estática.
 
 - Fuente canónica del runtime: `src/data/historico_completo_sc.json`.
-- Carga: import dinámico desde `src/services/vercelDataService.js`.
+- Carga: `loadArchive()` en `src/services/archive.js`.
 - Autenticación: no aplica.
 - Variables obligatorias: ninguna.
 - Endpoint `/api/data`: compatibilidad pública opcional; la UI no depende de él.

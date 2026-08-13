@@ -20,11 +20,11 @@ Como mínimo:
 
 ```bash
 python3 -m json.tool src/data/historico_completo_sc.json >/dev/null
-CI=true npm test -- --watchAll=false
-npm run build
+npm run test:data
+npm run test:ci
 ```
 
-El fallo conocido de `src/App.test.js` por el texto `learn react` debe reportarse; no convertirlo en éxito. Ejecutar además las pruebas del skill RSSSF si el alta es doméstica.
+Ejecutar además las pruebas del skill RSSSF si el alta es doméstica.
 
 ## Git y producción
 

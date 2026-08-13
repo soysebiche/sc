@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { CLUB_NAME, parseCalendarDate, resultFromScoreAndNote } from '../src/domain/matches.js';
 
 const REQUIRED_KEYS = [
   'Año', 'Mes', 'Dia', 'Día de la Semana', 'Fecha', 'Torneo', 'Número de Fecha',
@@ -25,11 +26,12 @@ export function auditArchive(records, metadata) {
       issues.push(issue('schema', index, 'Las 13 claves o su orden no coinciden con el contrato.'));
     }
 
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(match.Fecha || '') || Number.isNaN(Date.parse(`${match.Fecha}T00:00:00Z`))) {
+    const parsedDate = parseCalendarDate(match.Fecha);
+    if (!parsedDate) {
       issues.push(issue('date', index, `Fecha inválida: ${match.Fecha}`));
     } else {
       dates.push(match.Fecha);
-      const calendarYear = Number(match.Fecha.slice(0, 4));
+      const calendarYear = parsedDate.year;
       const isJanuarySeasonCarryover = match.Fecha.slice(5, 7) === '01' && Number(match.Año) === calendarYear - 1;
       if (Number(match.Año) !== calendarYear && !isJanuarySeasonCarryover) {
         issues.push(issue('year', index, `Año ${match.Año} no coincide con ${match.Fecha}.`));
@@ -41,8 +43,8 @@ export function auditArchive(records, metadata) {
       issues.push(issue('score', index, `Marcador inválido: ${match.Marcador}`));
     }
 
-    const isHome = match['Equipo Local'] === 'Sporting Cristal';
-    const isAway = match['Equipo Visita'] === 'Sporting Cristal';
+    const isHome = match['Equipo Local'] === CLUB_NAME;
+    const isAway = match['Equipo Visita'] === CLUB_NAME;
     if (isHome === isAway) {
       issues.push(issue('club', index, 'Sporting Cristal debe aparecer exactamente una vez.'));
     }
@@ -52,10 +54,13 @@ export function auditArchive(records, metadata) {
       const awayGoals = Number(score[2]);
       const scGoals = isHome ? homeGoals : awayGoals;
       const opponentGoals = isHome ? awayGoals : homeGoals;
-      let group = scGoals > opponentGoals ? 'win' : scGoals < opponentGoals ? 'loss' : 'draw';
-      const penaltyNote = String(match['Goles (Solo SC)'] || '');
-      if (group === 'draw' && /perdi[oó].*penal/i.test(penaltyNote)) group = 'loss';
-      if (group === 'draw' && /gan[oó].*penal/i.test(penaltyNote)) group = 'win';
+      const code = resultFromScoreAndNote({
+        scGoals,
+        opponentGoals,
+        resultField: match.Resultado,
+        goalsNote: match['Goles (Solo SC)'],
+      });
+      const group = code === 'V' ? 'win' : code === 'P' ? 'loss' : 'draw';
       if (!RESULT_GROUPS[group].has(match.Resultado)) {
         issues.push(issue('result', index, `Resultado ${match.Resultado} contradice el marcador ${match.Marcador}.`));
       }

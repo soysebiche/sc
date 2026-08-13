@@ -1,11 +1,17 @@
-function StatTile({ label, value, detail, sub, color, colorVar, align = 'center' }) {
-  const resolvedColor = color || colorVar || 'var(--text-primary)';
-  const resolvedDetail = detail || sub;
+const TONE_CLASS = {
+  celeste: 'stat-tile--celeste',
+  win: 'stat-tile--win',
+  draw: 'stat-tile--draw',
+  loss: 'stat-tile--loss',
+};
+
+function StatTile({ label, value, detail, tone, align = 'center' }) {
+  const toneClass = TONE_CLASS[tone] || '';
   return (
-    <div className={`stat-tile ${align === 'left' ? 'text-left' : ''}`}>
-      <p className="stat-label" style={{ color: resolvedColor }}>{label}</p>
-      <p className="stat-value stat-number" style={{ color: resolvedColor }}>{value}</p>
-      {resolvedDetail && <p className="stat-detail">{resolvedDetail}</p>}
+    <div className={`stat-tile ${toneClass} ${align === 'left' ? 'text-left' : ''}`.trim()}>
+      <p className="stat-label">{label}</p>
+      <p className="stat-value stat-number">{value}</p>
+      {detail && <p className="stat-detail">{detail}</p>}
     </div>
   );
 }

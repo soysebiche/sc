@@ -1,3 +1,4 @@
+import archive from '../data/historico_completo_sc.json';
 import {
   canonicalizeRival,
   getOpponent,
@@ -7,16 +8,21 @@ import {
   getUniqueYears,
   getYearFromMatch,
   paginateMatches,
+  parseMatch,
+  resultFromScoreAndNote,
   summarizeMatches,
+  calculateArchiveOverview,
 } from './matches';
 
-const homeWin = {
+const rawHomeWin = {
   Año: 2024,
   Fecha: '2024-08-04',
   'Equipo Local': 'Sporting Cristal',
   'Equipo Visita': 'UTC',
   Marcador: '2-0',
 };
+
+const homeWin = parseMatch(rawHomeWin);
 
 describe('match domain', () => {
   test('normalizes confirmed rival aliases without changing historical records', () => {
@@ -33,25 +39,31 @@ describe('match domain', () => {
   });
 
   test('honors a documented penalty shootout after a drawn score', () => {
-    expect(getResultCode({
-      ...homeWin,
+    expect(getResultCode(parseMatch({
+      ...rawHomeWin,
       Marcador: '0-0',
       Resultado: 'D',
       'Goles (Solo SC)': '(Perdió 5-4 en penales)',
+    }))).toBe('P');
+    expect(resultFromScoreAndNote({
+      scGoals: 0,
+      opponentGoals: 0,
+      resultField: 'D',
+      goalsNote: '(Perdió 5-4 en penales)',
     })).toBe('P');
   });
 
   test('keeps unique years in descending order', () => {
     expect(getUniqueYears([
       homeWin,
-      { ...homeWin, Año: 2026 },
-      { ...homeWin, Año: 2024 },
-      { ...homeWin, Año: 1956 },
+      parseMatch({ ...rawHomeWin, Año: 2026 }),
+      parseMatch({ ...rawHomeWin, Año: 2024 }),
+      parseMatch({ ...rawHomeWin, Año: 1956 }),
     ])).toEqual([2026, 2024, 1956]);
   });
 
   test('summarizes valid matches from the club perspective', () => {
-    const draw = { ...homeWin, Marcador: '1-1' };
+    const draw = parseMatch({ ...rawHomeWin, Marcador: '1-1' });
     expect(summarizeMatches([homeWin, draw])).toEqual({
       total: 2,
       victories: 1,
@@ -74,8 +86,34 @@ describe('match domain', () => {
   test('finds efemerides by day and month across years', () => {
     expect(getMatchesForDayMonth([
       homeWin,
-      { ...homeWin, Fecha: '2020-08-04' },
-      { ...homeWin, Fecha: '2020-08-05' },
+      parseMatch({ ...rawHomeWin, Fecha: '2020-08-04' }),
+      parseMatch({ ...rawHomeWin, Fecha: '2020-08-05' }),
     ], '2026-08-04')).toHaveLength(2);
+  });
+
+  test('exposes summarizeMatches fields on the archive overview', () => {
+    const draw = parseMatch({ ...rawHomeWin, Marcador: '1-1', País: 'Perú' });
+    const win = parseMatch({ ...rawHomeWin, País: 'Perú' });
+    const overview = calculateArchiveOverview([win, draw]);
+    expect(overview).toMatchObject({
+      total: 2,
+      victories: 1,
+      draws: 1,
+      goalsFor: 3,
+      winPercentage: '50.0',
+    });
+    expect(overview.totalMatches).toBeUndefined();
+    expect(overview.maxScGoals).toBeUndefined();
+  });
+
+  test('parses representative archive records to the same result codes as production', () => {
+    const home = archive.find(match => match['Equipo Local'] === 'Sporting Cristal' && match.Marcador === '2-0');
+    const away = archive.find(match => match['Equipo Visita'] === 'Sporting Cristal' && /^\d+-\d+$/.test(match.Marcador));
+    const penalty = archive.find(match => /penal/i.test(match['Goles (Solo SC)'] || ''));
+    expect(parseMatch(home).isHome).toBe(true);
+    expect(parseMatch(home).resultCode).toBe('V');
+    expect(parseMatch(away).isHome).toBe(false);
+    expect(['V', 'E', 'P']).toContain(parseMatch(away).resultCode);
+    expect(['V', 'P']).toContain(parseMatch(penalty).resultCode);
   });
 });

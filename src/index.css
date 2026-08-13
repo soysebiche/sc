@@ -1,4 +1,4 @@
-/* Tailwind base */
+/* Tokens, themes, and primitives. Editorial layout lives in styles/archive.css. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -199,11 +199,11 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -467,6 +467,18 @@ tr:hover td {
   margin-bottom: 3px;
 }
 
+.stat-tile--celeste .stat-label,
+.stat-tile--celeste .stat-value { color: var(--color-celeste); }
+.stat-tile--win .stat-label,
+.stat-tile--win .stat-value { color: var(--color-win); }
+.stat-tile--draw .stat-label,
+.stat-tile--draw .stat-value { color: var(--color-draw); }
+.stat-tile--loss .stat-label,
+.stat-tile--loss .stat-value { color: var(--color-loss); }
+
+.copy-secondary { color: var(--text-secondary); }
+.copy-muted { color: var(--text-muted); }
+
 .stat-value {
   font-size: clamp(1.55rem, 2.5vw, 2rem);
   line-height: 1;
@@ -527,6 +539,13 @@ tr:hover td {
   font-family: var(--font-mono);
   color: var(--text-on-result);
 }
+
+.distribution-bar__fill--victories { background: var(--color-win-bar); }
+.distribution-bar__fill--draws { background: var(--color-draw-bar); }
+.distribution-bar__fill--defeats { background: var(--color-loss-bar); }
+.distribution-legend__item--victories { color: var(--color-win); }
+.distribution-legend__item--draws { color: var(--color-draw); }
+.distribution-legend__item--defeats { color: var(--color-loss); }
 
 /* ═══════════════════════════════════════════════════════════════════════
    PROGRESS BAR

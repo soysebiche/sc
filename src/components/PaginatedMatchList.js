@@ -28,7 +28,7 @@ function PaginatedMatchList({
       </p>
       <div className="match-list match-list--catalog">
         {pagination.items.map((match, index) => (
-          <MatchRow key={`${match.Fecha}-${match['Equipo Local']}-${match['Equipo Visita']}-${index}`} match={match} />
+          <MatchRow key={`${match.date}-${match.home}-${match.away}-${index}`} match={match} />
         ))}
       </div>
       <Pagination

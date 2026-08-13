@@ -1,15 +1,12 @@
-
-
 import fs from 'fs';
 import path from 'path';
 
 export default function handler(req, res) {
-  // Verificar método HTTP
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Archivo público. La aplicación también entrega estos datos como un chunk estático.
+  // Same public JSON the UI loads via loadArchive(); this route is optional compatibility.
 
   try {
     const { type = 'completo' } = req.query;

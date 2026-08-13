@@ -1,4 +1,4 @@
-import { formatMatchDate, getResultCode } from '../domain/matches';
+import { formatMatchDate } from '../domain/matches';
 
 const RESULT_META = {
   V: { label: 'Victoria', badge: 'badge-green', className: 'match-row--win' },
@@ -7,10 +7,8 @@ const RESULT_META = {
 };
 
 function MatchRow({ match }) {
-  const result = getResultCode(match);
-  const resultMeta = RESULT_META[result];
-  const goals = match['Goles (Solo SC)'];
-  const hasGoals = goals && goals !== '-';
+  const resultMeta = RESULT_META[match.resultCode];
+  const hasGoals = Boolean(match.goalsNote);
 
   return (
     <article className={`match-row ${resultMeta?.className || ''}`}>
@@ -21,22 +19,22 @@ function MatchRow({ match }) {
             aria-label={resultMeta.label}
             title={resultMeta.label}
           >
-            {result}
+            {match.resultCode}
           </span>
         )}
-        <time dateTime={match.Fecha !== 'TBD' ? match.Fecha : undefined}>
-          {formatMatchDate(match.Fecha)}
+        <time dateTime={match.date !== 'TBD' ? match.date : undefined}>
+          {formatMatchDate(match.date)}
         </time>
       </div>
 
       <div className="match-row__fixture">
-        <p className="match-teams">{match['Equipo Local']} vs {match['Equipo Visita']}</p>
-        {hasGoals && <p className="match-goals"><span>Goles</span> · {goals}</p>}
+        <p className="match-teams">{match.home} vs {match.away}</p>
+        {hasGoals && <p className="match-goals"><span>Goles</span> · {match.goalsNote}</p>}
       </div>
 
       <div className="match-row__outcome">
-        <p className="match-score">{match.Marcador}</p>
-        <p className="match-tournament">{match.Torneo}</p>
+        <p className="match-score">{match.scoreLabel}</p>
+        <p className="match-tournament">{match.tournament}</p>
       </div>
     </article>
   );

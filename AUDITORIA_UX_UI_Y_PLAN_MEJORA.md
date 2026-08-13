@@ -137,7 +137,7 @@ La mejora de autenticidad proviene de información y jerarquía, no de añadir a
 - Vite 7 + Vitest 4 + ESLint 9 sustituyen CRA.
 - `App.js` orquesta; Dashboard, Efemérides, Partidos y Año viven en `src/features`.
 - Agregaciones y paginación son funciones puras con pruebas.
-- Los módulos no montados están declarados en `src/legacy-manifest.json`, fuera del grafo activo.
+- El runtime carga el dataset con `loadArchive()`; no hay prototipos Login/Trivia en `src/`.
 - `vercel.json` sirve `dist`; CI usa Node 22.
 
 ### Gate 4

@@ -1,8 +1,20 @@
+import { useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import MatchRow from '../components/MatchRow';
 import UpcomingMatches from '../components/UpcomingMatches';
+import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
+import { useUrlState } from '../hooks/useUrlState';
 
-function EfemeridesView({ selectedDate, setSelectedDate, matches, stats }) {
+const getToday = () => {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+};
+
+function EfemeridesView({ matches }) {
+  const [selectedDate, setSelectedDate] = useUrlState('date', getToday());
+  const dayMatches = useMemo(() => getMatchesForDayMonth(matches, selectedDate), [matches, selectedDate]);
+  const stats = useMemo(() => summarizeMatches(dayMatches), [dayMatches]);
+
   return (
     <div className="space-y-4 animate-fade-in">
       <UpcomingMatches />
@@ -15,15 +27,15 @@ function EfemeridesView({ selectedDate, setSelectedDate, matches, stats }) {
         </div>
       </section>
 
-      {matches.length > 0 ? (
+      {dayMatches.length > 0 ? (
         <>
           <BalanceSummary title="Balance del día" stats={stats} />
           <section className="archive-section archive-section--matches">
             <p className="archive-kicker">
-              {matches.length} partido{matches.length === 1 ? '' : 's'} jugado{matches.length === 1 ? '' : 's'} un {new Date(`${matches[0].Fecha}T00:00:00`).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+              {dayMatches.length} partido{dayMatches.length === 1 ? '' : 's'} jugado{dayMatches.length === 1 ? '' : 's'} un {formatMatchDate(dayMatches[0].date, { day: 'numeric', month: 'long' })}
             </p>
             <div className="match-list">
-              {matches.map((match, index) => <MatchRow key={`${match.Fecha}-${match['Equipo Local']}-${index}`} match={match} />)}
+              {dayMatches.map((match, index) => <MatchRow key={`${match.date}-${match.home}-${index}`} match={match} />)}
             </div>
           </section>
         </>

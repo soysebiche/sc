@@ -1,25 +1,25 @@
+import { useMemo } from 'react';
+import { calculateArchiveOverview } from '../domain/matches';
 import DistributionBar from '../components/DistributionBar';
 import StatTile from '../components/StatTile';
 
-function DashboardView({ overview }) {
-  const winRate = overview.totalMatches ? ((overview.victories / overview.totalMatches) * 100).toFixed(1) : '0.0';
-  const drawRate = overview.totalMatches ? ((overview.draws / overview.totalMatches) * 100).toFixed(1) : '0.0';
-  const lossRate = overview.totalMatches ? ((overview.defeats / overview.totalMatches) * 100).toFixed(1) : '0.0';
-  const goalDifference = overview.totalScGoals - overview.totalOpponentGoals;
+function DashboardView({ matches }) {
+  const overview = useMemo(() => calculateArchiveOverview(matches), [matches]);
+  const goalDifference = overview.goalsFor - overview.goalsAgainst;
 
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="stat-strip stat-strip--4">
-        <StatTile label="Partidos" value={overview.totalMatches || 0} color="var(--color-celeste)" />
-        <StatTile label="Victorias" value={overview.victories || 0} detail={`${winRate}%`} color="var(--color-win)" />
-        <StatTile label="Empates" value={overview.draws || 0} detail={`${drawRate}%`} color="var(--color-draw)" />
-        <StatTile label="Derrotas" value={overview.defeats || 0} detail={`${lossRate}%`} color="var(--color-loss)" />
+        <StatTile label="Partidos" value={overview.total || 0} tone="celeste" />
+        <StatTile label="Victorias" value={overview.victories || 0} detail={`${overview.winPercentage}%`} tone="win" />
+        <StatTile label="Empates" value={overview.draws || 0} detail={`${overview.drawPercentage}%`} tone="draw" />
+        <StatTile label="Derrotas" value={overview.defeats || 0} detail={`${overview.defeatPercentage}%`} tone="loss" />
       </div>
 
       <div className="stat-strip stat-strip--3">
-        <StatTile label="Goles a favor" value={overview.totalScGoals || 0} color="var(--color-celeste)" />
-        <StatTile label="Goles en contra" value={overview.totalOpponentGoals || 0} />
-        <StatTile label="Diferencia de goles" value={`${goalDifference > 0 ? '+' : ''}${goalDifference}`} color="var(--color-celeste)" />
+        <StatTile label="Goles a favor" value={overview.goalsFor || 0} tone="celeste" />
+        <StatTile label="Goles en contra" value={overview.goalsAgainst || 0} />
+        <StatTile label="Diferencia de goles" value={`${goalDifference > 0 ? '+' : ''}${goalDifference}`} tone="celeste" />
       </div>
 
       <div className="stat-strip stat-strip--3 stat-strip--context">
@@ -30,7 +30,7 @@ function DashboardView({ overview }) {
 
       <section className="archive-section">
         <p className="stat-label mb-3">Distribución de resultados</p>
-        <DistributionBar wins={overview.victories} draws={overview.draws} losses={overview.defeats} total={overview.totalMatches} />
+        <DistributionBar stats={overview} />
       </section>
     </div>
   );

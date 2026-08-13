@@ -1,132 +1,49 @@
-# 📊 Configuración de Google Analytics en Vercel
+# Medición GA4 (opcional)
 
-## 🎯 Resumen
+Sebiche Celeste envía eventos a Google Analytics 4 solo después de consentimiento explícito. Sin `VITE_GA_MEASUREMENT_ID` válido, `enableAnalytics()` queda inerte.
 
-Se ha implementado Google Analytics 4 (GA4) en tu aplicación web de Sporting Cristal Stats Viewer.
+## Variable de entorno
 
-## 🔧 Configuración Requerida
-
-### 1. Crear Cuenta de Google Analytics
-
-1. Ve a [Google Analytics](https://analytics.google.com/)
-2. Crea una nueva cuenta o usa una existente
-3. Crea una nueva propiedad para tu web
-4. Selecciona "Web" como plataforma
-5. Completa la información de tu sitio
-
-### 2. Obtener Measurement ID
-
-1. En tu propiedad de GA4, ve a **Admin** (⚙️)
-2. En **Data Streams**, haz clic en tu stream web
-3. Copia el **Measurement ID** (formato: G-XXXXXXXXXX)
-
-### 3. Configurar Variables de Entorno en Vercel
-
-1. Ve a tu dashboard de Vercel
-2. Selecciona tu proyecto
-3. Ve a **Settings** > **Environment Variables**
-4. Agrega esta variable:
+En Vercel: **Settings → Environment Variables**.
 
 ```
-Name: REACT_APP_GA_MEASUREMENT_ID
-Value: G-XXXXXXXXXX (tu Measurement ID real)
+Name: VITE_GA_MEASUREMENT_ID
+Value: G-XXXXXXXXXX
 Environment: Production, Preview, Development
 ```
 
-## 📱 Eventos que se Trackean
+Localmente, copiar `env.example` a `.env.local`. Formato aceptado: `G-` seguido de 6 a 16 caracteres alfanuméricos.
 
-### 🔄 Navegación
-- **Tab Navigation**: Cambios entre tabs (Efemérides, Temporadas, etc.)
-- **Page Views**: Cada vista de página
+No usar `REACT_APP_*`. Este proyecto es Vite.
 
-### 🔍 Filtros y Búsquedas
-- **Year Filter**: Selección de año
-- **Month Filter**: Selección de mes
-- **Date Search**: Búsquedas por fecha específica
+## Consentimiento
 
-### 📊 Estadísticas
-- **Stats Viewed**: Visualización de estadísticas por año
-- **Data Load Success**: Carga exitosa de datos
-- **Load Time**: Tiempo de carga de la aplicación
+`src/components/MeasurementConsent.js` guarda `accepted` o `declined` en `localStorage` (`sc-measurement-consent`). Hasta `accepted`:
 
-### ⚠️ Errores
-- **Data Load Error**: Errores al cargar datos
-- **Error Occurred**: Otros errores de la aplicación
+- no se carga `gtag.js`
+- no se envían page views ni filtros
+- RUM (`/api/vitals`) permanece apagado
 
-### 👤 Interacciones del Usuario
-- **User Interaction**: Clicks, hovers, etc.
+Al declinar o retirar el permiso se llama `disableAnalytics()` y se borran cookies `_ga` / `_ga_*`.
 
-## 🚀 Verificación
+## Eventos reales (`src/services/analytics.js`)
 
-### 1. Verificar en Vercel
-- Confirma que la variable `REACT_APP_GA_MEASUREMENT_ID` esté configurada
-- Haz redeploy de la aplicación
+| Evento | Cuándo | Payload |
+|---|---|---|
+| `page_view` | Vista activa con consentimiento | `page_title`, `page_location` (origen + path, sin query), `page_path` (`/efemerides`, etc.) |
+| `archive_filter` | Query param de filtro distinto del default | `filter_name`, `is_active` |
+| `archive_pagination` | `page`, `rivalPage` o `countryPage` | `collection` |
+| `theme_change` | Toggle claro/oscuro | `theme`: `dark` \| `light` |
+| `calendar_subscribe` | Clic en suscripción | `calendar_client`: `webcal` \| `unknown` |
+| `archive_load_error` | Fallo al cargar el JSON | `error_code`: `archive_unavailable` |
 
-### 2. Verificar en Google Analytics
-- Ve a **Reports** > **Realtime**
-- Abre tu web en otra pestaña
-- Deberías ver actividad en tiempo real
+Filtros allowlisteados: `date`, `year`, `month`, `tournament`, `decade`, `rival`, `rivalYear`, `country`, `countryYear`. Cualquier otra key de URL se ignora.
 
-### 3. Verificar en la Consola
-- Abre la consola del navegador
-- Deberías ver: "✅ Google Analytics inicializado"
+No se envían nombres de rivales, texto de búsqueda ni valores de query.
 
-## 📈 Métricas Disponibles
+## Verificación
 
-### 👥 Usuarios
-- Usuarios activos en tiempo real
-- Usuarios nuevos vs recurrentes
-- Sesiones por usuario
-
-### 📱 Comportamiento
-- Páginas más visitadas
-- Tiempo en página
-- Tasa de rebote
-
-### 🎯 Eventos Personalizados
-- Navegación entre tabs
-- Uso de filtros
-- Búsquedas de fechas
-- Tiempo de carga
-
-### 🌍 Demografía
-- Ubicación geográfica
-- Dispositivos utilizados
-- Navegadores
-
-## 🔒 Privacidad y Cumplimiento
-
-### ✅ Implementado
-- No se trackean datos personales
-- Solo eventos de uso de la aplicación
-- Cumple con GDPR básico
-
-### 📋 Recomendaciones
-- Agregar política de privacidad
-- Banner de cookies (si es necesario)
-- Opt-out para usuarios
-
-## 🛠️ Personalización
-
-### Agregar Nuevos Eventos
-```javascript
-// En cualquier componente
-const analytics = useAnalytics();
-
-analytics.trackEvent('custom_event', {
-  custom_parameter: 'value'
-});
-```
-
-### Modificar Eventos Existentes
-Edita `src/services/analyticsService.js` para agregar nuevos métodos.
-
-## 📚 Recursos Adicionales
-
-- [Google Analytics 4 Documentation](https://developers.google.com/analytics/devguides/collection/ga4)
-- [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables)
-- [React Analytics Best Practices](https://developers.google.com/analytics/devguides/collection/ga4/react)
-
----
-
-**🎉 ¡Listo!** Tu aplicación ahora tiene analytics completos para entender mejor el comportamiento de los usuarios.
+1. Variable `VITE_GA_MEASUREMENT_ID` en Vercel y redeploy.
+2. Aceptar medición en el footer.
+3. GA4 → Reports → Realtime.
+4. Sin consentimiento, Network no debe mostrar `gtag/js` ni `/api/vitals`.

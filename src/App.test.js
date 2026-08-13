@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import App from './App';
 
 beforeEach(() => {
@@ -94,4 +94,17 @@ test('persists the selected theme', async () => {
 
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   expect(window.localStorage.getItem('sc-theme')).toBe('dark');
+});
+
+test('restores the active view from a popstate change', async () => {
+  render(<App />);
+  await screen.findByRole('heading', { name: 'Próximos encuentros' });
+  fireEvent.click(screen.getByRole('button', { name: 'RIVALES' }));
+  expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
+
+  window.history.replaceState({}, '', '/');
+  act(() => {
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  });
+  expect(await screen.findByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
 });

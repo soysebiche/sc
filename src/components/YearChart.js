@@ -3,7 +3,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 function YearChart({ data }) {
   return (
     <div className="chart-container">
-      <h3 className="text-base font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Evolución por año</h3>
+      <h3 className="chart-title text-base font-bold mb-3">Evolución por año</h3>
       <ResponsiveContainer width="100%" height={260}>
         <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
