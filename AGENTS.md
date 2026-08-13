@@ -2,23 +2,27 @@
 
 ## Cursor Cloud specific instructions
 
-This is a **Create React App** project (React 19) for viewing Sporting Cristal football club historical match statistics ("Sebiche Celeste"). All data is static JSON bundled at `src/data/historico_completo_sc.json` — no database or external API is needed for local development.
+This is a **Vite 7 + React 19** project for viewing Sporting Cristal football club historical match statistics ("Sebiche Celeste"). All data is static JSON bundled at `src/data/historico_completo_sc.json` — no database or external API is needed for local development.
 
 ### Running the app
 
-- **Dev server:** `npm start` (port 3000)
-- **Build:** `npm run build`
-- **Tests:** `CI=true npm test` (use `CI=true` to run non-interactively)
-- **Lint:** `npx eslint src/`
+- **Dev server:** `npm start` (port 5173 unless Vite picks another free port)
+- **Build:** `npm run build` (runs `scripts/generate-calendar.mjs` first)
+- **Tests:** `npm run test:ci` (Vitest, non-interactive)
+- **Lint:** `npm run lint` (`eslint src/ api/`)
+- **Full gate:** `npm run check` (lint + data audit + tests + production build)
 
 See `README.md` for full script documentation.
 
-### Known issues
+### Architecture notes
 
-- The default test in `src/App.test.js` fails because it still looks for the CRA boilerplate "learn react" text, which no longer exists in the customized app. This is a pre-existing issue, not a regression.
-- ESLint reports 1 pre-existing warning in `src/services/authService.js` (`import/no-anonymous-default-export`).
+- Domain rules live in `src/domain/matches.js`. Do not re-parse scores, dates, or rival aliases in views.
+- Shareable UI state lives in URL params via `src/hooks/useUrlState.js`.
+- The Vercel serverless routes (`/api/data`, `/api/vitals`) are optional. The UI loads the dataset with a dynamic import, not `/api/data`.
+- Files listed in `src/legacy-manifest.json` are **not mounted**. Do not revive Login, Trivia, or `authService` unless the task explicitly asks to restore them. Prefer deleting that tree over extending it.
 
 ### Environment notes
 
-- No environment variables are required for local development. `API_SECRET_TOKEN` and `REACT_APP_GA_MEASUREMENT_ID` are optional (see `env.example`).
-- The Vercel serverless API (`/api/data`) is not needed locally; the app imports data directly from the bundled JSON file.
+- No environment variables are required for local development.
+- `VITE_GA_MEASUREMENT_ID` is optional and only used after explicit visitor consent (see `env.example`).
+- Do not introduce `REACT_APP_*` variables; this is not Create React App.
