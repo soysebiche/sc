@@ -1,5 +1,4 @@
-import MatchRow from '../components/MatchRow';
-import Pagination from '../components/Pagination';
+import PaginatedMatchList from '../components/PaginatedMatchList';
 
 function MatchesView({
   years,
@@ -9,7 +8,7 @@ function MatchesView({
   selectedMonth,
   setSelectedMonth,
   matches,
-  pagination,
+  page,
   setPage,
 }) {
   const changeYear = event => { setSelectedYear(event.target.value); setPage('1'); };
@@ -35,22 +34,14 @@ function MatchesView({
           </div>
         </div>
 
-        {matches.length > 0 ? (
-          <>
-            <p className="archive-kicker" role="status" aria-live="polite">
-              Mostrando {pagination.start}–{pagination.end} de {matches.length} partidos · página {pagination.currentPage} de {pagination.totalPages}
-            </p>
-            <div className="match-list match-list--catalog">
-              {pagination.items.map(match => <MatchRow key={`${match.Fecha}-${match['Equipo Local']}-${match['Equipo Visita']}`} match={match} />)}
-            </div>
-            <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} onPageChange={page => setPage(String(page))} />
-          </>
-        ) : (
-          <div className="archive-empty-state">
-            <h3>No hay partidos con esos filtros</h3>
-            <p>Prueba otro año o mes.</p>
-          </div>
-        )}
+        <PaginatedMatchList
+          matches={matches}
+          page={page}
+          setPage={setPage}
+          label="Paginación del archivo de partidos"
+          emptyTitle="No hay partidos con esos filtros"
+          emptyMessage="Prueba otro año o mes."
+        />
       </section>
     </div>
   );

@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import ArchiveProvenance from './components/ArchiveProvenance';
-import CountryHistory from './components/CountryHistory';
 import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
-import RivalHistory from './components/RivalHistory';
 import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
 import {
@@ -12,12 +10,12 @@ import {
   getMatchesForDayMonth,
   getUniqueMonths,
   getUniqueYears,
-  paginateMatches,
   summarizeMatches,
 } from './domain/matches';
 import AnnualAnalysisView from './features/AnnualAnalysisView';
 import DashboardView from './features/DashboardView';
 import EfemeridesView from './features/EfemeridesView';
+import EntityHistory, { COUNTRIES_HISTORY, RIVALS_HISTORY } from './features/EntityHistory';
 import MatchesView from './features/MatchesView';
 import { useUrlState } from './hooks/useUrlState';
 import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackThemeChange } from './services/analytics';
@@ -118,7 +116,6 @@ function App() {
   const years = useMemo(() => getUniqueYears(data), [data]);
   const months = useMemo(() => getUniqueMonths(data), [data]);
   const matches = useMemo(() => filterMatchesByYearAndMonth(data, selectedYear, selectedMonth), [data, selectedMonth, selectedYear]);
-  const matchesPagination = useMemo(() => paginateMatches(matches, matchesPage), [matches, matchesPage]);
   const efemeridesMatches = useMemo(() => getMatchesForDayMonth(data, selectedDate), [data, selectedDate]);
   const efemeridesStats = useMemo(() => summarizeMatches(efemeridesMatches), [efemeridesMatches]);
   const decades = useMemo(() => [...new Set(years.map(year => Math.floor(year / 10) * 10))].sort((a, b) => b - a), [years]);
@@ -188,10 +185,10 @@ function App() {
         )}
         {dataStatus === 'ready' && activeTab === 'dashboard' && <DashboardView overview={overview} />}
         {dataStatus === 'ready' && activeTab === 'efemerides' && <EfemeridesView selectedDate={selectedDate} setSelectedDate={setSelectedDate} matches={efemeridesMatches} stats={efemeridesStats} />}
-        {dataStatus === 'ready' && activeTab === 'partidos' && <MatchesView years={years} months={months} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} matches={matches} pagination={matchesPagination} setPage={setMatchesPage} />}
+        {dataStatus === 'ready' && activeTab === 'partidos' && <MatchesView years={years} months={months} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} matches={matches} page={matchesPage} setPage={setMatchesPage} />}
         {dataStatus === 'ready' && activeTab === 'analisis-anual' && <AnnualAnalysisView decades={decades} selectedDecade={selectedDecade} setSelectedDecade={setSelectedDecade} tournamentFilter={tournamentFilter} setTournamentFilter={setTournamentFilter} chartData={chartData} stats={filteredYearlyStats} currentYearStats={currentYearStats} selectedYear={effectiveSelectedYear} setSelectedYear={setSelectedYearForStats} sortConfig={yearSortConfig} setSortConfig={setYearSortConfig} />}
-        {dataStatus === 'ready' && activeTab === 'rivales' && <RivalHistory data={data} />}
-        {dataStatus === 'ready' && activeTab === 'paises' && <CountryHistory data={data} />}
+        {dataStatus === 'ready' && activeTab === 'rivales' && <EntityHistory matches={data} config={RIVALS_HISTORY} />}
+        {dataStatus === 'ready' && activeTab === 'paises' && <EntityHistory matches={data} config={COUNTRIES_HISTORY} />}
       </main>
 
       {dataStatus !== 'loading' && (

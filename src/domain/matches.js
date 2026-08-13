@@ -146,15 +146,12 @@ export const getMatchesForDayMonth = (matches, dateString) => {
 const INTERNATIONAL_TOURNAMENTS = new Set(['Copa Libertadores', 'Copa Sudamericana', 'Copa Merconorte']);
 
 export const calculateArchiveOverview = (matches) => {
-  const totals = summarizeMatches(matches);
   const rivalStats = {};
   const countries = new Set();
-  let maxScGoals = 0;
 
   matches.forEach(match => {
-    const { valid, scGoals } = getScore(match);
+    const { valid } = getScore(match);
     if (!valid) return;
-    maxScGoals = Math.max(maxScGoals, scGoals);
 
     const rival = getOpponent(match);
     if (!rivalStats[rival]) rivalStats[rival] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 };
@@ -177,13 +174,7 @@ export const calculateArchiveOverview = (matches) => {
   const toNamedStats = entry => entry ? { name: entry[0], ...entry[1] } : null;
 
   return {
-    totalMatches: totals.total,
-    victories: totals.victories,
-    draws: totals.draws,
-    defeats: totals.defeats,
-    totalScGoals: totals.goalsFor,
-    totalOpponentGoals: totals.goalsAgainst,
-    maxScGoals,
+    ...summarizeMatches(matches),
     bestRival: toNamedStats(bestRivalEntry),
     worstRival: toNamedStats(worstRivalEntry),
     totalIntlCountries: countries.size,

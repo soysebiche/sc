@@ -8,6 +8,7 @@ import {
   getYearFromMatch,
   paginateMatches,
   summarizeMatches,
+  calculateArchiveOverview,
 } from './matches';
 
 const homeWin = {
@@ -77,5 +78,20 @@ describe('match domain', () => {
       { ...homeWin, Fecha: '2020-08-04' },
       { ...homeWin, Fecha: '2020-08-05' },
     ], '2026-08-04')).toHaveLength(2);
+  });
+
+  test('exposes summarizeMatches fields on the archive overview', () => {
+    const draw = { ...homeWin, Marcador: '1-1', País: 'Perú' };
+    const win = { ...homeWin, País: 'Perú' };
+    const overview = calculateArchiveOverview([win, draw]);
+    expect(overview).toMatchObject({
+      total: 2,
+      victories: 1,
+      draws: 1,
+      goalsFor: 3,
+      winPercentage: '50.0',
+    });
+    expect(overview.totalMatches).toBeUndefined();
+    expect(overview.maxScGoals).toBeUndefined();
   });
 });
