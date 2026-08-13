@@ -1,7 +1,10 @@
+import { useMemo } from 'react';
+import { calculateArchiveOverview } from '../domain/matches';
 import DistributionBar from '../components/DistributionBar';
 import StatTile from '../components/StatTile';
 
-function DashboardView({ overview }) {
+function DashboardView({ matches }) {
+  const overview = useMemo(() => calculateArchiveOverview(matches), [matches]);
   const goalDifference = overview.goalsFor - overview.goalsAgainst;
 
   return (

@@ -1,34 +1,25 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchiveProvenance from './components/ArchiveProvenance';
 import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
 import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
-import {
-  calculateArchiveOverview,
-  calculateYearlyStats,
-  filterMatchesByYearAndMonth,
-  getMatchesForDayMonth,
-  getUniqueMonths,
-  getUniqueYears,
-  summarizeMatches,
-} from './domain/matches';
 import AnnualAnalysisView from './features/AnnualAnalysisView';
 import DashboardView from './features/DashboardView';
 import EfemeridesView from './features/EfemeridesView';
 import EntityHistory, { COUNTRIES_HISTORY, RIVALS_HISTORY } from './features/EntityHistory';
 import MatchesView from './features/MatchesView';
-import { useUrlState } from './hooks/useUrlState';
-import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackThemeChange } from './services/analytics';
+import { UrlStateProvider, useUrlState } from './hooks/useUrlState';
+import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackThemeChange, trackUrlControl } from './services/analytics';
 import { loadArchive } from './services/archive';
 import { setWebVitalsConsent, startWebVitals } from './observability/webVitals';
 
 const TABS = [
-  { id: 'efemerides', label: 'EFEMÉRIDES' },
-  { id: 'dashboard', label: 'DASHBOARD' },
-  { id: 'partidos', label: 'PARTIDOS' },
-  { id: 'analisis-anual', label: 'AÑO' },
-  { id: 'rivales', label: 'RIVALES' },
-  { id: 'paises', label: 'PAÍSES' },
+  { id: 'efemerides', label: 'EFEMÉRIDES', View: EfemeridesView },
+  { id: 'dashboard', label: 'DASHBOARD', View: DashboardView },
+  { id: 'partidos', label: 'PARTIDOS', View: MatchesView },
+  { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
+  { id: 'rivales', label: 'RIVALES', View: props => <EntityHistory {...props} config={RIVALS_HISTORY} /> },
+  { id: 'paises', label: 'PAÍSES', View: props => <EntityHistory {...props} config={COUNTRIES_HISTORY} /> },
 ];
 
 const TAB_IDS = new Set(TABS.map(tab => tab.id));
@@ -54,51 +45,71 @@ const MoonIcon = () => (
   </svg>
 );
 
-const getToday = () => {
-  const today = new Date();
-  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-};
+function readInitialTheme() {
+  return document.documentElement.getAttribute('data-theme')
+    || localStorage.getItem('sc-theme')
+    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+}
 
-function App() {
-  const [data, setData] = useState([]);
-  const [dataStatus, setDataStatus] = useState('loading');
-  const [loadAttempt, setLoadAttempt] = useState(0);
-  const [measurementChoice, setMeasurementChoice] = useState(() => localStorage.getItem(MEASUREMENT_STORAGE_KEY));
-  const [theme, setTheme] = useState(() => localStorage.getItem('sc-theme')
-    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-
-  const [activeTab, setActiveTab] = useUrlState('view', 'efemerides', { validate: isValidTab, history: 'push' });
-  const [selectedDate, setSelectedDate] = useUrlState('date', getToday());
-  const [selectedYear, setSelectedYear] = useUrlState('year', '');
-  const [selectedMonth, setSelectedMonth] = useUrlState('month', '');
-  const [matchesPage, setMatchesPage] = useUrlState('page', '1');
-  const [tournamentFilter, setTournamentFilter] = useUrlState('tournament', 'todos');
-  const [selectedDecade, setSelectedDecade] = useUrlState('decade', 'all');
-  const [yearSortConfig, setYearSortConfig] = useState({ key: 'year', direction: 'desc' });
-  const [selectedYearForStats, setSelectedYearForStats] = useState(null);
-
-  useEffect(() => {
-    let isActive = true;
-    loadArchive()
-      .then(records => {
-        if (!isActive) return;
-        setData(records);
-        setDataStatus('ready');
-      })
-      .catch(() => {
-        if (isActive) {
-          setDataStatus('error');
-          trackDataLoadError();
-        }
-      });
-    return () => { isActive = false; };
-  }, [loadAttempt]);
+function useTheme() {
+  const [theme, setTheme] = useState(readInitialTheme);
+  const timeoutRef = useRef(0);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.dataset.revision = archiveMetadata.datasetRevision;
     localStorage.setItem('sc-theme', theme);
   }, [theme]);
+
+  useEffect(() => () => window.clearTimeout(timeoutRef.current), []);
+
+  const toggleTheme = () => {
+    document.documentElement.classList.add('theme-transition');
+    window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, 350);
+    setTheme(current => {
+      const nextTheme = current === 'light' ? 'dark' : 'light';
+      trackThemeChange(nextTheme);
+      return nextTheme;
+    });
+  };
+
+  return [theme, toggleTheme];
+}
+
+function ArchiveShell() {
+  const [matches, setMatches] = useState([]);
+  const [dataStatus, setDataStatus] = useState('loading');
+  const [measurementChoice, setMeasurementChoice] = useState(() => localStorage.getItem(MEASUREMENT_STORAGE_KEY));
+  const [theme, toggleTheme] = useTheme();
+  const [activeTab, setActiveTab] = useUrlState('view', 'efemerides', { validate: isValidTab, history: 'push' });
+  const loadGeneration = useRef(0);
+
+  const applyArchive = useCallback((generation, records) => {
+    if (generation !== loadGeneration.current) return;
+    setMatches(records);
+    setDataStatus('ready');
+  }, []);
+
+  const failArchive = useCallback(generation => {
+    if (generation !== loadGeneration.current) return;
+    setDataStatus('error');
+    trackDataLoadError();
+  }, []);
+
+  useEffect(() => {
+    const generation = ++loadGeneration.current;
+    loadArchive().then(records => applyArchive(generation, records)).catch(() => failArchive(generation));
+    return () => { loadGeneration.current += 1; };
+  }, [applyArchive, failArchive]);
+
+  const retryDataLoad = () => {
+    const generation = ++loadGeneration.current;
+    setDataStatus('loading');
+    loadArchive().then(records => applyArchive(generation, records)).catch(() => failArchive(generation));
+  };
 
   useEffect(() => {
     if (measurementChoice === 'accepted') {
@@ -112,41 +123,7 @@ function App() {
     }
   }, [activeTab, measurementChoice]);
 
-  const overview = useMemo(() => calculateArchiveOverview(data), [data]);
-  const years = useMemo(() => getUniqueYears(data), [data]);
-  const months = useMemo(() => getUniqueMonths(data), [data]);
-  const matches = useMemo(() => filterMatchesByYearAndMonth(data, selectedYear, selectedMonth), [data, selectedMonth, selectedYear]);
-  const efemeridesMatches = useMemo(() => getMatchesForDayMonth(data, selectedDate), [data, selectedDate]);
-  const efemeridesStats = useMemo(() => summarizeMatches(efemeridesMatches), [efemeridesMatches]);
-  const decades = useMemo(() => [...new Set(years.map(year => Math.floor(year / 10) * 10))].sort((a, b) => b - a), [years]);
-  const yearlyStats = useMemo(() => calculateYearlyStats(data, tournamentFilter).sort((a, b) => {
-    const aValue = a[yearSortConfig.key];
-    const bValue = b[yearSortConfig.key];
-    return yearSortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-  }), [data, tournamentFilter, yearSortConfig]);
-  const filteredYearlyStats = useMemo(() => selectedDecade === 'all'
-    ? yearlyStats
-    : yearlyStats.filter(item => Math.floor(item.year / 10) * 10 === Number.parseInt(selectedDecade, 10)), [selectedDecade, yearlyStats]);
-  const chartData = useMemo(() => [...filteredYearlyStats].sort((a, b) => a.year - b.year), [filteredYearlyStats]);
-  const effectiveSelectedYear = filteredYearlyStats.some(item => item.year === selectedYearForStats)
-    ? selectedYearForStats
-    : filteredYearlyStats[0]?.year || null;
-  const currentYearStats = filteredYearlyStats.find(item => item.year === effectiveSelectedYear) || null;
-
-  const toggleTheme = () => {
-    document.documentElement.classList.add('theme-transition');
-    setTheme(current => {
-      const nextTheme = current === 'light' ? 'dark' : 'light';
-      trackThemeChange(nextTheme);
-      return nextTheme;
-    });
-    window.setTimeout(() => document.documentElement.classList.remove('theme-transition'), 350);
-  };
-
-  const retryDataLoad = () => {
-    setDataStatus('loading');
-    setLoadAttempt(attempt => attempt + 1);
-  };
+  const ActiveView = TABS.find(tab => tab.id === activeTab)?.View;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-primary)' }}>
@@ -183,12 +160,7 @@ function App() {
             <button type="button" className="btn btn-primary" onClick={retryDataLoad}>Reintentar</button>
           </div>
         )}
-        {dataStatus === 'ready' && activeTab === 'dashboard' && <DashboardView overview={overview} />}
-        {dataStatus === 'ready' && activeTab === 'efemerides' && <EfemeridesView selectedDate={selectedDate} setSelectedDate={setSelectedDate} matches={efemeridesMatches} stats={efemeridesStats} />}
-        {dataStatus === 'ready' && activeTab === 'partidos' && <MatchesView years={years} months={months} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} matches={matches} page={matchesPage} setPage={setMatchesPage} />}
-        {dataStatus === 'ready' && activeTab === 'analisis-anual' && <AnnualAnalysisView decades={decades} selectedDecade={selectedDecade} setSelectedDecade={setSelectedDecade} tournamentFilter={tournamentFilter} setTournamentFilter={setTournamentFilter} chartData={chartData} stats={filteredYearlyStats} currentYearStats={currentYearStats} selectedYear={effectiveSelectedYear} setSelectedYear={setSelectedYearForStats} sortConfig={yearSortConfig} setSortConfig={setYearSortConfig} />}
-        {dataStatus === 'ready' && activeTab === 'rivales' && <EntityHistory matches={data} config={RIVALS_HISTORY} />}
-        {dataStatus === 'ready' && activeTab === 'paises' && <EntityHistory matches={data} config={COUNTRIES_HISTORY} />}
+        {dataStatus === 'ready' && ActiveView && <ActiveView matches={matches} />}
       </main>
 
       {dataStatus !== 'loading' && (
@@ -202,6 +174,14 @@ function App() {
         </div></footer>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <UrlStateProvider onUserChange={trackUrlControl}>
+      <ArchiveShell />
+    </UrlStateProvider>
   );
 }
 

@@ -1,5 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import StatTile from '../components/StatTile';
+import { calculateYearlyStats, getUniqueYears } from '../domain/matches';
+import { useUrlState } from '../hooks/useUrlState';
 
 const YearChart = lazy(() => import('../components/YearChart'));
 
@@ -14,20 +16,33 @@ const COLUMNS = [
   { key: 'goalsAgainst', label: 'GC' },
 ];
 
-function AnnualAnalysisView({
-  decades,
-  selectedDecade,
-  setSelectedDecade,
-  tournamentFilter,
-  setTournamentFilter,
-  chartData,
-  stats,
-  currentYearStats,
-  selectedYear,
-  setSelectedYear,
-  sortConfig,
-  setSortConfig,
-}) {
+function AnnualAnalysisView({ matches }) {
+  const [selectedDecade, setSelectedDecade] = useUrlState('decade', 'all');
+  const [tournamentFilter, setTournamentFilter] = useUrlState('tournament', 'todos');
+  const [sortConfig, setSortConfig] = useState({ key: 'year', direction: 'desc' });
+  const [selectedYearForStats, setSelectedYearForStats] = useState(null);
+
+  const years = useMemo(() => getUniqueYears(matches), [matches]);
+  const decades = useMemo(
+    () => [...new Set(years.map(year => Math.floor(year / 10) * 10))].sort((a, b) => b - a),
+    [years]
+  );
+  const yearlyStats = useMemo(() => calculateYearlyStats(matches, tournamentFilter).sort((a, b) => {
+    const aValue = a[sortConfig.key];
+    const bValue = b[sortConfig.key];
+    return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+  }), [matches, tournamentFilter, sortConfig]);
+  const stats = useMemo(() => (
+    selectedDecade === 'all'
+      ? yearlyStats
+      : yearlyStats.filter(item => Math.floor(item.year / 10) * 10 === Number.parseInt(selectedDecade, 10))
+  ), [selectedDecade, yearlyStats]);
+  const chartData = useMemo(() => [...stats].sort((a, b) => a.year - b.year), [stats]);
+  const selectedYear = stats.some(item => item.year === selectedYearForStats)
+    ? selectedYearForStats
+    : stats[0]?.year || null;
+  const currentYearStats = stats.find(item => item.year === selectedYear) || null;
+
   const sortBy = key => setSortConfig({
     key,
     direction: sortConfig.key === key && sortConfig.direction === 'desc' ? 'asc' : 'desc',
@@ -84,7 +99,7 @@ function AnnualAnalysisView({
           ))}</tr></thead>
           <tbody>{stats.map(yearData => (
             <tr key={yearData.year} style={{ background: selectedYear === yearData.year ? 'var(--color-celeste-soft)' : undefined }}>
-              <td><button type="button" className="year-select-button" onClick={() => setSelectedYear(yearData.year)} aria-pressed={selectedYear === yearData.year} aria-label={`Mostrar resumen de ${yearData.year}`}>{yearData.year}</button></td>
+              <td><button type="button" className="year-select-button" onClick={() => setSelectedYearForStats(yearData.year)} aria-pressed={selectedYear === yearData.year} aria-label={`Mostrar resumen de ${yearData.year}`}>{yearData.year}</button></td>
               <td className="text-center">{yearData.total}</td>
               <td className="text-center font-semibold text-victory">{yearData.victories}</td>
               <td className="text-center text-draw">{yearData.draws}</td>

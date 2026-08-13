@@ -82,8 +82,9 @@ function EntityHistory({ matches = [], config }) {
   const selectedEntity = config.canonicalize(entityParam);
 
   const setSelectedEntity = value => {
-    setEntityParam(config.canonicalize(value));
-    setPage('1');
+    setEntityParam(config.canonicalize(value), {
+      [config.pageKey]: { value: '1', defaultValue: '1' },
+    });
   };
 
   const { options, years, meta } = useMemo(() => config.collect(matches), [config, matches]);
@@ -145,7 +146,7 @@ function EntityHistory({ matches = [], config }) {
             <select
               id={config.yearId}
               value={selectedYear}
-              onChange={event => { setSelectedYear(event.target.value); setPage('1'); }}
+              onChange={event => setSelectedYear(event.target.value, { [config.pageKey]: { value: '1', defaultValue: '1' } })}
               className="w-full"
               disabled={!selectedEntity}
             >
