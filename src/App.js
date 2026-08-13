@@ -126,7 +126,7 @@ function ArchiveShell() {
   const ActiveView = TABS.find(tab => tab.id === activeTab)?.View;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-primary)' }}>
+    <div className="app-shell">
       <a className="skip-link" href="#main-content">Saltar al contenido</a>
       <header className="app-header">
         <div className="app-header__inner"><div className="app-header__layout">

@@ -100,7 +100,7 @@ function EntityHistory({ matches = [], config }) {
   const stats = useMemo(() => summarizeMatches(filteredMatches), [filteredMatches]);
 
   if (!matches.length) {
-    return <div className="p-4 text-center" style={{ color: 'var(--text-secondary)' }}>No hay datos disponibles</div>;
+    return <div className="p-4 text-center copy-secondary">No hay datos disponibles</div>;
   }
 
   return (
@@ -113,7 +113,7 @@ function EntityHistory({ matches = [], config }) {
       <section className="archive-section">
         <div className="filter-bar">
           <div>
-            <label htmlFor={config.entityId} className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>{config.entityLabel}</label>
+            <label htmlFor={config.entityId} className="block text-sm font-medium mb-2 copy-secondary">{config.entityLabel}</label>
             {config.control === 'combobox' ? (
               <>
                 <input
@@ -131,7 +131,7 @@ function EntityHistory({ matches = [], config }) {
                     <option key={option} value={option}>{config.optionCaption(option, meta)}</option>
                   ))}
                 </datalist>
-                <p id={config.helpId} className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>{config.help(options.length)}</p>
+                <p id={config.helpId} className="text-xs mt-2 copy-muted">{config.help(options.length)}</p>
               </>
             ) : (
               <select id={config.entityId} value={selectedEntity} onChange={event => setSelectedEntity(event.target.value)} className="w-full">
@@ -141,7 +141,7 @@ function EntityHistory({ matches = [], config }) {
             )}
           </div>
           <div>
-            <label htmlFor={config.yearId} className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>{config.yearLabel}</label>
+            <label htmlFor={config.yearId} className="block text-sm font-medium mb-2 copy-secondary">{config.yearLabel}</label>
             <select
               id={config.yearId}
               value={selectedYear}
@@ -172,9 +172,9 @@ function EntityHistory({ matches = [], config }) {
         </>
       ) : (
         <div className="text-center py-12">
-          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>{config.emptyPrompt}</p>
+          <p className="text-lg copy-secondary">{config.emptyPrompt}</p>
           {config.emptyCount && (
-            <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>{config.emptyCount(options.length)}</p>
+            <p className="text-sm mt-2 copy-muted">{config.emptyCount(options.length)}</p>
           )}
         </div>
       )}

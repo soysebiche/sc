@@ -10,16 +10,16 @@ function DashboardView({ matches }) {
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="stat-strip stat-strip--4">
-        <StatTile label="Partidos" value={overview.total || 0} color="var(--color-celeste)" />
-        <StatTile label="Victorias" value={overview.victories || 0} detail={`${overview.winPercentage}%`} color="var(--color-win)" />
-        <StatTile label="Empates" value={overview.draws || 0} detail={`${overview.drawPercentage}%`} color="var(--color-draw)" />
-        <StatTile label="Derrotas" value={overview.defeats || 0} detail={`${overview.defeatPercentage}%`} color="var(--color-loss)" />
+        <StatTile label="Partidos" value={overview.total || 0} tone="celeste" />
+        <StatTile label="Victorias" value={overview.victories || 0} detail={`${overview.winPercentage}%`} tone="win" />
+        <StatTile label="Empates" value={overview.draws || 0} detail={`${overview.drawPercentage}%`} tone="draw" />
+        <StatTile label="Derrotas" value={overview.defeats || 0} detail={`${overview.defeatPercentage}%`} tone="loss" />
       </div>
 
       <div className="stat-strip stat-strip--3">
-        <StatTile label="Goles a favor" value={overview.goalsFor || 0} color="var(--color-celeste)" />
+        <StatTile label="Goles a favor" value={overview.goalsFor || 0} tone="celeste" />
         <StatTile label="Goles en contra" value={overview.goalsAgainst || 0} />
-        <StatTile label="Diferencia de goles" value={`${goalDifference > 0 ? '+' : ''}${goalDifference}`} color="var(--color-celeste)" />
+        <StatTile label="Diferencia de goles" value={`${goalDifference > 0 ? '+' : ''}${goalDifference}`} tone="celeste" />
       </div>
 
       <div className="stat-strip stat-strip--3 stat-strip--context">

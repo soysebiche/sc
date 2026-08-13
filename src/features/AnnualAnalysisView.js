@@ -79,11 +79,11 @@ function AnnualAnalysisView({ matches }) {
         <section className="archive-section" key={currentYearStats.year}>
           <h3 className="balance-title">Resumen {currentYearStats.year}</h3>
           <div className="stat-strip stat-strip--5">
-            <StatTile label="Partidos" value={currentYearStats.total} color="var(--color-celeste)" />
-            <StatTile label="Victorias" value={currentYearStats.victories} detail={`${currentYearStats.winPercentage}%`} color="var(--color-win)" />
-            <StatTile label="Empates" value={currentYearStats.draws} detail={`${currentYearStats.drawPercentage}%`} color="var(--color-draw)" />
-            <StatTile label="Derrotas" value={currentYearStats.defeats} detail={`${currentYearStats.defeatPercentage}%`} color="var(--color-loss)" />
-            <StatTile label="Goles" value={`${currentYearStats.goalsFor} - ${currentYearStats.goalsAgainst}`} color="var(--color-celeste)" />
+            <StatTile label="Partidos" value={currentYearStats.total} tone="celeste" />
+            <StatTile label="Victorias" value={currentYearStats.victories} detail={`${currentYearStats.winPercentage}%`} tone="win" />
+            <StatTile label="Empates" value={currentYearStats.draws} detail={`${currentYearStats.drawPercentage}%`} tone="draw" />
+            <StatTile label="Derrotas" value={currentYearStats.defeats} detail={`${currentYearStats.defeatPercentage}%`} tone="loss" />
+            <StatTile label="Goles" value={`${currentYearStats.goalsFor} - ${currentYearStats.goalsAgainst}`} tone="celeste" />
           </div>
         </section>
       )}
@@ -98,7 +98,7 @@ function AnnualAnalysisView({ matches }) {
             </th>
           ))}</tr></thead>
           <tbody>{stats.map(yearData => (
-            <tr key={yearData.year} style={{ background: selectedYear === yearData.year ? 'var(--color-celeste-soft)' : undefined }}>
+            <tr key={yearData.year} className={selectedYear === yearData.year ? 'year-row--selected' : undefined}>
               <td><button type="button" className="year-select-button" onClick={() => setSelectedYearForStats(yearData.year)} aria-pressed={selectedYear === yearData.year} aria-label={`Mostrar resumen de ${yearData.year}`}>{yearData.year}</button></td>
               <td className="text-center">{yearData.total}</td>
               <td className="text-center font-semibold text-victory">{yearData.victories}</td>

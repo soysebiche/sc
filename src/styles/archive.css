@@ -1,14 +1,18 @@
-/* ═══════════════════════════════════════════════════════════════════════
-   APP SPECIFIC STYLES — Cristal Archive 2026
-   Sophisticated Editorial Design
-   ═══════════════════════════════════════════════════════════════════════ */
+/* Editorial components. Design tokens live in index.css. Do not add a third stylesheet. */
 
 /* ═══════════════════════════════════════════════════════════════════════
    HEADER
    ═══════════════════════════════════════════════════════════════════════ */
 
+.app-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+
 header.app-header {
-  background: linear-gradient(135deg, #1B265C 0%, #111940 100%) !important;
+  background: linear-gradient(135deg, #1B265C 0%, #111940 100%);
   border-bottom: none;
   box-shadow: 0 4px 20px rgba(27, 38, 92, 0.15);
   padding: 0.75rem 1rem;
@@ -501,6 +505,14 @@ header.app-header {
   padding: 1rem 1.25rem;
 }
 
+.chart-title {
+  color: var(--text-primary);
+}
+
+.year-row--selected {
+  background: var(--color-celeste-soft);
+}
+
 .chart-skeleton {
   min-height: 350px;
   border: 1px solid var(--border-subtle);
@@ -532,7 +544,7 @@ header.app-header {
    ═══════════════════════════════════════════════════════════════════════ */
 
 footer.app-footer {
-  background: #1B265C !important;
+  background: #1B265C;
   color: rgba(255, 255, 255, 0.78);
 }
 
@@ -934,7 +946,7 @@ input[type="date"]:focus {
 
 @media print {
   header.app-header {
-    background: #1B265C !important;
+    background: #1B265C;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }

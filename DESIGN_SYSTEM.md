@@ -1,6 +1,6 @@
 # Sistema de diseño de Sebiche Celeste
 
-Esta es la referencia normativa del runtime activo. Los valores implementados viven en `src/index.css` y `src/App.css`.
+Esta es la referencia normativa del runtime activo. Los tokens viven en `src/index.css` y los componentes editoriales en `src/styles/archive.css`.
 
 ## Dirección
 
