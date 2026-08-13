@@ -20,7 +20,8 @@ See `README.md` for full script documentation.
 - Shareable UI state lives in URL params via `src/hooks/useUrlState.js` (`UrlStateProvider` + one `popstate` listener).
 - The Vercel serverless routes (`/api/data`, `/api/vitals`) are optional. The UI loads the dataset with `loadArchive()` in `src/services/archive.js`, not `/api/data`.
 - Do not revive Login, Trivia, or `authService`. That tree was deleted.
-- Maintainability work follows `PLAN_TECNICO_CODE_QUALITY.md` (P1–P5). Do not mix those PRs. Do not change the published JSON key contract or shareable URL param names.
+- P1–P5 of `PLAN_TECNICO_CODE_QUALITY.md` landed in #4. That plan is history, not a backlog. Do not re-execute it. Do not change the published JSON key contract or shareable URL param names.
+- Optional hygiene only (identity getters, Spanish rival-stat keys, App chrome SVGs). Do not reopen CSS or the URL store for that.
 
 ### Environment notes
 
