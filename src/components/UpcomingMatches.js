@@ -14,6 +14,13 @@ const TIME_FORMAT = new Intl.DateTimeFormat('es-PE', {
   minute: '2-digit',
 });
 
+const VERIFIED_FORMAT = new Intl.DateTimeFormat('es-PE', {
+  timeZone: fixturesData.calendar.timeZone,
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
 function CalendarIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -74,8 +81,8 @@ function UpcomingMatches() {
       </ol>
 
       <p className="upcoming__source">
-        Verificado el 4 de agosto de 2026 en{' '}
-        <a href={fixturesData.calendar.sourceUrl} target="_blank" rel="noreferrer">Liga 1</a>.
+        Verificado el {VERIFIED_FORMAT.format(new Date(fixturesData.calendar.lastVerifiedAt))} en{' '}
+        <a href={fixturesData.calendar.sourceUrl} target="_blank" rel="noreferrer">{fixturesData.calendar.sourceName}</a>.
         La programación puede cambiar.
       </p>
     </section>

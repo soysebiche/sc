@@ -23,8 +23,8 @@ function DashboardView({ matches }) {
       </div>
 
       <div className="stat-strip stat-strip--3 stat-strip--context">
-        <StatTile label="Mejor rival" value={overview.bestRival?.name || '-'} detail={overview.bestRival ? `${overview.bestRival.ganados}V · ${overview.bestRival.empatados}E · ${overview.bestRival.perdidos}P` : '-'} align="left" />
-        <StatTile label="Rival más difícil" value={overview.worstRival?.name || '-'} detail={overview.worstRival ? `${overview.worstRival.ganados}V · ${overview.worstRival.empatados}E · ${overview.worstRival.perdidos}P` : '-'} align="left" />
+        <StatTile label="Mejor rival" value={overview.bestRival?.name || '-'} detail={overview.bestRival ? `${overview.bestRival.victories}V · ${overview.bestRival.draws}E · ${overview.bestRival.defeats}P` : '-'} align="left" />
+        <StatTile label="Rival más difícil" value={overview.worstRival?.name || '-'} detail={overview.worstRival ? `${overview.worstRival.victories}V · ${overview.worstRival.draws}E · ${overview.worstRival.defeats}P` : '-'} align="left" />
         <StatTile label="Países jugados" value={overview.totalIntlCountries || 0} detail="selecciones y equipos" align="left" />
       </div>
 
