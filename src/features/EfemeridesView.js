@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import MatchRow from '../components/MatchRow';
 import UpcomingMatches from '../components/UpcomingMatches';
-import { getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
+import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
 import { useUrlState } from '../hooks/useUrlState';
 
 const getToday = () => {
@@ -32,10 +32,10 @@ function EfemeridesView({ matches }) {
           <BalanceSummary title="Balance del día" stats={stats} />
           <section className="archive-section archive-section--matches">
             <p className="archive-kicker">
-              {dayMatches.length} partido{dayMatches.length === 1 ? '' : 's'} jugado{dayMatches.length === 1 ? '' : 's'} un {new Date(`${dayMatches[0].Fecha}T00:00:00`).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+              {dayMatches.length} partido{dayMatches.length === 1 ? '' : 's'} jugado{dayMatches.length === 1 ? '' : 's'} un {formatMatchDate(dayMatches[0].date, { day: 'numeric', month: 'long' })}
             </p>
             <div className="match-list">
-              {dayMatches.map((match, index) => <MatchRow key={`${match.Fecha}-${match['Equipo Local']}-${index}`} match={match} />)}
+              {dayMatches.map((match, index) => <MatchRow key={`${match.date}-${match.home}-${index}`} match={match} />)}
             </div>
           </section>
         </>

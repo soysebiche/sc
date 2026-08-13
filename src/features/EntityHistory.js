@@ -3,7 +3,6 @@ import BalanceSummary from '../components/BalanceSummary';
 import PaginatedMatchList from '../components/PaginatedMatchList';
 import {
   canonicalizeRival,
-  getOpponent,
   getUniqueYears,
   getYearFromMatch,
   sortMatchesNewest,
@@ -15,9 +14,9 @@ function collectRivals(matches) {
   const options = new Set();
   const countryMap = {};
   matches.forEach(match => {
-    const rival = getOpponent(match);
+    const rival = match.opponent;
     options.add(rival);
-    if (match.País) countryMap[rival] = match.País;
+    if (match.country) countryMap[rival] = match.country;
   });
   return { options: [...options].sort(), years: getUniqueYears(matches), meta: countryMap };
 }
@@ -25,7 +24,7 @@ function collectRivals(matches) {
 function collectCountries(matches) {
   const options = new Set();
   matches.forEach(match => {
-    if (match.País && match.País !== 'Perú') options.add(match.País);
+    if (match.country && match.country !== 'Perú') options.add(match.country);
   });
   return { options: [...options].sort(), years: getUniqueYears(matches), meta: {} };
 }
@@ -50,7 +49,7 @@ export const RIVALS_HISTORY = {
   emptyMessage: (entity, year) => `No hay partidos contra ${entity}${year ? ` en ${year}` : ''}.`,
   canonicalize: canonicalizeRival,
   collect: collectRivals,
-  matches: (match, selected) => getOpponent(match) === selected,
+  matches: (match, selected) => match.opponent === selected,
   optionCaption: (option, meta) => (meta[option] && meta[option] !== 'Perú' ? meta[option] : ''),
 };
 
@@ -72,7 +71,7 @@ export const COUNTRIES_HISTORY = {
   emptyMessage: (entity, year) => `No hay partidos contra equipos de ${entity}${year ? ` en ${year}` : ''}.`,
   canonicalize: value => value,
   collect: collectCountries,
-  matches: (match, selected) => match.País === selected,
+  matches: (match, selected) => match.country === selected,
 };
 
 function EntityHistory({ matches = [], config }) {

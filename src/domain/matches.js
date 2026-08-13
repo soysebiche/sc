@@ -12,46 +12,90 @@ export const RIVAL_ALIASES = Object.freeze({
   UTC: 'U.T.C.',
 });
 
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const LOST_ON_PENALTIES = /perdi[oó].*penal/i;
+const WON_ON_PENALTIES = /gan[oó].*penal/i;
+const INTERNATIONAL_TOURNAMENTS = new Set(['Copa Libertadores', 'Copa Sudamericana', 'Copa Merconorte']);
+
 export const canonicalizeRival = (name = '') => RIVAL_ALIASES[name] || name;
 
-export const getOpponent = (match) => canonicalizeRival(
-  match['Equipo Local'] === CLUB_NAME ? match['Equipo Visita'] : match['Equipo Local']
-);
-
-export const getYearFromMatch = (match) => {
-  if (Number.isInteger(match.Año)) return match.Año;
-  if (!match.Fecha || match.Fecha === 'TBD') return null;
-
-  const date = new Date(`${match.Fecha}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? null : date.getFullYear();
+export const parseCalendarDate = (value) => {
+  if (!value || value === 'TBD' || !DATE_PATTERN.test(value)) return null;
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return null;
+  const [year, month, day] = value.split('-').map(Number);
+  if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) return null;
+  return { date, year, monthIndex: month - 1, monthName: MONTH_NAMES[month - 1], day };
 };
 
-export const getScore = (match) => {
-  const values = String(match.Marcador || '').split('-').map(value => Number.parseInt(value.trim(), 10));
-  if (values.length !== 2 || values.some(Number.isNaN)) {
-    return { valid: false, scGoals: 0, opponentGoals: 0 };
-  }
-
-  const isHome = match['Equipo Local'] === CLUB_NAME;
-  return {
-    valid: true,
-    scGoals: isHome ? values[0] : values[1],
-    opponentGoals: isHome ? values[1] : values[0],
-  };
+const parseScoreLabel = (marcador) => {
+  const values = String(marcador || '').split('-').map(value => Number.parseInt(value.trim(), 10));
+  if (values.length !== 2 || values.some(Number.isNaN)) return null;
+  return { home: values[0], away: values[1] };
 };
 
-export const getResultCode = (match) => {
-  const { valid, scGoals, opponentGoals } = getScore(match);
-  if (!valid) return null;
+export const resultFromScoreAndNote = ({ scGoals, opponentGoals, resultField, goalsNote }) => {
   if (scGoals > opponentGoals) return 'V';
   if (scGoals < opponentGoals) return 'P';
-  if (['D', 'P'].includes(match.Resultado) && /perdi[oó].*penal/i.test(String(match['Goles (Solo SC)'] || ''))) return 'P';
-  if (['G', 'V'].includes(match.Resultado) && /gan[oó].*penal/i.test(String(match['Goles (Solo SC)'] || ''))) return 'V';
+  const note = String(goalsNote || '');
+  if (['D', 'P'].includes(resultField) && LOST_ON_PENALTIES.test(note)) return 'P';
+  if (['G', 'V'].includes(resultField) && WON_ON_PENALTIES.test(note)) return 'V';
   return 'E';
 };
 
+export const parseMatch = (record) => {
+  const home = record['Equipo Local'] || '';
+  const away = record['Equipo Visita'] || '';
+  const isHome = home === CLUB_NAME;
+  const parsedDate = parseCalendarDate(record.Fecha);
+  const score = parseScoreLabel(record.Marcador);
+  const goalsNote = record['Goles (Solo SC)'] && record['Goles (Solo SC)'] !== '-'
+    ? String(record['Goles (Solo SC)'])
+    : null;
+
+  let scGoals = null;
+  let opponentGoals = null;
+  let resultCode = null;
+  if (score) {
+    scGoals = isHome ? score.home : score.away;
+    opponentGoals = isHome ? score.away : score.home;
+    resultCode = resultFromScoreAndNote({
+      scGoals,
+      opponentGoals,
+      resultField: record.Resultado,
+      goalsNote,
+    });
+  }
+
+  return {
+    year: Number.isInteger(record.Año) ? record.Año : parsedDate?.year ?? null,
+    month: MONTH_NAMES.includes(record.Mes) ? record.Mes : parsedDate?.monthName ?? null,
+    date: record.Fecha || '',
+    tournament: record.Torneo || '',
+    home,
+    away,
+    opponent: canonicalizeRival(isHome ? away : home),
+    country: record.País || '',
+    scoreLabel: record.Marcador || '',
+    goalsNote,
+    isHome,
+    scGoals,
+    opponentGoals,
+    resultCode,
+  };
+};
+
+export const getOpponent = match => match.opponent;
+export const getYearFromMatch = match => match.year;
+export const getScore = match => (
+  match.scGoals == null
+    ? { valid: false, scGoals: 0, opponentGoals: 0 }
+    : { valid: true, scGoals: match.scGoals, opponentGoals: match.opponentGoals }
+);
+export const getResultCode = match => match.resultCode;
+
 export const getUniqueYears = (matches) => [...new Set(
-  matches.map(getYearFromMatch).filter(year => year !== null)
+  matches.map(match => match.year).filter(year => year !== null)
 )].sort((a, b) => b - a);
 
 export const formatMatchDate = (dateString, options = {
@@ -59,28 +103,27 @@ export const formatMatchDate = (dateString, options = {
   month: '2-digit',
   year: 'numeric',
 }) => {
-  if (!dateString || dateString === 'TBD') return 'Fecha pendiente';
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString('es-ES', options);
+  const parsed = parseCalendarDate(dateString);
+  if (!parsed) return 'Fecha pendiente';
+  return parsed.date.toLocaleDateString('es-ES', options);
 };
 
-export const sortMatchesNewest = (matches) => [...matches].sort((a, b) => {
-  const dateA = a.Fecha === 'TBD' ? Number.NEGATIVE_INFINITY : Date.parse(`${a.Fecha}T00:00:00`);
-  const dateB = b.Fecha === 'TBD' ? Number.NEGATIVE_INFINITY : Date.parse(`${b.Fecha}T00:00:00`);
-  return (Number.isNaN(dateB) ? Number.NEGATIVE_INFINITY : dateB)
-    - (Number.isNaN(dateA) ? Number.NEGATIVE_INFINITY : dateA);
-});
+const dateValue = (match) => {
+  if (match.date === 'TBD') return Number.NEGATIVE_INFINITY;
+  const parsed = parseCalendarDate(match.date);
+  return parsed ? parsed.date.getTime() : Number.NEGATIVE_INFINITY;
+};
+
+export const sortMatchesNewest = (matches) => [...matches].sort((a, b) => dateValue(b) - dateValue(a));
 
 export const summarizeMatches = (matches) => {
   const summary = matches.reduce((accumulator, match) => {
-    const { valid, scGoals, opponentGoals } = getScore(match);
-    if (!valid) return accumulator;
-
+    if (match.scGoals == null) return accumulator;
     accumulator.total += 1;
-    accumulator.goalsFor += scGoals;
-    accumulator.goalsAgainst += opponentGoals;
-    const result = getResultCode(match);
-    if (result === 'V') accumulator.victories += 1;
-    else if (result === 'P') accumulator.defeats += 1;
+    accumulator.goalsFor += match.scGoals;
+    accumulator.goalsAgainst += match.opponentGoals;
+    if (match.resultCode === 'V') accumulator.victories += 1;
+    else if (match.resultCode === 'P') accumulator.defeats += 1;
     else accumulator.draws += 1;
     return accumulator;
   }, { total: 0, victories: 0, draws: 0, defeats: 0, goalsFor: 0, goalsAgainst: 0 });
@@ -110,58 +153,41 @@ export const paginateMatches = (matches, requestedPage, pageSize = MATCHES_PER_P
 };
 
 export const getUniqueMonths = (matches) => {
-  const present = new Set(matches.map(match => {
-    if (match.Mes && MONTH_NAMES.includes(match.Mes)) return match.Mes;
-    if (!match.Fecha || match.Fecha === 'TBD') return null;
-    const date = new Date(`${match.Fecha}T00:00:00`);
-    return Number.isNaN(date.getTime()) ? null : MONTH_NAMES[date.getMonth()];
-  }).filter(Boolean));
-
+  const present = new Set(matches.map(match => match.month).filter(Boolean));
   return MONTH_NAMES.filter(month => present.has(month));
 };
 
 export const filterMatchesByYearAndMonth = (matches, year = '', month = '') => sortMatchesNewest(
   matches.filter(match => {
-    const matchYear = getYearFromMatch(match);
-    const yearMatches = year ? String(matchYear) === String(year) : true;
+    const yearMatches = year ? String(match.year) === String(year) : true;
     if (!yearMatches || !month) return yearMatches;
-
-    if (match.Mes && MONTH_NAMES.includes(match.Mes)) return match.Mes === month;
-    if (!match.Fecha || match.Fecha === 'TBD') return false;
-    const date = new Date(`${match.Fecha}T00:00:00`);
-    return !Number.isNaN(date.getTime()) && MONTH_NAMES[date.getMonth()] === month;
+    return match.month === month;
   })
 );
 
 export const getMatchesForDayMonth = (matches, dateString) => {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString || '')) return [];
+  if (!DATE_PATTERN.test(dateString || '')) return [];
   const [, month, day] = dateString.split('-');
   return sortMatchesNewest(matches.filter(match => {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(match.Fecha || '')) return false;
-    const [, matchMonth, matchDay] = match.Fecha.split('-');
+    if (!DATE_PATTERN.test(match.date || '')) return false;
+    const [, matchMonth, matchDay] = match.date.split('-');
     return matchMonth === month && matchDay === day;
   }));
 };
-
-const INTERNATIONAL_TOURNAMENTS = new Set(['Copa Libertadores', 'Copa Sudamericana', 'Copa Merconorte']);
 
 export const calculateArchiveOverview = (matches) => {
   const rivalStats = {};
   const countries = new Set();
 
   matches.forEach(match => {
-    const { valid } = getScore(match);
-    if (!valid) return;
-
-    const rival = getOpponent(match);
+    if (match.scGoals == null) return;
+    const rival = match.opponent;
     if (!rivalStats[rival]) rivalStats[rival] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 };
     rivalStats[rival].jugados += 1;
-    const result = getResultCode(match);
-    if (result === 'V') rivalStats[rival].ganados += 1;
-    else if (result === 'P') rivalStats[rival].perdidos += 1;
+    if (match.resultCode === 'V') rivalStats[rival].ganados += 1;
+    else if (match.resultCode === 'P') rivalStats[rival].perdidos += 1;
     else rivalStats[rival].empatados += 1;
-
-    if (match.País && match.País !== 'Perú') countries.add(match.País);
+    if (match.country && match.country !== 'Perú') countries.add(match.country);
   });
 
   const eligibleRivals = Object.entries(rivalStats).filter(([, stats]) => stats.jugados >= 5);
@@ -183,7 +209,7 @@ export const calculateArchiveOverview = (matches) => {
 
 export const calculateYearlyStats = (matches, filter = 'todos') => {
   const filtered = matches.filter(match => {
-    const isInternational = INTERNATIONAL_TOURNAMENTS.has(match.Torneo);
+    const isInternational = INTERNATIONAL_TOURNAMENTS.has(match.tournament);
     if (filter === 'local') return !isInternational;
     if (filter === 'internacional') return isInternational;
     return true;
@@ -191,10 +217,9 @@ export const calculateYearlyStats = (matches, filter = 'todos') => {
   const groups = new Map();
 
   filtered.forEach(match => {
-    const year = getYearFromMatch(match);
-    if (year === null) return;
-    if (!groups.has(year)) groups.set(year, []);
-    groups.get(year).push(match);
+    if (match.year === null) return;
+    if (!groups.has(match.year)) groups.set(match.year, []);
+    groups.get(match.year).push(match);
   });
 
   return [...groups.entries()].map(([year, yearMatches]) => ({
