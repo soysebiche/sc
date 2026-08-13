@@ -1,10 +1,77 @@
 # Thermo-Nuclear Code Quality Review — Sebiche Celeste
 
+## Re-auditoría post P1–P5 — 2026-08-13
+
+Alcance: árbol actual en `cursor/thermo-nuclear-code-quality-review-117f` (`78ca73e`), con P1–P5 ya aplicados.  
+Rúbrica: la misma. La barra no bajó.
+
+### Veredicto
+
+**Aprueba.** Los bloqueos estructurales de la pasada anterior ya no están. El archivo se lee en un sitting: un loader, un store de URL, un historial parametrizado, un modelo parseado en la frontera, CSS en dos archivos. Lo que queda es residuo de migración, no un segundo diseño.
+
+No es un 10. Hay wrappers de identidad y un poco de ceremonia en el shell. Ninguno de esos ítems vuelve a hacer el repo más enredado de lo que era esta mañana, y ninguno exige un sexto PR antes de merge.
+
+### Barra, reaplicada
+
+| Criterio | Antes | Ahora |
+|---|---|---|
+| Regresión estructural / museo en `src/` | Fallo (~12k líneas not-mounted) | Pasa. Ese árbol no existe. |
+| Code judo evidente sin aplicar | Fallo (God-object, historiales gemelos) | Pasa. `App` despacha; las vistas derivan. |
+| Archivo injustificado > 1k | Fallo (`triviaQuestions.js`) | Pasa. El JS vivo más largo es `matches.js` (229). `archive.css` tiene 959; no cruzó 1k. |
+| Spaghetti por casos especiales | Fallo parcial (penales + DTO dual) | Pasa. Una regex de penales; un `DistributionBar({ stats })`. |
+| Wrappers / magia inútil | Fallo (clase Vercel, `ui/Button`) | Reserva menor: ver §2. |
+| Lógica en la capa canónica | Fallo parcial | Pasa. `parseMatch` es la frontera; el auditor valida el JSON crudo y reutiliza resultado/fecha. |
+| Docs alineados al runtime | Fallo (CRA / `REACT_APP_*`) | Pasa para agentes y GA4. |
+
+### 1. Lo que esta pasada ya no tiene que pedir
+
+- No hay Login, Trivia, auth, wrappers `ui/`, emojis ni scripts de raíz que muten el JSON.
+- `App` no calcula yearly stats ni paginación de partidos en la pestaña de efemérides.
+- Rivales y Países no son forks. `MatchesView` no reescribe `PaginatedMatchList`.
+- Las vistas no leen `match['Equipo Local']`. Eso vive solo en `parseMatch` y en el auditor del contrato de publicación.
+- Un `popstate`. Sets atómicos año+página.
+- Tokens en `index.css`, componentes en `styles/archive.css`. El único `style={{}}` de producto es el ancho de la barra de distribución, que es dato.
+
+Eso era el code judo. Está hecho.
+
+### 2. Residuo que aún se puede borrar (no bloquea el merge)
+
+Estos ítems fallarían un nit de la rúbrica si aparecieran **nuevos** en un PR. En un re-audit del árbol completo no justifican revertir P1–P5.
+
+**Wrappers de identidad en dominio.** `getOpponent`, `getYearFromMatch`, `getScore` y `getResultCode` ahora son `match => match.opponent` (y equivalentes). Solo los usan tests y una línea de `EntityHistory`. La rúbrica dice: *this abstraction seems unnecessary. can we just keep the direct flow?* Sí. Borrar los cuatro y leer el campo. `EntityHistory` ya tiene `canonicalize: value => value` en países: otra identidad; se puede omitir y tratar `canonicalize` como opcional.
+
+**Ceremonia del shell.** `App.js` tiene 188 líneas porque Sun/Moon SVG y `useTheme` viven ahí. El plan pedía ~150. Extraer iconos y tema a módulos de chrome no cambia el diseño; solo adelgaza el archivo. `TABS.find` en cada render es un mapa `id → View` que ya está implícito en `TABS`.
+
+**API de extras en URL.** `setYear(value, { page: { value: '1', defaultValue: '1' } })` funciona y es atómico, pero el shape es ruidoso. Un `setParams({ year, page: '1' })` con defaults registrados al suscribirse borraría esa anidación. No es spaghetti; es un contrato un poco mágico.
+
+**Efemérides sigue mapeando `MatchRow` a mano.** No pagina (correcto: pocos partidos por día). Un `MatchList` sin paginación, o `PaginatedMatchList` con page fija, unificaría la última lista suelta. Impacto bajo.
+
+**`calculateArchiveOverview` recorre dos veces.** Un `forEach` de rivales y luego `summarizeMatches`. Con 1937 filas no duele. Un solo pass sería más inevitable, no más urgente.
+
+**Auditoría Node ↔ dominio.** `scripts/audit-data.mjs` importa `src/domain/matches.js` y Node avisa `MODULE_TYPELESS_PACKAGE_JSON`. No es un leak de frontera (el auditor *debe* ver el JSON crudo). Es un warning de packaging. No añadir `"type": "module"` al `package.json` de un Vite app solo por eso; un `matches.mjs` o dejar el warning es suficiente.
+
+Nada de esto es un segundo producto, un God-object o un archivo de 10k líneas.
+
+### 3. Qué no es hallazgo
+
+- Claves en español en el JSON y en el auditor: contrato de publicación.
+- Tailwind para `w-full` / `space-y-4` junto a CSS editorial: política de P5, documentada.
+- `UpcomingMatches` con “Verificado el 4 de agosto de 2026” en markup: es copy de fixture, no complejidad de control flow. El calendario generado ya trae fuente; el copy estático se puede ligar a metadata en un alta de datos, no en este review.
+- TypeScript: sigue sin hacer falta.
+
+### Aprobación
+
+Mergeable. Si hay un follow-up, que sea un PR chico de higiene: borrar los cuatro getters de identidad, opcionalizar `canonicalize`, y sacar los SVG del shell. No reabrir CSS ni el store de URL para eso.
+
+---
+
+## Auditoría original (pre P1–P5)
+
 Fecha: 2026-08-13  
 Alcance: repositorio completo en `main` (`6af7edb`), no un diff de feature.  
 Rúbrica: `thermo-nuclear-code-quality-review` (simplificación estructural, code judo, archivos gigantes, spaghetti, fronteras de dominio).
 
-## Veredicto
+## Veredicto original
 
 **No aprueba.** El producto vivo es un archivo estático coherente y las vistas activas ya están razonablemente partidas. Eso no basta. El repo conserva un segundo producto muerto, un orquestador que calcula las seis vistas a la vez, dos historiales casi idénticos y un modelo de dominio que sigue siendo la hoja de cálculo.
 
