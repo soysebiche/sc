@@ -21,7 +21,7 @@ import EfemeridesView from './features/EfemeridesView';
 import MatchesView from './features/MatchesView';
 import { useUrlState } from './hooks/useUrlState';
 import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackThemeChange } from './services/analytics';
-import vercelDataService from './services/vercelDataService';
+import { loadArchive } from './services/archive';
 import { setWebVitalsConsent, startWebVitals } from './observability/webVitals';
 
 const TABS = [
@@ -81,10 +81,10 @@ function App() {
 
   useEffect(() => {
     let isActive = true;
-    vercelDataService.fetchAllData()
-      .then(result => {
+    loadArchive()
+      .then(records => {
         if (!isActive) return;
-        setData(result.completo);
+        setData(records);
         setDataStatus('ready');
       })
       .catch(() => {
