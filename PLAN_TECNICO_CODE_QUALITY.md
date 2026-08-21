@@ -1,5 +1,7 @@
 # Plan técnico — fixes de la auditoría thermo-nuclear
 
+**Estado: ejecutado.** P1–P5 aterrizaron en `main` vía #4 (`08b7711`). Este documento es bitácora, no backlog. No re-ejecutar estos PRs.
+
 Fecha: 2026-08-13  
 Origen: `THERMO_NUCLEAR_CODE_QUALITY_REVIEW.md`  
 Objetivo: aplicar todos los code judo del informe **sin cambiar comportamiento de producto**.
