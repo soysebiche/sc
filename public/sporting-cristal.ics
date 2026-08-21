@@ -22,14 +22,36 @@ END:VTIMEZONE
 BEGIN:VEVENT
 UID:liga1-clausura-2026-f6-alianza-atletico-sporting-cristal@celeste.sebi
  che.com
-DTSTAMP:20260821T063642Z
-LAST-MODIFIED:20260821T063642Z
+DTSTAMP:20260821T064912Z
+LAST-MODIFIED:20260821T064912Z
 DTSTART;TZID=America/Lima:20260821T150000
 DTEND;TZID=America/Lima:20260821T171500
 SUMMARY:Alianza Atlético vs. Sporting Cristal
 DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 6. Programación sujeta a
   cambios. Fuente: Liga 1 Te Apuesto
 LOCATION:Estadio Campeones del 36
+URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
+ 026/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:copa-de-la-liga-2026-qf-sporting-cristal-sport-huancayo@celeste.sebic
+ he.com
+DTSTAMP:20260821T064912Z
+LAST-MODIFIED:20260821T064912Z
+DTSTART;TZID=America/Lima:20260826T150000
+DTEND;TZID=America/Lima:20260826T171500
+SUMMARY:Sporting Cristal vs. Sport Huancayo
+DESCRIPTION:Copa de la Liga · Cuartos de final. Programación sujeta a c
+ ambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Alberto Gallardo
 URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
  026/
 STATUS:CONFIRMED

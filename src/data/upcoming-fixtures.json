@@ -5,7 +5,7 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-08-21T06:36:42Z",
+    "lastVerifiedAt": "2026-08-21T06:49:12Z",
     "sourceName": "Liga 1 Te Apuesto",
     "sourceUrl": "https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2026/"
   },
@@ -19,6 +19,17 @@
       "start": "2026-08-21T15:00:00-05:00",
       "end": "2026-08-21T17:15:00-05:00",
       "venue": "Estadio Campeones del 36",
+      "status": "confirmed"
+    },
+    {
+      "id": "copa-de-la-liga-2026-qf-sporting-cristal-sport-huancayo",
+      "competition": "Copa de la Liga",
+      "round": "Cuartos de final",
+      "homeTeam": "Sporting Cristal",
+      "awayTeam": "Sport Huancayo",
+      "start": "2026-08-26T15:00:00-05:00",
+      "end": "2026-08-26T17:15:00-05:00",
+      "venue": "Estadio Alberto Gallardo",
       "status": "confirmed"
     }
   ]
