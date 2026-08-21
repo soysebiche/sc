@@ -20,32 +20,10 @@ DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:liga1-clausura-2026-f5-sporting-cristal-sport-huancayo@celeste.sebich
- e.com
-DTSTAMP:20260808T063701Z
-LAST-MODIFIED:20260808T063701Z
-DTSTART;TZID=America/Lima:20260816T110000
-DTEND;TZID=America/Lima:20260816T131500
-SUMMARY:Sporting Cristal vs. Sport Huancayo
-DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 5. Programación sujeta a
-  cambios. Fuente: Liga 1 Te Apuesto
-LOCATION:Estadio Alberto Gallardo
-URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
- 026/
-STATUS:CONFIRMED
-TRANSP:TRANSPARENT
-SEQUENCE:0
-BEGIN:VALARM
-TRIGGER:-PT2H
-ACTION:DISPLAY
-DESCRIPTION:Sporting Cristal juega en 2 horas
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:liga1-clausura-2026-f6-alianza-atletico-sporting-cristal@celeste.sebi
  che.com
-DTSTAMP:20260808T063701Z
-LAST-MODIFIED:20260808T063701Z
+DTSTAMP:20260821T063642Z
+LAST-MODIFIED:20260821T063642Z
 DTSTART;TZID=America/Lima:20260821T150000
 DTEND;TZID=America/Lima:20260821T171500
 SUMMARY:Alianza Atlético vs. Sporting Cristal
