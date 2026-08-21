@@ -74,7 +74,7 @@ function UpcomingMatches() {
       </ol>
 
       <p className="upcoming__source">
-        Verificado el 4 de agosto de 2026 en{' '}
+        Verificado el 21 de agosto de 2026 en{' '}
         <a href={fixturesData.calendar.sourceUrl} target="_blank" rel="noreferrer">Liga 1</a>.
         La programación puede cambiar.
       </p>
