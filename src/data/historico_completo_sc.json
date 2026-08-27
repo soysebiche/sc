@@ -29068,5 +29068,35 @@
     "Resultado": "V",
     "Goles (Solo SC)": "Michael Hoyos (11, 73), Hernán Barcos (25), Rafael Lutiger (80)",
     "País": "Perú"
+  },
+  {
+    "Año": 2026,
+    "Mes": "Agosto",
+    "Dia": 21,
+    "Día de la Semana": "Viernes",
+    "Fecha": "2026-08-21",
+    "Torneo": "Clausura",
+    "Número de Fecha": "6",
+    "Equipo Local": "Alianza Atlético",
+    "Equipo Visita": "Sporting Cristal",
+    "Marcador": "3-1",
+    "Resultado": "P",
+    "Goles (Solo SC)": "Michael Hoyos (53)",
+    "País": "Perú"
+  },
+  {
+    "Año": 2026,
+    "Mes": "Agosto",
+    "Dia": 26,
+    "Día de la Semana": "Miércoles",
+    "Fecha": "2026-08-26",
+    "Torneo": "Copa de la Liga",
+    "Número de Fecha": "Cuartos",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "Sport Huancayo",
+    "Marcador": "4-1",
+    "Resultado": "V",
+    "Goles (Solo SC)": "Irven Ávila (42), Maxloren Castro (46), Catriel Cabellos (59, 81)",
+    "País": "Perú"
   }
 ]
