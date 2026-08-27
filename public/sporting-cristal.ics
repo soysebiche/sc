@@ -20,16 +20,60 @@ DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:copa-de-la-liga-2026-qf-sporting-cristal-sport-huancayo@celeste.sebic
- he.com
-DTSTAMP:20260826T131500Z
-LAST-MODIFIED:20260826T131500Z
-DTSTART;TZID=America/Lima:20260826T150000
-DTEND;TZID=America/Lima:20260826T171500
-SUMMARY:Sporting Cristal vs. Sport Huancayo
-DESCRIPTION:Copa de la Liga · Cuartos de final. Programación sujeta a c
- ambios. Fuente: Liga 1 Te Apuesto
+UID:liga1-clausura-2026-f7-sport-boys-sporting-cristal@celeste.sebiche.co
+ m
+DTSTAMP:20260827T072000Z
+LAST-MODIFIED:20260827T072000Z
+DTSTART;TZID=America/Lima:20260830T153000
+DTEND;TZID=America/Lima:20260830T174500
+SUMMARY:Sport Boys vs. Sporting Cristal
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 7. Programación sujeta a
+  cambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Miguel Grau
+URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
+ 026/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:liga1-clausura-2026-f8-sporting-cristal-los-chankas@celeste.sebiche.c
+ om
+DTSTAMP:20260827T072000Z
+LAST-MODIFIED:20260827T072000Z
+DTSTART;TZID=America/Lima:20260906T110000
+DTEND;TZID=America/Lima:20260906T131500
+SUMMARY:Sporting Cristal vs. Los Chankas
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 8. Programación sujeta a
+  cambios. Fuente: Liga 1 Te Apuesto
 LOCATION:Estadio Alberto Gallardo
+URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
+ 026/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:liga1-clausura-2026-f9-cd-moquegua-sporting-cristal@celeste.sebiche.c
+ om
+DTSTAMP:20260827T072000Z
+LAST-MODIFIED:20260827T072000Z
+DTSTART;TZID=America/Lima:20260912T151500
+DTEND;TZID=America/Lima:20260912T173000
+SUMMARY:CD Moquegua vs. Sporting Cristal
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 9. Programación sujeta a
+  cambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio 25 de noviembre
 URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
  026/
 STATUS:CONFIRMED

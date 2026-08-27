@@ -5,20 +5,42 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-08-26T13:15:00Z",
+    "lastVerifiedAt": "2026-08-27T07:20:00Z",
     "sourceName": "Liga 1 Te Apuesto",
     "sourceUrl": "https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2026/"
   },
   "fixtures": [
     {
-      "id": "copa-de-la-liga-2026-qf-sporting-cristal-sport-huancayo",
-      "competition": "Copa de la Liga",
-      "round": "Cuartos de final",
+      "id": "liga1-clausura-2026-f7-sport-boys-sporting-cristal",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 7",
+      "homeTeam": "Sport Boys",
+      "awayTeam": "Sporting Cristal",
+      "start": "2026-08-30T15:30:00-05:00",
+      "end": "2026-08-30T17:45:00-05:00",
+      "venue": "Estadio Miguel Grau",
+      "status": "confirmed"
+    },
+    {
+      "id": "liga1-clausura-2026-f8-sporting-cristal-los-chankas",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 8",
       "homeTeam": "Sporting Cristal",
-      "awayTeam": "Sport Huancayo",
-      "start": "2026-08-26T15:00:00-05:00",
-      "end": "2026-08-26T17:15:00-05:00",
+      "awayTeam": "Los Chankas",
+      "start": "2026-09-06T11:00:00-05:00",
+      "end": "2026-09-06T13:15:00-05:00",
       "venue": "Estadio Alberto Gallardo",
+      "status": "confirmed"
+    },
+    {
+      "id": "liga1-clausura-2026-f9-cd-moquegua-sporting-cristal",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 9",
+      "homeTeam": "CD Moquegua",
+      "awayTeam": "Sporting Cristal",
+      "start": "2026-09-12T15:15:00-05:00",
+      "end": "2026-09-12T17:30:00-05:00",
+      "venue": "Estadio 25 de noviembre",
       "status": "confirmed"
     }
   ]

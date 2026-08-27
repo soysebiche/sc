@@ -16,8 +16,10 @@ test('renders the historical archive with a named date control', async () => {
   expect(await screen.findByText(/Archivo Histórico · 1939 Partidos/i)).toBeInTheDocument();
   expect(await screen.findByLabelText('Fecha para consultar')).toHaveAttribute('type', 'date');
   expect(screen.getByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Sport Huancayo/).length).toBeGreaterThan(0);
-  expect(screen.getByText('Cuartos de final')).toBeInTheDocument();
+  expect(screen.getAllByText(/Sport Boys/).length).toBeGreaterThan(0);
+  expect(screen.getByText('Fecha 7')).toBeInTheDocument();
+  expect(screen.getByText('Fecha 8')).toBeInTheDocument();
+  expect(screen.getByText('Fecha 9')).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
