@@ -29113,5 +29113,20 @@
     "Resultado": "P",
     "Goles (Solo SC)": "",
     "País": "Perú"
+  },
+  {
+    "Año": 2026,
+    "Mes": "Septiembre",
+    "Dia": 6,
+    "Día de la Semana": "Domingo",
+    "Fecha": "2026-09-06",
+    "Torneo": "Clausura",
+    "Número de Fecha": "8",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "Dep. Los Chankas",
+    "Marcador": "5-0",
+    "Resultado": "V",
+    "Goles (Solo SC)": "Santiago González (11), Luis Iberico (42), Yoshimar Yotún (64, 75), Juan Cuesta (90+1)",
+    "País": "Perú"
   }
 ]
