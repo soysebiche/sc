@@ -5,7 +5,7 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-09-06T19:15:00Z",
+    "lastVerifiedAt": "2026-09-12T06:55:26Z",
     "sourceName": "Liga 1 Te Apuesto",
     "sourceUrl": "https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2026/"
   },
@@ -16,8 +16,8 @@
       "round": "Fecha 9",
       "homeTeam": "CD Moquegua",
       "awayTeam": "Sporting Cristal",
-      "start": "2026-09-12T15:15:00-05:00",
-      "end": "2026-09-12T17:30:00-05:00",
+      "start": "2026-09-13T10:00:00-05:00",
+      "end": "2026-09-13T12:15:00-05:00",
       "venue": "Estadio 25 de noviembre",
       "status": "confirmed"
     }
