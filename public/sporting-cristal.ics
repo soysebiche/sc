@@ -19,26 +19,4 @@ TZNAME:-05
 DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
-BEGIN:VEVENT
-UID:liga1-clausura-2026-f9-cd-moquegua-sporting-cristal@celeste.sebiche.c
- om
-DTSTAMP:20260912T065526Z
-LAST-MODIFIED:20260912T065526Z
-DTSTART;TZID=America/Lima:20260913T100000
-DTEND;TZID=America/Lima:20260913T121500
-SUMMARY:CD Moquegua vs. Sporting Cristal
-DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 9. Programación sujeta a
-  cambios. Fuente: Liga 1 Te Apuesto
-LOCATION:Estadio 25 de noviembre
-URL:https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2
- 026/
-STATUS:CONFIRMED
-TRANSP:TRANSPARENT
-SEQUENCE:0
-BEGIN:VALARM
-TRIGGER:-PT2H
-ACTION:DISPLAY
-DESCRIPTION:Sporting Cristal juega en 2 horas
-END:VALARM
-END:VEVENT
 END:VCALENDAR

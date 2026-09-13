@@ -18,16 +18,24 @@ test('publica únicamente partidos confirmados sin datos de cuenta', async () =>
   assert.doesNotMatch(calendar, /20260830T153000|Sport Boys vs\. Sporting Cristal/);
   assert.doesNotMatch(calendar, /20260906T110000|Sporting Cristal vs\. Los Chankas/);
   assert.doesNotMatch(calendar, /20260912T151500/);
-  assert.match(calendar, /DTSTART;TZID=America\/Lima:20260913T100000/);
-  assert.match(calendar, /DTEND;TZID=America\/Lima:20260913T121500/);
-  assert.match(calendar, /CD Moquegua vs\. Sporting Cristal/);
-  assert.match(calendar, /Estadio 25 de noviembre/);
+  assert.doesNotMatch(calendar, /20260913T100000|CD Moquegua vs\. Sporting Cristal/);
   assert.doesNotMatch(calendar, /@gmail\.com|calendar\.google\.com\/calendar\/ical\/.*private/i);
-  assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 1);
+  assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 0);
+  assert.equal(data.fixtures.length, 0);
 });
 
 test('rechaza eventos tentativos o sin programación completa', async () => {
   const data = await loadData();
-  data.fixtures[0].status = 'tentative';
+  data.fixtures = [{
+    id: 'sample-tentative',
+    competition: 'Liga 1 — Torneo Clausura',
+    round: 'Fecha X',
+    homeTeam: 'Sample FC',
+    awayTeam: 'Sporting Cristal',
+    start: '2026-09-20T15:00:00-05:00',
+    end: '2026-09-20T17:15:00-05:00',
+    venue: 'Estadio Sample',
+    status: 'tentative',
+  }];
   assert.throws(() => validateFixtureData(data), /no confirmado/);
 });
