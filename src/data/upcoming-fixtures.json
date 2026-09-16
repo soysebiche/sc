@@ -5,9 +5,43 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-09-13T19:16:31Z",
+    "lastVerifiedAt": "2026-09-16T13:32:03Z",
     "sourceName": "Liga 1 Te Apuesto",
-    "sourceUrl": "https://liga1.pe/fixture-y-resultados-del-clausura-liga1-te-apuesto-2026/"
+    "sourceUrl": "https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del-torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te-apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224"
   },
-  "fixtures": []
+  "fixtures": [
+    {
+      "id": "liga1-clausura-2026-f10-sporting-cristal-atletico-grau",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 10",
+      "homeTeam": "Sporting Cristal",
+      "awayTeam": "Atlético Grau",
+      "start": "2026-09-19T15:30:00-05:00",
+      "end": "2026-09-19T17:45:00-05:00",
+      "venue": "Estadio Alberto Gallardo",
+      "status": "confirmed"
+    },
+    {
+      "id": "copa-de-la-liga-2026-sf-ida-adt-sporting-cristal",
+      "competition": "Copa de la Liga",
+      "round": "Semifinal - Ida",
+      "homeTeam": "ADT",
+      "awayTeam": "Sporting Cristal",
+      "start": "2026-09-27T15:15:00-05:00",
+      "end": "2026-09-27T18:15:00-05:00",
+      "venue": "Estadio Unión Tarma",
+      "status": "confirmed"
+    },
+    {
+      "id": "copa-de-la-liga-2026-sf-vuelta-sporting-cristal-adt",
+      "competition": "Copa de la Liga",
+      "round": "Semifinal - Vuelta",
+      "homeTeam": "Sporting Cristal",
+      "awayTeam": "ADT",
+      "start": "2026-10-01T15:00:00-05:00",
+      "end": "2026-10-01T18:00:00-05:00",
+      "venue": "Estadio Alberto Gallardo",
+      "status": "confirmed"
+    }
+  ]
 }
