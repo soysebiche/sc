@@ -4,8 +4,7 @@ PRODID:-//Sebiche Celeste//Partidos de Sporting Cristal//ES
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Sporting Cristal — próximos partidos
-X-WR-CALDESC:Partidos confirmados del primer equipo de Sporting Cristal. 
- La programación puede cambiar por decisión del organizador.
+X-WR-CALDESC:Partidos confirmados del primer equipo de Sporting Cristal. \n La programación puede cambiar por decisión del organizador.
 X-WR-TIMEZONE:America/Lima
 REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
@@ -19,4 +18,72 @@ TZNAME:-05
 DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
+BEGIN:VEVENT
+UID:liga1-clausura-2026-f10-sporting-cristal-atletico-grau@celeste.sebich
+ e.com
+DTSTAMP:20260916T133203Z
+LAST-MODIFIED:20260916T133203Z
+DTSTART;TZID=America/Lima:20260919T153000
+DTEND;TZID=America/Lima:20260919T174500
+SUMMARY:Sporting Cristal vs. Atlético Grau
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 10. Programación sujeta 
+ a cambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Alberto Gallardo
+URL:https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del
+ -torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te
+ -apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:copa-de-la-liga-2026-sf-ida-adt-sporting-cristal@celeste.sebiche.com
+DTSTAMP:20260916T133203Z
+LAST-MODIFIED:20260916T133203Z
+DTSTART;TZID=America/Lima:20260927T151500
+DTEND;TZID=America/Lima:20260927T181500
+SUMMARY:ADT vs. Sporting Cristal
+DESCRIPTION:Copa de la Liga · Semifinal - Ida. Programación sujeta a ca
+ mbios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Unión Tarma
+URL:https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del
+ -torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te
+ -apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:copa-de-la-liga-2026-sf-vuelta-sporting-cristal-adt@celeste.sebiche.c
+ om
+DTSTAMP:20260916T133203Z
+LAST-MODIFIED:20260916T133203Z
+DTSTART;TZID=America/Lima:20261001T150000
+DTEND;TZID=America/Lima:20261001T180000
+SUMMARY:Sporting Cristal vs. ADT
+DESCRIPTION:Copa de la Liga · Semifinal - Vuelta. Programación sujeta a
+  cambios. Fuente: Liga 1 Te Apuesto
+LOCATION:Estadio Alberto Gallardo
+URL:https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del
+ -torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te
+ -apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
 END:VCALENDAR
