@@ -19,6 +19,10 @@ test('renders the historical archive with a named date control', async () => {
   expect(screen.queryByText('Fecha 8')).not.toBeInTheDocument();
   expect(screen.queryByText('Fecha 9')).not.toBeInTheDocument();
   expect(screen.queryByText(/CD Moquegua/)).not.toBeInTheDocument();
+  expect(screen.getByText('Fecha 10')).toBeInTheDocument();
+  expect(screen.getByText(/Atlético Grau/)).toBeInTheDocument();
+  expect(screen.getByText(/Semifinal - Ida/)).toBeInTheDocument();
+  expect(screen.getByText(/Semifinal - Vuelta/)).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
