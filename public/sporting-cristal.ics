@@ -42,14 +42,15 @@ DESCRIPTION:Sporting Cristal juega en 2 horas
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:copa-de-la-liga-2026-sf-vuelta-sporting-cristal-adt@celeste.sebiche.com
+UID:copa-de-la-liga-2026-sf-vuelta-sporting-cristal-adt@celeste.sebiche.c
+ om
 DTSTAMP:20260919T231001Z
 LAST-MODIFIED:20260919T231001Z
 DTSTART;TZID=America/Lima:20261001T150000
 DTEND;TZID=America/Lima:20261001T180000
 SUMMARY:Sporting Cristal vs. ADT
 DESCRIPTION:Copa de la Liga · Semifinal - Vuelta. Programación sujeta a
- cambios. Fuente: Liga 1 Te Apuesto
+  cambios. Fuente: Liga 1 Te Apuesto
 LOCATION:Estadio Alberto Gallardo
 URL:https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del
  -torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te
