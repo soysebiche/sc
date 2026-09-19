@@ -5,22 +5,11 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-09-16T13:32:03Z",
+    "lastVerifiedAt": "2026-09-19T23:10:01Z",
     "sourceName": "Liga 1 Te Apuesto",
     "sourceUrl": "https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del-torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te-apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224"
   },
   "fixtures": [
-    {
-      "id": "liga1-clausura-2026-f10-sporting-cristal-atletico-grau",
-      "competition": "Liga 1 — Torneo Clausura",
-      "round": "Fecha 10",
-      "homeTeam": "Sporting Cristal",
-      "awayTeam": "Atlético Grau",
-      "start": "2026-09-19T15:30:00-05:00",
-      "end": "2026-09-19T17:45:00-05:00",
-      "venue": "Estadio Alberto Gallardo",
-      "status": "confirmed"
-    },
     {
       "id": "copa-de-la-liga-2026-sf-ida-adt-sporting-cristal",
       "competition": "Copa de la Liga",
