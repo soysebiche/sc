@@ -1,10 +1,119 @@
 # Thermo-Nuclear Code Quality Review — Sebiche Celeste
 
+## Re-auditoría post-merge — 2026-08-13
+
+Alcance: árbol vivo en `main` (`08b7711`, squash de P1–P5 vía #4). No es un diff: es el mismo tipo de pasada que la auditoría original, con la misma rúbrica y la misma barra.  
+Skill: `thermo-nuclear-code-quality-review`.
+
+### Veredicto
+
+**Aprueba.** El diseño se siente inevitable. Un extraño puede leer el runtime en un sitting: un loader, un store de URL, un historial parametrizado, un modelo parseado en la frontera, CSS en dos archivos. Los bloqueos de la pasada anterior —museo de 12k líneas, God-object, historiales gemelos, hoja de cálculo como tipo de UI— ya no están.
+
+No es un 10. Queda residuo de migración (wrappers de identidad, un DTO de rivales todavía en español, ceremonia en el shell). Nada de eso es un segundo producto, un archivo de 10k líneas ni un code judo que borre una categoría entera de complejidad. No exige un sexto PR antes de seguir.
+
+### Barra, reaplicada
+
+| Criterio | Pre P1–P5 (`6af7edb`) | `main` (`08b7711`) |
+|---|---|---|
+| Sin regresión estructural | Fallo (~12k líneas not-mounted) | Pasa. Ese árbol no existe. |
+| Sin code judo evidente sin aplicar | Fallo (God-object, historiales gemelos) | Pasa. `App` despacha; las vistas derivan. |
+| Sin archivo injustificado > 1k | Fallo (`triviaQuestions.js`) | Pasa. JS vivo más largo: `matches.js` (229). `archive.css` 959; no cruzó 1k. |
+| Sin spaghetti por casos especiales | Fallo parcial (penales + DTO dual) | Pasa. Una regex de penales; un `DistributionBar({ stats })`. |
+| Sin wrappers / magia inútil | Fallo (`VercelDataService`, `ui/Button`) | Reserva menor: ver §4. |
+| Lógica en la capa canónica | Fallo parcial | Pasa. `parseMatch` es la frontera; el auditor valida el JSON crudo y reutiliza fecha/resultado. |
+| Docs alineados al runtime | Fallo (CRA / `REACT_APP_*`) | Pasa para runtime y GA4. `AGENTS.md` aún habla de P1–P5 como trabajo por hacer. |
+
+### 1. Regresiones estructurales
+
+Ninguna. Grep de control:
+
+- Cero `Login`, `Trivia`, `authService`, `triviaQuestions`, `legacy-manifest`, `reportWebVitals`, `vercelDataService`.
+- Cero `match['Equipo Local']` fuera de `parseMatch`, el auditor y los tests de contrato.
+- Cero `T00:00:00` fuera de `parseCalendarDate`.
+- Un `popstate`. Sets año+página atómicos.
+- ESLint ya no ignora un cementerio.
+
+`App` carga el archivo, pinta chrome y despacha `ActiveView`. Cada vista recibe `matches` y deriva. Eso era el code judo. Está hecho.
+
+### 2. Code judo que ya no hay que pedir
+
+No hay un movimiento restante que borre una capa entera sin cambiar comportamiento.
+
+- Rivales y Países son `EntityHistory` + dos configs. El precio es un objeto de copy; el beneficio es un solo flujo de filtro/resumen/paginación.
+- `MatchesView` usa `PaginatedMatchList`. Efemérides mapea `MatchRow` a mano porque no pagina (pocos partidos por día). Unificar esa lista no elimina un concepto; solo ahorra ~8 líneas.
+- `loadArchive()` es una función. `DistributionBar` tiene un contrato.
+- Tokens en `index.css`, editorial en `styles/archive.css`. El único `style={{}}` de producto es el ancho de la barra de distribución, que es dato.
+
+Pedir un sexto refactor “por higiene de forma” ahora sí sería mover complejidad de sitio.
+
+### 3. Spaghetti / branching
+
+No hay crecimiento ad-hoc en flujos ajenos. Penales viven en `resultFromScoreAndNote`. El dispatcher de tabs es `TABS.find`, no seis `&&`. El store de URL no registra un listener por clave.
+
+La API de extras `setYear(v, { page: { value: '1', defaultValue: '1' } })` es ruidosa. Funciona y es atómica. Un `setParams({ year, page: '1' })` con defaults registrados al suscribirse sería más directo. No es spaghetti; es un contrato un poco mágico. No reabrir el store solo para eso.
+
+### 4. Frontera, wrappers y contratos
+
+**Wrappers de identidad.** `getOpponent`, `getYearFromMatch`, `getScore` y `getResultCode` son `match => match.campo` (con un `{ valid }` residual en `getScore`). Producto: una línea en `EntityHistory`. El resto, tests. La rúbrica dice: *this abstraction seems unnecessary. can we just keep the direct flow?* Sí. Borrar los cuatro y leer el campo. `COUNTRIES_HISTORY.canonicalize: value => value` es la misma clase de identidad: hacer `canonicalize` opcional.
+
+**DTO de mejor/peor rival.** `summarizeMatches` habla inglés (`victories`, `draws`). `calculateArchiveOverview` arma `{ jugados, ganados, empatados, perdidos }` y el dashboard lo pinta así. Es el último eco de la hoja de cálculo *dentro* del dominio parseado. No vuelve a filtrar `Equipo Local` a la UI; sí deja dos vocabularios en un archivo. Un follow-up puede alinear esos cuatro campos al resumen canónico.
+
+**Auditor vs dominio.** `scripts/audit-data.mjs` debe ver el JSON crudo. Reutiliza `parseCalendarDate` y `resultFromScoreAndNote`. Todavía parsea el marcador con su propia regex porque `parseScoreLabel` no se exporta. Node avisa `MODULE_TYPELESS_PACKAGE_JSON` al importar `src/domain/matches.js`. No añadir `"type": "module"` al `package.json` de una app Vite solo por eso.
+
+Nada de esto oscurece el invariante. El tipo de hecho después de `loadArchive()` es el partido parseado.
+
+### 5. Tamaño
+
+| Archivo | Líneas |
+|---|---:|
+| `src/styles/archive.css` | 959 |
+| `src/index.css` | 785 |
+| `src/domain/matches.js` | 229 |
+| `src/App.js` | 188 |
+| `src/features/EntityHistory.js` | 185 |
+
+Ningún JS cruza 1k. `archive.css` está cerca; no lo cruzó este trabajo y no hay un extracto que borre una categoría de reglas. `App.js` mide 188 sobre todo por Sun/Moon SVG y `useTheme`. Extraer chrome adelgaza el archivo; no cambia el diseño.
+
+Tailwind sigue para `w-full` / `space-y-4` / `sr-only` junto al CSS editorial. Fue política explícita de P5, no un tercer design system.
+
+### 6. Modularidad
+
+El mapa de tabs con `View: props => <EntityHistory {...props} config={…} />` es estable (constante de módulo). Un `RivalsView` nombrado sería más escaneable; no es un wrapper que esconda flujo.
+
+`retryDataLoad` duplica el cableado del `useEffect` de carga. Un `load()` compartido es más aburrido. Impacto bajo.
+
+`api/data/index.js` sigue releyendo el JSON del source tree. La UI no lo usa. Sigue siendo compatibilidad documentada, no un segundo modelo.
+
+### 7. Legibilidad operativa
+
+`AGENTS.md` describe Vite, `npm run check` y `VITE_GA_MEASUREMENT_ID`. Eso ya no miente sobre el runtime. Todavía dice que hay que ejecutar `PLAN_TECNICO_CODE_QUALITY.md` (P1–P5) sin mezclar PRs. Ese plan ya está en `main`. El siguiente agente que lo lea va a “implementar” trabajo mergeado. Corregir esa frase es parte de esta pasada.
+
+`UpcomingMatches` imprime “Verificado el 4 de agosto de 2026” a mano. El JSON trae `calendar.lastVerifiedAt` = `2026-08-08T06:37:01Z`. Es copy desacoplado de metadata, no complejidad de control flow. Ligarlo en un alta de datos, no en un refactor de calidad.
+
+`PLAN_TECNICO_CODE_QUALITY.md` queda como bitácora de ejecución, no como backlog.
+
+### Qué no es hallazgo
+
+- Claves en español en el JSON y en el auditor: contrato de publicación.
+- TypeScript: el runtime vivo no lo exige. `parseMatch` ya es el tipo de hecho.
+- Cobertura VoiceOver / UX de 2026-08-04.
+- Recharts en lazy load.
+
+### Aprobación
+
+Mergeable. El archivo histórico en `main` deja de decir “no aprueba” sobre un árbol que ya no existe.
+
+Si hay un follow-up, que sea un PR chico de higiene: borrar los cuatro getters, opcionalizar `canonicalize`, alinear `ganados`/`empatados` al DTO de `summarizeMatches`, y sacar los SVG del shell. No reabrir CSS ni el store de URL para eso.
+
+---
+
+## Auditoría original (pre P1–P5)
+
 Fecha: 2026-08-13  
 Alcance: repositorio completo en `main` (`6af7edb`), no un diff de feature.  
 Rúbrica: `thermo-nuclear-code-quality-review` (simplificación estructural, code judo, archivos gigantes, spaghetti, fronteras de dominio).
 
-## Veredicto
+## Veredicto original
 
 **No aprueba.** El producto vivo es un archivo estático coherente y las vistas activas ya están razonablemente partidas. Eso no basta. El repo conserva un segundo producto muerto, un orquestador que calcula las seis vistas a la vez, dos historiales casi idénticos y un modelo de dominio que sigue siendo la hoja de cálculo.
 
@@ -149,7 +258,7 @@ Rivales y Países viven en `components/` aunque son features del mismo rango que
 
 Los pasos 1–2 son mecánicos y seguros. El 3 es el que hace que el código se sienta inevitable. El 4 es el que evita el próximo bug de penales o de mes mal parseado.
 
-Plan de ejecución (cinco PRs, invariantes, APIs y tests): `PLAN_TECNICO_CODE_QUALITY.md`.
+Plan de ejecución (cinco PRs, invariantes, APIs y tests): `PLAN_TECNICO_CODE_QUALITY.md`. Ejecutado en #4.
 
 ## Qué no es un hallazgo de esta rúbrica
 
@@ -158,7 +267,7 @@ Plan de ejecución (cinco PRs, invariantes, APIs y tests): `PLAN_TECNICO_CODE_QU
 - Cobertura de usuarios reales / VoiceOver: eso es la auditoría UX de 2026-08-04, no maintainability.
 - Recharts en lazy load: está bien puesto.
 
-## Barra de aprobación, aplicada
+## Barra de aprobación, aplicada (árbol original)
 
 | Criterio | Estado |
 |---|---|
