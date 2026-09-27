@@ -5,22 +5,11 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-09-19T23:10:01Z",
+    "lastVerifiedAt": "2026-09-27T23:19:55Z",
     "sourceName": "Liga 1 Te Apuesto",
     "sourceUrl": "https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del-torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te-apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224"
   },
   "fixtures": [
-    {
-      "id": "copa-de-la-liga-2026-sf-ida-adt-sporting-cristal",
-      "competition": "Copa de la Liga",
-      "round": "Semifinal - Ida",
-      "homeTeam": "ADT",
-      "awayTeam": "Sporting Cristal",
-      "start": "2026-09-27T15:15:00-05:00",
-      "end": "2026-09-27T18:15:00-05:00",
-      "venue": "Estadio Unión Tarma",
-      "status": "confirmed"
-    },
     {
       "id": "copa-de-la-liga-2026-sf-vuelta-sporting-cristal-adt",
       "competition": "Copa de la Liga",
