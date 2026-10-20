@@ -29173,5 +29173,50 @@
     "Resultado": "V",
     "Goles (Solo SC)": "Gabriel Santana (14)",
     "País": "Perú"
+  },
+  {
+    "Año": 2026,
+    "Mes": "Octubre",
+    "Dia": 1,
+    "Día de la Semana": "Jueves",
+    "Fecha": "2026-10-01",
+    "Torneo": "Copa de la Liga",
+    "Número de Fecha": "Semifinal - Vuelta",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "A.D.T.",
+    "Marcador": "5-0",
+    "Resultado": "V",
+    "Goles (Solo SC)": "Michael Hoyos (18), Santiago González (45), Leandro Sosa (61), Catriel Cabellos (71), Santiago González (86)",
+    "País": "Perú"
+  },
+  {
+    "Año": 2026,
+    "Mes": "Octubre",
+    "Dia": 11,
+    "Día de la Semana": "Domingo",
+    "Fecha": "2026-10-11",
+    "Torneo": "Clausura",
+    "Número de Fecha": "11",
+    "Equipo Local": "UTC",
+    "Equipo Visita": "Sporting Cristal",
+    "Marcador": "0-1",
+    "Resultado": "V",
+    "Goles (Solo SC)": "Luis Iberico (12)",
+    "País": "Perú"
+  },
+  {
+    "Año": 2026,
+    "Mes": "Octubre",
+    "Dia": 18,
+    "Día de la Semana": "Domingo",
+    "Fecha": "2026-10-18",
+    "Torneo": "Clausura",
+    "Número de Fecha": "12",
+    "Equipo Local": "Sporting Cristal",
+    "Equipo Visita": "Comerciantes Unidos",
+    "Marcador": "4-2",
+    "Resultado": "V",
+    "Goles (Solo SC)": "Luis Iberico (35), Luis Iberico (64), Hernán Barcos (71), Hernán Barcos (94)",
+    "País": "Perú"
   }
 ]
