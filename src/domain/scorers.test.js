@@ -33,7 +33,8 @@ describe('scorer aliases', () => {
   it('resolves ambiguous surnames by date', () => {
     expect(resolve('Palacios', '1995-03-17')).toBe('Roberto Palacios');
     expect(resolve('Ramírez', '1980-04-25')).toBe('Oswaldo Ramírez');
-    expect(resolve('Ramírez', '1961-08-15')).toBe('Ramírez');
+    expect(resolve('Ramírez', '1961-08-15')).toBe('Alberto Ramírez');
+    expect(resolve('Jhilmar Lobaton', '2020-10-17')).toBe('Jhilmar Lobatón');
     expect(resolve('Gerald Támara', '2020-01-01')).toBe('Gerald Távara');
   });
   it('produces a top-scorers table', () => {
