@@ -19,9 +19,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('recharts')) return 'charts';
+          if (id.includes('node_modules') && !/node_modules\/(react|react-dom|scheduler)\//.test(id) && !id.includes('web-vitals')) return 'charts';
           if (id.includes('historico_completo_sc.json')) return 'archive-data';
-          if (id.includes('node_modules')) return 'vendor';
+          // Only React lands in the eagerly-loaded vendor chunk; recharts' deps
+          // (d3, redux, lodash, …) stay with the lazy YearChart chunk.
+          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'vendor';
           return undefined;
         },
       },
