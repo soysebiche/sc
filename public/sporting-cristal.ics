@@ -20,18 +20,18 @@ DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:copa-de-la-liga-2026-sf-ida-adt-sporting-cristal@celeste.sebiche.com
-DTSTAMP:20260919T231001Z
-LAST-MODIFIED:20260919T231001Z
-DTSTART;TZID=America/Lima:20260927T151500
-DTEND;TZID=America/Lima:20260927T181500
-SUMMARY:ADT vs. Sporting Cristal
-DESCRIPTION:Copa de la Liga · Semifinal - Ida. Programación sujeta a ca
- mbios. Fuente: Liga 1 Te Apuesto
-LOCATION:Estadio Unión Tarma
-URL:https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del
- -torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te
- -apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224
+UID:clausura-2026-f13-cusco-fc-sporting-cristal@celeste.sebiche.com
+DTSTAMP:20261020T194000Z
+LAST-MODIFIED:20261020T194000Z
+DTSTART;TZID=America/Lima:20261024T151500
+DTEND;TZID=America/Lima:20261024T173000
+SUMMARY:Cusco FC vs. Sporting Cristal
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 13. Programación sujeta 
+ a cambios. Fuente: Infobae / Líbero (programación Liga 1)
+LOCATION:Estadio Inca Garcilaso de la Vega
+URL:https://www.infobae.com/peru/deportes/2026/10/19/programacion-de-la-f
+ echa-13-del-torneo-clausura-de-la-liga-1-2026-partidos-horarios-y-canale
+ s-tv/
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 SEQUENCE:0
@@ -42,19 +42,18 @@ DESCRIPTION:Sporting Cristal juega en 2 horas
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:copa-de-la-liga-2026-sf-vuelta-sporting-cristal-adt@celeste.sebiche.c
- om
-DTSTAMP:20260919T231001Z
-LAST-MODIFIED:20260919T231001Z
-DTSTART;TZID=America/Lima:20261001T150000
-DTEND;TZID=America/Lima:20261001T180000
-SUMMARY:Sporting Cristal vs. ADT
-DESCRIPTION:Copa de la Liga · Semifinal - Vuelta. Programación sujeta a
-  cambios. Fuente: Liga 1 Te Apuesto
+UID:clausura-2026-f14-sporting-cristal-alianza-lima@celeste.sebiche.com
+DTSTAMP:20261020T194000Z
+LAST-MODIFIED:20261020T194000Z
+DTSTART;TZID=America/Lima:20261029T153000
+DTEND;TZID=America/Lima:20261029T174500
+SUMMARY:Sporting Cristal vs. Alianza Lima
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 14. Programación sujeta 
+ a cambios. Fuente: Infobae / Líbero (programación Liga 1)
 LOCATION:Estadio Alberto Gallardo
-URL:https://rpp.pe/futbol/descentralizado/programacion-de-la-fecha-10-del
- -torneo-clausura-2026-fechas-y-horarios-de-los-partidos-por-la-liga-1-te
- -apuesto-deportivo-garcilaso-vs-universitario-noticia-1707224
+URL:https://www.infobae.com/peru/deportes/2026/10/19/programacion-de-la-f
+ echa-13-del-torneo-clausura-de-la-liga-1-2026-partidos-horarios-y-canale
+ s-tv/
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 SEQUENCE:0
