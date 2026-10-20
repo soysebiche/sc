@@ -85,15 +85,6 @@ export const parseMatch = (record) => {
   };
 };
 
-export const getOpponent = match => match.opponent;
-export const getYearFromMatch = match => match.year;
-export const getScore = match => (
-  match.scGoals == null
-    ? { valid: false, scGoals: 0, opponentGoals: 0 }
-    : { valid: true, scGoals: match.scGoals, opponentGoals: match.opponentGoals }
-);
-export const getResultCode = match => match.resultCode;
-
 export const getUniqueYears = (matches) => [...new Set(
   matches.map(match => match.year).filter(year => year !== null)
 )].sort((a, b) => b - a);
@@ -182,20 +173,20 @@ export const calculateArchiveOverview = (matches) => {
   matches.forEach(match => {
     if (match.scGoals == null) return;
     const rival = match.opponent;
-    if (!rivalStats[rival]) rivalStats[rival] = { jugados: 0, ganados: 0, empatados: 0, perdidos: 0 };
-    rivalStats[rival].jugados += 1;
-    if (match.resultCode === 'V') rivalStats[rival].ganados += 1;
-    else if (match.resultCode === 'P') rivalStats[rival].perdidos += 1;
-    else rivalStats[rival].empatados += 1;
+    if (!rivalStats[rival]) rivalStats[rival] = { total: 0, victories: 0, draws: 0, defeats: 0 };
+    rivalStats[rival].total += 1;
+    if (match.resultCode === 'V') rivalStats[rival].victories += 1;
+    else if (match.resultCode === 'P') rivalStats[rival].defeats += 1;
+    else rivalStats[rival].draws += 1;
     if (match.country && match.country !== 'Perú') countries.add(match.country);
   });
 
-  const eligibleRivals = Object.entries(rivalStats).filter(([, stats]) => stats.jugados >= 5);
+  const eligibleRivals = Object.entries(rivalStats).filter(([, stats]) => stats.total >= 5);
   const bestRivalEntry = eligibleRivals.reduce((best, entry) => (
-    !best || entry[1].ganados / entry[1].jugados > best[1].ganados / best[1].jugados ? entry : best
+    !best || entry[1].victories / entry[1].total > best[1].victories / best[1].total ? entry : best
   ), null);
   const worstRivalEntry = eligibleRivals.reduce((worst, entry) => (
-    !worst || entry[1].perdidos / entry[1].jugados > worst[1].perdidos / worst[1].jugados ? entry : worst
+    !worst || entry[1].defeats / entry[1].total > worst[1].defeats / worst[1].total ? entry : worst
   ), null);
   const toNamedStats = entry => entry ? { name: entry[0], ...entry[1] } : null;
 

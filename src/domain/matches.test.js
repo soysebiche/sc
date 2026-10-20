@@ -1,12 +1,8 @@
 import archive from '../data/historico_completo_sc.json';
 import {
   canonicalizeRival,
-  getOpponent,
   getMatchesForDayMonth,
-  getResultCode,
-  getScore,
   getUniqueYears,
-  getYearFromMatch,
   paginateMatches,
   parseMatch,
   resultFromScoreAndNote,
@@ -29,22 +25,23 @@ describe('match domain', () => {
     expect(canonicalizeRival('UTC')).toBe('U.T.C.');
     expect(canonicalizeRival('Union Comercio')).toBe('Unión Comercio');
     expect(canonicalizeRival('Sport Boys')).toBe('Sport Boys');
-    expect(getOpponent(homeWin)).toBe('U.T.C.');
+    expect(homeWin.opponent).toBe('U.T.C.');
   });
 
   test('reads year and score from the club perspective', () => {
-    expect(getYearFromMatch(homeWin)).toBe(2024);
-    expect(getScore(homeWin)).toEqual({ valid: true, scGoals: 2, opponentGoals: 0 });
-    expect(getResultCode(homeWin)).toBe('V');
+    expect(homeWin.year).toBe(2024);
+    expect(homeWin.scGoals).toBe(2);
+    expect(homeWin.opponentGoals).toBe(0);
+    expect(homeWin.resultCode).toBe('V');
   });
 
   test('honors a documented penalty shootout after a drawn score', () => {
-    expect(getResultCode(parseMatch({
+    expect(parseMatch({
       ...rawHomeWin,
       Marcador: '0-0',
       Resultado: 'D',
       'Goles (Solo SC)': '(Perdió 5-4 en penales)',
-    }))).toBe('P');
+    }).resultCode).toBe('P');
     expect(resultFromScoreAndNote({
       scGoals: 0,
       opponentGoals: 0,
@@ -104,6 +101,25 @@ describe('match domain', () => {
     });
     expect(overview.totalMatches).toBeUndefined();
     expect(overview.maxScGoals).toBeUndefined();
+    expect(overview.ganados).toBeUndefined();
+  });
+
+  test('names best and worst rivals with summarizeMatches fields', () => {
+    const easy = Array.from({ length: 5 }, () => parseMatch({
+      ...rawHomeWin,
+      'Equipo Visita': 'Easy FC',
+      País: 'Perú',
+    }));
+    const hard = Array.from({ length: 5 }, () => parseMatch({
+      ...rawHomeWin,
+      'Equipo Visita': 'Hard FC',
+      Marcador: '0-1',
+      País: 'Perú',
+    }));
+    const overview = calculateArchiveOverview([...easy, ...hard]);
+    expect(overview.bestRival).toMatchObject({ name: 'Easy FC', total: 5, victories: 5, draws: 0, defeats: 0 });
+    expect(overview.worstRival).toMatchObject({ name: 'Hard FC', total: 5, victories: 0, draws: 0, defeats: 5 });
+    expect(overview.bestRival.ganados).toBeUndefined();
   });
 
   test('parses representative archive records to the same result codes as production', () => {

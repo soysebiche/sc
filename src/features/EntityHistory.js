@@ -4,7 +4,6 @@ import PaginatedMatchList from '../components/PaginatedMatchList';
 import {
   canonicalizeRival,
   getUniqueYears,
-  getYearFromMatch,
   sortMatchesNewest,
   summarizeMatches,
 } from '../domain/matches';
@@ -69,19 +68,19 @@ export const COUNTRIES_HISTORY = {
   emptyCount: count => `Países disponibles: ${count}`,
   paginationLabel: entity => `Paginación del historial de ${entity}`,
   emptyMessage: (entity, year) => `No hay partidos contra equipos de ${entity}${year ? ` en ${year}` : ''}.`,
-  canonicalize: value => value,
   collect: collectCountries,
   matches: (match, selected) => match.country === selected,
 };
 
 function EntityHistory({ matches = [], config }) {
+  const canonicalize = config.canonicalize || (value => value);
   const [entityParam, setEntityParam] = useUrlState(config.entityKey, '');
   const [selectedYear, setSelectedYear] = useUrlState(config.yearKey, '');
   const [page, setPage] = useUrlState(config.pageKey, '1');
-  const selectedEntity = config.canonicalize(entityParam);
+  const selectedEntity = canonicalize(entityParam);
 
   const setSelectedEntity = value => {
-    setEntityParam(config.canonicalize(value), {
+    setEntityParam(canonicalize(value), {
       [config.pageKey]: { value: '1', defaultValue: '1' },
     });
   };
@@ -91,8 +90,7 @@ function EntityHistory({ matches = [], config }) {
   const filteredMatches = useMemo(() => {
     if (!selectedEntity) return [];
     return sortMatchesNewest(matches.filter(match => {
-      const matchYear = getYearFromMatch(match);
-      const yearMatch = selectedYear ? String(matchYear) === selectedYear : true;
+      const yearMatch = selectedYear ? String(match.year) === selectedYear : true;
       return config.matches(match, selectedEntity) && yearMatch;
     }));
   }, [config, matches, selectedEntity, selectedYear]);

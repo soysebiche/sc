@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchiveProvenance from './components/ArchiveProvenance';
 import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
+import { MoonIcon, SunIcon } from './components/ThemeIcons';
 import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
 import AnnualAnalysisView from './features/AnnualAnalysisView';
@@ -8,76 +9,31 @@ import DashboardView from './features/DashboardView';
 import EfemeridesView from './features/EfemeridesView';
 import EntityHistory, { COUNTRIES_HISTORY, RIVALS_HISTORY } from './features/EntityHistory';
 import MatchesView from './features/MatchesView';
+import { useTheme } from './hooks/useTheme';
 import { UrlStateProvider, useUrlState } from './hooks/useUrlState';
-import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackThemeChange, trackUrlControl } from './services/analytics';
+import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, trackUrlControl } from './services/analytics';
 import { loadArchive } from './services/archive';
 import { setWebVitalsConsent, startWebVitals } from './observability/webVitals';
+
+function RivalsView(props) {
+  return <EntityHistory {...props} config={RIVALS_HISTORY} />;
+}
+
+function CountriesView(props) {
+  return <EntityHistory {...props} config={COUNTRIES_HISTORY} />;
+}
 
 const TABS = [
   { id: 'efemerides', label: 'EFEMÉRIDES', View: EfemeridesView },
   { id: 'dashboard', label: 'DASHBOARD', View: DashboardView },
   { id: 'partidos', label: 'PARTIDOS', View: MatchesView },
   { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
-  { id: 'rivales', label: 'RIVALES', View: props => <EntityHistory {...props} config={RIVALS_HISTORY} /> },
-  { id: 'paises', label: 'PAÍSES', View: props => <EntityHistory {...props} config={COUNTRIES_HISTORY} /> },
+  { id: 'rivales', label: 'RIVALES', View: RivalsView },
+  { id: 'paises', label: 'PAÍSES', View: CountriesView },
 ];
 
 const TAB_IDS = new Set(TABS.map(tab => tab.id));
 const isValidTab = value => TAB_IDS.has(value);
-
-const SunIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="5" />
-    <line x1="12" y1="1" x2="12" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" />
-    <line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-  </svg>
-);
-
-const MoonIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
-);
-
-function readInitialTheme() {
-  return document.documentElement.getAttribute('data-theme')
-    || localStorage.getItem('sc-theme')
-    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-}
-
-function useTheme() {
-  const [theme, setTheme] = useState(readInitialTheme);
-  const timeoutRef = useRef(0);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    document.documentElement.dataset.revision = archiveMetadata.datasetRevision;
-    localStorage.setItem('sc-theme', theme);
-  }, [theme]);
-
-  useEffect(() => () => window.clearTimeout(timeoutRef.current), []);
-
-  const toggleTheme = () => {
-    document.documentElement.classList.add('theme-transition');
-    window.clearTimeout(timeoutRef.current);
-    timeoutRef.current = window.setTimeout(() => {
-      document.documentElement.classList.remove('theme-transition');
-    }, 350);
-    setTheme(current => {
-      const nextTheme = current === 'light' ? 'dark' : 'light';
-      trackThemeChange(nextTheme);
-      return nextTheme;
-    });
-  };
-
-  return [theme, toggleTheme];
-}
 
 function ArchiveShell() {
   const [matches, setMatches] = useState([]);
