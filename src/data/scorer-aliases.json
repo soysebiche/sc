@@ -1,0 +1,552 @@
+{
+  "_doc": "Canonical scorer name -> raw variants as written in historico_completo_sc.json `Goles (Solo SC)`. Overrides resolve ambiguous surnames by match date and take precedence. Raw strings are not rewritten. Unlisted raw names count as their own player.",
+  "players": {
+    "Alberto Gallardo": [
+      "Gallardo"
+    ],
+    "Alberto Rodríguez": [
+      "Alberto Rodriguez"
+    ],
+    "Aldo Olcese": [
+      "A. Olcese",
+      "Olcese"
+    ],
+    "Alejandro Hohberg": [],
+    "Amilton Prado": [
+      "A. Prado"
+    ],
+    "Andrés Mendoza": [
+      "A.Mendoza",
+      "Mendoza"
+    ],
+    "Brenner Marlos": [
+      "Brenner"
+    ],
+    "Carlos Carbonell": [
+      "Carbonell"
+    ],
+    "Carlos Gonzáles Pajuelo": [
+      "Gonzáles Pajuelo"
+    ],
+    "Carlos Juárez": [
+      "C. Juárez",
+      "Carlos Juarez"
+    ],
+    "Carlos Lobatón": [
+      "C. Lobaton",
+      "C. Lobatón",
+      "Carlos Lobaton"
+    ],
+    "Carlos Zegarra": [
+      "C. Zegarra"
+    ],
+    "Christian Ortiz": [
+      "Christian Ortíz",
+      "Cristian Ortiz"
+    ],
+    "Christofer Gonzales": [
+      "Christofer Gonzáles"
+    ],
+    "Christopher Olivares": [
+      "C. Olivares",
+      "Cristopher Olivares"
+    ],
+    "César Loyola": [
+      "Loyola"
+    ],
+    "César Pereyra": [
+      "Cesar Pereyra"
+    ],
+    "Damián Ísmodes": [
+      "D. Ismodes",
+      "Damian Ismodes",
+      "Damián Ismodes"
+    ],
+    "Daniel Noriega": [
+      "D. Noriega"
+    ],
+    "Daniel Sánchez": [
+      "D. Sánchez",
+      "Daniel Sanchez"
+    ],
+    "Diego Ifrán": [
+      "Diego Ifran"
+    ],
+    "Donizete Amorim": [
+      "D. Amorim"
+    ],
+    "Edinson Chávez": [
+      "Edinson Chavez"
+    ],
+    "Eloy Campos": [
+      "Campos"
+    ],
+    "Emanuel Herrera": [
+      "E. Herrera"
+    ],
+    "Fernando Pacheco": [
+      "F. Pacheco"
+    ],
+    "Ferreira (1998-99)": [
+      "Ferreira",
+      "Ferreyra",
+      "J.Ferreira"
+    ],
+    "Flavio Gómez": [
+      "F. Gómez",
+      "Flavio Gomez"
+    ],
+    "Flavio Maestri": [
+      "F. Maestri",
+      "Maestri"
+    ],
+    "Francesco Manassero": [
+      "Manassero"
+    ],
+    "Gabriel Costa": [
+      "G. Costa"
+    ],
+    "Gastón Córdoba": [
+      "Gastón Córdova"
+    ],
+    "Gerald Távara": [
+      "Gerald Tábara",
+      "Gerald Támara",
+      "Gerald Tavara"
+    ],
+    "Germán Pinillos": [
+      "Pinillos"
+    ],
+    "Gianfranco Chávez": [
+      "Gianfranco Chavez"
+    ],
+    "Gregorio Bernales": [
+      "G. Bernales"
+    ],
+    "Gustavo Vassallo": [
+      "Gustavo Vasallo"
+    ],
+    "Henry Quinteros": [
+      "H. Quinteros"
+    ],
+    "Hernán Rengifo": [
+      "H. Rengifo"
+    ],
+    "Horacio Calcaterra": [
+      "H. Calcaterra"
+    ],
+    "Héctor Chumpitaz": [
+      "Chumpitaz"
+    ],
+    "Héctor Hurtado": [
+      "H. Hurtado",
+      "Hector Hurtado"
+    ],
+    "Ignácio da Silva": [
+      "Ignacio",
+      "Ignácio"
+    ],
+    "Irven Ávila": [
+      "I. Ávila",
+      "Irven Avila"
+    ],
+    "Isaac Ponte": [
+      "I. Ponte"
+    ],
+    "Ivan Alvarado (?)": [
+      "Alvarado",
+      "I.Alvarado"
+    ],
+    "Jean Ferrari": [
+      "J. Ferrari",
+      "Ferrari"
+    ],
+    "Jesús Castillo": [
+      "Jesus Castillo"
+    ],
+    "Jhilmar Lora": [
+      "Jhilmar Lobaton"
+    ],
+    "Joazinho Arroé": [
+      "Joazinho Arroe"
+    ],
+    "Jorge Cazulo": [
+      "J. Cazulo"
+    ],
+    "Jorge Hirano": [
+      "Hirano"
+    ],
+    "Jorge Huamán": [
+      "Jorge Huaman"
+    ],
+    "Jorge Lazo": [
+      "Lazo"
+    ],
+    "Jorge Soto": [
+      "J. Soto",
+      "J.Soto",
+      "Soto"
+    ],
+    "Josepmir Ballón": [
+      "J. Ballón",
+      "Josepmir Ballon"
+    ],
+    "Josué Estrada": [
+      "Josue Estrada"
+    ],
+    "José Fernández": [
+      "J. Fernandez",
+      "José Fernandez"
+    ],
+    "José Moisela": [
+      "José Moisella",
+      "Jorge Moisella"
+    ],
+    "José del Castillo": [
+      "Del Castillo"
+    ],
+    "Juan Caballero": [
+      "Caballero"
+    ],
+    "Juan Carlos Oblitas": [
+      "Oblitas"
+    ],
+    "Juan Orbegoso": [
+      "Orbegoso",
+      "Orbegozo"
+    ],
+    "Julio César Antón": [
+      "Antón"
+    ],
+    "Julio César Uribe": [
+      "Uribe"
+    ],
+    "Julio Rivera": [
+      "Rivera"
+    ],
+    "Junior Ross": [
+      "J. Ross",
+      "Júnior Ross"
+    ],
+    "Luis Advíncula": [
+      "Luis Advincula"
+    ],
+    "Luis Alberto Mora": [
+      "Mora"
+    ],
+    "Luis Bonnet": [
+      "L. Bonnet",
+      "Bonnet",
+      "Luis Alberto Bonnet"
+    ],
+    "Luis González": [
+      "Lluis Gonzáles"
+    ],
+    "Manuel Earl": [
+      "Earl"
+    ],
+    "Marcelo Asteggiano": [
+      "M.Asteggiano",
+      "Asteggiano"
+    ],
+    "Marcio Valverde": [
+      "M. Valverde"
+    ],
+    "Mario Aquije": [
+      "Aquije"
+    ],
+    "Martín Cauteruccio": [
+      "Martin Cauteruccio"
+    ],
+    "Martín Hidalgo": [
+      "Martin Hidalgo",
+      "Hidalgo"
+    ],
+    "Martín Távara": [
+      "Martin Tavara"
+    ],
+    "Miguel Gutiérrez": [
+      "Gutierrez"
+    ],
+    "Miguel Villalta": [
+      "M. Villalta"
+    ],
+    "Miguel Ximénez": [
+      "Miguel Ximenez"
+    ],
+    "Nicolás Nieri": [
+      "Nieri"
+    ],
+    "Nilson Esidio": [
+      "Nilson"
+    ],
+    "Nolberto Solano": [
+      "Solano"
+    ],
+    "Omar Merlo": [
+      "O. Merlo"
+    ],
+    "Oswaldo Ramírez": [],
+    "Palhinha": [
+      "Palinha"
+    ],
+    "Paul Cominges": [],
+    "Pedro Garay": [
+      "Garay",
+      "P.Garay"
+    ],
+    "Pedro Ruiz": [
+      "Ruiz"
+    ],
+    "Percy Olivares": [
+      "Olivares"
+    ],
+    "Percy Rojas": [
+      "Rojas"
+    ],
+    "Ramón Mifflin": [
+      "Mifflin"
+    ],
+    "Renzo Revoredo": [
+      "R. Revoredo"
+    ],
+    "Renzo Sheput": [
+      "R. Sheput"
+    ],
+    "Reynaldo Jaime": [
+      "Jaime"
+    ],
+    "Roberto Arrelucea": [
+      "Arrelucea"
+    ],
+    "Roberto Holsen": [
+      "R. Holsen",
+      "Holsen"
+    ],
+    "Roberto Mosquera": [],
+    "Roberto Palacios": [
+      "R. Palacios"
+    ],
+    "Salazar (1999)": [
+      "Salazar",
+      "R.Salazar"
+    ],
+    "Santiago González": [
+      "Santiago Gonzales"
+    ],
+    "Sergio Junior": [
+      "S. Junior",
+      "Sergio Júnior"
+    ],
+    "Tadeo Risco": [
+      "Risco"
+    ],
+    "Vinha de Souza": [
+      "De Souza"
+    ],
+    "Waldir Sáenz": [
+      "Waldir Saenz"
+    ],
+    "Walter Vílchez": [
+      "Walter Vilchez"
+    ],
+    "William Chiroque": [
+      "W. Chiroque"
+    ],
+    "Yoshimar Yotún": [
+      "Yoshimar Yotun"
+    ]
+  },
+  "overrides": [
+    {
+      "date": "1974-04-03",
+      "raw": "Palacios",
+      "canonical": "Augusto Palacios",
+      "confidence": "doubtful",
+      "evidence": "Only 'Augusto Palacios' in squad era (1972 rows); Roberto Palacios was born 1972."
+    },
+    {
+      "date": "1992-03-25",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-02-08",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-02-21",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-03-08",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-03-17",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-05-04",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-04-07",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-04-13",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-05-19",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-10-20",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1978-07-25",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1978-08-01",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1980-04-25",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1981-03-24",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1981-04-07",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1981-04-14",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1978-07-05",
+      "raw": "Mosquera",
+      "canonical": "Roberto Mosquera",
+      "confidence": "sure",
+      "evidence": "'Roberto Mosquera' appears in 1979-80 rows."
+    },
+    {
+      "date": "1978-07-16",
+      "raw": "Mosquera",
+      "canonical": "Roberto Mosquera",
+      "confidence": "sure",
+      "evidence": "'Roberto Mosquera' appears in 1979-80 rows."
+    }
+  ],
+  "unresolved": [
+    {
+      "raw": "Ramírez",
+      "dates": "1961-1962",
+      "reason": "Not Oswaldo Ramírez (born 1947). No first name in source; 1961 SC squad unverified."
+    },
+    {
+      "raw": "Mosquera",
+      "dates": "1956",
+      "reason": "Not Roberto Mosquera (born 1956). First name unknown."
+    },
+    {
+      "raw": "Delgado",
+      "dates": "1956-1961",
+      "reason": "First name unknown; could be more than one player."
+    },
+    {
+      "raw": "F. Gonzales",
+      "dates": "1969",
+      "reason": "Initial F. does not match Carlos Gonzáles Pajuelo; could be a typo or a different player."
+    },
+    {
+      "raw": "Soto",
+      "dates": "1995",
+      "reason": "Assigned to Jorge Soto, but his brother José Soto also scored in 1995 (José Soto has 4 goals that year)."
+    },
+    {
+      "raw": "Ávila",
+      "dates": "1993",
+      "reason": "Not Irven Ávila (born 1990). First name unknown."
+    },
+    {
+      "raw": "Torres / Zegarra / Prado / Navarro",
+      "dates": "1992-1993",
+      "reason": "Surname only; possibly Erick Torres, Ricardo Zegarra, or Orlando/Pedro Prado, but they are outside their known goal years in this dataset."
+    },
+    {
+      "raw": "Ferreira / Ferreyra / J.Ferreira",
+      "dates": "1998-1999",
+      "reason": "Grouped as one player; first name unconfirmed."
+    },
+    {
+      "raw": "Salazar / R.Salazar, Sánchez, Silva, Gonzales, Valencia, Vassallo",
+      "dates": "1999",
+      "reason": "Surname only. Silva might be Roberto Silva (2000-01 rows), and Vassallo is not Gustavo Vassallo (2006). Left unmerged."
+    },
+    {
+      "raw": "A. Gonzales",
+      "dates": "2009-03-21",
+      "reason": "Initial only; player not identified."
+    },
+    {
+      "raw": "Zegarra",
+      "dates": "1993-1996",
+      "reason": "Left separate from Ricardo Zegarra (1996) and from P.Zegarra (1998)."
+    }
+  ]
+}
