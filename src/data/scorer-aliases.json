@@ -1,0 +1,689 @@
+{
+  "_doc": "Canonical scorer name -> raw variants as written in historico_completo_sc.json `Goles (Solo SC)`. Overrides resolve ambiguous surnames by match date and take precedence. Raw strings are not rewritten. Unlisted raw names count as their own player.",
+  "players": {
+    "Alberto Gallardo": [
+      "Gallardo"
+    ],
+    "Alberto Rodríguez": [
+      "Alberto Rodriguez"
+    ],
+    "Aldo Olcese": [
+      "A. Olcese",
+      "Olcese"
+    ],
+    "Alejandro González": [
+      "A. Gonzales"
+    ],
+    "Alejandro Hohberg": [],
+    "Amilton Prado": [
+      "A. Prado"
+    ],
+    "Andrés Gonzales": [
+      "Gonzales"
+    ],
+    "Andrés Mendoza": [
+      "A.Mendoza",
+      "Mendoza"
+    ],
+    "Brenner Marlos": [
+      "Brenner"
+    ],
+    "Carlos Carbonell": [
+      "Carbonell"
+    ],
+    "Carlos Gonzáles Pajuelo": [
+      "Gonzáles Pajuelo"
+    ],
+    "Carlos Juárez": [
+      "C. Juárez",
+      "Carlos Juarez"
+    ],
+    "Carlos Lobatón": [
+      "C. Lobaton",
+      "C. Lobatón",
+      "Carlos Lobaton"
+    ],
+    "Carlos Torres": [
+      "Torres"
+    ],
+    "Carlos Zegarra": [
+      "C. Zegarra"
+    ],
+    "Christian Ortiz": [
+      "Christian Ortíz",
+      "Cristian Ortiz"
+    ],
+    "Christofer Gonzales": [
+      "Christofer Gonzáles"
+    ],
+    "Christopher Olivares": [
+      "C. Olivares",
+      "Cristopher Olivares"
+    ],
+    "César Loyola": [
+      "Loyola"
+    ],
+    "César Pereyra": [
+      "Cesar Pereyra"
+    ],
+    "Damián Ísmodes": [
+      "D. Ismodes",
+      "Damian Ismodes",
+      "Damián Ismodes"
+    ],
+    "Daniel Noriega": [
+      "D. Noriega"
+    ],
+    "Daniel Sánchez": [
+      "D. Sánchez",
+      "Daniel Sanchez"
+    ],
+    "Diego Ifrán": [
+      "Diego Ifran"
+    ],
+    "Donizete Amorim": [
+      "D. Amorim"
+    ],
+    "Edinson Chávez": [
+      "Edinson Chavez"
+    ],
+    "Eloy Campos": [
+      "Campos"
+    ],
+    "Emanuel Herrera": [
+      "E. Herrera"
+    ],
+    "Faustino Delgado": [
+      "Delgado"
+    ],
+    "Fernando Pacheco": [
+      "F. Pacheco"
+    ],
+    "Flavio Gómez": [
+      "F. Gómez",
+      "Flavio Gomez"
+    ],
+    "Flavio Maestri": [
+      "F. Maestri",
+      "Maestri"
+    ],
+    "Francesco Manassero": [
+      "Manassero"
+    ],
+    "Francisco Gonzales": [
+      "F. Gonzales"
+    ],
+    "Franco Navarro": [
+      "Navarro"
+    ],
+    "Gabriel Costa": [
+      "G. Costa"
+    ],
+    "Gastón Córdoba": [
+      "Gastón Córdova"
+    ],
+    "Gerald Távara": [
+      "Gerald Tábara",
+      "Gerald Támara",
+      "Gerald Tavara"
+    ],
+    "Germán Pinillos": [
+      "Pinillos"
+    ],
+    "Gianfranco Chávez": [
+      "Gianfranco Chavez"
+    ],
+    "Gregorio Bernales": [
+      "G. Bernales"
+    ],
+    "Gustavo Vassallo": [
+      "Gustavo Vasallo",
+      "Vassallo"
+    ],
+    "Henry Quinteros": [
+      "H. Quinteros"
+    ],
+    "Hernán Rengifo": [
+      "H. Rengifo"
+    ],
+    "Horacio Calcaterra": [
+      "H. Calcaterra"
+    ],
+    "Héctor Chumpitaz": [
+      "Chumpitaz"
+    ],
+    "Héctor Hurtado": [
+      "H. Hurtado",
+      "Hector Hurtado"
+    ],
+    "Héctor Sánchez": [
+      "Sánchez"
+    ],
+    "Ignácio da Silva": [
+      "Ignacio",
+      "Ignácio"
+    ],
+    "Irven Ávila": [
+      "I. Ávila",
+      "Irven Avila"
+    ],
+    "Isaac Ponte": [
+      "I. Ponte"
+    ],
+    "Ismael Alvarado": [
+      "Alvarado",
+      "I.Alvarado"
+    ],
+    "Javier Ferreira": [
+      "Ferreira",
+      "Ferreyra",
+      "J.Ferreira"
+    ],
+    "Jean Ferrari": [
+      "J. Ferrari",
+      "Ferrari"
+    ],
+    "Jesús Castillo": [
+      "Jesus Castillo"
+    ],
+    "Jhilmar Lobatón": [
+      "Jhilmar Lobaton"
+    ],
+    "Joazinho Arroé": [
+      "Joazinho Arroe"
+    ],
+    "Jorge Cazulo": [
+      "J. Cazulo"
+    ],
+    "Jorge Hirano": [
+      "Hirano"
+    ],
+    "Jorge Huamán": [
+      "Jorge Huaman"
+    ],
+    "Jorge Lazo": [
+      "Lazo"
+    ],
+    "Jorge Soto": [
+      "J. Soto",
+      "J.Soto",
+      "Soto"
+    ],
+    "Josepmir Ballón": [
+      "J. Ballón",
+      "Josepmir Ballon"
+    ],
+    "Josué Estrada": [
+      "Josue Estrada"
+    ],
+    "José Fernández": [
+      "J. Fernandez",
+      "José Fernandez"
+    ],
+    "José Moisela": [
+      "José Moisella",
+      "Jorge Moisella"
+    ],
+    "José del Castillo": [
+      "Del Castillo"
+    ],
+    "Juan Caballero": [
+      "Caballero"
+    ],
+    "Juan Carlos Oblitas": [
+      "Oblitas"
+    ],
+    "Juan Orbegoso": [
+      "Orbegoso",
+      "Orbegozo"
+    ],
+    "Julio César Antón": [
+      "Antón"
+    ],
+    "Julio César Uribe": [
+      "Uribe"
+    ],
+    "Julio Rivera": [
+      "Rivera"
+    ],
+    "Junior Ross": [
+      "J. Ross",
+      "Júnior Ross"
+    ],
+    "Luis Advíncula": [
+      "Luis Advincula"
+    ],
+    "Luis Alberto Mora": [
+      "Mora"
+    ],
+    "Luis Bonnet": [
+      "L. Bonnet",
+      "Bonnet",
+      "Luis Alberto Bonnet"
+    ],
+    "Luis González": [
+      "Lluis Gonzáles"
+    ],
+    "Luis Ávila": [
+      "Ávila"
+    ],
+    "Manuel Earl": [
+      "Earl"
+    ],
+    "Marcelo Asteggiano": [
+      "M.Asteggiano",
+      "Asteggiano"
+    ],
+    "Marcio Valverde": [
+      "M. Valverde"
+    ],
+    "Marco Valencia": [
+      "Valencia"
+    ],
+    "Mario Aquije": [
+      "Aquije"
+    ],
+    "Martín Cauteruccio": [
+      "Martin Cauteruccio"
+    ],
+    "Martín Hidalgo": [
+      "Martin Hidalgo",
+      "Hidalgo"
+    ],
+    "Martín Távara": [
+      "Martin Tavara"
+    ],
+    "Miguel Gutiérrez": [
+      "Gutierrez"
+    ],
+    "Miguel Villalta": [
+      "M. Villalta"
+    ],
+    "Miguel Ximénez": [
+      "Miguel Ximenez"
+    ],
+    "Nicolás Nieri": [
+      "Nieri"
+    ],
+    "Nilson Esidio": [
+      "Nilson"
+    ],
+    "Nolberto Solano": [
+      "Solano"
+    ],
+    "Omar Merlo": [
+      "O. Merlo"
+    ],
+    "Orlando Prado": [
+      "Prado"
+    ],
+    "Oswaldo Ramírez": [],
+    "Palhinha": [
+      "Palinha"
+    ],
+    "Paul Cominges": [],
+    "Pedro Garay": [
+      "Garay",
+      "P.Garay"
+    ],
+    "Pedro Ruiz": [
+      "Ruiz"
+    ],
+    "Percy Olivares": [
+      "Olivares"
+    ],
+    "Percy Rojas": [
+      "Rojas"
+    ],
+    "Ramón Mifflin": [
+      "Mifflin"
+    ],
+    "Renzo Revoredo": [
+      "R. Revoredo"
+    ],
+    "Renzo Sheput": [
+      "R. Sheput"
+    ],
+    "Reynaldo Jaime": [
+      "Jaime"
+    ],
+    "Roberto Arrelucea": [
+      "Arrelucea"
+    ],
+    "Roberto Holsen": [
+      "R. Holsen",
+      "Holsen"
+    ],
+    "Roberto Mosquera": [],
+    "Roberto Palacios": [
+      "R. Palacios"
+    ],
+    "Roberto Salazar": [
+      "R.Salazar",
+      "Salazar"
+    ],
+    "Roberto Silva": [
+      "Silva"
+    ],
+    "Santiago González": [
+      "Santiago Gonzales"
+    ],
+    "Sergio Junior": [
+      "S. Junior",
+      "Sergio Júnior"
+    ],
+    "Tadeo Risco": [
+      "Risco"
+    ],
+    "Vinha de Souza": [
+      "De Souza"
+    ],
+    "Waldir Sáenz": [
+      "Waldir Saenz"
+    ],
+    "Walter Vílchez": [
+      "Walter Vilchez"
+    ],
+    "William Chiroque": [
+      "W. Chiroque"
+    ],
+    "Yoshimar Yotún": [
+      "Yoshimar Yotun"
+    ]
+  },
+  "overrides": [
+    {
+      "date": "1974-04-03",
+      "raw": "Palacios",
+      "canonical": "Augusto Palacios",
+      "confidence": "sure",
+      "evidence": "Transfermarkt match sheet: Augusto Palacios 42'. https://www.transfermarkt.co.uk/spielbericht/index/spielbericht/3293067"
+    },
+    {
+      "date": "1961-08-15",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1961-08-27",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1961-09-03",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1961-09-24",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1961-10-07",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1961-10-29",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1961-12-04",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1962-01-06",
+      "raw": "Ramírez",
+      "canonical": "Alberto Ramírez",
+      "confidence": "sure",
+      "evidence": "Alberto 'Cachito' Ramírez scored 10 in 1961 and the 1962 playoff goal. https://www.clubsportingcristal.pe/19-historia/campeones/103-campeon-1961 ; https://www.gloriosoceleste.com/2019/07/29/campana-sporting-cristal-1961/"
+    },
+    {
+      "date": "1956-08-18",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1956-09-02",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1956-09-09",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1956-09-16",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1956-10-07",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1956-10-14",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1956-10-21",
+      "raw": "Mosquera",
+      "canonical": "Máximo Mosquera",
+      "confidence": "sure",
+      "evidence": "1956 squad lists Máximo 'Vides' Mosquera as the only Mosquera. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956"
+    },
+    {
+      "date": "1993-04-14",
+      "raw": "Zegarra",
+      "canonical": "Pablo Zegarra",
+      "confidence": "sure",
+      "evidence": "Pablo Zegarra scored in the 1993 Libertadores; he was in the squad 1992-93. https://www.weltfussball.de/wettbewerb/co24/conmebol-copa-libertadores/se4919/1993/statistik-torjaeger/ ; https://www.footballdatabase.eu/es/club/equipo/1182-sporting_cristal/1993"
+    },
+    {
+      "date": "1996-03-26",
+      "raw": "Zegarra",
+      "canonical": "Ricardo Zegarra",
+      "confidence": "sure",
+      "evidence": "Ricardo Zegarra 50' and 68' vs Peñarol. https://www.ceroacero.com.co/partido/1996-03-26-sporting-cristal-penarol/1103999"
+    },
+    {
+      "date": "1992-03-25",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-02-08",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-02-21",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-03-08",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-03-17",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1995-05-04",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-04-07",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-04-13",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-05-19",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1996-10-20",
+      "raw": "Palacios",
+      "canonical": "Roberto Palacios",
+      "confidence": "sure",
+      "evidence": "Roberto 'Chorri' Palacios debuted for SC in 1992 and played there until 1998."
+    },
+    {
+      "date": "1978-07-25",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1978-08-01",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1980-04-25",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1981-03-24",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1981-04-07",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1981-04-14",
+      "raw": "Ramírez",
+      "canonical": "Oswaldo Ramírez",
+      "confidence": "sure",
+      "evidence": "'Oswaldo Ramírez' is the full name in the same 1979-80 rows; Cachito Ramírez played for SC in that period."
+    },
+    {
+      "date": "1978-07-05",
+      "raw": "Mosquera",
+      "canonical": "Roberto Mosquera",
+      "confidence": "sure",
+      "evidence": "'Roberto Mosquera' appears in 1979-80 rows."
+    },
+    {
+      "date": "1978-07-16",
+      "raw": "Mosquera",
+      "canonical": "Roberto Mosquera",
+      "confidence": "sure",
+      "evidence": "'Roberto Mosquera' appears in 1979-80 rows."
+    }
+  ],
+  "unresolved": [
+    {
+      "raw": "P.Zegarra",
+      "dates": "1998",
+      "reason": "Probably Pablo Zegarra, but no 1998 source found. Left unmerged."
+    },
+    {
+      "raw": "Salazar",
+      "dates": "1999-03-11",
+      "reason": "Assigned to Roberto Salazar as doubtful. Santiago Salazar was also in the 1999 squad, but national-football-teams credits him with 0 goals that year. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html"
+    },
+    {
+      "raw": "Lluis Gonzáles",
+      "dates": "2004-11-21",
+      "reason": "Merged into Luis González, but a stats site credits Robert Lima with 77' and 89' in Alianza Atlético 4-3 Sporting Cristal, so the source row itself may be wrong."
+    }
+  ],
+  "evidence": {
+    "Alberto Gallardo": "Joined SC in 1960; scored 18 in 1961; titles 1961/68/70/72. https://es.wikipedia.org/wiki/Anexo:Futbolistas_del_Club_Sporting_Cristal",
+    "Faustino Delgado": "Top scorer in 1956 (11 goals) and in the 1961 squad; the only Delgado. https://www.clubsportingcristal.pe/19-historia/campeones/88-campeon-1956",
+    "Francisco Gonzales": "RSSSF lists 'F.González' separately from 'González Pajuelo' in 1969. Francisco Gonzales León was SC's striker. https://rsssf.org/sacups/copa69.html ; https://es.wikipedia.org/wiki/Francisco_Gonzales_Le%C3%B3n",
+    "Luis Ávila": "Luis Ávila, SC, 3 goals in the 1993 Libertadores. https://www.weltfussball.de/wettbewerb/co24/conmebol-copa-libertadores/se4919/1993/statistik-torjaeger/",
+    "Carlos Torres": "Carlos Torres 27' vs Universitario, 1993-02-10. http://www.daleucampeon.com/Libertadores1993.htm",
+    "Orlando Prado": "Transfermarkt 1992-04-03 match sheet: Orlando Prado 1-0. https://www.transfermarkt.co.uk/spielbericht/index/spielbericht/3295391",
+    "Franco Navarro": "Franco Navarro was SC's centre forward in 1992 and scored in the 1992 Libertadores. https://www.soccerzz.com/team/sporting-cristal?epoca_id=121",
+    "Jorge Soto": "RSSSF: 'J.Soto' 1995-03-17; ceroacero: Jorge Soto 71' 1995-05-04. https://www.rsssf.org/sacups/copa95.html ; https://www.ceroacero.com.co/partido/1995-05-04-sporting-cristal-caracas-fc/1103961",
+    "Javier Ferreira": "Paraguayan midfielder Javier Ferreira, 11 goals in 1999. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html",
+    "Héctor Sánchez": "Héctor 'Pocholo' Sánchez, Clausura 1999, 8 goals. https://es.wikipedia.org/wiki/H%C3%A9ctor_Hern%C3%A1n_S%C3%A1nchez",
+    "Roberto Silva": "Roberto Silva, 10 goals in 1999. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html",
+    "Andrés Gonzales": "Andrés Gonzales, 1999 squad. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html",
+    "Marco Valencia": "Marco Valencia, 2 goals in 1999. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html",
+    "Gustavo Vassallo": "Gustavo Vassallo (born 1978), 2 goals in 1999; the same player as in 2006. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html",
+    "Ismael Alvarado": "Ismael Alvarado, 1 goal in 1999. https://www.national-football-teams.com/app.php/club/1856/1999_2/Sporting_Cristal_Lima.html",
+    "Roberto Salazar": "Roberto Salazar was in the 1999 squad (Transfermarkt). https://www.transfermarkt.co/club-sporting-cristal/startseite/verein/1450/saison_id/1998",
+    "Alejandro González": "ESPN/DeChalaca: Alejandro González 26' vs Inti Gas, 2009-03-21. https://www.espn.com/soccer/match/_/gameId/262995/ayacucho-fc-sporting-cristal",
+    "Jhilmar Lobatón": "A real, separate player, not a typo for Jhilmar Lora: Jhilmar Lobatón scored 90+6' vs Binacional, 2020-10-17. https://elcomercio.pe/deporte-total/futbol-peruano/sporting-cristal-6-3-binacional-goles-resultado-y-resumen-del-partido-con-hat-trick-de-emanuel-herrera-video-liga-1-nczd-noticia/",
+    "José Moisela": "Paysandu 2-1 SC, 2003-03-18: Moisela 53'. The only Moisela at SC was José (2001-05). https://rsssf.org/sacups/copa03.html",
+    "Juan Caballero": "Juan Caballero 83' vs ULA Mérida, 1984-05-11. https://www.balonazos.com/en-1984-en-copa-libertadores-el-ula-merida-elimino-a-sportig-cristal/",
+    "Vinha de Souza": "Vinha de Souza scored vs Olimpia, 1973-02-17. https://www.transfermarkt.co.uk/club-sporting-cristal_club-olimpia/index/spielbericht/3292947",
+    "Gerald Távara": "'Támara'/'Tábara' are spelling errors; Gerald Távara is the SC midfielder from 2019 onward. https://es.wikipedia.org/wiki/Gerald_T%C3%A1vara"
+  }
+}

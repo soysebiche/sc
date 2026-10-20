@@ -13,10 +13,19 @@ test('renders the historical archive with a named date control', async () => {
     level: 1,
     name: /Sebiche Celeste — Archivo Histórico de Sporting Cristal/i,
   })).toBeInTheDocument();
-  expect(await screen.findByText(/Archivo Histórico · 1937 Partidos/i)).toBeInTheDocument();
+  expect(await screen.findByText(/Archivo Histórico · 1948 Partidos/i)).toBeInTheDocument();
   expect(await screen.findByLabelText('Fecha para consultar')).toHaveAttribute('type', 'date');
   expect(screen.getByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Universitario/).length).toBeGreaterThan(0);
+  expect(screen.queryByText('Fecha 8')).not.toBeInTheDocument();
+  expect(screen.queryByText('Fecha 9')).not.toBeInTheDocument();
+  expect(screen.queryByText(/CD Moquegua/)).not.toBeInTheDocument();
+  const upcoming = screen.getByRole('heading', { name: 'Próximos encuentros' }).closest('section');
+  expect(within(upcoming).queryByText('Fecha 10')).not.toBeInTheDocument();
+  expect(within(upcoming).queryByText(/Atlético Grau/)).not.toBeInTheDocument();
+  expect(within(upcoming).queryByText(/Semifinal - Ida/)).not.toBeInTheDocument();
+  expect(within(upcoming).queryByText(/Semifinal - Vuelta/)).not.toBeInTheDocument();
+  expect(within(upcoming).getByText(/Fecha 13/)).toBeInTheDocument();
+  expect(within(upcoming).getByText(/Fecha 14/)).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
@@ -89,7 +98,7 @@ test('paginates country histories independently', async () => {
 
 test('persists the selected theme', async () => {
   render(<App />);
-  await screen.findByText(/1937 Partidos/i);
+  await screen.findByText(/1948 Partidos/i);
   fireEvent.click(screen.getByRole('button', { name: 'Cambiar a modo noche' }));
 
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
