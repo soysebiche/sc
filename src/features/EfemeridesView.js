@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import MatchRow from '../components/MatchRow';
+import ShareButton from '../components/ShareButton';
 import UpcomingMatches from '../components/UpcomingMatches';
 import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
 import { useUrlState } from '../hooks/useUrlState';
@@ -28,6 +29,7 @@ function EfemeridesView({ matches }) {
           <label htmlFor="efemerides-date" className="block text-sm font-medium mb-2">Fecha para consultar</label>
           <input id="efemerides-date" type="date" value={selectedDate} onChange={event => setSelectedDate(event.target.value)} className="w-full" />
         </div>
+        <div className="mt-3"><ShareButton type="efemeride" date={selectedDate} text="Un día como hoy jugó Sporting Cristal" label="Compartir efeméride" /></div>
       </section>
 
       {dayMatches.length > 0 ? (

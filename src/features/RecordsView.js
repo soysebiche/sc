@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+import MinuteBars from '../components/MinuteBars';
 import StatTile from '../components/StatTile';
 import aliases from '../data/scorer-aliases.json';
 import { formatMatchDate } from '../domain/matches';
+import { minuteDistribution } from '../domain/goals';
 import { tournamentRecords } from '../domain/rivals';
 import { calculateHomeAway, calculateRecords, calculateStreaks, winRate } from '../domain/stats';
 
@@ -65,6 +67,8 @@ function RecordsView({ matches }) {
   const homeAway = useMemo(() => calculateHomeAway(matches), [matches]);
   const byTournament = useMemo(() => tournamentRecords(matches, aliases), [matches]);
   const { home, away } = homeAway.overall;
+  const minutes = useMemo(() => minuteDistribution(matches, aliases), [matches]);
+  const peak = minutes.buckets.reduce((a, b) => (b.goals > a.goals ? b : a));
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -127,6 +131,19 @@ function RecordsView({ matches }) {
           <StatTile label="Visita · % victorias" value={`${winRate(away)}%`} detail={`${away.V}V ${away.E}E ${away.P}D · ${away.played} PJ`} tone="celeste" />
           <StatTile label="Visita · goles" value={`${away.goalsFor}-${away.goalsAgainst}`} />
         </div>
+      </section>
+      <section className="archive-section">
+        <h3 className="collection-title">Goles por minuto</h3>
+        <p className="text-xs copy-muted mb-3">Cobertura: {minutes.coverage.matches} de {minutes.coverage.matchesWithGoals} partidos con gol celeste tienen el minuto de cada gol ({minutes.coverage.goals} goles). El descuento cuenta en el tramo de su tiempo (45+ y 90+).</p>
+        <div className="stat-strip stat-strip--4">
+          <StatTile label="Tramo más goleador" value={`${peak.label}'`} detail={`${peak.goals} goles`} tone="celeste" />
+          <StatTile label="Primer tiempo" value={minutes.halves.first} detail={`${Math.round((minutes.halves.first / Math.max(1, minutes.coverage.goals)) * 100)}%`} />
+          <StatTile label="Segundo tiempo" value={minutes.halves.second} detail={`${Math.round((minutes.halves.second / Math.max(1, minutes.coverage.goals)) * 100)}%`} />
+          <StatTile label="Goles del 90' en adelante" value={minutes.lateGoals} detail={minutes.lateScorers[0] ? `Más: ${minutes.lateScorers[0].name} (${minutes.lateScorers[0].goals})` : ''} />
+        </div>
+        <MinuteBars buckets={minutes.buckets} />
+        <h4 className="font-bold mt-4 mb-2">Goleadores del final (90{"'"} o más)</h4>
+        <ol className="text-sm">{minutes.lateScorers.slice(0, 8).map(s => <li key={s.name}>{s.name} · {s.goals}</li>)}</ol>
       </section>
       <SplitTable title="Local vs. visita por década" labelHeader="Década" rows={homeAway.perDecade.map(d => ({ ...d, label: `${d.decade}s` }))} />
       <SplitTable title="Local vs. visita por rival (10+ partidos)" labelHeader="Rival" rows={homeAway.perRival.map(r => ({ ...r, label: r.name }))} />

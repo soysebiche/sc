@@ -1,10 +1,13 @@
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
+import { useUrlState } from '../hooks/useUrlState';
 import aliases from '../data/scorer-aliases.json';
 import { listDecades, listTournaments, rankScorers, SCORER_COMPLETE_FROM } from '../domain/stats';
 
 const PAGE = 50;
+const ScorerProfile = lazy(() => import('./ScorerProfile'));
 
 function ScorersView({ matches }) {
+  const [player, setPlayer] = useUrlState('jugador', '', { history: 'push' });
   const [tournament, setTournament] = useState('');
   const [decade, setDecade] = useState('');
   const [limit, setLimit] = useState(PAGE);
@@ -12,6 +15,14 @@ function ScorersView({ matches }) {
   const decades = useMemo(() => listDecades(matches), [matches]);
   const ranking = useMemo(() => rankScorers(matches, aliases, { tournament, decade }), [matches, tournament, decade]);
   const totalGoals = ranking.reduce((sum, p) => sum + p.goals, 0);
+
+  if (player) {
+    return (
+      <Suspense fallback={<div className="archive-skeleton" role="status"><span>Cargando perfil…</span></div>}>
+        <ScorerProfile matches={matches} name={player} onBack={() => setPlayer('')} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -49,7 +60,7 @@ function ScorersView({ matches }) {
             <tbody>{ranking.slice(0, limit).map((p, i) => (
               <tr key={p.name}>
                 <td className="text-center">{i + 1}</td>
-                <td>{p.name}</td>
+                <td><a className="link-accent" href={`?view=goleadores&jugador=${encodeURIComponent(p.name)}`} onClick={e => { e.preventDefault(); setPlayer(p.name); window.scrollTo?.(0, 0); }}>{p.name}</a></td>
                 <td className="text-center font-bold text-accent">{p.goals}{p.lowerBound ? '*' : ''}</td>
                 <td className="text-center">{p.matches}</td>
                 <td className="text-center">{p.first === p.last ? p.first : `${p.first}–${p.last}`}</td>

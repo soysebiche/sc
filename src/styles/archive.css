@@ -957,3 +957,12 @@ input[type="date"]:focus {
     border: 1px solid var(--border-subtle);
   }
 }
+
+/* Goal-minute bars and share button */
+.minute-bars ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.minute-bars li { display: grid; grid-template-columns: 4.5rem 1fr 3rem; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+.minute-bars__track { background: var(--bg-inset); border-radius: 4px; height: 0.9rem; overflow: hidden; }
+.minute-bars__fill { display: block; height: 100%; background: var(--color-celeste); border-radius: 4px; }
+.minute-bars__value { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.share-x { display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none; }
+.link-accent { color: var(--color-celeste); text-decoration: underline; text-underline-offset: 2px; }
