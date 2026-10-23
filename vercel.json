@@ -63,10 +63,6 @@
     }
   ],
   "functions": {
-    "api/og/index.js": {
-      "includeFiles": "src/data/**",
-      "maxDuration": 10
-    },
     "api/share/index.js": {
       "includeFiles": "src/data/**"
     }
