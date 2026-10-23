@@ -1,8 +1,17 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { readFileSync } from 'node:fs';
+
+const archiveMetadata = JSON.parse(readFileSync(new URL('./src/data/archive-metadata.json', import.meta.url), 'utf8'));
+
+// Keep the meta description in sync with the dataset size.
+const archiveMetaDescription = () => ({
+  name: 'archive-meta-description',
+  transformIndexHtml: html => html.replace('%ARCHIVE_RECORD_COUNT%', archiveMetadata.recordCount.toLocaleString('en-US')),
+});
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), archiveMetaDescription()],
   esbuild: {
     loader: 'jsx',
     include: /src\/.*\.js$/,

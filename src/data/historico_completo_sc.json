@@ -10,7 +10,7 @@
     "Equipo Local": "Alianza Lima",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Zunino",
     "País": "Perú"
   },
@@ -25,7 +25,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Ciclista Lima",
     "Marcador": "3-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Zunino (2), Mosquera",
     "País": "Perú"
   },
@@ -55,7 +55,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Centro Iqueño",
     "Marcador": "4-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mosquera (2), Delgado (2)",
     "País": "Perú"
   },
@@ -70,7 +70,7 @@
     "Equipo Local": "Mariscal Sucre",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mosquera (2), Delgado",
     "País": "Perú"
   },
@@ -85,7 +85,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Atlético Chalaco",
     "Marcador": "3-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mosquera, Navarrete, Autogol",
     "País": "Perú"
   },
@@ -130,7 +130,7 @@
     "Equipo Local": "Carlos Concha",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Zunino, Mosquera",
     "País": "Perú"
   },
@@ -145,7 +145,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Lima",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Autogol, Mosquera",
     "País": "Perú"
   },
@@ -160,7 +160,7 @@
     "Equipo Local": "Ciclista Lima",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-4",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Delgado (2), Mosquera (2)",
     "País": "Perú"
   },
@@ -175,7 +175,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Municipal",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Delgado, Sacco",
     "País": "Perú"
   },
@@ -190,7 +190,7 @@
     "Equipo Local": "Centro Iqueño",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Delgado, Farfán, Navarrete",
     "País": "Perú"
   },
@@ -205,7 +205,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Mariscal Sucre",
     "Marcador": "3-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Zunino, Navarrete, Delgado",
     "País": "Perú"
   },
@@ -220,7 +220,7 @@
     "Equipo Local": "Atlético Chalaco",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Villanueva, Sacco",
     "País": "Perú"
   },
@@ -235,7 +235,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Sport Boys",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Zunino, Navarrete",
     "País": "Perú"
   },
@@ -250,7 +250,7 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -265,7 +265,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Carlos Concha",
     "Marcador": "4-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Delgado (2), Navarrete, Zunino",
     "País": "Perú"
   },
@@ -280,7 +280,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Municipal",
     "Marcador": "5-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Gallardo (3), Nieri, Ramírez",
     "País": "Perú"
   },
@@ -295,7 +295,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Sport Boys",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Gallardo",
     "País": "Perú"
   },
@@ -310,7 +310,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Lima",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ramírez (2)",
     "País": "Perú"
   },
@@ -325,7 +325,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Ciclista Lima",
     "Marcador": "3-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Gallardo (2), Ramírez",
     "País": "Perú"
   },
@@ -340,7 +340,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Defensor Lima",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Autogol",
     "País": "Perú"
   },
@@ -355,7 +355,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Universitario",
     "Marcador": "3-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ramírez (2), Gallardo",
     "País": "Perú"
   },
@@ -370,7 +370,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Centro Iqueño",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Gallardo, Delgado",
     "País": "Perú"
   },
@@ -385,7 +385,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Atlético Chalaco",
     "Marcador": "3-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ramírez, Gallardo (2)",
     "País": "Perú"
   },
@@ -400,7 +400,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Mariscal Sucre",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Gallardo",
     "País": "Perú"
   },
@@ -415,7 +415,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Municipal",
     "Marcador": "3-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Autogol (2), Ramírez",
     "País": "Perú"
   },
@@ -430,7 +430,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Sport Boys",
     "Marcador": "0-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -445,7 +445,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Lima",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Autogol",
     "País": "Perú"
   },
@@ -460,7 +460,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Ciclista Lima",
     "Marcador": "0-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -475,7 +475,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Defensor Lima",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ramírez, Castro",
     "País": "Perú"
   },
@@ -505,7 +505,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Centro Iqueño",
     "Marcador": "2-3",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Gallardo, Nieri",
     "País": "Perú"
   },
@@ -520,7 +520,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Atlético Chalaco",
     "Marcador": "2-4",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Gallardo (2)",
     "País": "Perú"
   },
@@ -550,7 +550,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Lima",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ramírez, Gallardo",
     "País": "Perú"
   },
@@ -7502,26 +7502,11 @@
   {
     "Año": 1996,
     "Mes": "Abril",
-    "Dia": 28,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-04-28",
-    "Torneo": "Apertura",
-    "Número de Fecha": "5",
-    "Equipo Local": "Deportivo Pesquero",
-    "Equipo Visita": "Sporting Cristal",
-    "Marcador": "3-0",
-    "Resultado": "D",
-    "Goles (Solo SC)": "-",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Abril",
     "Dia": 27,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-04-28",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "5",
     "Equipo Local": "Deportivo Pesquero",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
@@ -7562,26 +7547,11 @@
   {
     "Año": 1996,
     "Mes": "Mayo",
-    "Dia": 19,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-05-19",
-    "Torneo": "Apertura",
-    "Número de Fecha": "8",
-    "Equipo Local": "Sporting Cristal",
-    "Equipo Visita": "San Agustín",
-    "Marcador": "3-1",
-    "Resultado": "V",
-    "Goles (Solo SC)": "Garay, Palacios, Maestri",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Mayo",
     "Dia": 18,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-05-19",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "8",
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo San Agustín",
     "Marcador": "3-1",
@@ -7667,26 +7637,11 @@
   {
     "Año": 1996,
     "Mes": "Junio",
-    "Dia": 23,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-06-23",
-    "Torneo": "Apertura",
-    "Número de Fecha": "12",
-    "Equipo Local": "Sporting Cristal",
-    "Equipo Visita": "FBC Melgar",
-    "Marcador": "3-0",
-    "Resultado": "V",
-    "Goles (Solo SC)": "Garay, Asteggiano, Lazo",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Junio",
     "Dia": 22,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-06-23",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "12",
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "FBC Melgar",
     "Marcador": "3-0",
@@ -7697,26 +7652,11 @@
   {
     "Año": 1996,
     "Mes": "Junio",
-    "Dia": 30,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-06-30",
-    "Torneo": "Apertura",
-    "Número de Fecha": "13",
-    "Equipo Local": "Municipal",
-    "Equipo Visita": "Sporting Cristal",
-    "Marcador": "0-2",
-    "Resultado": "V",
-    "Goles (Solo SC)": "Solano, Lazo",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Junio",
     "Dia": 29,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-06-30",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "13",
     "Equipo Local": "Deportivo Municipal",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-2",
@@ -7832,26 +7772,11 @@
   {
     "Año": 1996,
     "Mes": "Agosto",
-    "Dia": 18,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-08-18",
-    "Torneo": "Apertura",
-    "Número de Fecha": "20",
-    "Equipo Local": "Sporting Cristal",
-    "Equipo Visita": "Deportivo Pesquero",
-    "Marcador": "3-1",
-    "Resultado": "V",
-    "Goles (Solo SC)": "Solano (2), Bonnet",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Agosto",
     "Dia": 17,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-08-18",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "20",
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Pesquero",
     "Marcador": "3-1",
@@ -7892,26 +7817,11 @@
   {
     "Año": 1996,
     "Mes": "Septiembre",
-    "Dia": 22,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-09-22",
-    "Torneo": "Apertura",
-    "Número de Fecha": "23",
-    "Equipo Local": "San Agustín",
-    "Equipo Visita": "Sporting Cristal",
-    "Marcador": "0-3",
-    "Resultado": "V",
-    "Goles (Solo SC)": "Solano, Soto, Julinho",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Septiembre",
     "Dia": 21,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-09-22",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "23",
     "Equipo Local": "Deportivo San Agustín",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-3",
@@ -7967,26 +7877,11 @@
   {
     "Año": 1996,
     "Mes": "Octubre",
-    "Dia": 13,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-10-13",
-    "Torneo": "Apertura",
-    "Número de Fecha": "27",
-    "Equipo Local": "FBC Melgar",
-    "Equipo Visita": "Sporting Cristal",
-    "Marcador": "1-1",
-    "Resultado": "E",
-    "Goles (Solo SC)": "Garay",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Octubre",
     "Dia": 12,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-10-13",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "27",
     "Equipo Local": "FBC Melgar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-1",
@@ -7997,26 +7892,11 @@
   {
     "Año": 1996,
     "Mes": "Octubre",
-    "Dia": 20,
-    "Día de la Semana": "Domingo",
-    "Fecha": "1996-10-20",
-    "Torneo": "Apertura",
-    "Número de Fecha": "28",
-    "Equipo Local": "Sporting Cristal",
-    "Equipo Visita": "Municipal",
-    "Marcador": "5-2",
-    "Resultado": "V",
-    "Goles (Solo SC)": "Solano (2), Palacios, Julinho, Soto",
-    "País": "Perú"
-  },
-  {
-    "Año": 1996,
-    "Mes": "Octubre",
     "Dia": 19,
     "Día de la Semana": "Sábado",
     "Fecha": "1996-10-20",
     "Torneo": "Descentralizado",
-    "Número de Fecha": "1",
+    "Número de Fecha": "28",
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "5-2",
@@ -8275,7 +8155,7 @@
     "Equipo Local": "Alianza Atlético",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "R.Serrano, Nilson",
     "País": "Perú"
   },
@@ -8290,7 +8170,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Pesquero",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "J.Soto, Nilson",
     "País": "Perú"
   },
@@ -8350,7 +8230,7 @@
     "Equipo Local": "Lawn Tennis",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-4",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "J.Soto, Nilson (2), P.Garay",
     "País": "Perú"
   },
@@ -8410,7 +8290,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Cienciano",
     "Marcador": "3-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Julinho, A.Mendoza, J.Soto",
     "País": "Perú"
   },
@@ -8440,7 +8320,7 @@
     "Equipo Local": "Sport Boys",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8470,7 +8350,7 @@
     "Equipo Local": "Unión Minas",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8515,7 +8395,7 @@
     "Equipo Local": "Deportivo Municipal",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "J.Soto, J.Ferreira, Julinho",
     "País": "Perú"
   },
@@ -8575,7 +8455,7 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "G.Tempone",
     "País": "Perú"
   },
@@ -8590,7 +8470,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Lawn Tennis",
     "Marcador": "5-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "M.Asteggiano, J.Soto, Nilson (2), A.Mendoza",
     "País": "Perú"
   },
@@ -8620,7 +8500,7 @@
     "Equipo Local": "Cienciano",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Nilson",
     "País": "Perú"
   },
@@ -8635,7 +8515,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Sport Boys",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8650,7 +8530,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Unión Minas",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Julinho (2)",
     "País": "Perú"
   },
@@ -8665,7 +8545,7 @@
     "Equipo Local": "FBC Melgar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8680,7 +8560,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "3-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "I.Alvarado, Nilson, Julinho",
     "País": "Perú"
   },
@@ -8695,7 +8575,7 @@
     "Equipo Local": "Alianza Atlético",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza, Nilson, Ferreyra",
     "País": "Perú"
   },
@@ -8710,7 +8590,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Pesquero",
     "Marcador": "0-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8725,7 +8605,7 @@
     "Equipo Local": "Juan Aurich",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "P.Zegarra",
     "País": "Perú"
   },
@@ -8740,7 +8620,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Universitario",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "P.Zegarra, Jorge Soto",
     "País": "Perú"
   },
@@ -8785,7 +8665,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Cienciano",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Asteggiano",
     "País": "Perú"
   },
@@ -8800,7 +8680,7 @@
     "Equipo Local": "Sport Boys",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8815,7 +8695,7 @@
     "Equipo Local": "Unión Minas",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -8830,7 +8710,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "FBC Melgar",
     "Marcador": "3-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Nilson (2), Olcese",
     "País": "Perú"
   },
@@ -8845,7 +8725,7 @@
     "Equipo Local": "Deportivo Municipal",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Carty",
     "País": "Perú"
   },
@@ -8860,7 +8740,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Atlético",
     "Marcador": "3-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Jorge Soto, Mendoza",
     "País": "Perú"
   },
@@ -8890,7 +8770,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Juan Aurich",
     "Marcador": "3-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Nilson, Jorge Soto (2)",
     "País": "Perú"
   },
@@ -8905,7 +8785,7 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Carty (2)",
     "País": "Perú"
   },
@@ -8920,7 +8800,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Lawn Tennis",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Nilson (2)",
     "País": "Perú"
   },
@@ -8935,7 +8815,7 @@
     "Equipo Local": "Alianza Lima",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Nilson, Mendoza",
     "País": "Perú"
   },
@@ -8950,7 +8830,7 @@
     "Equipo Local": "Cienciano",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Mendoza",
     "País": "Perú"
   },
@@ -8965,7 +8845,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Sport Boys",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza, Nilson",
     "País": "Perú"
   },
@@ -8980,7 +8860,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Unión Minas",
     "Marcador": "4-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza (2), Ferreira, Jorge Soto",
     "País": "Perú"
   },
@@ -8995,7 +8875,7 @@
     "Equipo Local": "FBC Melgar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Rivera",
     "País": "Perú"
   },
@@ -9010,7 +8890,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "7-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Jorge Soto (3), Nilson, Ferreira, Mendoza, Julinho",
     "País": "Perú"
   },
@@ -9025,7 +8905,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Lima",
     "Marcador": "1-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza",
     "País": "Perú"
   },
@@ -9040,7 +8920,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Universitario",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Nilson, Mendoza",
     "País": "Perú"
   },
@@ -9055,7 +8935,7 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Mendoza",
     "País": "Perú"
   },
@@ -9070,7 +8950,7 @@
     "Equipo Local": "Juan Aurich",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ferreira, Mendoza",
     "País": "Perú"
   },
@@ -9100,7 +8980,7 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza, Julinho",
     "País": "Perú"
   },
@@ -9130,7 +9010,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "2-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza (2)",
     "País": "Perú"
   },
@@ -9190,7 +9070,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Atlético",
     "Marcador": "4-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Julinho (2), Gonzales, Soto",
     "País": "Perú"
   },
@@ -9220,7 +9100,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "IMI F.C.",
     "Marcador": "6-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "R.Salazar, Olcese, Mendoza (2), Ferreira, Vassallo",
     "País": "Perú"
   },
@@ -9265,7 +9145,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Unión Minas",
     "Marcador": "4-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Valencia, Julinho (2), Mendoza",
     "País": "Perú"
   },
@@ -9310,7 +9190,7 @@
     "Equipo Local": "FBC Melgar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Arnao, Valencia, Silva",
     "País": "Perú"
   },
@@ -9325,7 +9205,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Juan Aurich",
     "Marcador": "3-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Soto (2), Silva",
     "País": "Perú"
   },
@@ -9340,7 +9220,7 @@
     "Equipo Local": "Cienciano",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -9370,7 +9250,7 @@
     "Equipo Local": "Deportivo Municipal",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-4",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Soto (2), Mendoza, Silva",
     "País": "Perú"
   },
@@ -9385,7 +9265,7 @@
     "Equipo Local": "Alianza Lima",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Soto, Mendoza",
     "País": "Perú"
   },
@@ -9430,7 +9310,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Pesquero",
     "Marcador": "5-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Julinho, Silva (2), Olcese (2)",
     "País": "Perú"
   },
@@ -9445,7 +9325,7 @@
     "Equipo Local": "Unión Minas",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -9475,7 +9355,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "FBC Melgar",
     "Marcador": "3-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Alvarado, Vassallo, Olcese",
     "País": "Perú"
   },
@@ -9505,7 +9385,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Cienciano",
     "Marcador": "1-3",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Mendoza",
     "País": "Perú"
   },
@@ -9520,7 +9400,7 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Julinho",
     "País": "Perú"
   },
@@ -9535,7 +9415,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "6-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Olcese (2), Silva (2), Sánchez, Zabárbulo",
     "País": "Perú"
   },
@@ -9550,7 +9430,7 @@
     "Equipo Local": "Alianza Lima",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Olcese",
     "País": "Perú"
   },
@@ -9565,7 +9445,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Atlético",
     "Marcador": "3-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Sánchez (3)",
     "País": "Perú"
   },
@@ -9580,7 +9460,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "IMI F.C.",
     "Marcador": "4-0",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ferrari, Sánchez, Julinho, Silva",
     "País": "Perú"
   },
@@ -9610,7 +9490,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Unión Minas",
     "Marcador": "5-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Julinho, Sánchez, Silva, Zabárbulo, Holsen",
     "País": "Perú"
   },
@@ -9625,7 +9505,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Sport Boys",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza, Ferreira",
     "País": "Perú"
   },
@@ -9655,7 +9535,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Juan Aurich",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Olcese, Silva",
     "País": "Perú"
   },
@@ -9670,7 +9550,7 @@
     "Equipo Local": "Cienciano",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -9700,7 +9580,7 @@
     "Equipo Local": "Deportivo Municipal",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Ferreira, Hidalgo, Julinho",
     "País": "Perú"
   },
@@ -9730,7 +9610,7 @@
     "Equipo Local": "Alianza Atlético",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-3",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Sánchez, Holsen, Ferreira",
     "País": "Perú"
   },
@@ -9745,7 +9625,7 @@
     "Equipo Local": "IMI F.C.",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Sánchez, Holsen",
     "País": "Perú"
   },
@@ -9760,7 +9640,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Deportivo Pesquero",
     "Marcador": "2-1",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Mendoza (2)",
     "País": "Perú"
   },
@@ -9775,7 +9655,7 @@
     "Equipo Local": "Unión Minas",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "-",
     "País": "Perú"
   },
@@ -9790,7 +9670,7 @@
     "Equipo Local": "Sport Boys",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Julinho",
     "País": "Perú"
   },
@@ -9805,7 +9685,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "FBC Melgar",
     "Marcador": "3-2",
-    "Resultado": "G",
+    "Resultado": "V",
     "Goles (Solo SC)": "Olcese, Silva, R.Salazar",
     "País": "Perú"
   },
@@ -10061,7 +9941,7 @@
     "Equipo Visita": "América de Cali",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Colombia"
   },
   {
@@ -10451,7 +10331,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Ecuador"
   },
   {
@@ -10496,7 +10376,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "México"
   },
   {
@@ -10691,7 +10571,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Paraguay"
   },
   {
@@ -10706,7 +10586,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -10721,7 +10601,7 @@
     "Equipo Visita": "Emelec",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Ecuador"
   },
   {
@@ -10766,7 +10646,7 @@
     "Equipo Visita": "Cruzeiro",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -10796,7 +10676,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -10841,7 +10721,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "5-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -11216,7 +11096,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -11276,7 +11156,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "México"
   },
   {
@@ -11366,7 +11246,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -11441,7 +11321,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -11591,7 +11471,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -11621,7 +11501,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "4-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "México"
   },
   {
@@ -11651,7 +11531,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Uruguay"
   },
   {
@@ -11696,7 +11576,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -11741,7 +11621,7 @@
     "Equipo Visita": "Morelia",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "México"
   },
   {
@@ -11816,7 +11696,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -11861,7 +11741,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -11951,7 +11831,7 @@
     "Equipo Visita": "Universitario",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -12071,7 +11951,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -12101,7 +11981,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -12191,7 +12071,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -12236,7 +12116,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -12311,7 +12191,7 @@
     "Equipo Visita": "Paysandu",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -12476,7 +12356,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Paraguay"
   },
   {
@@ -13061,7 +12941,7 @@
     "Equipo Visita": "Alianza Atlético",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -13121,7 +13001,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-5",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -13181,7 +13061,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -13226,7 +13106,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -13346,7 +13226,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -13451,7 +13331,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -13706,7 +13586,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -13931,7 +13811,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -14066,7 +13946,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14096,7 +13976,7 @@
     "Equipo Visita": "Boca Juniors",
     "Marcador": "0-3",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -14126,7 +14006,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "México"
   },
   {
@@ -14171,7 +14051,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14201,7 +14081,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14291,7 +14171,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14351,7 +14231,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14366,7 +14246,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14381,7 +14261,7 @@
     "Equipo Visita": "Sport Boys",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14426,7 +14306,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14486,7 +14366,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14621,7 +14501,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14666,7 +14546,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -14711,7 +14591,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15491,7 +15371,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "5-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "México"
   },
   {
@@ -15521,7 +15401,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15731,7 +15611,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15746,7 +15626,7 @@
     "Equipo Visita": "Universidad San Martín de Porres",
     "Marcador": "0-3",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15761,7 +15641,7 @@
     "Equipo Visita": "Sport Áncash",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15776,7 +15656,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15806,7 +15686,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15821,7 +15701,7 @@
     "Equipo Visita": "Bolognesi",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15896,7 +15776,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -15956,7 +15836,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -16001,7 +15881,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -16121,7 +16001,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -16151,7 +16031,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -16976,7 +16856,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -16991,7 +16871,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17036,7 +16916,7 @@
     "Equipo Visita": "Cienciano",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17081,7 +16961,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17276,7 +17156,7 @@
     "Equipo Visita": "Total Chalaco",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17336,7 +17216,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17381,7 +17261,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17426,7 +17306,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17516,7 +17396,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17546,7 +17426,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17576,7 +17456,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17621,7 +17501,7 @@
     "Equipo Visita": "Juan Aurich",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -17636,7 +17516,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18401,7 +18281,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18431,7 +18311,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18506,7 +18386,7 @@
     "Equipo Visita": "León de Huánuco",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18521,7 +18401,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18566,7 +18446,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18596,7 +18476,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18626,7 +18506,7 @@
     "Equipo Visita": "Inti Gas",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18686,7 +18566,7 @@
     "Equipo Visita": "Juan Aurich",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18716,7 +18596,7 @@
     "Equipo Visita": "Universidad San Martín de Porres",
     "Marcador": "0-4",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18971,7 +18851,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -18986,7 +18866,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19046,7 +18926,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19526,7 +19406,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19676,7 +19556,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19736,7 +19616,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19781,7 +19661,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19811,7 +19691,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19841,7 +19721,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19886,7 +19766,7 @@
     "Equipo Visita": "FBC Melgar",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -19931,7 +19811,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -20051,7 +19931,7 @@
     "Equipo Visita": "Unión Comercio",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -20081,7 +19961,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -20126,7 +20006,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -21101,7 +20981,7 @@
     "Equipo Visita": "Racing Club",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -21161,7 +21041,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Venezuela"
   },
   {
@@ -21731,7 +21611,7 @@
     "Equipo Visita": "Sport Huancayo",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -21836,7 +21716,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Colombia"
   },
   {
@@ -21896,7 +21776,7 @@
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -21926,7 +21806,7 @@
     "Equipo Visita": "Atlético Nacional",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Colombia"
   },
   {
@@ -21941,7 +21821,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22001,7 +21881,7 @@
     "Equipo Visita": "Universitario",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22121,7 +22001,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22181,7 +22061,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22346,7 +22226,7 @@
     "Equipo Visita": "Deportivo Municipal",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22361,7 +22241,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22376,7 +22256,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22406,7 +22286,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22436,7 +22316,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22481,7 +22361,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22526,7 +22406,7 @@
     "Equipo Visita": "FBC Melgar",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22541,7 +22421,7 @@
     "Equipo Visita": "Unión Comercio",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22676,7 +22556,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Colombia"
   },
   {
@@ -22721,7 +22601,7 @@
     "Equipo Visita": "The Strongest",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Bolivia"
   },
   {
@@ -22736,7 +22616,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22781,7 +22661,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22811,7 +22691,7 @@
     "Equipo Visita": "Independiente Santa Fe",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Colombia"
   },
   {
@@ -22826,7 +22706,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "4-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -22886,7 +22766,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -22976,7 +22856,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -23036,7 +22916,7 @@
     "Equipo Visita": "Juan Aurich",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -23111,7 +22991,7 @@
     "Equipo Visita": "Real Garcilaso",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -23201,7 +23081,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24146,7 +24026,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24176,7 +24056,7 @@
     "Equipo Visita": "Olimpia",
     "Marcador": "0-3",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Paraguay"
   },
   {
@@ -24191,7 +24071,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24251,7 +24131,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -24281,7 +24161,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24326,7 +24206,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24482,8 +24362,8 @@
   {
     "Año": 2019,
     "Mes": "Julio",
-    "Dia": 12,
-    "Día de la Semana": "Tuesday",
+    "Dia": 23,
+    "Día de la Semana": "Martes",
     "Fecha": "2019-07-23",
     "Torneo": "Copa Sudamericana",
     "Número de Fecha": "Octavos (Ida)",
@@ -24491,7 +24371,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Venezuela"
   },
   {
@@ -24656,7 +24536,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24761,7 +24641,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -24806,7 +24686,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "4-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Ecuador"
   },
   {
@@ -25376,7 +25256,7 @@
     "Equipo Visita": "São Paulo",
     "Marcador": "0-3",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -25436,7 +25316,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Uruguay"
   },
   {
@@ -25466,7 +25346,7 @@
     "Equipo Visita": "Racing Club",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -25511,7 +25391,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -25526,7 +25406,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -25721,7 +25601,7 @@
     "Equipo Visita": "Universidad César Vallejo",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -25736,7 +25616,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Uruguay"
   },
   {
@@ -25931,7 +25811,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -25946,7 +25826,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -25961,7 +25841,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26066,7 +25946,7 @@
     "Equipo Visita": "Flamengo",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -26081,7 +25961,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26141,7 +26021,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -26216,7 +26096,7 @@
     "Equipo Visita": "Talleres",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -26366,7 +26246,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26426,7 +26306,7 @@
     "Equipo Visita": "Universidad César Vallejo",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26516,7 +26396,7 @@
     "Equipo Visita": "Universitario",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26591,7 +26471,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26606,7 +26486,7 @@
     "Equipo Visita": "FBC Melgar",
     "Marcador": "0-2",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -26666,7 +26546,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Uruguay"
   },
   {
@@ -26711,7 +26591,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Argentina"
   },
   {
@@ -27086,7 +26966,7 @@
     "Equipo Visita": "Emelec",
     "Marcador": "0-1",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Ecuador"
   },
   {
@@ -27116,7 +26996,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Ecuador"
   },
   {
@@ -27716,7 +27596,7 @@
     "Equipo Visita": "Alianza Lima",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -27731,7 +27611,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -27821,7 +27701,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
     "Resultado": "D",
-    "Goles (Solo SC)": null,
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -27925,7 +27805,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Alianza Lima",
     "Marcador": "1-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Jhoao Velásquez (9og)",
     "País": "Perú"
   },
@@ -27940,8 +27820,8 @@
     "Equipo Local": "FBC Melgar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -27985,8 +27865,8 @@
     "Equipo Local": "Alianza Atlético",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28045,8 +27925,8 @@
     "Equipo Local": "Universitario",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28090,7 +27970,7 @@
     "Equipo Local": "Dep. Los Chankas",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Christofer Gonzales (14)",
     "País": "Perú"
   },
@@ -28196,7 +28076,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": "",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28255,7 +28135,7 @@
     "Equipo Local": "Cusco FC",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Leandro Sosa (2), Irven Ávila (52)",
     "País": "Perú"
   },
@@ -28271,7 +28151,7 @@
     "Equipo Visita": "Alianza Atlético",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": "",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28286,7 +28166,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": "",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28315,7 +28195,7 @@
     "Equipo Local": "A.D.T.",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Santiago González (39), Leandro Sosa (45+1)",
     "País": "Perú"
   },
@@ -28330,8 +28210,8 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Universitario",
     "Marcador": "0-1",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28360,8 +28240,8 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Dep. Los Chankas",
     "Marcador": "0-1",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28465,8 +28345,8 @@
     "Equipo Local": "Cusco FC",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28480,7 +28360,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Palmeiras",
     "Marcador": "2-3",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Jesús Pretell (67), Gerald Távara (83)",
     "País": "Brasil"
   },
@@ -28495,8 +28375,8 @@
     "Equipo Local": "Bolívar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Bolivia"
   },
   {
@@ -28540,8 +28420,8 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Cerro Porteño",
     "Marcador": "0-1",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Paraguay"
   },
   {
@@ -28555,8 +28435,8 @@
     "Equipo Local": "Palmeiras",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "6-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -28585,7 +28465,7 @@
     "Equipo Local": "Palmeiras",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Juan Cruz González (40)",
     "País": "Brasil"
   },
@@ -28615,8 +28495,8 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Palmeiras",
     "Marcador": "0-2",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -28630,7 +28510,7 @@
     "Equipo Local": "Junior",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Yoshimar Yotún (45+4), Gustavo Cazonatti (55)",
     "País": "Colombia"
   },
@@ -28645,8 +28525,8 @@
     "Equipo Local": "Cerro Porteño",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Paraguay"
   },
   {
@@ -28661,7 +28541,7 @@
     "Equipo Visita": "Red Bull Bragantino",
     "Marcador": "0-0",
     "Resultado": "E",
-    "Goles (Solo SC)": "",
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -28675,8 +28555,8 @@
     "Equipo Local": "Red Bull Bragantino",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Brasil"
   },
   {
@@ -28705,7 +28585,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "FBC Melgar",
     "Marcador": "1-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Felipe Vizeu (86)",
     "País": "Perú"
   },
@@ -28750,7 +28630,7 @@
     "Equipo Local": "Sport Huancayo",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Jair Moretti (83)",
     "País": "Perú"
   },
@@ -28795,7 +28675,7 @@
     "Equipo Local": "Dep. Los Chankas",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Miguel Araujo (42), Luis Iberico (97)",
     "País": "Perú"
   },
@@ -28810,7 +28690,7 @@
     "Equipo Local": "Sporting Cristal",
     "Equipo Visita": "Dep. Moquegua",
     "Marcador": "1-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Gerald Távara (53pen)",
     "País": "Perú"
   },
@@ -28840,7 +28720,7 @@
     "Equipo Local": "Atlético Grau",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "4-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Felipe Vizeu (57)",
     "País": "Perú"
   },
@@ -28855,8 +28735,8 @@
     "Equipo Local": "Comerciantes Unidos",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
@@ -28900,7 +28780,7 @@
     "Equipo Local": "FC Cajamarca",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Yoshimar Yotún (25)",
     "País": "Perú"
   },
@@ -28930,7 +28810,7 @@
     "Equipo Local": "Cienciano",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-2",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Gabriel Santana (27), Maxloren Castro (45+2)",
     "País": "Perú"
   },
@@ -29020,7 +28900,7 @@
     "Equipo Local": "FBC Melgar",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Irven Ávila (76)",
     "País": "Perú"
   },
@@ -29080,7 +28960,7 @@
     "Equipo Local": "Alianza Atlético",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-1",
-    "Resultado": "P",
+    "Resultado": "D",
     "Goles (Solo SC)": "Michael Hoyos (53)",
     "País": "Perú"
   },
@@ -29110,8 +28990,8 @@
     "Equipo Local": "Sport Boys",
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-0",
-    "Resultado": "P",
-    "Goles (Solo SC)": "",
+    "Resultado": "D",
+    "Goles (Solo SC)": "-",
     "País": "Perú"
   },
   {
