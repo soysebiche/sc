@@ -24,12 +24,20 @@ export function render(card) {
       h('div', {}, 'celeste.sebiche.com')));
 }
 
-export default function handler(request) {
+export default async function handler(request) {
   const q = new URL(request.url).searchParams;
-  matches ||= records.map(parseMatch);
-  const card = buildCard(matches, aliases, { type: q.get('type') || 'result', rival: q.get('rival'), name: q.get('name'), date: q.get('date') });
-  return new ImageResponse(render(card), {
-    width: 1200, height: 630, status: card ? 200 : 404,
-    headers: { 'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' },
-  });
+  try {
+    matches ||= records.map(parseMatch);
+    const card = buildCard(matches, aliases, { type: q.get('type') || 'result', rival: q.get('rival'), name: q.get('name'), date: q.get('date') });
+    // Render eagerly so a failure becomes a 500 instead of a cached empty 200.
+    const png = await new ImageResponse(render(card), { width: 1200, height: 630 }).arrayBuffer();
+    if (!png.byteLength) throw new Error('empty image');
+    return new Response(png, {
+      status: card ? 200 : 404,
+      headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' },
+    });
+  } catch (error) {
+    console.error('OG render failed', error);
+    return new Response(`OG render failed: ${error && error.message}`, { status: 500, headers: { 'Cache-Control': 'no-store' } });
+  }
 }
