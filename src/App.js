@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import ArchiveProvenance from './components/ArchiveProvenance';
 import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
 import { MoonIcon, SunIcon } from './components/ThemeIcons';
@@ -15,6 +15,9 @@ import { disableAnalytics, enableAnalytics, trackDataLoadError, trackPageView, t
 import { loadArchive } from './services/archive';
 import { setWebVitalsConsent, startWebVitals } from './observability/webVitals';
 
+const ScorersView = lazy(() => import('./features/ScorersView'));
+const RecordsView = lazy(() => import('./features/RecordsView'));
+
 function RivalsView(props) {
   return <EntityHistory {...props} config={RIVALS_HISTORY} />;
 }
@@ -28,6 +31,8 @@ const TABS = [
   { id: 'dashboard', label: 'DASHBOARD', View: DashboardView },
   { id: 'partidos', label: 'PARTIDOS', View: MatchesView },
   { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
+  { id: 'goleadores', label: 'GOLEADORES', View: ScorersView },
+  { id: 'records', label: 'RÉCORDS', View: RecordsView },
   { id: 'rivales', label: 'RIVALES', View: RivalsView },
   { id: 'paises', label: 'PAÍSES', View: CountriesView },
 ];
@@ -116,7 +121,11 @@ function ArchiveShell() {
             <button type="button" className="btn btn-primary" onClick={retryDataLoad}>Reintentar</button>
           </div>
         )}
-        {dataStatus === 'ready' && ActiveView && <ActiveView matches={matches} />}
+        {dataStatus === 'ready' && ActiveView && (
+          <Suspense fallback={<div className="archive-skeleton" role="status"><span>Cargando sección…</span></div>}>
+            <ActiveView matches={matches} />
+          </Suspense>
+        )}
       </main>
 
       {dataStatus !== 'loading' && (
