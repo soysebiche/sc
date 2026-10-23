@@ -8,7 +8,7 @@ export default [
   { ignores: ['dist/**', 'build/**', 'coverage/**', 'node_modules/**'] },
   js.configs.recommended,
   {
-    files: ['src/**/*.{js,jsx}', 'api/**/*.js'],
+    files: ['src/**/*.{js,jsx}', 'api/**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
