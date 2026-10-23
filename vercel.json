@@ -65,6 +65,10 @@
   "functions": {
     "api/share/index.js": {
       "includeFiles": "src/data/**"
+    },
+    "api/og/index.mjs": {
+      "includeFiles": "src/data/**",
+      "maxDuration": 10
     }
   }
 }

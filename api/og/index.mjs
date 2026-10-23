@@ -1,11 +1,13 @@
 import { ImageResponse } from '@vercel/og';
-import records from '../../src/data/historico_completo_sc.json';
-import aliases from '../../src/data/scorer-aliases.json';
+import fs from 'node:fs';
+import path from 'node:path';
 import { parseMatch } from '../../src/domain/matches.js';
 import { buildCard } from '../../src/domain/share.js';
 
-// @vercel/og is ESM-only; the Edge runtime is its supported target.
-export const config = { runtime: 'edge' };
+// .mjs on the Node runtime: @vercel/og is ESM-only, and the Edge runtime here
+// rejects its runtime-compiled WASM ("Wasm code generation disallowed").
+const readJson = file => JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src', 'data', file), 'utf8'));
+let aliases;
 
 const C = { bg: '#0B1120', card: '#151D30', celeste: '#3CBEEF', light: '#6DD4F7', text: '#F8FAFC', muted: '#94A3B8' };
 const h = (type, style, ...children) => ({ type, props: { style: { display: 'flex', ...style }, children: children.flat().filter(c => c !== null && c !== '') } });
@@ -24,10 +26,11 @@ export function render(card) {
       h('div', {}, 'celeste.sebiche.com')));
 }
 
-export default async function handler(request) {
+export async function GET(request) {
   const q = new URL(request.url).searchParams;
   try {
-    matches ||= records.map(parseMatch);
+    matches ||= readJson('historico_completo_sc.json').map(parseMatch);
+    aliases ||= readJson('scorer-aliases.json');
     const card = buildCard(matches, aliases, { type: q.get('type') || 'result', rival: q.get('rival'), name: q.get('name'), date: q.get('date') });
     // Render eagerly so a failure becomes a 500 instead of a cached empty 200.
     const png = await new ImageResponse(render(card), { width: 1200, height: 630 }).arrayBuffer();
