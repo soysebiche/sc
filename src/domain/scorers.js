@@ -14,7 +14,7 @@ export function scGoals(match) {
 }
 
 // Split on top-level commas / semicolons, keeping minute-only fragments with the previous name.
-function splitEntries(str) {
+export function splitEntries(str) {
   // "Name 87', 59' Other 85'" -> insert separators before a new capitalised name
   str = str.replace(/(\d\s*'?(?:\s*\(Pen\.?\))?)\s+(?=[A-ZÁÉÍÓÚÑ])/g, '$1, ');
   const parts = [];
@@ -33,7 +33,7 @@ function splitEntries(str) {
   return out;
 }
 
-function parseEntry(entry) {
+export function parseEntry(entry) {
   // returns {name, minuteGoals, bareNumber, ownGoal}
   let ownGoal = OWN_GOAL.test(entry);
   const parens = [...entry.matchAll(/\(([^)]*)\)/g)].map((m) => m[1]);

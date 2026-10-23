@@ -91,7 +91,7 @@ export const decadeOf = year => (Number.isInteger(year) ? Math.floor(year / 10) 
 // Sporting Cristal scorer data is sparse before 1990.
 export const SCORER_COMPLETE_FROM = 1990;
 
-const toRawRow = m => ({
+export const toRawRow = m => ({
   Fecha: m.date,
   Marcador: m.scoreLabel,
   'Equipo Local': m.home,

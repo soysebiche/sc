@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import aliases from '../data/scorer-aliases.json';
 import { MatchList, ScorerList, StreakStrip, TotalsStrip } from '../components/HeadToHead';
 import { CLASICOS, headToHead } from '../domain/rivals';
+import ShareButton from '../components/ShareButton';
 import { useUrlState } from '../hooks/useUrlState';
 
 const isValid = v => CLASICOS.includes(v);
@@ -36,6 +37,7 @@ function ClasicosView({ matches }) {
       <div className="view-intro">
         <h2 className="section-title">Clásicos</h2>
         <p className="section-subtitle">Cristal frente a los otros dos grandes, partido a partido desde 1956.</p>
+        <div className="mt-3"><ShareButton type="h2h" rival={rival} label="Compartir historial" /></div>
       </div>
       <div className="primary-nav" role="group" aria-label="Elegir clásico">
         {CLASICOS.map(r => (
