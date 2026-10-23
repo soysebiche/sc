@@ -966,3 +966,7 @@ input[type="date"]:focus {
 .minute-bars__value { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
 .share-x { display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none; }
 .link-accent { color: var(--color-celeste); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Mobile: keep preview tables inside the viewport */
+.match-preview { min-width: 0; max-width: 100%; }
+.match-preview .data-table-shell { max-width: 100%; }

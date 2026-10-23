@@ -34,7 +34,7 @@ function MatchPreview({ matches }) {
           <h3 className="collection-title mt-4">Historial vs. {rival}{lineage.length ? ` (incluye ${lineage.join(', ')})` : ''}</h3>
           <TotalsStrip total={h2h.total} />
           <p className="copy-secondary text-sm mt-2">Primer cruce: {formatMatchDate(h2h.firstMatch.date)} · Local {recordLine(h2h.home)} · Visita {recordLine(h2h.away)}</p>
-          <div className="grid gap-4 md:grid-cols-2 mt-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mt-3 [&>*]:min-w-0">
             <MatchList title={`Últimos ${h2h.last.length} vs. ${rival}`} rows={h2h.last} />
             <ScorerList title={`Goleadores celestes vs. ${rival}`} scorers={h2h.topScorers} />
           </div>
