@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import MatchRow from '../components/MatchRow';
 import UpcomingMatches from '../components/UpcomingMatches';
 import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
 import { useUrlState } from '../hooks/useUrlState';
+
+const MatchPreview = lazy(() => import('./MatchPreview'));
 
 const getToday = () => {
   const today = new Date();
@@ -18,6 +20,7 @@ function EfemeridesView({ matches }) {
   return (
     <div className="space-y-4 animate-fade-in">
       <UpcomingMatches />
+      <Suspense fallback={null}><MatchPreview matches={matches} /></Suspense>
 
       <section className="query-panel">
         <h2 className="section-title">Partidos jugados en esta fecha</h2>

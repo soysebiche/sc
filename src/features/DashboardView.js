@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { calculateArchiveOverview } from '../domain/matches';
 import DistributionBar from '../components/DistributionBar';
 import StatTile from '../components/StatTile';
+
+const MatchPreview = lazy(() => import('./MatchPreview'));
 
 function DashboardView({ matches }) {
   const overview = useMemo(() => calculateArchiveOverview(matches), [matches]);
@@ -9,6 +11,7 @@ function DashboardView({ matches }) {
 
   return (
     <div className="space-y-4 animate-fade-in">
+      <Suspense fallback={null}><MatchPreview matches={matches} /></Suspense>
       <div className="stat-strip stat-strip--4">
         <StatTile label="Partidos" value={overview.total || 0} tone="celeste" />
         <StatTile label="Victorias" value={overview.victories || 0} detail={`${overview.winPercentage}%`} tone="win" />

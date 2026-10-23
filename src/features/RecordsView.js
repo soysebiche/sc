@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import StatTile from '../components/StatTile';
+import aliases from '../data/scorer-aliases.json';
 import { formatMatchDate } from '../domain/matches';
+import { tournamentRecords } from '../domain/rivals';
 import { calculateHomeAway, calculateRecords, calculateStreaks, winRate } from '../domain/stats';
 
 const range = s => (s ? `${formatMatchDate(s.start)} – ${formatMatchDate(s.end)}` : '—');
@@ -61,6 +63,7 @@ function RecordsView({ matches }) {
   const streaks = useMemo(() => calculateStreaks(matches), [matches]);
   const records = useMemo(() => calculateRecords(matches), [matches]);
   const homeAway = useMemo(() => calculateHomeAway(matches), [matches]);
+  const byTournament = useMemo(() => tournamentRecords(matches, aliases), [matches]);
   const { home, away } = homeAway.overall;
 
   return (
@@ -82,6 +85,27 @@ function RecordsView({ matches }) {
             <StatTile key={id} label={`${s.label} · actual`} value={s.current?.length ?? 0} detail={s.current ? range(s.current) : 'Sin racha activa'} align="left" />
           ))}
         </div>
+      </section>
+
+      <section className="archive-section">
+        <h3 className="collection-title">Récord por torneo</h3>
+        <div className="data-table-shell"><div className="overflow-x-auto">
+          <table>
+            <thead><tr>{['Torneo', 'Años', 'PJ', 'V', 'E', 'D', 'GF', 'GC', '%V', 'Goleador'].map(h => <th scope="col" key={h}>{h}</th>)}</tr></thead>
+            <tbody>{byTournament.map(t => (
+              <tr key={t.family}>
+                <td title={t.variants.join(' · ')}>{t.family}</td>
+                <td className="text-center">{t.firstYear === t.lastYear ? t.firstYear : `${t.firstYear}–${t.lastYear}`}</td>
+                <td className="text-center">{t.played}</td>
+                <td className="text-center text-victory">{t.V}</td><td className="text-center text-draw">{t.E}</td><td className="text-center text-defeat">{t.P}</td>
+                <td className="text-center">{t.goalsFor}</td><td className="text-center">{t.goalsAgainst}</td>
+                <td className="text-center font-bold text-accent">{t.winRate}%</td>
+                <td>{t.topScorer ? `${t.topScorer.name} (${t.topScorer.goals}${t.topScorer.lowerBound ? '*' : ''})` : '—'}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div></div>
+        <p className="copy-secondary text-sm mt-2">Las variantes de nombre se agrupan (pasa el cursor sobre el torneo para verlas). * total mínimo: faltan goleadores antes de 1990.</p>
       </section>
 
       <MatchTable title="Mayores goleadas a favor" rows={records.biggestWins} />
