@@ -191,6 +191,10 @@ html.theme-transition *::after {
   box-sizing: border-box;
 }
 
+html {
+  max-width: 100%;
+}
+
 body {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -200,10 +204,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100dvh;
+  max-width: 100%;
 }
 
 #root {
   min-height: 100dvh;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════

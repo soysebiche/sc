@@ -29,6 +29,27 @@ test('renders the historical archive with a named date control', async () => {
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
+test('keeps nine section tabs in the primary navigation', async () => {
+  render(<App />);
+  await screen.findByRole('heading', { name: 'Próximos encuentros' });
+  const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
+  expect(within(nav).getAllByRole('button')).toHaveLength(9);
+});
+
+test('lazy-loads scorers, records and clasicos tabs', async () => {
+  render(<App />);
+  await screen.findByRole('heading', { name: 'Próximos encuentros' });
+
+  fireEvent.click(screen.getByRole('button', { name: 'GOLEADORES' }));
+  expect(await screen.findByRole('heading', { name: 'Goleadores' })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'RÉCORDS' }));
+  expect(await screen.findByRole('heading', { name: 'Rachas y récords' })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'CLÁSICOS' }));
+  expect(await screen.findByRole('heading', { name: 'Clásicos' })).toBeInTheDocument();
+});
+
 test('requires explicit consent before enabling anonymous measurement', async () => {
   render(<App />);
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
