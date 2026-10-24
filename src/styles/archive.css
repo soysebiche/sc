@@ -13,7 +13,7 @@
 }
 
 header.app-header {
-  background: linear-gradient(135deg, #1B265C 0%, #111940 100%);
+  background: linear-gradient(135deg, var(--sc-noche-800) 0%, var(--sc-noche-900) 100%);
   border-bottom: none;
   box-shadow: 0 4px 20px rgba(27, 38, 92, 0.15);
   padding: 0.75rem 1rem;
@@ -93,8 +93,8 @@ header.app-header {
   gap: 0.5rem;
   min-height: 44px;
   padding: 0.65rem 1rem;
-  color: #111940;
-  background: #8bdcf7;
+  color: var(--sc-noche-900);
+  background: var(--sc-celeste-300);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--radius-full);
   font-size: 0.78rem;
@@ -106,7 +106,7 @@ header.app-header {
 }
 
 .calendar-subscribe:hover {
-  background: #b7eafa;
+  background: var(--sc-celeste-100);
   transform: translateY(-1px);
 }
 
@@ -157,7 +157,7 @@ header.app-header {
 .upcoming {
   overflow: hidden;
   color: rgba(255, 255, 255, 0.78);
-  background: linear-gradient(120deg, #1b265c 0%, #111940 100%);
+  background: linear-gradient(120deg, var(--sc-noche-800) 0%, var(--sc-noche-900) 100%);
   border: 1px solid rgba(139, 220, 247, 0.25);
   border-radius: var(--radius-md);
   box-shadow: 0 10px 28px rgba(17, 25, 64, 0.16);
@@ -182,7 +182,7 @@ header.app-header {
 
 .upcoming__eyebrow {
   margin-bottom: 0.25rem;
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
@@ -244,7 +244,7 @@ header.app-header {
 }
 
 .upcoming-match__when strong {
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
   font-size: 0.76rem;
 }
 
@@ -292,7 +292,7 @@ header.app-header {
 }
 
 .upcoming__source a {
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
   text-underline-offset: 0.18em;
 }
 
@@ -572,7 +572,7 @@ header.app-header {
    ═══════════════════════════════════════════════════════════════════════ */
 
 footer.app-footer {
-  background: #1B265C;
+  background: var(--sc-header);
   color: rgba(255, 255, 255, 0.78);
 }
 
@@ -627,7 +627,7 @@ footer.app-footer {
   min-height: 44px;
   margin-bottom: 0.75rem;
   padding: 0;
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -705,7 +705,7 @@ footer.app-footer {
 }
 
 .provenance a {
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
   text-underline-offset: 0.2em;
 }
 
@@ -733,7 +733,7 @@ footer.app-footer {
 }
 
 .footer-meta a {
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
   font-size: 0.75rem;
   font-weight: 700;
   text-underline-offset: 0.2em;
@@ -756,7 +756,7 @@ footer.app-footer {
 }
 
 .seo-nav a {
-  color: #8bdcf7;
+  color: var(--sc-celeste-300);
 }
 
 .seo-crumbs ol,
@@ -1122,7 +1122,7 @@ input[type="date"]:focus {
 
 @media print {
   header.app-header {
-    background: #1B265C;
+    background: var(--sc-header);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -1147,3 +1147,9 @@ input[type="date"]:focus {
 .match-preview { min-width: 0; max-width: 100%; }
 .match-preview .data-table-shell { max-width: 100%; }
 .match-preview .archive-section { min-width: 0; max-width: 100%; }
+
+.footer-disclaimer {
+  margin: 0;
+  font-size: 0.72rem;
+  opacity: 0.9;
+}

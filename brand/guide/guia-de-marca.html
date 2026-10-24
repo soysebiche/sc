@@ -1,0 +1,210 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Guía de marca Sebiche Celeste</title><link rel="stylesheet" href="../fonts/fonts.css"><style>body{font-family:Inter,sans-serif;color:#121A3A;max-width:820px;margin:0 auto;padding:40px;font-size:14px;line-height:1.55}
+h1,h2{font-family:'Barlow Condensed';text-transform:uppercase;line-height:.95}h1{font-size:46px;border-top:6px solid #D10F21;padding-top:16px}h2{font-size:28px;color:#086A8C;margin-top:34px;break-after:avoid}
+img{max-width:100%;border:1px solid #dde;break-inside:avoid}table{border-collapse:collapse;width:100%;break-inside:avoid}td,th{border-bottom:1px solid #dde;padding:6px;text-align:left}th{font-family:'IBM Plex Mono';font-size:11px;text-transform:uppercase}
+blockquote{background:#0B1230;color:#F7FAFB;margin:0;padding:14px 18px;border-left:6px solid #3CBEEF}code{font-family:'IBM Plex Mono';font-size:12px}</style></head><body><div style="background:#0B1230;padding:40px;text-align:center"><img style="border:0;width:70%" src="../logo/svg/sebiche-celeste-lockup-horizontal-color.svg"></div><h1>Sebiche Celeste — Guía de marca v1</h1>
+<p><em>Octubre 2026 · archivo de hinchas de Sporting Cristal</em></p>
+<blockquote>
+<p><strong>Proyecto independiente de hinchas. Sin relación oficial con el Club Sporting Cristal.</strong>
+Este aviso va en la web, en las redes y en cualquier pieza pública. Nunca se usa el escudo del club, y nunca se combina con la marca SEBICHE (ni lockups ni respaldo).</p>
+</blockquote>
+<h2>1. Qué es la marca</h2>
+<p>Sebiche Celeste es un archivo estadístico de Sporting Cristal: 1948 partidos registrados desde 1956. La marca tiene que sentirse <strong>precisa, hincha y sobria</strong>: es un archivo con datos de verdad, no una cuenta de memes.</p>
+<h2>2. Logo y banderín</h2>
+<p><strong>Logo (wordmark):</strong> se trazó a vector <strong>sin modificar ni un píxel</strong> y se comprobó superponiéndolo al raster original (diferencia media 0,87; IoU alfa 0,998 contra el PNG de 6001 px). Ese trazo no se toca.</p>
+<p><strong>Banderín v2 (aprobado el 24 oct 2026):</strong> reemplaza al banderín pixel art anterior, que queda archivado en <code>_archive/banderin-v1/</code>. Está dibujado a mano en vector, con formas limpias:
+- Silueta del banderín en celeste #3CBEEF, con un filete interior blanco continuo.
+- Barra superior en rojo-blanco-rojo (#D10F21 / #FFFFFF / #D10F21), en tres tramos iguales y formas sólidas. Tiene exactamente el ancho del banderín: no sobresale.
+- Tres estrellas rellenas oro #F1AA19 en V (chica, grande, chica), las mismas estrellas del logo.</p>
+<p>El master es <code>logo/svg/sebiche-celeste-banderin-master.svg</code> (generado por <code>scripts/pen_v2.py</code>). Para 64 px o menos se usa la versión con filete más grueso (<code>banderin-v2/opcion-d-final-icon.svg</code>). En favicon las estrellas se leen como un punto oro, y eso es aceptado.</p>
+<p><strong>Reglas del banderín v2:</strong> no cambiar la proporción ni la posición de las estrellas, no agregar contornos a las estrellas, no hacer que la barra tricolor sobresalga del ancho del banderín, y no recolorear fuera de las versiones aprobadas.</p>
+<p><strong>Versiones permitidas</strong> (solo cambia el color, nunca la forma):
+- <strong>Color</strong>: es la principal y va sobre fondos noche (#0B1230 a #1B265C).
+- <strong>Color con placa</strong>: la misma versión color sobre una placa noche, para fondos claros.
+- <strong>Tinta</strong>: una sola tinta #1B265C, para impresión o sellos (en el banderín, la franja blanca, el filete y las estrellas quedan calados).
+- <strong>Reverso</strong>: blanco, sobre fotos o sobre colores de la marca.
+- <strong>Lockup horizontal</strong>: banderín más logo, separados por 300 unidades (la x).</p>
+<p><img alt="Área de respeto y tamaños mínimos" src="../sheets/lamina-area-respeto-minimos.png" /></p>
+<p><strong>Área de respeto:</strong> x = ancho de la estrella pequeña, que equivale al 5,4 % del ancho del logo. Hay que dejar al menos 1x libre por cada lado.</p>
+<p><strong>Tamaños mínimos:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pieza</th>
+<th>Pantalla</th>
+<th>Impresión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logo</td>
+<td>120 px</td>
+<td>30 mm</td>
+</tr>
+<tr>
+<td>Lockup</td>
+<td>160 px</td>
+<td>40 mm</td>
+</tr>
+<tr>
+<td>Banderín</td>
+<td>24 px</td>
+<td>8 mm</td>
+</tr>
+<tr>
+<td>Favicon</td>
+<td>16 px</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Usos correctos e incorrectos" src="../sheets/lamina-reglas-de-uso.png" /></p>
+<h2>3. Color</h2>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Hex</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>noche.950</td>
+<td>#0B1230</td>
+<td>Fondo oscuro, fondo del logo</td>
+</tr>
+<tr>
+<td>noche.800</td>
+<td>#1B265C</td>
+<td>Header, tinta</td>
+</tr>
+<tr>
+<td>celeste.400</td>
+<td>#3CBEEF</td>
+<td>Acento en oscuro, banderín</td>
+</tr>
+<tr>
+<td>oro</td>
+<td>#F1AA19</td>
+<td>Estrellas del logo y del banderín</td>
+</tr>
+<tr>
+<td>celeste.700</td>
+<td>#086A8C</td>
+<td>Acento y enlaces en claro</td>
+</tr>
+<tr>
+<td>papel.50</td>
+<td>#F7FAFB</td>
+<td>Fondo claro</td>
+</tr>
+<tr>
+<td>oro (UI)</td>
+<td>#F1AA19</td>
+<td>Marcador, destacados (en claro se usa #7A4E00)</td>
+</tr>
+<tr>
+<td>rojo</td>
+<td>#D10F21</td>
+<td>Franja del logo y barra del banderín (solo decorativo)</td>
+</tr>
+</tbody>
+</table>
+<p>Victoria, empate y derrota tienen tonos propios en cada tema, y <strong>siempre van acompañados de la letra V, E o P</strong> (P = perdido, como en el sitio): nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver <code>tokens/contrast-report.md</code>).</p>
+<p><strong>Regla:</strong> las estrellas oro sobre el celeste del banderín dan 1,07:1 de luminancia y se distinguen por el tono; por eso el banderín no se reduce a escala de grises: se usa la versión tinta. El banderín celeste sobre papel da 2,04:1. Como es un logo, está exento de la norma de contraste, pero sobre fondo claro se recomienda usar la versión <em>con placa</em> o la versión <em>tinta</em>.</p>
+<p>Los tokens se mantienen en <code>tokens/tokens.json</code> y desde ahí se generan <code>tokens.css</code> y <code>tailwind.preset.cjs</code>.</p>
+<h2>4. Tipografía</h2>
+<p>Las tres son OFL y van auto-alojadas en <code>fonts/</code>. Reemplazan a Avenir, que dependía de qué fuentes tuviera instaladas cada sistema.</p>
+<ul>
+<li><strong>Barlow Condensed 600–800</strong>: titulares y marcadores, en MAYÚSCULAS e interlineado de 0,92.</li>
+<li><strong>Inter</strong>: textos y UI.</li>
+<li><strong>IBM Plex Mono</strong>: fechas, etiquetas y datos (con espaciado de +0,1 em).</li>
+</ul>
+<h2>5. Composición</h2>
+<ul>
+<li>Cuadrícula de 8 px y radios pequeños (4–8 px).</li>
+<li>La franja roja, blanca y roja del logo puede usarse como filete superior de 4 px.</li>
+<li>Áreas táctiles de 44 px como mínimo.</li>
+<li>Los números van con <code>tabular-nums</code>.</li>
+<li>Hay que respetar <code>prefers-reduced-motion</code>.</li>
+</ul>
+<h2>6. Voz</h2>
+<p>Habla un hincha que sabe de datos: con cariño, exacto y sin agrandar las cosas.</p>
+<table>
+<thead>
+<tr>
+<th>En vez de</th>
+<th>Escribe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"¡¡EL MÁS GRANDE!! 🔥🔥"</td>
+<td>"6 partidos un 24 de octubre: 5 victorias."</td>
+</tr>
+<tr>
+<td>"Sporting Cristal oficial"</td>
+<td>"Archivo de hinchas de Sporting Cristal"</td>
+</tr>
+<tr>
+<td>"Destrozamos a Alianza"</td>
+<td>"Alianza Lima 1–3 SC, 24 oct 2021"</td>
+</tr>
+<tr>
+<td>"Datos aproximados"</td>
+<td>"Fuente: archivo propio, 1956–2026"</td>
+</tr>
+<tr>
+<td>"Síguenos para más"</td>
+<td>"Suscríbete al calendario de partidos"</td>
+</tr>
+</tbody>
+</table>
+<p>En la locución de videos, el cierre es: <em>"Sebiche Celeste es un proyecto independiente de hinchas, sin relación oficial con el Club Sporting Cristal."</em></p>
+<h2>7. Usos prohibidos</h2>
+<ul>
+<li>Usar el escudo de Sporting Cristal o cualquier marca registrada del club.</li>
+<li>Deformar, rotar, recolorear (fuera de las versiones aprobadas) o ponerle sombras o contornos al logo o al banderín, o volver a usar el banderín pixel art anterior.</li>
+<li>Formar lockups con SEBICHE o insinuar patrocinio o carácter oficial.</li>
+<li>Inventar datos: cada cifra tiene que salir del archivo.</li>
+</ul>
+<h2>8. Piezas y producción</h2>
+<table>
+<thead>
+<tr>
+<th>Pieza</th>
+<th>Ruta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logos (SVG y PNG)</td>
+<td><code>logo/</code></td>
+</tr>
+<tr>
+<td>Iconos y manifest</td>
+<td><code>icons/</code></td>
+</tr>
+<tr>
+<td>Plantillas para redes</td>
+<td><code>social/</code></td>
+</tr>
+<tr>
+<td>Imágenes OG</td>
+<td><code>og/</code></td>
+</tr>
+<tr>
+<td>Calendario .ics</td>
+<td><code>ics/</code></td>
+</tr>
+<tr>
+<td>UI kit</td>
+<td><code>ui-kit/</code></td>
+</tr>
+<tr>
+<td>Press kit</td>
+<td><code>press/</code></td>
+</tr>
+</tbody>
+</table>
+<p>Las filas que el plan asignaba a <em>Claude Design</em> se entregaron como piezas finales hechas en HTML y código. Sebiche puede refinarlas en Claude Design partiendo de esos HTML.</p></body></html>

@@ -1,25 +1,41 @@
 {
-  "short_name": "Sebiche Celeste",
-  "name": "Sebiche Celeste — Archivo Histórico Sporting Cristal",
+  "name": "Sebiche Celeste",
+  "short_name": "Celeste",
+  "description": "Archivo independiente de hinchas: efemérides, rivales y temporadas de Sporting Cristal. Sin relación oficial con el club.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1230",
+  "theme_color": "#1B265C",
+  "lang": "es-PE",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "logo192.png",
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "192x192"
+      "purpose": "any"
     },
     {
-      "src": "logo512.png",
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#1B265C",
-  "background_color": "#F8FAFC"
+  ]
 }

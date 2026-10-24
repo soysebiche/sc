@@ -1,0 +1,32 @@
+[
+ {
+  "label": "logo vs raster maestro 6001x2725",
+  "size": [
+   6001,
+   2725
+  ],
+  "mean_abs_diff": 0.866,
+  "pct_px_diff_gt32": 1.1243,
+  "alpha_IoU": 0.99844
+ },
+ {
+  "label": "logo vs webp web 512x233",
+  "size": [
+   512,
+   233
+  ],
+  "mean_abs_diff": 2.932,
+  "pct_px_diff_gt32": 2.9347,
+  "alpha_IoU": 0.98899
+ },
+ {
+  "label": "bander\u00edn vs pennant-source 84x84",
+  "size": [
+   84,
+   84
+  ],
+  "mean_abs_diff": 1.771,
+  "pct_px_diff_gt32": 0.6944,
+  "alpha_IoU": 0.99062
+ }
+]
