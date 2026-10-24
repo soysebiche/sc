@@ -22,13 +22,12 @@ test('publica únicamente partidos confirmados sin datos de cuenta', async () =>
   assert.doesNotMatch(calendar, /20260919T153000|Sporting Cristal vs\. Atlético Grau/);
   assert.doesNotMatch(calendar, /20260927T151500|ADT vs\. Sporting Cristal/);
   assert.doesNotMatch(calendar, /20261001T150000|Sporting Cristal vs\. ADT/);
-  assert.match(calendar, /20261024T151500/);
-  assert.match(calendar, /Cusco FC vs\. Sporting Cristal/);
+  assert.doesNotMatch(calendar, /20261024T151500|Cusco FC vs\. Sporting Cristal/);
   assert.match(calendar, /20261029T153000/);
   assert.match(calendar, /Sporting Cristal vs\. Alianza Lima/);
   assert.doesNotMatch(calendar, /@gmail\.com|calendar\.google\.com\/calendar\/ical\/.*private/i);
-  assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 2);
-  assert.equal(data.fixtures.length, 2);
+  assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 1);
+  assert.equal(data.fixtures.length, 1);
 });
 
 test('rechaza eventos tentativos o sin programación completa', async () => {
