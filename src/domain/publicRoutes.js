@@ -3,7 +3,7 @@ import { SITE_URL } from './shareLinks.js';
 
 export { SITE_URL };
 
-export const OG_IMAGE_PATH = '/og-image.png';
+export const OG_IMAGE_PATH = '/og/home.png';
 export const RESULT_WORD = Object.freeze({ V: 'Victoria', E: 'Empate', P: 'Derrota' });
 
 export function slugify(value) {

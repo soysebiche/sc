@@ -12,7 +12,7 @@ import {
   rivalPathByName,
   seasonPathByYear,
 } from '../src/domain/publicRoutes.js';
-import { OG_HEIGHT, OG_WIDTH, buildOgImage } from './og-png.mjs';
+import { OG_HEIGHT, OG_WIDTH } from './og-png.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST = path.join(ROOT, 'dist');
@@ -230,7 +230,8 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
 
   const matches = records.map(parseMatch);
   const catalog = buildPublicCatalog(matches);
-  const ogPng = buildOgImage();
+  // Legacy URL kept for already-shared links: serve the brand-kit home OG there too.
+  const ogPng = await readFile(path.join(ROOT, 'public', 'og', 'home.png'));
   await writeFile(path.join(distDir, 'og-image.png'), ogPng);
 
   const crumbsHome = [{ name: 'Inicio', path: '/' }];

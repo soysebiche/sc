@@ -102,14 +102,14 @@ try {
   const unknownHead = await curl(origin, '/no-existe-esta-ruta', { method: 'HEAD' });
   const unknownGet = await curl(origin, '/no-existe-esta-ruta');
   const querySpa = await curl(origin, '/?view=rivales&rival=Alianza%20Lima');
-  const ogImage = await curl(origin, '/og-image.png', { method: 'HEAD' });
+  const ogImage = await curl(origin, '/og/home.png', { method: 'HEAD' });
   const robots = await curl(origin, '/robots.txt');
 
   if (home.status !== 200) throw new Error(`GET / returned ${home.status}`);
   if (match.status !== 200) throw new Error(`GET ${matchPath} returned ${match.status}`);
   if (unknownHead.status !== 404) throw new Error(`HEAD unknown returned ${unknownHead.status}`);
   if (unknownGet.status !== 404) throw new Error(`GET unknown returned ${unknownGet.status}`);
-  if (ogImage.status !== 200) throw new Error('og-image.png was not published');
+  if (ogImage.status !== 200) throw new Error('og/home.png was not published');
   if (querySpa.status !== 200) throw new Error('Shareable query URLs must still hit the home document');
 
   requireSnippet('/', home.body, 'lang="es-PE"');

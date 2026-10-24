@@ -16,7 +16,7 @@ describe('share cards', () => {
   });
   it('builds efeméride, h2h and scorer cards', () => {
     expect(buildCard(matches, aliases, { type: 'efemeride', date: '2026-10-23' }).big).toBe('1 partidos');
-    expect(buildCard(matches, aliases, { type: 'h2h', rival: 'Alianza Lima' }).big).toBe('1V 0E 0D');
+    expect(buildCard(matches, aliases, { type: 'h2h', rival: 'Alianza Lima' }).big).toBe('1V 0E 0P');
     const s = buildCard(matches, aliases, { type: 'scorer', name: 'Jorge Soto' });
     expect(s.spaPath).toBe('/?view=goleadores&jugador=Jorge+Soto');
     expect(buildCard(matches, aliases, { type: 'scorer', name: 'Nadie' })).toBeNull();

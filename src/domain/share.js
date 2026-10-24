@@ -40,9 +40,9 @@ export function buildCard(matches, aliases, params = {}, now = new Date()) {
     if (!h.total.played) return null;
     const t = h.total;
     return {
-      type, eyebrow: 'Historial', title: `Sporting Cristal vs. ${rival}`, big: `${t.V}V ${t.E}E ${t.P}D`,
+      type, eyebrow: 'Historial', title: `Sporting Cristal vs. ${rival}`, big: `${t.V}V ${t.E}E ${t.P}P`,
       lines: [`${t.played} partidos · goles ${t.goalsFor}-${t.goalsAgainst} · ${t.winRate}% de victorias`, h.last[0] ? `Último: ${scoreLine(h.last[0])} (${formatMatchDate(h.last[0].date)})` : ''].filter(Boolean),
-      spaPath: `/?${qs({ view: 'rivales', rival })}`, text: `Sporting Cristal vs. ${rival}: ${t.V}V ${t.E}E ${t.P}D en ${t.played} partidos`,
+      spaPath: `/?${qs({ view: 'rivales', rival })}`, text: `Sporting Cristal vs. ${rival}: ${t.V}V ${t.E}E ${t.P}P en ${t.played} partidos`,
     };
   }
   const p = params.name ? scorerProfile(matches, aliases, params.name) : null;

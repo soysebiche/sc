@@ -30,7 +30,7 @@ test('applyHead sets Spanish Peru language, unique canonical and social tags', (
   assert.match(html, /lang="es-PE"/);
   assert.match(html, /rel="canonical" href="https:\/\/celeste.sebiche.com\/rivales\/alianza-lima"/);
   assert.match(html, /twitter:card" content="summary_large_image"/);
-  assert.match(html, /og:image" content="https:\/\/celeste.sebiche.com\/og-image.png"/);
+  assert.match(html, /og:image" content="https:\/\/celeste.sebiche.com\/og\/home.png"/);
   assert.match(html, /name="sc-spa" content="\/\?view=rivales&amp;rival=Alianza Lima"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
 });

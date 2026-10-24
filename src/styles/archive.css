@@ -1153,3 +1153,34 @@ input[type="date"]:focus {
   font-size: 0.72rem;
   opacity: 0.9;
 }
+
+/* Desktop header: 9 tabs on a single row, tagline on one line. */
+@media (min-width: 769px) {
+  .brand-lockup { flex: 0 0 auto; }
+  .brand-logo { width: 11rem; }
+  .app-header .header-subtitle { white-space: nowrap; font-size: 11px; letter-spacing: 0.04em; }
+  .app-header .primary-nav {
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 0.15rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .app-header .primary-nav::-webkit-scrollbar { display: none; }
+  .app-header .primary-nav .tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 8px 11px;
+    letter-spacing: 0.03em;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+  .brand-logo { width: 9.5rem; }
+  .app-header .header-subtitle { font-size: 10px; letter-spacing: 0.02em; }
+  .app-header__layout { gap: 0.6rem; }
+  .app-header .primary-nav .tab { padding: 8px 8px; font-size: 11px; letter-spacing: 0.02em; }
+  .app-header .calendar-subscribe--compact { padding-inline: 0.7rem; }
+}

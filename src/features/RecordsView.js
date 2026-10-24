@@ -50,7 +50,7 @@ function SplitTable({ title, rows, labelHeader }) {
             <th scope="col" rowSpan="2">{labelHeader}</th>
             <th scope="colgroup" colSpan="5">Local</th><th scope="colgroup" colSpan="5">Visita</th>
           </tr><tr>
-            {['PJ', 'V', 'E', 'D', '%V', 'PJ', 'V', 'E', 'D', '%V'].map((h, i) => <th scope="col" key={i}>{h}</th>)}
+            {['PJ', 'V', 'E', 'P', '%V', 'PJ', 'V', 'E', 'P', '%V'].map((h, i) => <th scope="col" key={i}>{h}</th>)}
           </tr></thead>
           <tbody>{rows.map(r => (
             <tr key={r.label}><td>{r.label}</td>{splitCells(r.home)}{splitCells(r.away)}</tr>
@@ -95,7 +95,7 @@ function RecordsView({ matches }) {
         <h3 className="collection-title">Récord por torneo</h3>
         <div className="data-table-shell"><div className="overflow-x-auto">
           <table>
-            <thead><tr>{['Torneo', 'Años', 'PJ', 'V', 'E', 'D', 'GF', 'GC', '%V', 'Goleador'].map(h => <th scope="col" key={h}>{h}</th>)}</tr></thead>
+            <thead><tr>{['Torneo', 'Años', 'PJ', 'V', 'E', 'P', 'GF', 'GC', '%V', 'Goleador'].map(h => <th scope="col" key={h}>{h}</th>)}</tr></thead>
             <tbody>{byTournament.map(t => (
               <tr key={t.family}>
                 <td title={t.variants.join(' · ')}>{t.family}</td>
@@ -126,9 +126,9 @@ function RecordsView({ matches }) {
       <section className="archive-section">
         <h3 className="collection-title">Local vs. visita</h3>
         <div className="stat-strip stat-strip--4">
-          <StatTile label="Local · % victorias" value={`${winRate(home)}%`} detail={`${home.V}V ${home.E}E ${home.P}D · ${home.played} PJ`} tone="win" />
+          <StatTile label="Local · % victorias" value={`${winRate(home)}%`} detail={`${home.V}V ${home.E}E ${home.P}P · ${home.played} PJ`} tone="win" />
           <StatTile label="Local · goles" value={`${home.goalsFor}-${home.goalsAgainst}`} />
-          <StatTile label="Visita · % victorias" value={`${winRate(away)}%`} detail={`${away.V}V ${away.E}E ${away.P}D · ${away.played} PJ`} tone="celeste" />
+          <StatTile label="Visita · % victorias" value={`${winRate(away)}%`} detail={`${away.V}V ${away.E}E ${away.P}P · ${away.played} PJ`} tone="celeste" />
           <StatTile label="Visita · goles" value={`${away.goalsFor}-${away.goalsAgainst}`} />
         </div>
       </section>

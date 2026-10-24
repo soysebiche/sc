@@ -13,7 +13,7 @@ function DecadeTable({ rows }) {
       <h3 className="collection-title">Por década</h3>
       <div className="data-table-shell"><div className="overflow-x-auto">
         <table>
-          <thead><tr>{['Década', 'PJ', 'V', 'E', 'D', 'GF', 'GC', '%V'].map(h => <th scope="col" key={h}>{h}</th>)}</tr></thead>
+          <thead><tr>{['Década', 'PJ', 'V', 'E', 'P', 'GF', 'GC', '%V'].map(h => <th scope="col" key={h}>{h}</th>)}</tr></thead>
           <tbody>{rows.map(r => (
             <tr key={r.decade}>
               <td>{r.decade}s</td><td className="text-center">{r.played}</td>

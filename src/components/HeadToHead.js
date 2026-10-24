@@ -1,13 +1,13 @@
 import { formatMatchDate } from '../domain/matches';
 import StatTile from './StatTile';
 
-const BADGE = { V: ['badge-green', 'V'], E: ['badge-yellow', 'E'], P: ['badge-red', 'D'] };
+const BADGE = { V: ['badge-green', 'V'], E: ['badge-yellow', 'E'], P: ['badge-red', 'P'] };
 export function ResultBadge({ code }) {
   const [cls, label] = BADGE[code] || ['', '?'];
   return <span className={`badge ${cls}`} aria-label={{ V: 'Victoria', E: 'Empate', P: 'Derrota' }[code]}>{label}</span>;
 }
 
-export const recordLine = r => `${r.V}V ${r.E}E ${r.P}D · ${r.goalsFor}-${r.goalsAgainst}`;
+export const recordLine = r => `${r.V}V ${r.E}E ${r.P}P · ${r.goalsFor}-${r.goalsAgainst}`;
 const range = s => (s ? `${formatMatchDate(s.start)} – ${formatMatchDate(s.end)}` : '—');
 
 export function TotalsStrip({ total }) {
