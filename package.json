@@ -13,13 +13,15 @@
     "start": "vite --host 0.0.0.0",
     "dev": "vite --host 0.0.0.0",
     "generate:calendar": "node scripts/generate-calendar.mjs",
+    "generate:pages": "node scripts/generate-public-pages.mjs",
+    "verify:seo": "node scripts/verify-seo-html.mjs",
     "prebuild": "npm run generate:calendar",
-    "build": "vite build",
+    "build": "vite build && npm run generate:pages && npm run verify:seo",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint src/ api/",
     "test": "vitest",
     "test:ci": "vitest run",
-    "test:data": "node scripts/audit-data.mjs && node --test scripts/audit-data.test.mjs scripts/generate-calendar.test.mjs",
+    "test:data": "node scripts/audit-data.mjs && node --test scripts/audit-data.test.mjs scripts/generate-calendar.test.mjs scripts/generate-public-pages.test.mjs",
     "check": "npm run lint && npm run test:data && npm run test:ci && npm run build"
   },
   "devDependencies": {

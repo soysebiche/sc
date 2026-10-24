@@ -711,6 +711,57 @@ footer.app-footer {
   text-underline-offset: 0.2em;
 }
 
+/* Build-time public HTML (replaced by the SPA after hydration). */
+.seo-page a {
+  color: var(--color-celeste);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.seo-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.seo-nav a {
+  color: #8bdcf7;
+}
+
+.seo-crumbs ol,
+.seo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.seo-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.seo-crumbs li:not(:last-child)::after {
+  content: "/";
+  margin-left: 0.35rem;
+  color: var(--text-muted);
+}
+
+.seo-list {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.seo-list li {
+  color: var(--text-secondary);
+}
+
 @media (max-width: 520px) {
   .footer-meta {
     align-items: flex-start;
