@@ -957,3 +957,9 @@ input[type="date"]:focus {
     border: 1px solid var(--border-subtle);
   }
 }
+
+.footer-disclaimer {
+  margin: 0;
+  font-size: 0.72rem;
+  opacity: 0.9;
+}

@@ -125,6 +125,7 @@ function ArchiveShell() {
           <ArchiveProvenance metadata={archiveMetadata} />
           <div className="footer-meta">
             <p className="footer-signature">Sebiche Celeste &middot; {archiveMetadata.datasetRevision}</p>
+            <p className="footer-disclaimer">Proyecto independiente de hinchas. Sin relación oficial con el Club Sporting Cristal.</p>
             <a href="/privacidad.html">Privacidad y medición</a>
           </div>
         </div></footer>
