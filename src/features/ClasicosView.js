@@ -39,7 +39,7 @@ function ClasicosView({ matches }) {
         <p className="section-subtitle">Cristal frente a los otros dos grandes, partido a partido desde 1956.</p>
         <div className="mt-3"><ShareButton type="h2h" rival={rival} label="Compartir historial" /></div>
       </div>
-      <div className="primary-nav" role="group" aria-label="Elegir clásico">
+      <div className="primary-nav primary-nav--on-surface" role="group" aria-label="Elegir clásico">
         {CLASICOS.map(r => (
           <button type="button" key={r} className={`tab ${r === rival ? 'tab-active' : 'tab-inactive'}`} aria-pressed={r === rival} onClick={() => setRival(r)}>vs. {r}</button>
         ))}

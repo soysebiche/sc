@@ -22,7 +22,7 @@ function MatchPreview({ matches }) {
       <p className="section-subtitle">{WHEN.format(new Date(fixture.start))} · {fixture.venue}</p>
 
       <div className="stat-strip stat-strip--3 stat-strip--context mt-3">
-        <StatTile label="Forma de Cristal (últimos 5)" value={<span className="flex gap-1">{[...form.last].reverse().map(m => <ResultBadge key={m.date + m.opponent} code={m.resultCode} />)}</span>} detail={form.last[0] ? `Último: ${form.last[0].home} ${form.last[0].scoreLabel} ${form.last[0].away}` : ''} align="left" tone="celeste" />
+        <StatTile label="Forma de Cristal (últimos 5)" value={<span className="flex flex-wrap gap-1">{[...form.last].reverse().map(m => <ResultBadge key={m.date + m.opponent} code={m.resultCode} />)}</span>} detail={form.last[0] ? `Último: ${form.last[0].home} ${form.last[0].scoreLabel} ${form.last[0].away}` : ''} align="left" tone="celeste" />
         <StatTile label="Racha actual" value={form.unbeaten ? `${form.unbeaten.length} sin perder` : 'Sin racha'} detail={form.winning ? `${form.winning.length} victorias seguidas` : 'Viene de no ganar'} align="left" />
         <StatTile label={`Como ${isHome ? 'local' : 'visita'} vs. ${rival}`} value={venueRecord.played ? `${venueRecord.winRate}%` : '—'} detail={venueRecord.played ? `${recordLine(venueRecord)} · ${venueRecord.played} PJ` : 'Sin antecedentes'} align="left" />
       </div>

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import ArchiveProvenance from './components/ArchiveProvenance';
 import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
+import PrimaryNav from './components/PrimaryNav';
 import { MoonIcon, SunIcon } from './components/ThemeIcons';
 import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
@@ -102,18 +103,12 @@ function ArchiveShell() {
               <p className="header-subtitle">Archivo Histórico &middot; {archiveMetadata.recordCount} Partidos</p>
             </div>
           </div>
-          <nav className="primary-nav" aria-label="Secciones principales">
-            {TABS.map(tab => (
-              <button type="button" key={tab.id} onClick={() => setActiveTab(tab.id)} className={`tab ${activeTab === tab.id ? 'tab-active' : 'tab-inactive'}`} aria-current={activeTab === tab.id ? 'page' : undefined}>
-                {tab.label}
-              </button>
-            ))}
-          </nav>
+          <PrimaryNav tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
           <CalendarSubscribeLink compact />
         </div></div>
       </header>
 
-      <main id="main-content" className="w-full max-w-7xl mx-auto px-4 py-6 flex-1" tabIndex="-1">
+      <main id="main-content" className="app-main w-full max-w-7xl mx-auto px-4 py-6 flex-1 min-w-0" tabIndex="-1">
         <h1 className="sr-only">Sebiche Celeste — Archivo Histórico de Sporting Cristal</h1>
         {dataStatus === 'loading' && <div className="archive-skeleton" role="status"><span>Cargando archivo histórico…</span></div>}
         {dataStatus === 'error' && (
