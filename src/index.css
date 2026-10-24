@@ -1,82 +1,85 @@
 /* Tokens, themes, and primitives. Editorial layout lives in styles/archive.css. */
 @import './styles/brand-fonts.css';
-@import './styles/brand-tokens.css';
+@import '../brand/tokens/tokens.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════════════
    SPORTING CRISTAL ARCHIVE — Sophisticated Editorial Design System
-   Palette: Picton Blue #3CBEEF | Biscay #1B265C | White #FFFFFF
+   Palette: brand/tokens/tokens.css (Sebiche Celeste kit) — see DESIGN_SYSTEM.md
    ═══════════════════════════════════════════════════════════════════════ */
 
 :root {
   /* === BRAND COLORS === */
-  --color-celeste: #08769A;
-  --color-celeste-dark: #066B8E;
-  --color-celeste-light: #6DD4F7;
-  --color-celeste-soft: rgba(60, 190, 239, 0.08);
-  --color-celeste-muted: rgba(60, 190, 239, 0.15);
+  /* Legacy aliases → brand tokens (brand/tokens/tokens.css is the single source). */
+  --color-celeste: var(--sc-accent);
+  --color-celeste-dark: var(--sc-celeste-900);
+  --color-celeste-light: var(--sc-celeste-300);
+  --color-celeste-soft: color-mix(in srgb, var(--sc-celeste-400) 8%, transparent);
+  --color-celeste-muted: color-mix(in srgb, var(--sc-celeste-400) 15%, transparent);
 
-  --color-biscay: #1B265C;
-  --color-biscay-dark: #111940;
-  --color-biscay-light: #2A3A7A;
+  --color-biscay: var(--sc-noche-800);
+  --color-biscay-dark: var(--sc-noche-900);
+  --color-biscay-light: var(--sc-noche-700);
 
-  /* === BACKGROUND === */
-  --bg-primary: #EDF2F7;
+  /* Banderín (identity only — never for text on light backgrounds) */
+  --color-banderin-celeste: var(--sc-brand-banderin-celeste);
+  --color-banderin-gold: var(--sc-brand-banderin-gold);
+  --color-banderin-red: var(--sc-brand-banderin-red);
+  --color-highlight: var(--sc-highlight);
+
+  --bg-primary: var(--sc-bg);
   --bg-secondary: #FFFFFF;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #F1F5F9;
+  --bg-card-hover: var(--sc-papel-100);
   --bg-elevated: #FFFFFF;
-  --bg-inset: #E7EEF5;
+  --bg-inset: var(--sc-surface);
 
-  /* === TEXT === */
-  --text-primary: #1B265C;
-  --text-secondary: #475569;
-  --text-muted: #475569;
+  --text-primary: var(--sc-text);
+  --text-secondary: var(--sc-text-muted);
+  --text-muted: var(--sc-text-muted);
   --text-on-dark: #FFFFFF;
-  --text-on-accent: #FFFFFF;
+  --text-on-accent: var(--sc-on-accent);
 
-  /* === SEMANTIC RESULT COLORS (desaturated, refined) === */
-  --color-win: #047857;
-  --color-win-light: #D1FAE5;
-  --color-win-text: #065F46;
-  --color-draw: #92400E;
-  --color-draw-light: #FEF3C7;
-  --color-draw-text: #92400E;
-  --color-loss: #B91C1C;
-  --color-loss-light: #FEE2E2;
-  --color-loss-text: #991B1B;
-  --color-win-bar: #047857;
-  --color-draw-bar: #92400E;
-  --color-loss-bar: #B91C1C;
+  --color-win: var(--sc-win);
+  --color-win-light: color-mix(in srgb, var(--sc-win) 12%, transparent);
+  --color-win-text: var(--sc-win);
+  --color-draw: var(--sc-draw);
+  --color-draw-light: color-mix(in srgb, var(--sc-draw) 12%, transparent);
+  --color-draw-text: var(--sc-draw);
+  --color-loss: var(--sc-loss);
+  --color-loss-light: color-mix(in srgb, var(--sc-loss) 12%, transparent);
+  --color-loss-text: var(--sc-loss);
+  --color-win-bar: var(--sc-result-win-light);
+  --color-draw-bar: var(--sc-result-draw-light);
+  --color-loss-bar: var(--sc-result-loss-light);
   --text-on-result: #FFFFFF;
 
-  /* === BORDERS === */
-  --border-subtle: #D5DFEA;
-  --border-medium: #CBD5E1;
-  --border-accent: #3CBEEF;
+  --border-subtle: var(--sc-border);
+  --border-medium: color-mix(in srgb, var(--sc-border) 70%, var(--sc-text-muted));
+  --border-accent: var(--sc-celeste-400);
+  --focus-ring: var(--sc-focus);
 
-  /* === SHADOWS (tinted to Biscay) === */
-  --shadow-sm: 0 1px 2px rgba(27, 38, 92, 0.04);
-  --shadow-md: 0 4px 12px rgba(27, 38, 92, 0.06);
-  --shadow-lg: 0 8px 24px rgba(27, 38, 92, 0.08);
-  --shadow-xl: 0 16px 48px rgba(27, 38, 92, 0.10);
-  --shadow-card: 0 1px 3px rgba(27, 38, 92, 0.04), 0 4px 12px rgba(27, 38, 92, 0.03);
-  --shadow-card-hover: 0 8px 24px rgba(27, 38, 92, 0.08), 0 2px 6px rgba(27, 38, 92, 0.04);
+  --shadow-sm: 0 1px 2px rgba(18, 26, 58, 0.04);
+  --shadow-md: 0 4px 12px rgba(18, 26, 58, 0.06);
+  --shadow-lg: 0 8px 24px rgba(18, 26, 58, 0.08);
+  --shadow-xl: 0 16px 48px rgba(18, 26, 58, 0.10);
+  --shadow-card: 0 1px 3px rgba(18, 26, 58, 0.04), 0 4px 12px rgba(18, 26, 58, 0.03);
+  --shadow-card-hover: 0 8px 24px rgba(18, 26, 58, 0.08), 0 2px 6px rgba(18, 26, 58, 0.04);
 
-  /* === RADIUS === */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 24px;
+  /* Radii — brand is squarer: 4 / 8 */
+  --radius-sm: var(--sc-radius-sm);
+  --radius-md: var(--sc-radius-md);
+  --radius: var(--sc-radius-md);
+  --radius-lg: var(--sc-radius-md);
+  --radius-xl: var(--sc-radius-md);
   --radius-full: 9999px;
 
-  /* === TYPOGRAPHY === */
-  --font-display: 'Avenir Next Condensed', 'Arial Narrow', 'Avenir Next', sans-serif;
-  --font-body: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'SFMono-Regular', 'SF Mono', 'Roboto Mono', monospace;
+  /* Type — self-hosted Barlow Condensed / Inter / IBM Plex Mono */
+  --font-display: var(--sc-font-display);
+  --font-body: var(--sc-font-body);
+  --font-mono: var(--sc-font-mono);
 
   /* === TRANSITIONS === */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -92,36 +95,14 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 [data-theme="dark"] {
-  --color-celeste: #3CBEEF;
-  --color-celeste-dark: #6DD4F7;
-  --bg-primary: #0B1120;
-  --bg-secondary: #111827;
-  --bg-card: #151D30;
-  --bg-card-hover: #1C2640;
-  --bg-elevated: #1A2338;
-  --bg-inset: #111827;
-
-  --text-primary: #F1F5F9;
-  --text-secondary: #94A3B8;
-  --text-muted: #94A3B8;
-  --text-on-dark: #FFFFFF;
-  --text-on-accent: #111940;
-
-  --color-win: #34D399;
-  --color-win-light: rgba(52, 211, 153, 0.15);
-  --color-win-text: #6EE7B7;
-  --color-draw: #FBBF24;
-  --color-draw-light: rgba(251, 191, 36, 0.15);
-  --color-draw-text: #FCD34D;
-  --color-loss: #F87171;
-  --color-loss-light: rgba(248, 113, 113, 0.15);
-  --color-loss-text: #FCA5A5;
-  --color-win-bar: #047857;
-  --color-draw-bar: #92400E;
-  --color-loss-bar: #B91C1C;
-
-  --border-subtle: #1E293B;
-  --border-medium: #334155;
+  --bg-primary: var(--sc-bg);
+  --bg-secondary: var(--sc-surface);
+  --bg-card: var(--sc-surface);
+  --bg-card-hover: color-mix(in srgb, var(--sc-surface) 85%, var(--sc-noche-700));
+  --bg-elevated: color-mix(in srgb, var(--sc-surface) 90%, var(--sc-noche-700));
+  --bg-inset: var(--sc-bg);
+  --border-subtle: color-mix(in srgb, var(--sc-noche-700) 60%, var(--sc-surface));
+  --border-medium: var(--sc-noche-700);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
@@ -130,8 +111,11 @@
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15);
 
-  --color-celeste-soft: rgba(60, 190, 239, 0.12);
-  --color-celeste-muted: rgba(60, 190, 239, 0.2);
+  --color-celeste-soft: color-mix(in srgb, var(--sc-celeste-400) 12%, transparent);
+  --color-celeste-muted: color-mix(in srgb, var(--sc-celeste-400) 20%, transparent);
+  --color-win-light: color-mix(in srgb, var(--sc-win) 15%, transparent);
+  --color-draw-light: color-mix(in srgb, var(--sc-draw) 15%, transparent);
+  --color-loss-light: color-mix(in srgb, var(--sc-loss) 15%, transparent);
 }
 
 [data-theme="dark"] ::selection {
