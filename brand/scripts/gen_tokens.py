@@ -34,7 +34,7 @@ color=[
  ("rojo.600","#D10F21","Franja/alertas de marca, no para derrota."),
  ("result.win.light","#04724F","Victoria (claro)."),("result.win.dark","#3DDC97","Victoria (oscuro)."),
  ("result.draw.light","#8A4B00","Empate (claro)."),("result.draw.dark","#F6C344","Empate (oscuro)."),
- ("result.loss.light","#B4232C","Derrota (claro)."),("result.loss.dark","#FF8A8A","Derrota (oscuro)."),
+ ("result.loss.light","#B4232C","Derrota (claro), letra P."),("result.loss.dark","#FF8A8A","Derrota (oscuro), letra P."),
 ]
 C=dict((n,v) for n,v,_ in color)
 themes={

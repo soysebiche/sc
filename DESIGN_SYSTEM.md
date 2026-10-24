@@ -41,7 +41,7 @@ Los colores del banderín v2 tienen tokens propios: `--sc-brand-banderin-celeste
 | Empate (`--sc-draw`) | #8A4B00 | #F6C344 |
 | Derrota (`--sc-loss`) | #B4232C | #FF8A8A |
 
-- Un resultado nunca se comunica solo con color: siempre va con su letra. En la guía las letras son V/E/D. En el sitio, la derrota se marca **P** (perdido), porque así viene el código en `src/domain/matches.js`.
+- Un resultado nunca se comunica solo con color: siempre va con su letra. Las letras son V/E/P en todo el sitio y el kit: la derrota se marca **P** (perdido), igual que el código de `src/domain/matches.js`.
 - Los chips usan el mismo color sobre un tinte de ese color al 12 % (15 % en oscuro). Las barras usan siempre el tono claro con texto blanco.
 - Todos cumplen AA (≥ 4,5:1). Chip en claro: V 5,0 · E 5,7 · P 5,4. Chip en oscuro: 7,0 · 7,5 · 5,8. Barra con texto blanco: 6,0 · 6,8 · 6,5. Detalle en `brand/tokens/contrast-report.md`.
 

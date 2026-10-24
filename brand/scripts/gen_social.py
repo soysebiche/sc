@@ -4,7 +4,7 @@ from lib import *
 FORMATS={'post':(1080,1350),'story':(1080,1920),'x':(1600,900)}
 C={
 'efemeride':dict(kick='Efeméride · 24 de octubre',big='2021',line1='Alianza Lima <b class="score">1–3</b> Sporting Cristal',meta='Liga 1 · Fase 2 · Visita' ,detail="Riquelme 17' 80' · Ávila 21'",foot='Otros 24 de octubre en el archivo: <b>6 partidos · 5 victorias</b>',res='v'),
-'previa':dict(kick='Previa · Clausura 2026 · Fecha 13',big='HOY',line1='Cusco FC <b class="score">vs</b> Sporting Cristal',meta='Sáb 24 oct · 15:15 hora de Lima · Inca Garcilaso de la Vega',detail='Historial ante Cusco FC: 13 PJ · 8 V · 2 E · 3 D',foot='Calendario actualizado: celeste.sebiche.com/sporting-cristal.ics',res=None),
+'previa':dict(kick='Previa · Clausura 2026 · Fecha 13',big='HOY',line1='Cusco FC <b class="score">vs</b> Sporting Cristal',meta='Sáb 24 oct · 15:15 hora de Lima · Inca Garcilaso de la Vega',detail='Historial ante Cusco FC: 13 PJ · 8 V · 2 E · 3 P',foot='Calendario actualizado: celeste.sebiche.com/sporting-cristal.ics',res=None),
 'resultado':dict(kick='Resultado · Clausura 2026 · Fecha 12',big='FINAL',line1='Sporting Cristal <b class="score">4–2</b> Comerciantes Unidos',meta='Dom 18 oct 2026 · Lima',detail="Iberico 35' 64' · Barcos 71' 90+4'",foot='Ficha completa en celeste.sebiche.com',res='v'),
 }
 CSS='''
@@ -28,7 +28,7 @@ VARS={'post':'--p:80px;--lh:86px;--big:240px;--l1:92px;--m:30px;--g:28px;--k:24p
 jobs=[]
 for kind,c in C.items():
     for fmt,(w,h) in FORMATS.items():
-        res=f'<span class="res {c["res"]}">{"V" if c["res"]=="v" else ""}</span>' if c['res'] else ''
+        res=f'<span class="res {c["res"]}">{ {"v":"V","e":"E","p":"P"}.get(c["res"],"") }</span>' if c['res'] else ''
         text=f'<div class="kick">{c["kick"]}</div><div class="l1">{c["line1"]}</div><div class="meta">{c["meta"]}</div><div class="detail">{c["detail"]} {res}</div>'
         main=(f'<div style="display:flex;flex-direction:column;gap:var(--g);max-width:62%">{text}</div><div class="big disp">{c["big"]}</div>' if fmt=='x' else f'<div class="big disp">{c["big"]}</div>{text}')
         body=f'''<div class="stripe" style="--st:12px;position:absolute;top:0;left:0;right:0"><i></i><i></i><i></i></div>

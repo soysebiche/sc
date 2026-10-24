@@ -57,7 +57,7 @@ El master es `logo/svg/sebiche-celeste-banderin-master.svg` (generado por `scrip
 | oro (UI) | #F1AA19 | Marcador, destacados (en claro se usa #7A4E00) |
 | rojo | #D10F21 | Franja del logo y barra del banderín (solo decorativo) |
 
-Victoria, empate y derrota tienen tonos propios en cada tema, y **siempre van acompañados de la letra V, E o D**: nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver `tokens/contrast-report.md`).
+Victoria, empate y derrota tienen tonos propios en cada tema, y **siempre van acompañados de la letra V, E o P** (P = perdido, como en el sitio): nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver `tokens/contrast-report.md`).
 
 **Regla:** las estrellas oro sobre el celeste del banderín dan 1,07:1 de luminancia y se distinguen por el tono; por eso el banderín no se reduce a escala de grises: se usa la versión tinta. El banderín celeste sobre papel da 2,04:1. Como es un logo, está exento de la norma de contraste, pero sobre fondo claro se recomienda usar la versión *con placa* o la versión *tinta*.
 

@@ -20,8 +20,8 @@ function Panel({ theme }) {
         </div>
         {efem.map((m) => <MatchCard key={m['Fecha']} match={m} />)}
         <div className="sc-card"><div className="sc-eyebrow" style={{ marginBottom: 10 }}>Clásico · vs Alianza Lima (140 PJ)</div><DistributionBar win={44} draw={52} loss={44} /></div>
-        <div className="sc-card"><DataTable caption="Temporadas recientes" columns={[{ key: 'y', label: 'Año' }, { key: 'pj', label: 'PJ', num: true }, { key: 'v', label: 'V', num: true }, { key: 'e', label: 'E', num: true }, { key: 'd', label: 'D', num: true }]} rows={[{ y: '2026', pj: 44, v: 20, e: 8, d: 16 }, { y: '2025', pj: 46, v: 22, e: 10, d: 14 }]} /></div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}><Button>Suscribirme al calendario</Button><Button variant="ghost">Ver ficha</Button><ResultBadge result="V" /><ResultBadge result="E" /><ResultBadge result="D" /></div>
+        <div className="sc-card"><DataTable caption="Temporadas recientes" columns={[{ key: 'y', label: 'Año' }, { key: 'pj', label: 'PJ', num: true }, { key: 'v', label: 'V', num: true }, { key: 'e', label: 'E', num: true }, { key: 'p', label: 'P', num: true }]} rows={[{ y: '2026', pj: 44, v: 20, e: 8, p: 16 }, { y: '2025', pj: 46, v: 22, e: 10, p: 14 }]} /></div>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}><Button>Suscribirme al calendario</Button><Button variant="ghost">Ver ficha</Button><ResultBadge result="V" /><ResultBadge result="E" /><ResultBadge result="P" /></div>
         {last.map((m) => <MatchCard key="l" match={m} />)}
         <Disclaimer />
       </main>

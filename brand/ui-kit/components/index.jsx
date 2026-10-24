@@ -4,7 +4,7 @@ import React from 'react';
 export const DISCLAIMER = 'Proyecto independiente de hinchas. Sin relación oficial con el Club Sporting Cristal.';
 const KIND = { V: 'win', G: 'win', E: 'draw', D: 'loss', P: 'loss' };
 const LABEL = { win: 'Victoria', draw: 'Empate', loss: 'Derrota' };
-const SHORT = { win: 'V', draw: 'E', loss: 'D' };
+const SHORT = { win: 'V', draw: 'E', loss: 'P' };
 export const resultKind = (r) => KIND[r] || 'draw';
 
 export function Stripe() { return <div className="sc-stripe" aria-hidden="true"><i /><i /><i /></div>; }
@@ -67,7 +67,7 @@ export function DistributionBar({ win, draw, loss, label = 'Distribución de res
         <span className="sc-dist__seg--draw" style={{ width: pct(draw) }} />
         <span className="sc-dist__seg--loss" style={{ width: pct(loss) }} />
       </div>
-      <figcaption className="sc-dist__legend"><span>V {win} · {pct(win)}</span><span>E {draw}</span><span>D {loss}</span></figcaption>
+      <figcaption className="sc-dist__legend"><span>V {win} · {pct(win)}</span><span>E {draw}</span><span>P {loss}</span></figcaption>
     </figure>
   );
 }
