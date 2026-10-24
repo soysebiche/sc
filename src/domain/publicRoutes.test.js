@@ -19,7 +19,7 @@ describe('public archive routes', () => {
     expect(new Set(catalog.rivals.map(rival => rival.slug)).size).toBe(catalog.rivals.length);
     expect(new Set(catalog.countries.map(country => country.slug)).size).toBe(catalog.countries.length);
     expect(new Set(catalog.seasons.map(season => season.path)).size).toBe(catalog.seasons.length);
-    expect(catalog.matches).toHaveLength(2125);
+    expect(catalog.matches).toHaveLength(2150);
     expect(catalog.rivals.length).toBeGreaterThan(100);
     expect(catalog.countries.map(country => country.name)).toEqual(expect.arrayContaining(['Perú', 'Argentina']));
   });
