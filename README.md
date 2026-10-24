@@ -63,7 +63,7 @@ No hay variables obligatorias para ejecutar el archivo. `VITE_GA_MEASUREMENT_ID`
 
 ## Deployment
 
-El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos y el fallback SPA. Configuración esperada:
+El repositorio contiene `vercel.json` para servir `/api/data`, assets estáticos y las páginas HTML públicas generadas en el build. Las URLs desconocidas responden `404.html` con status 404; no hay fallback SPA hacia el homepage. Configuración esperada:
 
 - Build: `npm run build`
 - Output: `dist`
@@ -96,3 +96,4 @@ GA4 se carga únicamente después del consentimiento explícito y solo si existe
 - `SETUP_SIMPLE.md`: contrato de datos actual.
 - `SETUP_VERCEL_FUNCTIONS.md`: alcance del endpoint opcional.
 - `VALIDACION_CAMPO_9.md`: protocolo y registro obligatorio para confirmar el 9.0.
+- `docs/SEO.md`: pre-render de rutas públicas, sitemap y verificación local.
