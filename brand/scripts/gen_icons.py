@@ -1,13 +1,13 @@
-"""Íconos de app/PWA desde el banderín calcado (sin modificarlo). Fondo noche.950."""
+"""Íconos de app/PWA desde el banderín v2. Fondo noche.950; <=64 px usa filete grueso."""
 import json,re,subprocess
 from PIL import Image
 B='/workspace/sc-research/brand'; I=f'{B}/icons'
-pen=open(f'{B}/logo/svg/sebiche-celeste-banderin-color.svg').read()
-inner=re.search(r'<title>.*?</title>(.*)</svg>',pen,re.S).group(1)
-def icon(size,frac,bg,rx=0):
-    vw,vh=960,1184; h=size*frac; w=h*vw/vh
+import sys; sys.path.insert(0,f'{B}/scripts'); import pen_v2
+BIG=pen_v2.groups('color','i'); SMALL=pen_v2.groups('color','s',sw=34)  # trazo grueso para tamaños chicos
+def icon(size,frac,bg,rx=0,inner=None):
+    inner=inner or (SMALL if size<=64 else BIG); vw,vh=560,760; h=size*frac; w=h*vw/vh
     b=f'<rect width="{size}" height="{size}" rx="{rx}" fill="{bg}"/>' if bg else ''
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 {size} {size}">{b}<svg x="{(size-w)/2:.2f}" y="{(size-h)/2:.2f}" width="{w:.2f}" height="{h:.2f}" viewBox="192 80 960 1184">{inner}</svg></svg>'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 {size} {size}">{b}<svg x="{(size-w)/2:.2f}" y="{(size-h)/2:.2f}" width="{w:.2f}" height="{h:.2f}" viewBox="140 40 560 760">{inner}</svg></svg>'
 spec={'icon-any-512.svg':(512,.70,'#0B1230',0),'icon-maskable-512.svg':(512,.56,'#0B1230',0),'favicon.svg':(64,.94,None,0),'apple-touch-icon.svg':(180,.66,'#0B1230',0)}
 jobs=[]
 for n,(s,f,bg,rx) in spec.items(): open(f'{I}/{n}','w').write(icon(s,f,bg,rx))

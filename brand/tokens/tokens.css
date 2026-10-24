@@ -1,8 +1,9 @@
 /* Sebiche Celeste tokens v1 — generado por scripts/gen_tokens.py. No editar a mano. */
 :root{
   --sc-brand-banderin-celeste: #3CBEEF;
-  --sc-brand-banderin-navy: #1B265C;
-  --sc-brand-banderin-gold: #FEDB01;
+  --sc-brand-banderin-red: #D10F21;
+  --sc-brand-banderin-white: #FFFFFF;
+  --sc-brand-banderin-gold: #F1AA19;
   --sc-brand-logo-celeste: #5CE0E5;
   --sc-brand-logo-white: #F7FAFB;
   --sc-brand-logo-red: #D10F21;

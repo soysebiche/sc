@@ -10,39 +10,17 @@ Este aviso va en la web, en las redes y en cualquier pieza pública. Nunca se us
 <h2>1. Qué es la marca</h2>
 <p>Sebiche Celeste es un archivo estadístico de Sporting Cristal: 1948 partidos registrados desde 1956. La marca tiene que sentirse <strong>precisa, hincha y sobria</strong>: es un archivo con datos de verdad, no una cuenta de memes.</p>
 <h2>2. Logo y banderín</h2>
-<p>Ambos se trazaron a vector <strong>sin modificar ni un píxel</strong> y se comprobaron superponiéndolos al raster original:</p>
-<table>
-<thead>
-<tr>
-<th>Pieza</th>
-<th>Fuente</th>
-<th>Diferencia media</th>
-<th>Píxeles con diferencia &gt;32</th>
-<th>IoU alfa</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Logo (wordmark)</td>
-<td>PNG 6001 px</td>
-<td>0,87</td>
-<td>1,1 %</td>
-<td>0,998</td>
-</tr>
-<tr>
-<td>Banderín</td>
-<td>Pixel art 84 px</td>
-<td>1,77</td>
-<td>0,7 %</td>
-<td>0,991</td>
-</tr>
-</tbody>
-</table>
-<p>La diferencia que queda está solo en los bordes con antialias. Los masters están en <code>logo/svg/*-master.svg</code>.</p>
+<p><strong>Logo (wordmark):</strong> se trazó a vector <strong>sin modificar ni un píxel</strong> y se comprobó superponiéndolo al raster original (diferencia media 0,87; IoU alfa 0,998 contra el PNG de 6001 px). Ese trazo no se toca.</p>
+<p><strong>Banderín v2 (aprobado el 24 oct 2026):</strong> reemplaza al banderín pixel art anterior, que queda archivado en <code>_archive/banderin-v1/</code>. Está dibujado a mano en vector, con formas limpias:
+- Silueta del banderín en celeste #3CBEEF, con un filete interior blanco continuo.
+- Barra superior en rojo-blanco-rojo (#D10F21 / #FFFFFF / #D10F21), en tres tramos iguales y formas sólidas. Tiene exactamente el ancho del banderín: no sobresale.
+- Tres estrellas rellenas oro #F1AA19 en V (chica, grande, chica), las mismas estrellas del logo.</p>
+<p>El master es <code>logo/svg/sebiche-celeste-banderin-master.svg</code> (generado por <code>scripts/pen_v2.py</code>). Para 64 px o menos se usa la versión con filete más grueso (<code>banderin-v2/opcion-d-final-icon.svg</code>). En favicon las estrellas se leen como un punto oro, y eso es aceptado.</p>
+<p><strong>Reglas del banderín v2:</strong> no cambiar la proporción ni la posición de las estrellas, no agregar contornos a las estrellas, no hacer que la barra tricolor sobresalga del ancho del banderín, y no recolorear fuera de las versiones aprobadas.</p>
 <p><strong>Versiones permitidas</strong> (solo cambia el color, nunca la forma):
 - <strong>Color</strong>: es la principal y va sobre fondos noche (#0B1230 a #1B265C).
 - <strong>Color con placa</strong>: la misma versión color sobre una placa noche, para fondos claros.
-- <strong>Tinta</strong>: una sola tinta #1B265C, para impresión o sellos.
+- <strong>Tinta</strong>: una sola tinta #1B265C, para impresión o sellos (en el banderín, la franja blanca, el filete y las estrellas quedan calados).
 - <strong>Reverso</strong>: blanco, sobre fotos o sobre colores de la marca.
 - <strong>Lockup horizontal</strong>: banderín más logo, separados por 300 unidades (la x).</p>
 <p><img alt="Área de respeto y tamaños mínimos" src="../sheets/lamina-area-respeto-minimos.png" /></p>
@@ -106,6 +84,11 @@ Este aviso va en la web, en las redes y en cualquier pieza pública. Nunca se us
 <td>Acento en oscuro, banderín</td>
 </tr>
 <tr>
+<td>oro</td>
+<td>#F1AA19</td>
+<td>Estrellas del logo y del banderín</td>
+</tr>
+<tr>
 <td>celeste.700</td>
 <td>#086A8C</td>
 <td>Acento y enlaces en claro</td>
@@ -116,19 +99,19 @@ Este aviso va en la web, en las redes y en cualquier pieza pública. Nunca se us
 <td>Fondo claro</td>
 </tr>
 <tr>
-<td>oro</td>
+<td>oro (UI)</td>
 <td>#F1AA19</td>
 <td>Marcador, destacados (en claro se usa #7A4E00)</td>
 </tr>
 <tr>
 <td>rojo</td>
 <td>#D10F21</td>
-<td>Franja del logo (solo decorativo)</td>
+<td>Franja del logo y barra del banderín (solo decorativo)</td>
 </tr>
 </tbody>
 </table>
-<p>Victoria, empate y derrota tienen tonos propios en cada tema, y <strong>siempre van acompañados de la letra V, E o D</strong>: nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver <code>tokens/contrast-report.md</code>, 35 de 36 combinaciones aprobadas).</p>
-<p><strong>Regla:</strong> el banderín celeste sobre papel da 2,04:1. Como es un logo, está exento de la norma de contraste, pero sobre fondo claro se recomienda usar la versión <em>con placa</em> o la versión <em>tinta</em>.</p>
+<p>Victoria, empate y derrota tienen tonos propios en cada tema, y <strong>siempre van acompañados de la letra V, E o D</strong>: nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver <code>tokens/contrast-report.md</code>).</p>
+<p><strong>Regla:</strong> las estrellas oro sobre el celeste del banderín dan 1,07:1 de luminancia y se distinguen por el tono; por eso el banderín no se reduce a escala de grises: se usa la versión tinta. El banderín celeste sobre papel da 2,04:1. Como es un logo, está exento de la norma de contraste, pero sobre fondo claro se recomienda usar la versión <em>con placa</em> o la versión <em>tinta</em>.</p>
 <p>Los tokens se mantienen en <code>tokens/tokens.json</code> y desde ahí se generan <code>tokens.css</code> y <code>tailwind.preset.cjs</code>.</p>
 <h2>4. Tipografía</h2>
 <p>Las tres son OFL y van auto-alojadas en <code>fonts/</code>. Reemplazan a Avenir, que dependía de qué fuentes tuviera instaladas cada sistema.</p>
@@ -181,7 +164,7 @@ Este aviso va en la web, en las redes y en cualquier pieza pública. Nunca se us
 <h2>7. Usos prohibidos</h2>
 <ul>
 <li>Usar el escudo de Sporting Cristal o cualquier marca registrada del club.</li>
-<li>Redibujar, deformar, rotar, recolorear (fuera de las versiones aprobadas) o ponerle sombras o contornos al logo o al banderín.</li>
+<li>Deformar, rotar, recolorear (fuera de las versiones aprobadas) o ponerle sombras o contornos al logo o al banderín, o volver a usar el banderín pixel art anterior.</li>
 <li>Formar lockups con SEBICHE o insinuar patrocinio o carácter oficial.</li>
 <li>Inventar datos: cada cifra tiene que salir del archivo.</li>
 </ul>

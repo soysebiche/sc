@@ -11,19 +11,21 @@ Sebiche Celeste es un archivo estadístico de Sporting Cristal: 1948 partidos re
 
 ## 2. Logo y banderín
 
-Ambos se trazaron a vector **sin modificar ni un píxel** y se comprobaron superponiéndolos al raster original:
+**Logo (wordmark):** se trazó a vector **sin modificar ni un píxel** y se comprobó superponiéndolo al raster original (diferencia media 0,87; IoU alfa 0,998 contra el PNG de 6001 px). Ese trazo no se toca.
 
-| Pieza | Fuente | Diferencia media | Píxeles con diferencia >32 | IoU alfa |
-|---|---|---|---|---|
-| Logo (wordmark) | PNG 6001 px | 0,87 | 1,1 % | 0,998 |
-| Banderín | Pixel art 84 px | 1,77 | 0,7 % | 0,991 |
+**Banderín v2 (aprobado el 24 oct 2026):** reemplaza al banderín pixel art anterior, que queda archivado en `_archive/banderin-v1/`. Está dibujado a mano en vector, con formas limpias:
+- Silueta del banderín en celeste #3CBEEF, con un filete interior blanco continuo.
+- Barra superior en rojo-blanco-rojo (#D10F21 / #FFFFFF / #D10F21), en tres tramos iguales y formas sólidas. Tiene exactamente el ancho del banderín: no sobresale.
+- Tres estrellas rellenas oro #F1AA19 en V (chica, grande, chica), las mismas estrellas del logo.
 
-La diferencia que queda está solo en los bordes con antialias. Los masters están en `logo/svg/*-master.svg`.
+El master es `logo/svg/sebiche-celeste-banderin-master.svg` (generado por `scripts/pen_v2.py`). Para 64 px o menos se usa la versión con filete más grueso (`banderin-v2/opcion-d-final-icon.svg`). En favicon las estrellas se leen como un punto oro, y eso es aceptado.
+
+**Reglas del banderín v2:** no cambiar la proporción ni la posición de las estrellas, no agregar contornos a las estrellas, no hacer que la barra tricolor sobresalga del ancho del banderín, y no recolorear fuera de las versiones aprobadas.
 
 **Versiones permitidas** (solo cambia el color, nunca la forma):
 - **Color**: es la principal y va sobre fondos noche (#0B1230 a #1B265C).
 - **Color con placa**: la misma versión color sobre una placa noche, para fondos claros.
-- **Tinta**: una sola tinta #1B265C, para impresión o sellos.
+- **Tinta**: una sola tinta #1B265C, para impresión o sellos (en el banderín, la franja blanca, el filete y las estrellas quedan calados).
 - **Reverso**: blanco, sobre fotos o sobre colores de la marca.
 - **Lockup horizontal**: banderín más logo, separados por 300 unidades (la x).
 
@@ -49,14 +51,15 @@ La diferencia que queda está solo en los bordes con antialias. Los masters est�
 | noche.950 | #0B1230 | Fondo oscuro, fondo del logo |
 | noche.800 | #1B265C | Header, tinta |
 | celeste.400 | #3CBEEF | Acento en oscuro, banderín |
+| oro | #F1AA19 | Estrellas del logo y del banderín |
 | celeste.700 | #086A8C | Acento y enlaces en claro |
 | papel.50 | #F7FAFB | Fondo claro |
-| oro | #F1AA19 | Marcador, destacados (en claro se usa #7A4E00) |
-| rojo | #D10F21 | Franja del logo (solo decorativo) |
+| oro (UI) | #F1AA19 | Marcador, destacados (en claro se usa #7A4E00) |
+| rojo | #D10F21 | Franja del logo y barra del banderín (solo decorativo) |
 
-Victoria, empate y derrota tienen tonos propios en cada tema, y **siempre van acompañados de la letra V, E o D**: nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver `tokens/contrast-report.md`, 35 de 36 combinaciones aprobadas).
+Victoria, empate y derrota tienen tonos propios en cada tema, y **siempre van acompañados de la letra V, E o D**: nunca dependen solo del color. Todas las combinaciones de texto cumplen WCAG AA (ver `tokens/contrast-report.md`).
 
-**Regla:** el banderín celeste sobre papel da 2,04:1. Como es un logo, está exento de la norma de contraste, pero sobre fondo claro se recomienda usar la versión *con placa* o la versión *tinta*.
+**Regla:** las estrellas oro sobre el celeste del banderín dan 1,07:1 de luminancia y se distinguen por el tono; por eso el banderín no se reduce a escala de grises: se usa la versión tinta. El banderín celeste sobre papel da 2,04:1. Como es un logo, está exento de la norma de contraste, pero sobre fondo claro se recomienda usar la versión *con placa* o la versión *tinta*.
 
 Los tokens se mantienen en `tokens/tokens.json` y desde ahí se generan `tokens.css` y `tailwind.preset.cjs`.
 
@@ -93,7 +96,7 @@ En la locución de videos, el cierre es: *"Sebiche Celeste es un proyecto indepe
 ## 7. Usos prohibidos
 
 - Usar el escudo de Sporting Cristal o cualquier marca registrada del club.
-- Redibujar, deformar, rotar, recolorear (fuera de las versiones aprobadas) o ponerle sombras o contornos al logo o al banderín.
+- Deformar, rotar, recolorear (fuera de las versiones aprobadas) o ponerle sombras o contornos al logo o al banderín, o volver a usar el banderín pixel art anterior.
 - Formar lockups con SEBICHE o insinuar patrocinio o carácter oficial.
 - Inventar datos: cada cifra tiene que salir del archivo.
 

@@ -37,4 +37,6 @@
 | ref | Logo blanco sobre noche.950 |  | #F7FAFB / #0B1230 | 17.51 | 3.0 | ✅ |
 | ref | Banderín celeste sobre noche.950 (gráfico) |  | #3CBEEF / #0B1230 | 8.57 | 3.0 | ✅ |
 | ref | Banderín celeste sobre papel.50 (gráfico) |  | #3CBEEF / #F7FAFB | 2.04 | 3.0 | ❌ |
+| ref | Estrellas oro sobre celeste del banderín (gráfico) |  | #F1AA19 / #3CBEEF | 1.07 | 3.0 | ❌ |
+| ref | Franja roja del banderín sobre noche.950 (gráfico) |  | #D10F21 / #0B1230 | 3.32 | 3.0 | ✅ |
 | ref | Web actual --color-celeste claro #08769A sobre blanco |  | #08769A / #FFFFFF | 5.16 | 4.5 | ✅ |

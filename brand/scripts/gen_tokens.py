@@ -2,10 +2,11 @@
 import json
 B='/workspace/sc-research/brand/tokens'
 color=[
- # marca (extraídos del calco; solo para el logo/banderín)
+ # marca (solo para el logo/banderín)
  ("brand.banderin.celeste","#3CBEEF","Relleno del banderín. Solo en el símbolo y como acento grande."),
- ("brand.banderin.navy","#1B265C","Contorno de la estrella del banderín."),
- ("brand.banderin.gold","#FEDB01","Estrella del banderín."),
+ ("brand.banderin.red","#D10F21","Franja roja-blanca-roja del banderín (igual a la del logo)."),
+ ("brand.banderin.white","#FFFFFF","Filete interior y franja blanca del banderín."),
+ ("brand.banderin.gold","#F1AA19","Tres estrellas del banderín (igual a las del logo)."),
  ("brand.logo.celeste","#5CE0E5","Palabra CELESTE del logo. No usar como texto de interfaz."),
  ("brand.logo.white","#F7FAFB","SEBICHE del logo."),
  ("brand.logo.red","#D10F21","Franja roja del logo."),
@@ -51,7 +52,7 @@ checks=[]
 for t,m in themes.items():
     for fg,bg,need in [("text","bg",4.5),("text","surface",4.5),("text-muted","bg",4.5),("text-muted","surface",4.5),("accent","bg",4.5),("accent","surface",4.5),("on-accent","accent-strong",4.5),("highlight","bg",4.5),("win","bg",4.5),("draw","bg",4.5),("loss","bg",4.5),("win","surface",4.5),("draw","surface",4.5),("loss","surface",4.5),("focus","bg",3.0),("text","header",4.5) if t=='dark' else ("papel.50","header",4.5)]:
         a=res(m.get(fg,fg)); b=res(m[bg]); r=cr(a,b); checks.append((t,fg,bg,a,b,round(r,2),need,r>=need))
-ref=[("Logo blanco sobre noche.950","#F7FAFB","#0B1230",3.0),("Banderín celeste sobre noche.950 (gráfico)","#3CBEEF","#0B1230",3.0),("Banderín celeste sobre papel.50 (gráfico)","#3CBEEF","#F7FAFB",3.0),("Web actual --color-celeste claro #08769A sobre blanco","#08769A","#FFFFFF",4.5)]
+ref=[("Logo blanco sobre noche.950","#F7FAFB","#0B1230",3.0),("Banderín celeste sobre noche.950 (gráfico)","#3CBEEF","#0B1230",3.0),("Banderín celeste sobre papel.50 (gráfico)","#3CBEEF","#F7FAFB",3.0),("Estrellas oro sobre celeste del banderín (gráfico)","#F1AA19","#3CBEEF",3.0),("Franja roja del banderín sobre noche.950 (gráfico)","#D10F21","#0B1230",3.0),("Web actual --color-celeste claro #08769A sobre blanco","#08769A","#FFFFFF",4.5)]
 for n,a,b,need in ref: checks.append(("ref",n,"",a,b,round(cr(a,b),2),need,cr(a,b)>=need))
 tok={"$schema":"sebiche-celeste/tokens v1","meta":{"name":"Sebiche Celeste","version":"1.0.0","date":"2026-10-24","note":"Identidad autónoma. Sin escudo de Sporting Cristal ni respaldo SEBICHE."},
  "color":[{"name":n,"value":v,"usage":u} for n,v,u in color],

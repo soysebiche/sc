@@ -16,7 +16,7 @@ Sebiche Celeste es el archivo abierto de Sporting Cristal: **1948 partidos desde
 - **Rivales**: el historial completo contra cada equipo. Por ejemplo, el clásico ante Alianza Lima: 140 partidos, con 44 victorias, 52 empates y 44 derrotas.
 - **Año a año**: 71 temporadas con récord y goleadores.
 
-**Identidad.** El banderín y el logo originales se conservaron píxel a píxel como vector verificado. Alrededor de ellos se construyó un sistema propio: paleta con contraste AA en tema claro y oscuro, tipografías libres auto-alojadas, plantillas para redes generadas con datos reales y un aviso de no afiliación en todas las piezas.
+**Identidad.** El logo original se conservó píxel a píxel como vector verificado, y el banderín se redibujó en vector limpio: barra rojo-blanco-rojo y tres estrellas en V como las del logo. Alrededor de ellos se construyó un sistema propio: paleta con contraste AA en tema claro y oscuro, tipografías libres auto-alojadas, plantillas para redes generadas con datos reales y un aviso de no afiliación en todas las piezas.
 
 ## Cifras
 

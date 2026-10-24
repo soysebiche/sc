@@ -7,8 +7,9 @@ module.exports = {
         "brand": {
           "banderin": {
             "celeste": "#3CBEEF",
-            "navy": "#1B265C",
-            "gold": "#FEDB01"
+            "red": "#D10F21",
+            "white": "#FFFFFF",
+            "gold": "#F1AA19"
           },
           "logo": {
             "celeste": "#5CE0E5",
