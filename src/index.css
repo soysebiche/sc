@@ -776,3 +776,13 @@ tr:hover td {
 .bg-victory { background-color: var(--color-win); }
 .bg-draw { background-color: var(--color-draw); }
 .bg-defeat { background-color: var(--color-loss); }
+
+/* Palmarés */
+.palmares-row { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: baseline; margin-top: 0.5rem; }
+.palmares-row > strong { min-width: 9rem; }
+.palmares-years { display: flex; flex-wrap: wrap; gap: 0.375rem; min-width: 0; }
+.palmares-year { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 999px; font-weight: 700; font-variant-numeric: tabular-nums; text-decoration: none; border: 1px solid currentColor; }
+.palmares-year--win { color: var(--color-win); }
+.palmares-year--draw { color: var(--color-draw); }
+.palmares-excluded { padding-left: 1.25rem; list-style: disc; overflow-wrap: anywhere; }
+.palmares-excluded li + li { margin-top: 0.375rem; }
