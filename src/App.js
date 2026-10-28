@@ -19,6 +19,7 @@ import { setWebVitalsConsent, startWebVitals } from './observability/webVitals';
 const ScorersView = lazy(() => import('./features/ScorersView'));
 const RecordsView = lazy(() => import('./features/RecordsView'));
 const ClasicosView = lazy(() => import('./features/ClasicosView'));
+const PalmaresView = lazy(() => import('./features/PalmaresView'));
 
 function RivalsView(props) {
   return <EntityHistory {...props} config={RIVALS_HISTORY} />;
@@ -35,6 +36,7 @@ const TABS = [
   { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
   { id: 'goleadores', label: 'GOLEADORES', View: ScorersView },
   { id: 'records', label: 'RÉCORDS', View: RecordsView },
+  { id: 'palmares', label: 'PALMARÉS', View: PalmaresView },
   { id: 'clasicos', label: 'CLÁSICOS', View: ClasicosView },
   { id: 'rivales', label: 'RIVALES', View: RivalsView },
   { id: 'paises', label: 'PAÍSES', View: CountriesView },
