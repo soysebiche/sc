@@ -31,11 +31,11 @@ test('renders the historical archive with a named date control', async () => {
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
-test('keeps ten section tabs in the primary navigation', async () => {
+test('keeps eleven section tabs in the primary navigation', async () => {
   render(<App />);
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
   const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
-  expect(within(nav).getAllByRole('button')).toHaveLength(10);
+  expect(within(nav).getAllByRole('button')).toHaveLength(11);
 });
 
 test('lazy-loads scorers, records and clasicos tabs', async () => {
