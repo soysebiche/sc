@@ -13,7 +13,7 @@ test('renders the historical archive with a named date control', async () => {
     level: 1,
     name: /Sebiche Celeste — Archivo Histórico de Sporting Cristal/i,
   })).toBeInTheDocument();
-  expect(await screen.findByText(/Archivo Histórico · 2151 Partidos/i)).toBeInTheDocument();
+  expect(await screen.findByText(/Archivo Histórico · 2152 Partidos/i)).toBeInTheDocument();
   expect(await screen.findByLabelText('Fecha para consultar')).toHaveAttribute('type', 'date');
   expect(screen.getByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
   expect(screen.queryByText('Fecha 8')).not.toBeInTheDocument();
@@ -26,8 +26,8 @@ test('renders the historical archive with a named date control', async () => {
   expect(within(upcoming).queryByText(/Semifinal - Vuelta/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/Fecha 13/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/Cusco FC/)).not.toBeInTheDocument();
-  expect(within(upcoming).getByText(/Fecha 14/)).toBeInTheDocument();
-  expect(within(upcoming).getByText(/Alianza Lima/)).toBeInTheDocument();
+  expect(within(upcoming).queryByText(/Fecha 14/)).not.toBeInTheDocument();
+  expect(within(upcoming).queryByText(/Alianza Lima/)).not.toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
@@ -103,10 +103,10 @@ test('paginates long rival histories and persists the page in the URL', async ()
   window.history.replaceState({}, '', '/?view=rivales&rival=Alianza%20Lima');
   render(<App />);
 
-  expect(await screen.findByText(/Mostrando 1–18 de 155 partidos/i)).toBeInTheDocument();
+  expect(await screen.findByText(/Mostrando 1–18 de 156 partidos/i)).toBeInTheDocument();
   expect(screen.getAllByRole('article')).toHaveLength(18);
   fireEvent.click(screen.getByRole('button', { name: 'Siguiente' }));
-  expect(screen.getByRole('status')).toHaveTextContent(/Mostrando 19–36 de 155 partidos/i);
+  expect(screen.getByRole('status')).toHaveTextContent(/Mostrando 19–36 de 156 partidos/i);
   expect(window.location.search).toContain('rivalPage=2');
 });
 
@@ -121,7 +121,7 @@ test('paginates country histories independently', async () => {
 
 test('persists the selected theme', async () => {
   render(<App />);
-  await screen.findByText(/2151 Partidos/i);
+  await screen.findByText(/2152 Partidos/i);
   fireEvent.click(screen.getByRole('button', { name: 'Cambiar a modo noche' }));
 
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
