@@ -19,4 +19,26 @@ TZNAME:-05
 DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
+BEGIN:VEVENT
+UID:clausura-2026-f16-adt-sporting-cristal@celeste.sebiche.com
+DTSTAMP:20261102T223301Z
+LAST-MODIFIED:20261102T223301Z
+DTSTART;TZID=America/Lima:20261107T130000
+DTEND;TZID=America/Lima:20261107T151500
+SUMMARY:ADT vs. Sporting Cristal
+DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 16. Programación sujeta 
+ a cambios. Fuente: El Diez / El Comercio (programación Liga 1)
+LOCATION:Estadio Unión Tarma
+URL:https://www.eldiez.com.pe/liga-1/liga-1-confirmo-la-programacion-de-l
+ a-fecha-16-asi-jugaran-alianza-lima-universitario-de-deportes-y-sporting
+ -cristal-noticia/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
 END:VCALENDAR

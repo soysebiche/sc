@@ -5,9 +5,21 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-11-02T23:18:49Z",
-    "sourceName": "Infobae / Líbero (programación Liga 1)",
-    "sourceUrl": "https://www.infobae.com/peru/deportes/2026/10/19/programacion-de-la-fecha-13-del-torneo-clausura-de-la-liga-1-2026-partidos-horarios-y-canales-tv/"
+    "lastVerifiedAt": "2026-11-02T22:33:01Z",
+    "sourceName": "El Diez / El Comercio (programación Liga 1)",
+    "sourceUrl": "https://www.eldiez.com.pe/liga-1/liga-1-confirmo-la-programacion-de-la-fecha-16-asi-jugaran-alianza-lima-universitario-de-deportes-y-sporting-cristal-noticia/"
   },
-  "fixtures": []
+  "fixtures": [
+    {
+      "id": "clausura-2026-f16-adt-sporting-cristal",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 16",
+      "homeTeam": "ADT",
+      "awayTeam": "Sporting Cristal",
+      "start": "2026-11-07T13:00:00-05:00",
+      "end": "2026-11-07T15:15:00-05:00",
+      "venue": "Estadio Unión Tarma",
+      "status": "confirmed"
+    }
+  ]
 }

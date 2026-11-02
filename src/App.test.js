@@ -30,6 +30,8 @@ test('renders the historical archive with a named date control', async () => {
   expect(within(upcoming).queryByText(/Alianza Lima/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/Fecha 15/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/FC Cajamarca/)).not.toBeInTheDocument();
+  expect(within(upcoming).getByText('Fecha 16')).toBeInTheDocument();
+  expect(within(upcoming).getByText(/ADT/)).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
