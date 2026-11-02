@@ -2,7 +2,7 @@
 // Raw strings are never rewritten; normalization is applied via scorer-aliases.json.
 
 const JUNK = /^(-|—|no disponible|sin goles|s\/d|n\/d)$|walkover|^\(perdi/i;
-const OWN_GOAL = /\b(autogol|og|gec|a\.?g\.?|en contra)\b/i;
+const OWN_GOAL = /(?:\b|\d)(autogol|og|gec|a\.?g\.?|en contra)\b/i;
 
 export function scGoals(match) {
   const m = /^(\d+)\s*-\s*(\d+)/.exec(match.Marcador || '');

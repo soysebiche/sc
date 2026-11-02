@@ -1184,3 +1184,8 @@ input[type="date"]:focus {
   .app-header .primary-nav .tab { padding: 8px 8px; font-size: 11px; letter-spacing: 0.02em; }
   .app-header .calendar-subscribe--compact { padding-inline: 0.7rem; }
 }
+
+.birthday-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
+.birthday-item { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.6rem; background: rgba(0, 156, 222, 0.08); min-width: 0; }
+.birthday-name { font-weight: 700; overflow-wrap: anywhere; }
+.birthday-meta { font-size: 0.875rem; opacity: 0.8; }

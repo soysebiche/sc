@@ -10,6 +10,11 @@
     "goals": 145
   },
   {
+    "name": "Luis Bonnet",
+    "birthDate": "1971-04-27",
+    "goals": 141
+  },
+  {
     "name": "Julinho",
     "birthDate": "1965-10-31",
     "goals": 114
@@ -23,6 +28,11 @@
     "name": "Flavio Maestri",
     "birthDate": "1973-01-21",
     "goals": 81
+  },
+  {
+    "name": "Emanuel Herrera",
+    "birthDate": "1987-04-13",
+    "goals": 70
   },
   {
     "name": "Roberto Palacios",
@@ -40,9 +50,19 @@
     "goals": 56
   },
   {
+    "name": "Miguel Ximénez",
+    "birthDate": "1977-08-26",
+    "goals": 56
+  },
+  {
     "name": "Nolberto Solano",
     "birthDate": "1974-12-12",
     "goals": 51
+  },
+  {
+    "name": "Martín Cauteruccio",
+    "birthDate": "1987-04-14",
+    "goals": 49
   },
   {
     "name": "Horacio Calcaterra",
@@ -63,6 +83,11 @@
     "name": "Gerald Távara",
     "birthDate": "1999-03-25",
     "goals": 36
+  },
+  {
+    "name": "Alejandro Hohberg",
+    "birthDate": "1991-08-20",
+    "goals": 35
   },
   {
     "name": "Carlos Gonzáles Pajuelo",
@@ -95,6 +120,11 @@
     "goals": 30
   },
   {
+    "name": "Santiago González",
+    "birthDate": "1999-07-25",
+    "goals": 30
+  },
+  {
     "name": "José del Castillo",
     "birthDate": "1943-05-10",
     "goals": 26
@@ -113,6 +143,21 @@
     "name": "Juan Caballero",
     "birthDate": "1958-06-17",
     "goals": 25
+  },
+  {
+    "name": "Nilson Esidio",
+    "birthDate": "1965-11-19",
+    "goals": 25
+  },
+  {
+    "name": "Sergio Junior",
+    "birthDate": "1979-02-19",
+    "goals": 25
+  },
+  {
+    "name": "Jorge Cazulo",
+    "birthDate": "1982-02-14",
+    "goals": 23
   },
   {
     "name": "Héctor Hurtado",
@@ -140,8 +185,28 @@
     "goals": 21
   },
   {
+    "name": "Cristian Palacios",
+    "birthDate": "1990-09-02",
+    "goals": 20
+  },
+  {
     "name": "César Loyola",
     "birthDate": "1965-09-13",
+    "goals": 19
+  },
+  {
+    "name": "Christian Ortiz",
+    "birthDate": "1992-08-20",
+    "goals": 19
+  },
+  {
+    "name": "Christopher Olivares",
+    "birthDate": "1999-04-03",
+    "goals": 19
+  },
+  {
+    "name": "Leandro Sosa",
+    "birthDate": "1994-06-24",
     "goals": 19
   },
   {
@@ -177,6 +242,11 @@
   {
     "name": "José Moisela",
     "birthDate": "1980-06-25",
+    "goals": 16
+  },
+  {
+    "name": "Julio Rivera",
+    "birthDate": "1967-04-12",
     "goals": 16
   },
   {
