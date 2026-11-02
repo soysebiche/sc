@@ -5,6 +5,8 @@ import ShareButton from '../components/ShareButton';
 import UpcomingMatches from '../components/UpcomingMatches';
 import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
 import { useUrlState } from '../hooks/useUrlState';
+import birthdayData from '../data/scorer-birthdays.json';
+import { birthdaysOn } from '../domain/birthdays';
 
 const MatchPreview = lazy(() => import('./MatchPreview'));
 
@@ -17,6 +19,10 @@ function EfemeridesView({ matches }) {
   const [selectedDate, setSelectedDate] = useUrlState('date', getToday());
   const dayMatches = useMemo(() => getMatchesForDayMonth(matches, selectedDate), [matches, selectedDate]);
   const stats = useMemo(() => summarizeMatches(dayMatches), [dayMatches]);
+  const birthdays = useMemo(() => {
+    const [year, month, day] = selectedDate.split('-').map(Number);
+    return year ? birthdaysOn(birthdayData, { year, month, day }) : [];
+  }, [selectedDate]);
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -31,6 +37,20 @@ function EfemeridesView({ matches }) {
         </div>
         <div className="mt-3"><ShareButton type="efemeride" date={selectedDate} text="Un día como hoy jugó Sporting Cristal" label="Compartir efeméride" /></div>
       </section>
+
+      {birthdays.length > 0 && (
+        <section className="archive-section birthday-section" aria-labelledby="hoy-cumple">
+          <h2 id="hoy-cumple" className="section-title">Hoy cumple</h2>
+          <ul className="birthday-list">
+            {birthdays.map((p) => (
+              <li key={p.name} className="birthday-item">
+                <span className="birthday-name">{p.name}</span>
+                <span className="birthday-meta">{p.age} años · {p.goals} gol{p.goals === 1 ? '' : 'es'} con Cristal</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {dayMatches.length > 0 ? (
         <>

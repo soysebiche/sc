@@ -43,3 +43,14 @@ describe('scorer aliases', () => {
     expect(top).toHaveLength(3);
   });
 });
+
+describe('own goals glued to minute (87og)', () => {
+  it('flags "Name (87og)" as own goal and excludes it from topScorers', async () => {
+    const { parseScorers, topScorers } = await import('./scorers.js');
+    const m = { Fecha: '2026-02-17', 'Equipo Local': 'X', 'Equipo Visita': 'Sporting Cristal', Marcador: '2-2', 'Goles (Solo SC)': 'Yoshimar Yotún (62pen), Ángel Martínez (87og)' };
+    const s = parseScorers(m);
+    expect(s.find((e) => e.name === 'Ángel Martínez').ownGoal).toBe(true);
+    expect(s.find((e) => e.name === 'Yoshimar Yotún').ownGoal).toBe(false);
+    expect(topScorers([m], { players: {} }).map((e) => e.name)).toEqual(['Yoshimar Yotún']);
+  });
+});
