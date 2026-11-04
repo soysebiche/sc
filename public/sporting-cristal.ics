@@ -21,17 +21,37 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:clausura-2026-f16-adt-sporting-cristal@celeste.sebiche.com
-DTSTAMP:20261102T223301Z
-LAST-MODIFIED:20261102T223301Z
+DTSTAMP:20261104T142400Z
+LAST-MODIFIED:20261104T142400Z
 DTSTART;TZID=America/Lima:20261107T130000
 DTEND;TZID=America/Lima:20261107T151500
 SUMMARY:ADT vs. Sporting Cristal
 DESCRIPTION:Liga 1 — Torneo Clausura · Fecha 16. Programación sujeta 
- a cambios. Fuente: El Diez / El Comercio (programación Liga 1)
+ a cambios. Fuente: Copa de la Liga (@CopadelaLigape) / El Comercio e Inf
+ obae
 LOCATION:Estadio Unión Tarma
-URL:https://www.eldiez.com.pe/liga-1/liga-1-confirmo-la-programacion-de-l
- a-fecha-16-asi-jugaran-alianza-lima-universitario-de-deportes-y-sporting
- -cristal-noticia/
+URL:https://x.com/CopadelaLigape/status/2117696568518492172
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Sporting Cristal juega en 2 horas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:copa-de-la-liga-2026-final-sporting-cristal-alianza-atletico@celeste.
+ sebiche.com
+DTSTAMP:20261104T142400Z
+LAST-MODIFIED:20261104T142400Z
+DTSTART;TZID=America/Lima:20261115T170000
+DTEND;TZID=America/Lima:20261115T200000
+SUMMARY:Sporting Cristal vs. Alianza Atlético
+DESCRIPTION:Copa de la Liga · Final. Programación sujeta a cambios. Fue
+ nte: Copa de la Liga (@CopadelaLigape) / El Comercio e Infobae
+LOCATION:Estadio Mansiche\, Trujillo
+URL:https://x.com/CopadelaLigape/status/2117696568518492172
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 SEQUENCE:0
