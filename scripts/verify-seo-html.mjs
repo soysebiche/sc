@@ -38,6 +38,21 @@ function startServer() {
   return new Promise(resolve => {
     const server = createServer(async (request, response) => {
       const urlPath = (request.url || '/').split('?')[0];
+      if (urlPath === '/index.html') {
+        response.writeHead(308, { Location: '/' });
+        response.end();
+        return;
+      }
+      if (urlPath.length > 1 && urlPath.endsWith('/index.html')) {
+        response.writeHead(308, { Location: urlPath.slice(0, -'/index.html'.length) || '/' });
+        response.end();
+        return;
+      }
+      if (urlPath.length > 1 && urlPath.endsWith('/')) {
+        response.writeHead(308, { Location: urlPath.replace(/\/+$/, '') || '/' });
+        response.end();
+        return;
+      }
       const filePath = await resolveFile(urlPath);
       if (!filePath) {
         response.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -104,6 +119,8 @@ try {
   const querySpa = await curl(origin, '/?view=rivales&rival=Alianza%20Lima');
   const ogImage = await curl(origin, '/og/home.png', { method: 'HEAD' });
   const robots = await curl(origin, '/robots.txt');
+  const slash = await curl(origin, `${matchPath}/`);
+  const indexHtml = await curl(origin, `${matchPath}/index.html`);
 
   if (home.status !== 200) throw new Error(`GET / returned ${home.status}`);
   if (match.status !== 200) throw new Error(`GET ${matchPath} returned ${match.status}`);
@@ -111,6 +128,8 @@ try {
   if (unknownGet.status !== 404) throw new Error(`GET unknown returned ${unknownGet.status}`);
   if (ogImage.status !== 200) throw new Error('og/home.png was not published');
   if (querySpa.status !== 200) throw new Error('Shareable query URLs must still hit the home document');
+  if (slash.status !== 308) throw new Error(`GET ${matchPath}/ returned ${slash.status}, expected 308`);
+  if (indexHtml.status !== 308) throw new Error(`GET ${matchPath}/index.html returned ${indexHtml.status}, expected 308`);
 
   requireSnippet('/', home.body, 'lang="es-PE"');
   requireSnippet('/', home.body, `rel="canonical" href="${SITE_URL}/"`);
@@ -119,6 +138,7 @@ try {
   requireSnippet('/', home.body, '"@type":"SportsTeam"');
   requireSnippet('/', home.body, 'twitter:card" content="summary_large_image"');
   requireSnippet('/partidos', partidos.body, `rel="canonical" href="${SITE_URL}/partidos"`);
+  requireSnippet('/partidos', partidos.body, 'href="/temporadas/');
   requireSnippet(matchPath, match.body, `rel="canonical" href="${SITE_URL}${matchPath}"`);
   requireSnippet(matchPath, match.body, '<h1 class="section-title">');
   requireSnippet(matchPath, match.body, '"@type":"SportsEvent"');
@@ -127,9 +147,13 @@ try {
   requireSnippet(matchPath, match.body, '"startDate"');
   requireSnippet(matchPath, match.body, 'href="/rivales/');
   requireSnippet(matchPath, match.body, 'href="/temporadas/');
+  requireSnippet(matchPath, match.body, 'Partidos contiguos');
+  requireSnippet(matchPath, match.body, 'seo-facts');
   requireSnippet(rivalPath, rival.body, `rel="canonical" href="${SITE_URL}${rivalPath}"`);
+  requireSnippet(rivalPath, rival.body, 'href="/partidos/');
   requireSnippet(countryPath, country.body, `rel="canonical" href="${SITE_URL}${countryPath}"`);
   requireSnippet(seasonPath, season.body, `rel="canonical" href="${SITE_URL}${seasonPath}"`);
+  requireSnippet(seasonPath, season.body, 'href="/partidos/');
   requireSnippet('/zzz', unknownGet.body, 'Página no encontrada');
   requireSnippet('robots', robots.body, `Sitemap: ${SITE_URL}/sitemap.xml`);
   if (home.body.includes(`rel="canonical" href="${SITE_URL}${matchPath}"`)) {
@@ -138,11 +162,19 @@ try {
   if (match.body.includes(`rel="canonical" href="${SITE_URL}/"`)) {
     throw new Error('Match page canonical points at the home page');
   }
+  if (match.body.includes(`rel="canonical" href="${SITE_URL}${matchPath}/"`)) {
+    throw new Error('Match canonical has a trailing slash');
+  }
+  const matchLastmods = [...(await readFile(path.join(DIST, 'sitemap-matches.xml'), 'utf8')).matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(item => item[1]);
+  if (new Set(matchLastmods).size < 2) {
+    throw new Error('Match sitemap lastmod values are not per-match');
+  }
 
   const lines = [
     `SEO verify OK against ${origin} (filesystem then 404.html, matching vercel.json)`,
     `GET / → ${home.status} title+canonical+h1+WebSite+SportsTeam`,
-    `GET ${matchPath} → ${match.status} SportsEvent+canonical+internal links`,
+    `GET ${matchPath} → ${match.status} SportsEvent+canonical+unique copy+prev/next`,
+    `GET ${matchPath}/ → ${slash.status}`,
     `GET ${rivalPath} → ${rival.status}`,
     `GET ${countryPath} → ${country.status}`,
     `GET ${seasonPath} → ${season.status}`,

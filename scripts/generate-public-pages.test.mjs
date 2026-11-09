@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, SITEMAP_URL_LIMIT } from './generate-public-pages.mjs';
+import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
 
 const shell = `<!doctype html>
 <html lang="es">
@@ -23,12 +23,17 @@ test('applyHead sets Spanish Peru language, unique canonical and social tags', (
   const html = applyHead(shell, {
     title: 'Sporting Cristal vs. Alianza Lima | Sebiche Celeste',
     description: 'Historial celeste.',
-    pathname: '/rivales/alianza-lima',
+    pathname: '/rivales/alianza-lima/',
     spa: '/?view=rivales&rival=Alianza Lima',
+    prev: '/partidos/1956-08-05-alianza-lima',
+    next: '/partidos/1956-08-18-ciclista-lima',
     schema: { '@type': 'BreadcrumbList' },
   });
   assert.match(html, /lang="es-PE"/);
   assert.match(html, /rel="canonical" href="https:\/\/celeste.sebiche.com\/rivales\/alianza-lima"/);
+  assert.doesNotMatch(html, /rel="canonical" href="[^"]+\/"/);
+  assert.match(html, /rel="prev" href="https:\/\/celeste.sebiche.com\/partidos\/1956-08-05-alianza-lima"/);
+  assert.match(html, /rel="next" href="https:\/\/celeste.sebiche.com\/partidos\/1956-08-18-ciclista-lima"/);
   assert.match(html, /twitter:card" content="summary_large_image"/);
   assert.match(html, /og:image" content="https:\/\/celeste.sebiche.com\/og\/home.png"/);
   assert.match(html, /name="sc-spa" content="\/\?view=rivales&amp;rival=Alianza Lima"/);
@@ -67,6 +72,23 @@ test('splits a sitemap index above 50k URLs', () => {
   assert.match(files[1].xml, /<urlset /);
   assert.equal((files[1].xml.match(/<url>/g) || []).length, SITEMAP_URL_LIMIT);
   assert.equal((files[2].xml.match(/<url>/g) || []).length, 2);
+});
+
+test('keeps per-URL lastmod and splits a sitemap index by group', () => {
+  assert.equal(sitemapLastmod('1956-08-05', '2026-11-07'), '1956-08-05');
+  assert.equal(sitemapLastmod('nope', '2026-11-07'), '2026-11-07');
+  const files = buildSitemapDocuments([
+    { path: '/', group: 'pages', lastmod: '2026-11-07' },
+    { path: '/partidos/1956-08-05-alianza-lima', group: 'matches', lastmod: '1956-08-05' },
+    { path: '/partidos/2026-11-07-adt', group: 'matches', lastmod: '2026-11-07' },
+  ], '2026-11-07', { splitByGroup: true });
+  assert.equal(files[0].filename, 'sitemap.xml');
+  assert.match(files[0].xml, /<sitemapindex /);
+  assert.equal(files[1].filename, 'sitemap-pages.xml');
+  assert.equal(files[2].filename, 'sitemap-matches.xml');
+  assert.match(files[2].xml, /<lastmod>1956-08-05<\/lastmod>/);
+  assert.match(files[2].xml, /<lastmod>2026-11-07<\/lastmod>/);
+  assert.match(files[0].xml, /sitemap-matches\.xml/);
 });
 
 test('breadcrumb JSON-LD keeps absolute items', () => {

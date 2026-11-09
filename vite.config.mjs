@@ -10,7 +10,10 @@ const archiveMetaDescription = () => ({
   transformIndexHtml: html => html.replace('%ARCHIVE_RECORD_COUNT%', archiveMetadata.recordCount.toLocaleString('en-US')),
 });
 
-export default defineConfig({
+export default defineConfig(({ isPreview }) => ({
+  // Preview the generated public HTML (match/rival/season pages). SPA fallback
+  // would hide those files behind dist/index.html, unlike Vercel.
+  appType: isPreview ? 'mpa' : 'spa',
   plugins: [react(), archiveMetaDescription()],
   esbuild: {
     loader: 'jsx',
@@ -45,4 +48,4 @@ export default defineConfig({
     css: true,
     include: ['src/**/*.test.js'],
   },
-});
+}));

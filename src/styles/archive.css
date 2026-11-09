@@ -739,7 +739,7 @@ footer.app-footer {
   text-underline-offset: 0.2em;
 }
 
-/* Build-time public HTML (replaced by the SPA after hydration). */
+/* Build-time public HTML. Pretty archive URLs keep this document instead of hydrating the SPA. */
 .seo-page a {
   color: var(--color-celeste);
   text-decoration-thickness: 1px;
@@ -788,6 +788,45 @@ footer.app-footer {
 
 .seo-list li {
   color: var(--text-secondary);
+}
+
+.seo-facts {
+  display: grid;
+  gap: 0.45rem 1.25rem;
+  margin: 1rem 0;
+}
+
+.seo-facts div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+  gap: 0.35rem 0.85rem;
+}
+
+.seo-facts dt {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.seo-facts dd {
+  margin: 0;
+}
+
+.seo-pager {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1.15rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.seo-season-index,
+.seo-spa-link {
+  margin: 0 0 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 @media (max-width: 520px) {

@@ -1,6 +1,6 @@
 import archive from '../data/historico_completo_sc.json';
 import { parseMatch } from './matches';
-import { buildPublicCatalog, matchPublicId, slugify, spaSearch } from './publicRoutes';
+import { absoluteUrl, buildPublicCatalog, canonicalPath, matchPublicId, slugify, spaSearch } from './publicRoutes';
 
 const matches = archive.map(parseMatch);
 
@@ -29,6 +29,15 @@ describe('public archive routes', () => {
     const alianzas = catalog.rivals.find(rival => rival.name === 'Alianza Lima');
     expect(alianzas.spa).toBe('/?view=rivales&rival=Alianza+Lima');
     expect(catalog.indexes.partidos.spa).toBe('/?view=partidos');
+  });
+
+  test('canonical paths drop trailing slashes, queries and index.html', () => {
+    expect(canonicalPath('/partidos/1956-08-05-alianza-lima/')).toBe('/partidos/1956-08-05-alianza-lima');
+    expect(canonicalPath('/rivales/alianza-lima?utm=1')).toBe('/rivales/alianza-lima');
+    expect(canonicalPath('/index.html')).toBe('/');
+    expect(canonicalPath('/temporadas/1991/index.html')).toBe('/temporadas/1991');
+    expect(absoluteUrl('/partidos/foo/')).toBe('https://celeste.sebiche.com/partidos/foo');
+    expect(absoluteUrl('/')).toBe('https://celeste.sebiche.com/');
   });
 
   test('disambiguates a colliding match id without inventing a match', () => {
