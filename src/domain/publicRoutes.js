@@ -147,7 +147,16 @@ export function seasonPathByYear(year) {
   return `/temporadas/${year}`;
 }
 
+export function canonicalPath(pathname) {
+  const raw = String(pathname || '/').split('?')[0].split('#')[0];
+  let path = raw.replace(/\/+$/, '');
+  if (!path || path === '/index.html') return '/';
+  if (path.endsWith('/index.html')) path = path.slice(0, -'/index.html'.length);
+  return path || '/';
+}
+
 export function absoluteUrl(pathname, origin = SITE_URL) {
-  if (pathname === '/') return `${origin}/`;
-  return `${origin}${pathname}`;
+  const path = canonicalPath(pathname);
+  if (path === '/') return `${origin}/`;
+  return `${origin}${path}`;
 }

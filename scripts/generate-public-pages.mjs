@@ -3,6 +3,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { formatMatchDate, parseMatch, sortMatchesNewest, summarizeMatches } from '../src/domain/matches.js';
 import {
+  h2hContext,
+  matchDescription,
+  matchHeading,
+  matchLinkLabel,
+  matchTitle,
+  sortEntriesChronologically,
+  venuePhrase,
+} from '../src/domain/matchSeo.js';
+import {
   OG_IMAGE_PATH,
   RESULT_WORD,
   SITE_URL,
@@ -56,6 +65,8 @@ export function applyHead(template, {
   index = true,
   schema = null,
   spa = null,
+  prev = null,
+  next = null,
 }) {
   const url = absoluteUrl(pathname);
   const image = absoluteUrl(OG_IMAGE_PATH);
@@ -78,6 +89,8 @@ export function applyHead(template, {
   html = replaceOrInsert(html, /<meta name="twitter:description" content="[^"]*"\s*\/?>/, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
   html = replaceOrInsert(html, /<meta name="twitter:image" content="[^"]*"\s*\/?>/, `<meta name="twitter:image" content="${escapeHtml(image)}" />`);
   html = replaceOrInsert(html, /<meta name="sc-spa" content="[^"]*"\s*\/?>/, spa ? `<meta name="sc-spa" content="${escapeHtml(spa)}" />` : '');
+  if (prev) html = replaceOrInsert(html, /<link rel="prev" href="[^"]*"\s*\/?>/, `<link rel="prev" href="${escapeHtml(absoluteUrl(prev))}" />`);
+  if (next) html = replaceOrInsert(html, /<link rel="next" href="[^"]*"\s*\/?>/, `<link rel="next" href="${escapeHtml(absoluteUrl(next))}" />`);
   return replaceJsonLd(html, schema);
 }
 
@@ -109,7 +122,10 @@ export function breadcrumbList(items) {
   };
 }
 
-function siteChrome({ heading, intro, crumbs, extra }) {
+function siteChrome({ heading, intro, crumbs, extra, spa }) {
+  const spaLink = spa
+    ? `<p class="seo-spa-link"><a href="${escapeHtml(spa)}">Abrir en el archivo interactivo</a></p>`
+    : '';
   return `<div class="app-shell seo-page">
     <header class="app-header"><div class="app-header__inner"><div class="app-header__layout">
       <a href="/" class="brand-lockup"><img src="/sebiche-celeste-logo.webp" alt="Sebiche Celeste" width="512" height="233" class="brand-logo" /></a>
@@ -124,14 +140,10 @@ function siteChrome({ heading, intro, crumbs, extra }) {
       ${crumbsHtml(crumbs)}
       <h1 class="section-title">${escapeHtml(heading)}</h1>
       <p class="section-subtitle">${escapeHtml(intro)}</p>
+      ${spaLink}
       ${extra}
     </main>
   </div>`;
-}
-
-function matchSentence(match) {
-  const word = RESULT_WORD[match.resultCode] || 'Resultado';
-  return `${word} ${match.scoreLabel} de Sporting Cristal ante ${match.opponent} el ${longDate(match.date)} en ${match.tournament}.`;
 }
 
 export function groupedMatchList(entries) {
@@ -161,15 +173,91 @@ function statsLine(matches) {
   return `${formatCount(stats.total)} partidos · ${formatCount(stats.victories)} victorias · ${formatCount(stats.draws)} empates · ${formatCount(stats.defeats)} derrotas · goles ${formatCount(stats.goalsFor)}-${formatCount(stats.goalsAgainst)}`;
 }
 
+function seasonJumpNav(catalog) {
+  const links = catalog.seasons.map(season => `<a href="${escapeHtml(season.path)}">${season.year}</a>`).join(' · ');
+  return `<nav class="seo-season-index" aria-label="Temporadas">${links}</nav>`;
+}
+
+function itemListSchema(entries, name) {
+  const sorted = [...entries].sort((a, b) => (a.match.date < b.match.date ? 1 : a.match.date > b.match.date ? -1 : 0));
+  return {
+    '@type': 'ItemList',
+    name,
+    numberOfItems: sorted.length,
+    itemListElement: sorted.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: absoluteUrl(entry.path),
+      name: `${entry.match.home} ${entry.match.scoreLabel} ${entry.match.away}`,
+    })),
+  };
+}
+
+function factRow(term, value) {
+  if (!value) return '';
+  return `<div><dt>${term}</dt><dd>${value}</dd></div>`;
+}
+
+function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref }) {
+  const match = entry.match;
+  const pagerLink = (rel, item, label) => (item
+    ? `<a href="${escapeHtml(item.path)}" rel="${rel}">${label}: ${escapeHtml(matchLinkLabel(item))}</a>`
+    : '');
+  const facts = [
+    factRow('Fecha', `<time datetime="${escapeHtml(match.date)}">${escapeHtml(longDate(match.date))}</time>`),
+    factRow('Marcador', escapeHtml(match.scoreLabel)),
+    factRow('Resultado', escapeHtml(RESULT_WORD[match.resultCode] || 'Resultado')),
+    factRow('Competición', escapeHtml(match.tournament)),
+    factRow('Condición', escapeHtml(venuePhrase(match))),
+    match.country && countryHref ? factRow('País', `<a href="${escapeHtml(countryHref)}">${escapeHtml(match.country)}</a>`) : '',
+    match.goalsNote ? factRow('Goles de Sporting Cristal', escapeHtml(match.goalsNote)) : '',
+  ].join('');
+
+  return `<article class="archive-section seo-match">
+      <p>${escapeHtml(matchDescription(match, h2h))}</p>
+      <dl class="seo-facts">${facts}</dl>
+      <p>${escapeHtml(h2h.h2hSentence)}
+        <a href="${escapeHtml(rivalHref)}">Historial vs. ${escapeHtml(match.opponent)}</a>
+        ${match.year != null ? ` · <a href="${seasonPathByYear(match.year)}">Temporada ${match.year}</a>` : ''}</p>
+      <nav class="seo-pager" aria-label="Partidos contiguos">
+        ${pagerLink('prev', chrono.prev, 'Anterior') || '<span>Primer partido del archivo</span>'}
+        ${pagerLink('next', chrono.next, 'Siguiente') || '<span>Último partido del archivo</span>'}
+      </nav>
+      <nav class="seo-pager" aria-label="Mismo rival">
+        ${h2h.prevRival ? `<a href="${escapeHtml(h2h.prevRival.path)}">Anterior vs. ${escapeHtml(match.opponent)}: ${escapeHtml(matchLinkLabel(h2h.prevRival))}</a>` : '<span>Primer cruce vs. este rival</span>'}
+        ${h2h.nextRival ? `<a href="${escapeHtml(h2h.nextRival.path)}">Siguiente vs. ${escapeHtml(match.opponent)}: ${escapeHtml(matchLinkLabel(h2h.nextRival))}</a>` : '<span>Último cruce vs. este rival</span>'}
+      </nav>
+    </article>`;
+}
+
+function assertUniqueMatchMeta(pages) {
+  const titles = new Set();
+  const headings = new Set();
+  const canonicals = new Set();
+  pages.filter(page => page.path.startsWith('/partidos/')).forEach(page => {
+    const title = page.html.match(/<title>([^<]*)<\/title>/)?.[1];
+    const heading = page.html.match(/<h1 class="section-title">([\s\S]*?)<\/h1>/)?.[1];
+    const canonical = page.html.match(/rel="canonical" href="([^"]*)"/)?.[1];
+    const expectedCanonical = absoluteUrl(page.path);
+    if (!title || titles.has(title)) throw new Error(`Duplicate or missing match title (${page.path}): ${title}`);
+    if (!heading || headings.has(heading)) throw new Error(`Duplicate or missing match H1 (${page.path}): ${heading}`);
+    if (canonical !== expectedCanonical) throw new Error(`Match canonical for ${page.path} was ${canonical}`);
+    if (canonicals.has(canonical)) throw new Error(`Duplicate match canonical ${canonical}`);
+    titles.add(title);
+    headings.add(heading);
+    canonicals.add(canonical);
+  });
+}
+
 function jsonLdGraph(nodes) {
   return { '@context': 'https://schema.org', '@graph': nodes };
 }
 
-export function matchSportsEvent(entry) {
+export function matchSportsEvent(entry, description) {
   const match = entry.match;
   const event = {
     '@type': 'SportsEvent',
-    name: `${match.home} vs. ${match.away}`,
+    name: [match.home, match.scoreLabel, match.away].filter(Boolean).join(' '),
     url: absoluteUrl(entry.path),
     startDate: match.date,
     sport: 'Soccer',
@@ -177,6 +265,7 @@ export function matchSportsEvent(entry) {
     awayTeam: { '@type': 'SportsTeam', name: match.away },
     image: absoluteUrl(OG_IMAGE_PATH),
   };
+  if (description) event.description = description;
   if (match.tournament) event.superEvent = { '@type': 'SportsEvent', name: match.tournament };
   return event;
 }
@@ -190,28 +279,76 @@ async function writeHtml(pathname, html) {
   return target;
 }
 
-export function buildSitemapDocuments(entries, lastmod) {
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const SITEMAP_GROUP_ORDER = ['pages', 'rivals', 'countries', 'seasons', 'matches'];
+
+export function sitemapLastmod(value, fallback) {
+  return DATE_ONLY.test(value) ? value : fallback;
+}
+
+function latestLastmod(entries, fallback) {
+  return entries.reduce((max, entry) => {
+    const value = sitemapLastmod(entry.lastmod, fallback);
+    return value > max ? value : max;
+  }, fallback);
+}
+
+function chunkEntries(entries, limit) {
+  const chunks = [];
+  for (let index = 0; index < entries.length; index += limit) {
+    chunks.push(entries.slice(index, index + limit));
+  }
+  return chunks.length ? chunks : [[]];
+}
+
+export function buildSitemapDocuments(entries, lastmod, options = {}) {
   const loc = pathname => escapeHtml(absoluteUrl(pathname));
+  const urlLimit = options.urlLimit ?? SITEMAP_URL_LIMIT;
   const urlXml = entry => {
     const changefreq = entry.changefreq ? `\n    <changefreq>${entry.changefreq}</changefreq>` : '';
     const priority = entry.priority ? `\n    <priority>${entry.priority}</priority>` : '';
-    return `  <url>\n    <loc>${loc(entry.path)}</loc>\n    <lastmod>${lastmod}</lastmod>${changefreq}${priority}\n  </url>`;
+    const modified = sitemapLastmod(entry.lastmod, lastmod);
+    return `  <url>\n    <loc>${loc(entry.path)}</loc>\n    <lastmod>${modified}</lastmod>${changefreq}${priority}\n  </url>`;
   };
   const wrapUrlset = urls => `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(urlXml).join('\n')}\n</urlset>\n`;
 
-  if (entries.length <= SITEMAP_URL_LIMIT) {
-    return [{ filename: 'sitemap.xml', xml: wrapUrlset(entries) }];
+  const groups = [];
+  if (options.splitByGroup) {
+    const buckets = new Map();
+    entries.forEach(entry => {
+      const name = entry.group || 'pages';
+      if (!buckets.has(name)) buckets.set(name, []);
+      buckets.get(name).push(entry);
+    });
+    const names = [
+      ...SITEMAP_GROUP_ORDER.filter(name => buckets.has(name)),
+      ...[...buckets.keys()].filter(name => !SITEMAP_GROUP_ORDER.includes(name)).sort(),
+    ];
+    names.forEach(name => groups.push({ name, entries: buckets.get(name) }));
+  } else {
+    groups.push({ name: '', entries });
   }
 
-  const chunks = [];
-  for (let index = 0; index < entries.length; index += SITEMAP_URL_LIMIT) {
-    chunks.push(entries.slice(index, index + SITEMAP_URL_LIMIT));
-  }
-  const files = chunks.map((chunk, index) => ({
-    filename: `sitemap-${index + 1}.xml`,
-    xml: wrapUrlset(chunk),
-  }));
-  const indexXml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${files.map(file => `  <sitemap>\n    <loc>${loc(`/${file.filename}`)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </sitemap>`).join('\n')}\n</sitemapindex>\n`;
+  const files = [];
+  groups.forEach(group => {
+    const chunks = chunkEntries(group.entries, urlLimit);
+    const many = chunks.length > 1;
+    chunks.forEach((chunk, index) => {
+      let filename = 'sitemap.xml';
+      if (group.name && many) filename = `sitemap-${group.name}-${index + 1}.xml`;
+      else if (group.name) filename = `sitemap-${group.name}.xml`;
+      else if (many) filename = `sitemap-${index + 1}.xml`;
+      files.push({
+        filename,
+        xml: wrapUrlset(chunk),
+        lastmod: latestLastmod(chunk, lastmod),
+      });
+    });
+  });
+
+  if (files.length === 1 && files[0].filename === 'sitemap.xml') return files;
+
+  const indexXml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${files.map(file => `  <sitemap>\n    <loc>${loc(`/${file.filename}`)}</loc>\n    <lastmod>${file.lastmod}</lastmod>\n  </sitemap>`).join('\n')}\n</sitemapindex>\n`;
   return [{ filename: 'sitemap.xml', xml: indexXml }, ...files];
 }
 
@@ -314,7 +451,8 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Partidos de Sporting Cristal',
     intro: partidosDescription,
     crumbs: partidosCrumbs,
-    extra: groupedMatchList(catalog.matches),
+    spa: catalog.indexes.partidos.spa,
+    extra: `${seasonJumpNav(catalog)}${groupedMatchList(catalog.matches)}`,
   }));
 
   const rivalesCrumbs = [...crumbsHome, { name: 'Rivales', path: '/rivales' }];
@@ -330,6 +468,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Rivales de Sporting Cristal',
     intro: rivalesDescription,
     crumbs: rivalesCrumbs,
+    spa: catalog.indexes.rivales.spa,
     extra: `<ul class="seo-list">${catalog.rivals.map(rival => `<li><a href="${escapeHtml(rival.path)}">${escapeHtml(rival.name)}</a> · ${formatCount(rival.matches.length)} partidos</li>`).join('')}</ul>`,
   }));
 
@@ -346,6 +485,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Países enfrentados por Sporting Cristal',
     intro: paisesDescription,
     crumbs: paisesCrumbs,
+    spa: catalog.indexes.paises.spa,
     extra: `<ul class="seo-list">${catalog.countries.map(country => `<li><a href="${escapeHtml(country.path)}">${escapeHtml(country.name)}</a> · ${formatCount(country.matches.length)} partidos</li>`).join('')}</ul>`,
   }));
 
@@ -362,6 +502,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Temporadas de Sporting Cristal',
     intro: temporadasDescription,
     crumbs: temporadasCrumbs,
+    spa: catalog.indexes.temporadas.spa,
     extra: `<ul class="seo-list">${catalog.seasons.map(season => `<li><a href="${escapeHtml(season.path)}">Temporada ${season.year}</a> · ${formatCount(season.matches.length)} partidos</li>`).join('')}</ul>`,
   }));
 
@@ -373,29 +514,41 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     { path: '/temporadas', html: temporadasIndexHtml },
   ];
 
+  const chronological = sortEntriesChronologically(catalog.matches);
+  const chronoIndex = new Map(chronological.map((item, index) => [item.id, index]));
+  const rivalByName = new Map(catalog.rivals.map(rival => [rival.name, rival]));
+
   catalog.matches.forEach(entry => {
     const match = entry.match;
-    const heading = `${match.home} vs. ${match.away}`;
-    const description = matchSentence(match);
-    const crumbs = [...partidosCrumbs, { name: heading, path: entry.path }];
+    const heading = matchHeading(match);
+    const rival = rivalByName.get(match.opponent);
+    const h2h = h2hContext(entry, rival?.matches || [entry]);
+    const position = chronoIndex.get(entry.id);
+    const chrono = {
+      prev: chronological[position - 1] || null,
+      next: chronological[position + 1] || null,
+    };
+    const description = matchDescription(match, h2h);
+    const crumbs = [...partidosCrumbs, { name: `${match.home} vs. ${match.away}`, path: entry.path }];
     const rivalHref = rivalPathByName(catalog, match.opponent);
     const countryHref = match.country ? countryPathByName(catalog, match.country) : null;
-    const extra = `<section class="archive-section">
-        <p><time datetime="${escapeHtml(match.date)}">${escapeHtml(longDate(match.date))}</time> · ${escapeHtml(match.tournament)} · ${escapeHtml(RESULT_WORD[match.resultCode] || 'Resultado')} ${escapeHtml(match.scoreLabel)}</p>
-        ${match.goalsNote ? `<p>Goles de Sporting Cristal: ${escapeHtml(match.goalsNote)}</p>` : ''}
-        <p><a href="${escapeHtml(rivalHref)}">Historial vs. ${escapeHtml(match.opponent)}</a>
-          ${match.year != null ? ` · <a href="${seasonPathByYear(match.year)}">Temporada ${match.year}</a>` : ''}
-          ${countryHref ? ` · <a href="${escapeHtml(countryHref)}">${escapeHtml(match.country)}</a>` : ''}</p>
-      </section>`;
     pages.push({
       path: entry.path,
       html: injectRoot(applyHead(viteHtml, {
-        title: `${heading} ${match.scoreLabel} | Sebiche Celeste`,
+        title: matchTitle(match),
         description,
         pathname: entry.path,
         spa: entry.spa,
-        schema: jsonLdGraph([matchSportsEvent(entry), breadcrumbList(crumbs)]),
-      }), siteChrome({ heading, intro: description, crumbs, extra })),
+        prev: chrono.prev?.path,
+        next: chrono.next?.path,
+        schema: jsonLdGraph([matchSportsEvent(entry, description), breadcrumbList(crumbs)]),
+      }), siteChrome({
+        heading,
+        intro: description,
+        crumbs,
+        spa: entry.spa,
+        extra: matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref }),
+      })),
     });
   });
 
@@ -410,11 +563,12 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         description,
         pathname: rival.path,
         spa: rival.spa,
-        schema: jsonLdGraph([breadcrumbList(crumbs)]),
+        schema: jsonLdGraph([breadcrumbList(crumbs), itemListSchema(rival.matches, heading)]),
       }), siteChrome({
         heading,
         intro: description,
         crumbs,
+        spa: rival.spa,
         extra: groupedMatchList(rival.matches),
       })),
     });
@@ -431,11 +585,12 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         description,
         pathname: country.path,
         spa: country.spa,
-        schema: jsonLdGraph([breadcrumbList(crumbs)]),
+        schema: jsonLdGraph([breadcrumbList(crumbs), itemListSchema(country.matches, heading)]),
       }), siteChrome({
         heading,
         intro: description,
         crumbs,
+        spa: country.spa,
         extra: groupedMatchList(country.matches),
       })),
     });
@@ -452,11 +607,12 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         description,
         pathname: season.path,
         spa: season.spa,
-        schema: jsonLdGraph([breadcrumbList(crumbs)]),
+        schema: jsonLdGraph([breadcrumbList(crumbs), itemListSchema(season.matches, heading)]),
       }), siteChrome({
         heading,
         intro: description,
         crumbs,
+        spa: season.spa,
         extra: groupedMatchList(season.matches),
       })),
     });
@@ -469,18 +625,18 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   }
 
   const sitemapEntries = [
-    { path: '/', changefreq: 'weekly', priority: '1.0' },
-    { path: '/partidos', changefreq: 'weekly', priority: '0.9' },
-    { path: '/rivales', changefreq: 'weekly', priority: '0.8' },
-    { path: '/paises', changefreq: 'weekly', priority: '0.8' },
-    { path: '/temporadas', changefreq: 'weekly', priority: '0.8' },
-    ...STATIC_SITEMAP_PATHS.map(staticPath => ({ path: staticPath, changefreq: 'yearly', priority: '0.3' })),
-    ...catalog.rivals.map(rival => ({ path: rival.path, changefreq: 'monthly', priority: '0.6' })),
-    ...catalog.countries.map(country => ({ path: country.path, changefreq: 'monthly', priority: '0.5' })),
-    ...catalog.seasons.map(season => ({ path: season.path, changefreq: 'monthly', priority: '0.6' })),
-    ...catalog.matches.map(entry => ({ path: entry.path, changefreq: 'yearly', priority: '0.5' })),
+    { path: '/', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '1.0' },
+    { path: '/partidos', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.9' },
+    { path: '/rivales', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
+    { path: '/paises', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
+    { path: '/temporadas', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
+    ...STATIC_SITEMAP_PATHS.map(staticPath => ({ path: staticPath, group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'yearly', priority: '0.3' })),
+    ...catalog.rivals.map(rival => ({ path: rival.path, group: 'rivals', lastmod: metadata.lastUpdated, changefreq: 'monthly', priority: '0.6' })),
+    ...catalog.countries.map(country => ({ path: country.path, group: 'countries', lastmod: metadata.lastUpdated, changefreq: 'monthly', priority: '0.5' })),
+    ...catalog.seasons.map(season => ({ path: season.path, group: 'seasons', lastmod: metadata.lastUpdated, changefreq: 'monthly', priority: '0.6' })),
+    ...catalog.matches.map(entry => ({ path: entry.path, group: 'matches', lastmod: entry.match.date, changefreq: 'yearly', priority: '0.5' })),
   ];
-  const sitemapFiles = buildSitemapDocuments(sitemapEntries, metadata.lastUpdated);
+  const sitemapFiles = buildSitemapDocuments(sitemapEntries, metadata.lastUpdated, { splitByGroup: true });
   await Promise.all(sitemapFiles.map(file => writeFile(path.join(distDir, file.filename), file.xml, 'utf8')));
 
   const robots = `# https://www.robotstxt.org/robotstxt.html
@@ -516,6 +672,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     '<h1 class="section-title">',
     sampleMatch.match.scoreLabel,
     sampleMatch.match.tournament,
+    longDate(sampleMatch.match.date),
     `rel="canonical" href="${absoluteUrl(sampleMatch.path)}"`,
     '"@type":"SportsEvent"',
     '"homeTeam"',
@@ -523,12 +680,17 @@ Sitemap: ${SITE_URL}/sitemap.xml
     '"startDate"',
     rivalPathByName(catalog, sampleMatch.match.opponent),
     seasonPathByYear(sampleMatch.match.year),
+    'Partidos contiguos',
+    'Mismo rival',
   ]);
   assertContains('rival', rivalHtml, [
     sampleRival.name,
     `rel="canonical" href="${absoluteUrl(sampleRival.path)}"`,
     '"@type":"BreadcrumbList"',
+    '"@type":"ItemList"',
+    sampleRival.matches[0].path,
   ]);
+  assertUniqueMatchMeta(pages);
   assertContains('404', notFoundHtml, ['Página no encontrada', 'noindex,nofollow']);
 
   const generatedPages = pages.length;
