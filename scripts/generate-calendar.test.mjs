@@ -29,9 +29,13 @@ test('publica únicamente partidos confirmados sin datos de cuenta', async () =>
   assert.match(calendar, /20261115T170000/);
   assert.match(calendar, /Sporting Cristal vs\. Alianza Atlético/);
   assert.match(calendar, /Copa de la Liga · Final/);
+  assert.match(calendar, /20261122T150000/);
+  assert.match(calendar, /Sporting Cristal vs\. Cienciano/);
+  assert.match(calendar, /Liga 1 — Torneo Clausura · Fecha 17/);
+  assert.match(calendar, /Estadio Alberto Gallardo\\, Lima/);
   assert.doesNotMatch(calendar, /@gmail\.com|calendar\.google\.com\/calendar\/ical\/.*private/i);
-  assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 1);
-  assert.equal(data.fixtures.length, 1);
+  assert.equal((calendar.match(/BEGIN:VEVENT/g) || []).length, 2);
+  assert.equal(data.fixtures.length, 2);
 });
 
 test('rechaza eventos tentativos o sin programación completa', async () => {
