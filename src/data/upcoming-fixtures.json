@@ -5,9 +5,9 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-11-07T23:18:13Z",
-    "sourceName": "Copa de la Liga (@CopadelaLigape) / El Comercio e Infobae",
-    "sourceUrl": "https://x.com/CopadelaLigape/status/2117696568518492172"
+    "lastVerifiedAt": "2026-11-11T14:20:49Z",
+    "sourceName": "Liga1 Te Apuesto (@Liga1TeApuesto) / Infobae, Trome y Líbero",
+    "sourceUrl": "https://x.com/Liga1TeApuesto/status/2120174356395692119"
   },
   "fixtures": [
     {
@@ -19,6 +19,17 @@
       "start": "2026-11-15T17:00:00-05:00",
       "end": "2026-11-15T20:00:00-05:00",
       "venue": "Estadio Mansiche, Trujillo",
+      "status": "confirmed"
+    },
+    {
+      "id": "clausura-2026-f17-sporting-cristal-cienciano",
+      "competition": "Liga 1 — Torneo Clausura",
+      "round": "Fecha 17",
+      "homeTeam": "Sporting Cristal",
+      "awayTeam": "Cienciano",
+      "start": "2026-11-22T15:00:00-05:00",
+      "end": "2026-11-22T17:15:00-05:00",
+      "venue": "Estadio Alberto Gallardo, Lima",
       "status": "confirmed"
     }
   ]

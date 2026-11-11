@@ -34,8 +34,8 @@ test('renders the historical archive with a named date control', async () => {
   expect(within(upcoming).queryByText(/ADT/)).not.toBeInTheDocument();
   expect(within(upcoming).getByText('Final')).toBeInTheDocument();
   expect(within(upcoming).getByText(/Alianza Atlético/)).toBeInTheDocument();
-  expect(within(upcoming).queryByText(/Cienciano/)).not.toBeInTheDocument();
-  expect(within(upcoming).queryByText(/Fecha 17/)).not.toBeInTheDocument();
+  expect(within(upcoming).getByText('Fecha 17')).toBeInTheDocument();
+  expect(within(upcoming).getByText(/Cienciano/)).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
