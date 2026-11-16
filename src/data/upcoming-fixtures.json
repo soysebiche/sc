@@ -5,21 +5,9 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-11-07T23:18:13Z",
-    "sourceName": "Copa de la Liga (@CopadelaLigape) / El Comercio e Infobae",
-    "sourceUrl": "https://x.com/CopadelaLigape/status/2117696568518492172"
+    "lastVerifiedAt": "2026-11-16T01:57:53Z",
+    "sourceName": "Infobae / América TV / El Futbolero (resultado Copa de la Liga)",
+    "sourceUrl": "https://www.infobae.com/peru/deportes/2026/11/15/sporting-cristal-vs-alianza-atletico-en-vivo-hoy-minuto-a-minuto-partido-trujillo-final-copa-de-la-liga-2026-goles-resumen-resultado-campeon/"
   },
-  "fixtures": [
-    {
-      "id": "copa-de-la-liga-2026-final-sporting-cristal-alianza-atletico",
-      "competition": "Copa de la Liga",
-      "round": "Final",
-      "homeTeam": "Sporting Cristal",
-      "awayTeam": "Alianza Atlético",
-      "start": "2026-11-15T17:00:00-05:00",
-      "end": "2026-11-15T20:00:00-05:00",
-      "venue": "Estadio Mansiche, Trujillo",
-      "status": "confirmed"
-    }
-  ]
+  "fixtures": []
 }
