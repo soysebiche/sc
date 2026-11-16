@@ -44,6 +44,19 @@ test('keeps eleven section tabs in the primary navigation', async () => {
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
   const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
   expect(within(nav).getAllByRole('button')).toHaveLength(11);
+  const archiveNavs = screen.getAllByRole('navigation', { name: 'Archivo público' });
+  expect(archiveNavs.length).toBeGreaterThanOrEqual(2);
+  expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
+  expect(screen.getAllByRole('link', { name: 'Temporadas' }).some(link => link.getAttribute('href') === '/temporadas')).toBe(true);
+});
+
+test('exposes public match URLs from the interactive archive', async () => {
+  render(<App />);
+  fireEvent.click(await screen.findByRole('button', { name: 'PARTIDOS' }));
+  await waitFor(() => {
+    const links = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/partidos/'));
+    expect(links.length).toBeGreaterThan(0);
+  });
 });
 
 test('lazy-loads scorers, records and clasicos tabs', async () => {
@@ -95,6 +108,7 @@ test('restores a shareable rival view from the URL', async () => {
   expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
   expect(screen.getByLabelText('Buscar rival')).toHaveValue('Alianza Lima');
   expect(screen.getByText(/Balance vs Alianza Lima/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Ficha pública vs. Alianza Lima/ })).toHaveAttribute('href', '/rivales/alianza-lima');
 });
 
 test('normalizes rival aliases from a shared URL', async () => {

@@ -60,7 +60,7 @@ function ScorersView({ matches }) {
             <tbody>{ranking.slice(0, limit).map((p, i) => (
               <tr key={p.name}>
                 <td className="text-center">{i + 1}</td>
-                <td><a className="link-accent" href={`?view=goleadores&jugador=${encodeURIComponent(p.name)}`} onClick={e => { e.preventDefault(); setPlayer(p.name); window.scrollTo?.(0, 0); }}>{p.name}</a></td>
+                <td><a className="link-accent" href={`?view=goleadores&jugador=${encodeURIComponent(p.name)}`} rel="nofollow" onClick={e => { e.preventDefault(); setPlayer(p.name); window.scrollTo?.(0, 0); }}>{p.name}</a></td>
                 <td className="text-center font-bold text-accent">{p.goals}{p.lowerBound ? '*' : ''}</td>
                 <td className="text-center">{p.matches}</td>
                 <td className="text-center">{p.first === p.last ? p.first : `${p.first}–${p.last}`}</td>
