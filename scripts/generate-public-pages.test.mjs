@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
+import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, publicNavHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
 
 const shell = `<!doctype html>
 <html lang="es">
@@ -98,4 +98,11 @@ test('breadcrumb JSON-LD keeps absolute items', () => {
   ]);
   assert.equal(crumbs.itemListElement[0].item, 'https://celeste.sebiche.com/');
   assert.equal(crumbs.itemListElement[1].item, 'https://celeste.sebiche.com/partidos');
+});
+
+test('public nav and SPA archive links stay on canonical paths', () => {
+  assert.match(publicNavHtml(), /href="\/rivales"/);
+  assert.match(publicNavHtml(), /href="\/temporadas"/);
+  assert.match(spaArchiveLink('/?view=rivales&rival=Alianza+Lima'), /rel="nofollow"/);
+  assert.equal(spaArchiveLink(''), '');
 });

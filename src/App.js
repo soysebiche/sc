@@ -2,6 +2,8 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import ArchiveProvenance from './components/ArchiveProvenance';
 import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './components/MeasurementConsent';
 import PrimaryNav from './components/PrimaryNav';
+import PublicArchiveNav from './components/PublicArchiveNav';
+import { PublicCatalogProvider } from './components/PublicCatalog';
 import { MoonIcon, SunIcon } from './components/ThemeIcons';
 import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
@@ -94,53 +96,58 @@ function ArchiveShell() {
   const ActiveView = TABS.find(tab => tab.id === activeTab)?.View;
 
   return (
-    <div className="app-shell">
-      <a className="skip-link" href="#main-content">Saltar al contenido</a>
-      <header className="app-header">
-        <div className="app-header__inner"><div className="app-header__layout">
-          <div className="brand-lockup">
-            <button type="button" onClick={toggleTheme} className="theme-toggle" aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo noche'} title={theme === 'dark' ? 'Modo claro' : 'Modo noche'}>
-              {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-            </button>
-            <div className="brand-copy">
-              <img src="/sebiche-celeste-logo.webp" alt="Sebiche Celeste" width="512" height="233" fetchPriority="high" className="brand-logo" />
-              <p className="header-subtitle">Archivo Histórico &middot; {archiveMetadata.recordCount} Partidos</p>
+    <PublicCatalogProvider matches={matches}>
+      <div className="app-shell">
+        <a className="skip-link" href="#main-content">Saltar al contenido</a>
+        <header className="app-header">
+          <div className="app-header__inner"><div className="app-header__layout">
+            <div className="brand-lockup">
+              <button type="button" onClick={toggleTheme} className="theme-toggle" aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo noche'} title={theme === 'dark' ? 'Modo claro' : 'Modo noche'}>
+                {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+              </button>
+              <div className="brand-copy">
+                <img src="/sebiche-celeste-logo.webp" alt="Sebiche Celeste" width="512" height="233" fetchPriority="high" className="brand-logo" />
+                <p className="header-subtitle">Archivo Histórico &middot; {archiveMetadata.recordCount} Partidos</p>
+              </div>
             </div>
+            <PrimaryNav tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
+            <CalendarSubscribeLink compact />
           </div>
-          <PrimaryNav tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
-          <CalendarSubscribeLink compact />
-        </div></div>
-      </header>
+          <PublicArchiveNav />
+          </div>
+        </header>
 
-      <main id="main-content" className="app-main w-full max-w-7xl mx-auto px-4 py-6 flex-1 min-w-0" tabIndex="-1">
-        <h1 className="sr-only">Sebiche Celeste — Archivo Histórico de Sporting Cristal</h1>
-        {dataStatus === 'loading' && <div className="archive-skeleton" role="status"><span>Cargando archivo histórico…</span></div>}
-        {dataStatus === 'error' && (
-          <div className="archive-section archive-empty-state" role="alert">
-            <h2 className="section-title">No pudimos cargar el archivo</h2>
-            <p>El contenido local no respondió. Puedes intentarlo de nuevo.</p>
-            <button type="button" className="btn btn-primary" onClick={retryDataLoad}>Reintentar</button>
-          </div>
-        )}
-        {dataStatus === 'ready' && ActiveView && (
-          <Suspense fallback={<div className="archive-skeleton" role="status"><span>Cargando sección…</span></div>}>
-            <ActiveView matches={matches} />
-          </Suspense>
-        )}
-      </main>
+        <main id="main-content" className="app-main w-full max-w-7xl mx-auto px-4 py-6 flex-1 min-w-0" tabIndex="-1">
+          <h1 className="sr-only">Sebiche Celeste — Archivo Histórico de Sporting Cristal</h1>
+          {dataStatus === 'loading' && <div className="archive-skeleton" role="status"><span>Cargando archivo histórico…</span></div>}
+          {dataStatus === 'error' && (
+            <div className="archive-section archive-empty-state" role="alert">
+              <h2 className="section-title">No pudimos cargar el archivo</h2>
+              <p>El contenido local no respondió. Puedes intentarlo de nuevo.</p>
+              <button type="button" className="btn btn-primary" onClick={retryDataLoad}>Reintentar</button>
+            </div>
+          )}
+          {dataStatus === 'ready' && ActiveView && (
+            <Suspense fallback={<div className="archive-skeleton" role="status"><span>Cargando sección…</span></div>}>
+              <ActiveView matches={matches} />
+            </Suspense>
+          )}
+        </main>
 
-      {dataStatus !== 'loading' && (
-        <footer className="app-footer mt-10"><div className="footer-inner">
-          <MeasurementConsent choice={measurementChoice} onChange={setMeasurementChoice} />
-          <ArchiveProvenance metadata={archiveMetadata} />
-          <div className="footer-meta">
-            <p className="footer-signature">Sebiche Celeste &middot; {archiveMetadata.datasetRevision}</p>
-            <p className="footer-disclaimer">Proyecto independiente de hinchas. Sin relación oficial con el Club Sporting Cristal.</p>
-            <a href="/privacidad.html">Privacidad y medición</a>
-          </div>
-        </div></footer>
-      )}
-    </div>
+        {dataStatus !== 'loading' && (
+          <footer className="app-footer mt-10"><div className="footer-inner">
+            <MeasurementConsent choice={measurementChoice} onChange={setMeasurementChoice} />
+            <ArchiveProvenance metadata={archiveMetadata} />
+            <PublicArchiveNav className="seo-nav seo-nav--footer" />
+            <div className="footer-meta">
+              <p className="footer-signature">Sebiche Celeste &middot; {archiveMetadata.datasetRevision}</p>
+              <p className="footer-disclaimer">Proyecto independiente de hinchas. Sin relación oficial con el Club Sporting Cristal.</p>
+              <a href="/privacidad.html">Privacidad y medición</a>
+            </div>
+          </div></footer>
+        )}
+      </div>
+    </PublicCatalogProvider>
   );
 }
 

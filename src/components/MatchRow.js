@@ -1,4 +1,6 @@
 import { formatMatchDate } from '../domain/matches';
+import { matchKey } from '../domain/publicRoutes';
+import { usePublicCatalog } from './PublicCatalog';
 
 const RESULT_META = {
   V: { label: 'Victoria', badge: 'badge-green', className: 'match-row--win' },
@@ -9,6 +11,9 @@ const RESULT_META = {
 function MatchRow({ match }) {
   const resultMeta = RESULT_META[match.resultCode];
   const hasGoals = Boolean(match.goalsNote);
+  const { matchPathByKey } = usePublicCatalog();
+  const href = matchPathByKey.get(matchKey(match));
+  const fixture = `${match.home} vs ${match.away}`;
 
   return (
     <article className={`match-row ${resultMeta?.className || ''}`}>
@@ -28,7 +33,7 @@ function MatchRow({ match }) {
       </div>
 
       <div className="match-row__fixture">
-        <p className="match-teams">{match.home} vs {match.away}</p>
+        <p className="match-teams">{href ? <a href={href}>{fixture}</a> : fixture}</p>
         {hasGoals && <p className="match-goals"><span>Goles</span> · {match.goalsNote}</p>}
       </div>
 
