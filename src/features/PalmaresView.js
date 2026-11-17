@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import PlayerLink from '../components/PlayerLink';
 import StatTile from '../components/StatTile';
 import data from '../data/palmares.json';
 import { seasonHref, palmaresSummary } from '../domain/palmares';
@@ -53,13 +54,14 @@ function PalmaresView({ matches = [] }) {
 
       <section className="archive-section">
         <h3 className="collection-title">Goleadores del campeonato peruano</h3>
+        <p className="copy-secondary text-sm mb-3">Los nombres que aparecen en el archivo enlazan a su <a className="link-accent" href="/jugadores">ficha de goleador</a>.</p>
         <div className="data-table-shell"><div className="overflow-x-auto">
           <table>
             <thead><tr><th scope="col">Año</th><th scope="col">Jugador</th><th scope="col">Goles</th></tr></thead>
             <tbody>{data.topScorers.map(s => (
               <tr key={`${s.year}-${s.player}`}>
                 <td className="text-center"><YearLink year={s.year} years={archiveYears} /></td>
-                <td>{s.player}</td>
+                <td><PlayerLink name={s.player} /></td>
                 <td className="text-center font-bold text-accent">{s.goals}</td>
               </tr>
             ))}</tbody>

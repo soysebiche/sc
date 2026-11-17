@@ -145,7 +145,21 @@
     { "source": "/country", "destination": "/paises", "permanent": true },
     { "source": "/country/:path*", "destination": "/paises/:path*", "permanent": true },
     { "source": "/pais", "destination": "/paises", "permanent": true },
-    { "source": "/pais/:path*", "destination": "/paises/:path*", "permanent": true }
+    { "source": "/pais/:path*", "destination": "/paises/:path*", "permanent": true },
+    { "source": "/players", "destination": "/jugadores", "permanent": true },
+    { "source": "/players/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/player", "destination": "/jugadores", "permanent": true },
+    { "source": "/player/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/jugador", "destination": "/jugadores", "permanent": true },
+    { "source": "/jugador/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/goleadores", "destination": "/jugadores", "permanent": true },
+    { "source": "/goleadores/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/goleador", "destination": "/jugadores", "permanent": true },
+    { "source": "/goleador/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/scorers", "destination": "/jugadores", "permanent": true },
+    { "source": "/scorers/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/scorer", "destination": "/jugadores", "permanent": true },
+    { "source": "/scorer/:path*", "destination": "/jugadores/:path*", "permanent": true }
   ],
   "rewrites": [
     {

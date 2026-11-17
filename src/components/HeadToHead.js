@@ -1,4 +1,5 @@
 import { formatMatchDate } from '../domain/matches';
+import PlayerLink from './PlayerLink';
 import StatTile from './StatTile';
 
 const BADGE = { V: ['badge-green', 'V'], E: ['badge-yellow', 'E'], P: ['badge-red', 'P'] };
@@ -51,7 +52,7 @@ export function ScorerList({ title, scorers }) {
       {scorers.length === 0 ? <p className="copy-secondary">Sin goleadores registrados.</p> : (
         <ol className="space-y-1">
           {scorers.map((s, i) => (
-            <li key={s.name}><span className="copy-secondary">{i + 1}.</span> <strong>{s.name}</strong> — {s.goals} {s.goals === 1 ? 'gol' : 'goles'}{s.lowerBound ? '*' : ''}</li>
+            <li key={s.name}><span className="copy-secondary">{i + 1}.</span> <strong><PlayerLink name={s.name} /></strong> — {s.goals} {s.goals === 1 ? 'gol' : 'goles'}{s.lowerBound ? '*' : ''}</li>
           ))}
         </ol>
       )}

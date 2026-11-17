@@ -2,7 +2,7 @@
 
 const FILE_EXT = /\.[a-z0-9]+$/i;
 const SKIP_HEAD = new Set(['api', 'assets', 'fonts', 'icons', 'og']);
-const ARCHIVE_HEAD = new Set(['partidos', 'rivales', 'paises', 'temporadas']);
+const ARCHIVE_HEAD = new Set(['partidos', 'jugadores', 'rivales', 'paises', 'temporadas']);
 const LOCALE_HEAD = new Set(['en', 'es']);
 const ALIAS_HEAD = new Map([
   ['matches', 'partidos'],
@@ -20,6 +20,13 @@ const ALIAS_HEAD = new Map([
   ['countries', 'paises'],
   ['country', 'paises'],
   ['pais', 'paises'],
+  ['players', 'jugadores'],
+  ['player', 'jugadores'],
+  ['jugador', 'jugadores'],
+  ['goleadores', 'jugadores'],
+  ['goleador', 'jugadores'],
+  ['scorers', 'jugadores'],
+  ['scorer', 'jugadores'],
 ]);
 
 function stripIndexAndSlash(pathname) {
