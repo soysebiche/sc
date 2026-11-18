@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, publicNavHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
+import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, publicNavHtml, seasonCompareTableHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
 
 const shell = `<!doctype html>
 <html lang="es">
@@ -105,4 +105,19 @@ test('public nav and SPA archive links stay on canonical paths', () => {
   assert.match(publicNavHtml(), /href="\/temporadas"/);
   assert.match(spaArchiveLink('/?view=rivales&rival=Alianza+Lima'), /rel="nofollow"/);
   assert.equal(spaArchiveLink(''), '');
+});
+
+test('season compare table marks the better value without inventing stats', () => {
+  const html = seasonCompareTableHtml({
+    left: { label: '2023' },
+    right: { label: '2024' },
+    rows: [
+      { id: 'points', label: 'Puntos (3 por victoria)', left: 80, right: 70, winner: 'left' },
+      { id: 'P', label: 'Derrotas', left: 4, right: 8, winner: 'left' },
+    ],
+  });
+  assert.match(html, /<th scope="col">2023<\/th>/);
+  assert.match(html, /class="compare-better">80</);
+  assert.match(html, /class="compare-better">4</);
+  assert.doesNotMatch(html, /class="compare-better">70</);
 });

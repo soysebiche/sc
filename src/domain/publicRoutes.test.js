@@ -1,6 +1,6 @@
 import archive from '../data/historico_completo_sc.json';
 import { parseMatch } from './matches';
-import { absoluteUrl, buildCatalogLookups, buildPublicCatalog, canonicalPath, matchKey, matchPublicId, slugify, spaSearch } from './publicRoutes';
+import { COMPARE_PATH, absoluteUrl, buildCatalogLookups, buildPublicCatalog, canonicalPath, compareSpaSearch, matchKey, matchPublicId, slugify, spaSearch } from './publicRoutes';
 
 const matches = archive.map(parseMatch);
 
@@ -29,6 +29,8 @@ describe('public archive routes', () => {
     const alianzas = catalog.rivals.find(rival => rival.name === 'Alianza Lima');
     expect(alianzas.spa).toBe('/?view=rivales&rival=Alianza+Lima');
     expect(catalog.indexes.partidos.spa).toBe('/?view=partidos');
+    expect(catalog.indexes.comparar.path).toBe(COMPARE_PATH);
+    expect(compareSpaSearch({ a: 2023, b: 2024, ap: 'apertura' })).toBe('/?view=comparar&a=2023&b=2024&ap=apertura');
   });
 
   test('canonical paths drop trailing slashes, queries and index.html', () => {

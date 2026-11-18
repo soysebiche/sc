@@ -23,6 +23,7 @@ const RecordsView = lazy(() => import('./features/RecordsView'));
 const ClasicosView = lazy(() => import('./features/ClasicosView'));
 const PalmaresView = lazy(() => import('./features/PalmaresView'));
 const CuriosidadesView = lazy(() => import('./features/CuriosidadesView'));
+const SeasonCompareView = lazy(() => import('./features/SeasonCompareView'));
 
 function RivalsView(props) {
   return <EntityHistory {...props} config={RIVALS_HISTORY} />;
@@ -37,6 +38,7 @@ const TABS = [
   { id: 'dashboard', label: 'DASHBOARD', View: DashboardView },
   { id: 'partidos', label: 'PARTIDOS', View: MatchesView },
   { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
+  { id: 'comparar', label: 'COMPARAR', View: SeasonCompareView },
   { id: 'goleadores', label: 'GOLEADORES', View: ScorersView },
   { id: 'records', label: 'RÉCORDS', View: RecordsView },
   { id: 'palmares', label: 'PALMARÉS', View: PalmaresView },

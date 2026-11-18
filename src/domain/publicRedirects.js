@@ -61,6 +61,11 @@ export function normalizePublicPath(pathname) {
     segs = segs.map(seg => seg.toLowerCase());
   }
 
+  const joined = segs.map(seg => seg.toLowerCase()).join('/');
+  if (joined === 'comparar' || joined === 'compare' || joined === 'temporadas/compare' || joined === 'seasons/compare') {
+    segs = ['temporadas', 'comparar'];
+  }
+
   return stripIndexAndSlash(`/${segs.join('/')}`);
 }
 

@@ -12,6 +12,7 @@ export const PUBLIC_NAV = Object.freeze([
   { path: '/temporadas', label: 'Temporadas' },
 ]);
 export const ARCHIVE_HEADS = Object.freeze(['partidos', 'rivales', 'paises', 'temporadas']);
+export const COMPARE_PATH = '/temporadas/comparar';
 
 export function slugify(value) {
   const slug = String(value || '')
@@ -138,8 +139,13 @@ export function buildPublicCatalog(matches) {
       rivales: { path: '/rivales', spa: spaSearch({ view: 'rivales' }) },
       paises: { path: '/paises', spa: spaSearch({ view: 'paises' }) },
       temporadas: { path: '/temporadas', spa: spaSearch({ view: 'analisis-anual' }) },
+      comparar: { path: COMPARE_PATH, spa: spaSearch({ view: 'comparar' }) },
     },
   };
+}
+
+export function compareSpaSearch({ a, b, ap, bp } = {}) {
+  return spaSearch({ view: 'comparar', a, b, ap, bp });
 }
 
 export function rivalPathByName(catalog, name) {

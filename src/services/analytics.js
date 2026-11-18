@@ -6,6 +6,7 @@ const PAGE_TITLES = {
   dashboard: 'Dashboard histórico',
   partidos: 'Archivo de partidos',
   'analisis-anual': 'Análisis anual',
+  comparar: 'Comparar temporadas',
   rivales: 'Historial por rival',
   paises: 'Historial por país',
 };
@@ -13,6 +14,7 @@ const PAGE_TITLES = {
 const FILTER_KEYS = new Set([
   'date', 'year', 'month', 'tournament', 'decade',
   'rival', 'rivalYear', 'country', 'countryYear',
+  'a', 'b', 'ap', 'bp',
 ]);
 
 const PAGINATION_KEYS = new Set(['page', 'rivalPage', 'countryPage']);

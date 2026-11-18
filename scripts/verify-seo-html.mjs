@@ -96,7 +96,7 @@ try {
   const matchPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/partidos/') && pathname !== '/partidos');
   const rivalPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/rivales/') && pathname !== '/rivales');
   const countryPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/paises/') && pathname !== '/paises');
-  const seasonPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/temporadas/') && pathname !== '/temporadas');
+  const seasonPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => /^\/temporadas\/\d{4}$/.test(pathname));
   if (!matchPath || !rivalPath || !countryPath || !seasonPath) {
     throw new Error('Sitemap is missing match, rival, country or season URLs');
   }
@@ -107,6 +107,8 @@ try {
   const rival = await curl(origin, rivalPath);
   const country = await curl(origin, countryPath);
   const season = await curl(origin, seasonPath);
+  const compare = await curl(origin, '/temporadas/comparar');
+  const compareAlias = await curl(origin, '/comparar');
   const unknownHead = await curl(origin, '/no-existe-esta-ruta', { method: 'HEAD' });
   const unknownGet = await curl(origin, '/no-existe-esta-ruta');
   const querySpa = await curl(origin, '/?view=rivales&rival=Alianza%20Lima');
@@ -181,6 +183,14 @@ try {
   requireSnippet(countryPath, country.body, `rel="canonical" href="${SITE_URL}${countryPath}"`);
   requireSnippet(seasonPath, season.body, `rel="canonical" href="${SITE_URL}${seasonPath}"`);
   requireSnippet(seasonPath, season.body, 'href="/partidos/');
+  requireSnippet(seasonPath, season.body, 'href="/temporadas/comparar');
+  if (compare.status !== 200) throw new Error(`GET /temporadas/comparar returned ${compare.status}`);
+  if (compareAlias.status !== 308 || compareAlias.location !== '/temporadas/comparar') {
+    throw new Error(`GET /comparar returned ${compareAlias.status} ${compareAlias.location}`);
+  }
+  requireSnippet('/temporadas/comparar', compare.body, `rel="canonical" href="${SITE_URL}/temporadas/comparar"`);
+  requireSnippet('/temporadas/comparar', compare.body, 'compare-table');
+  requireSnippet('/temporadas/comparar', compare.body, '3 por victoria');
   requireSnippet('/zzz', unknownGet.body, 'Página no encontrada');
   requireSnippet('robots', robots.body, `Sitemap: ${SITE_URL}/sitemap.xml`);
   if (home.body.includes(`rel="canonical" href="${SITE_URL}${matchPath}"`)) {

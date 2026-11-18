@@ -23,6 +23,11 @@ describe('public URL duplicate redirects', () => {
     expect(redirectLocation('/seasons/1991')).toBe('/temporadas/1991');
     expect(redirectLocation('/rivals/alianza-lima')).toBe('/rivales/alianza-lima');
     expect(redirectLocation('/countries/argentina')).toBe('/paises/argentina');
+    expect(redirectLocation('/temporadas/comparar')).toBeNull();
+    expect(redirectLocation('/comparar')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/compare')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/temporadas/compare')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/seasons/compare')).toBe('/temporadas/comparar');
   });
 
   test('strips query strings on archive pages but not on the SPA home', () => {
