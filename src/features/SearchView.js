@@ -22,6 +22,8 @@ import {
   searchHref,
   searchStreaks,
   searchUpdates,
+  matchNoun,
+  streakCountLabel,
   summarizeSearch,
 } from '../domain/search';
 import { useUrlStore } from '../hooks/useUrlState';
@@ -62,12 +64,13 @@ function StreakMatches({ streak, matchPathByKey }) {
   );
 }
 
+function streakSpan(streak) {
+  if (!streak) return '';
+  if (streak.start === streak.end) return formatMatchDate(streak.start);
+  return `${formatMatchDate(streak.start)} – ${formatMatchDate(streak.end)}`;
+}
+
 function StreakBlock({ title, streak, empty, matchPathByKey }) {
-  const span = streak
-    ? (streak.start === streak.end
-      ? formatMatchDate(streak.start)
-      : `${formatMatchDate(streak.start)} – ${formatMatchDate(streak.end)}`)
-    : '';
   return (
     <div>
       <h4 className="font-bold mt-1 mb-2">{title}</h4>
@@ -75,7 +78,7 @@ function StreakBlock({ title, streak, empty, matchPathByKey }) {
         <>
           <p className="text-sm mb-2">
             <strong className="stat-number">{streak.length}</strong>
-            <span className="copy-muted"> partidos · {span}</span>
+            <span className="copy-muted"> {matchNoun(streak.length)} · {streakSpan(streak)}</span>
           </p>
           <StreakMatches streak={streak} matchPathByKey={matchPathByKey} />
         </>
@@ -270,7 +273,7 @@ function SearchView({ matches = [] }) {
               inputMode="numeric"
               value={query.score}
               onChange={event => setField(assign, query, 'score', event.target.value)}
-              placeholder="4-0"
+              placeholder="ej. 4-0"
               className="w-full"
               autoComplete="off"
             />
@@ -329,8 +332,7 @@ function SearchView({ matches = [] }) {
         <section className="archive-section search-active-streak">
           <h3 className="collection-title">Racha activa</h3>
           <p className="section-subtitle">
-            {featured.label}: {featured.current.length} partidos
-            ({formatMatchDate(featured.current.start)} – {formatMatchDate(featured.current.end)}).
+            {featured.label}: {streakCountLabel(featured.current.length)} ({streakSpan(featured.current)}).
             Sigue abierta al último partido de este conjunto.
           </p>
           {current.length > 1 && (

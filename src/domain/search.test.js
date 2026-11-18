@@ -12,6 +12,7 @@ import {
   readSearchQuery,
   searchHref,
   searchStreaks,
+  streakCountLabel,
   summarizeSearch,
 } from './search.js';
 
@@ -112,6 +113,9 @@ describe('filters and streaks (synthetic)', () => {
     expect(streaks.cleanSheet.record.length).toBe(3);
     expect(streaks.winless.current).toBeNull();
     expect(activeStreaks(streaks)[0].id).toBe('winning');
+    expect(activeStreaks(streaks, { minLength: 4 })).toEqual([]);
+    expect(streakCountLabel(1)).toBe('1 partido');
+    expect(streakCountLabel(3)).toBe('3 partidos');
   });
 });
 

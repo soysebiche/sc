@@ -250,9 +250,17 @@ export function searchStreaks(matches) {
   )));
 }
 
-export function activeStreaks(streaks) {
+export function matchNoun(length) {
+  return length === 1 ? 'partido' : 'partidos';
+}
+
+export function streakCountLabel(length) {
+  return `${length} ${matchNoun(length)}`;
+}
+
+export function activeStreaks(streaks, { minLength = 2 } = {}) {
   const order = ['winning', 'unbeaten', 'scoring', 'cleanSheet', 'winless'];
   return order
     .map(id => streaks[id])
-    .filter(streak => streak?.current?.length);
+    .filter(streak => streak?.current?.length >= minLength);
 }
