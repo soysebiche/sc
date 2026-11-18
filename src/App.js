@@ -4,6 +4,7 @@ import MeasurementConsent, { STORAGE_KEY as MEASUREMENT_STORAGE_KEY } from './co
 import PrimaryNav from './components/PrimaryNav';
 import PublicArchiveNav from './components/PublicArchiveNav';
 import { PublicCatalogProvider } from './components/PublicCatalog';
+import { RandomMatchLaunch } from './components/RandomMatch';
 import { MoonIcon, SunIcon } from './components/ThemeIcons';
 import { CalendarSubscribeLink } from './components/UpcomingMatches';
 import archiveMetadata from './data/archive-metadata.json';
@@ -111,7 +112,10 @@ function ArchiveShell() {
               </div>
             </div>
             <PrimaryNav tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
-            <CalendarSubscribeLink compact />
+            <div className="app-header__actions">
+              <RandomMatchLaunch matches={matches} />
+              <CalendarSubscribeLink compact />
+            </div>
           </div>
           <PublicArchiveNav />
           </div>

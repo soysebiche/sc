@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import MatchRow from '../components/MatchRow';
+import RandomMatchPanel from '../components/RandomMatch';
 import ShareButton from '../components/ShareButton';
 import UpcomingMatches from '../components/UpcomingMatches';
 import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
@@ -28,6 +29,7 @@ function EfemeridesView({ matches }) {
     <div className="space-y-4 animate-fade-in">
       <UpcomingMatches />
       <Suspense fallback={null}><MatchPreview matches={matches} /></Suspense>
+      <RandomMatchPanel matches={matches} />
 
       <section className="query-panel">
         <h2 className="section-title">Partidos jugados en esta fecha</h2>

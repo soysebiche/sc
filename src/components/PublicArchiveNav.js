@@ -1,3 +1,4 @@
+import { RandomMatchNavLink } from './RandomMatch';
 import { PUBLIC_NAV } from '../domain/publicRoutes';
 
 function PublicArchiveNav({ className = 'seo-nav' }) {
@@ -6,6 +7,7 @@ function PublicArchiveNav({ className = 'seo-nav' }) {
       {PUBLIC_NAV.map(item => (
         <a key={item.path} href={item.path}>{item.label}</a>
       ))}
+      <RandomMatchNavLink />
     </nav>
   );
 }

@@ -56,4 +56,8 @@ describe('public archive routes', () => {
     expect(first).not.toBe(second);
     expect(used.size).toBe(2);
   });
+
+  test('does not assign the reserved /partidos/azar id to a match', () => {
+    expect(catalog.matches.some(entry => entry.id === 'azar' || entry.path === '/partidos/azar')).toBe(false);
+  });
 });

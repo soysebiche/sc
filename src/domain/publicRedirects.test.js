@@ -29,6 +29,8 @@ describe('public URL duplicate redirects', () => {
     expect(redirectLocation('/partidos/1956-08-05-alianza-lima', '?utm=1')).toBe('/partidos/1956-08-05-alianza-lima');
     expect(redirectLocation('/rivales', '?view=rivales')).toBe('/rivales');
     expect(redirectLocation('/', '?view=partidos&year=1956')).toBeNull();
+    expect(redirectLocation('/partidos/azar', '?wins=1&auto=1')).toBeNull();
+    expect(redirectLocation('/partidos/azar/', '?auto=1')).toBe('/partidos/azar?auto=1');
   });
 
   test('does not treat /paises as the singular /pais alias', () => {

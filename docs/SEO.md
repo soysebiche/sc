@@ -9,7 +9,8 @@ En `/partidos/{id}`, `/rivales/{slug}`, `/paises/{slug}`, `/temporadas/{año}` y
 El generador es `scripts/generate-public-pages.mjs`. Se ejecuta al final de `npm run build` y escribe, en `dist/`:
 
 - `/index.html` (inicio: WebSite + SportsTeam + BreadcrumbList)
-- `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next)
+- `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next, copiar enlace / X / otro al azar)
+- `/partidos/azar/index.html` (`noindex`, enlace al archivo; el sorteo corre en el navegador)
 - `/rivales/index.html` y `/rivales/{slug}/index.html` (listado completo vs. ese rival + ItemList)
 - `/paises/index.html` y `/paises/{slug}/index.html`
 - `/temporadas/index.html` y `/temporadas/{año}/index.html` (cada partido de la temporada)

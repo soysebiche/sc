@@ -23,6 +23,12 @@ import {
   rivalPathByName,
   seasonPathByYear,
 } from '../src/domain/publicRoutes.js';
+import {
+  RANDOM_MATCH_PATH,
+  compactRandomIndex,
+  decadesForRandom,
+  randomMatchShareIntent,
+} from '../src/domain/randomMatch.js';
 import { OG_HEIGHT, OG_WIDTH } from './og-png.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -130,7 +136,10 @@ export function spaArchiveLink(spa) {
 }
 
 export function publicNavHtml() {
-  const links = PUBLIC_NAV.map(item => `<a href="${escapeHtml(item.path)}">${escapeHtml(item.label)}</a>`).join('');
+  const links = [
+    ...PUBLIC_NAV.map(item => `<a href="${escapeHtml(item.path)}">${escapeHtml(item.label)}</a>`),
+    `<a href="${RANDOM_MATCH_PATH}#auto=1">Partido al azar</a>`,
+  ].join('');
   return `<nav class="seo-nav" aria-label="Archivo público">${links}</nav>`;
 }
 
@@ -147,6 +156,7 @@ function siteChrome({ heading, intro, crumbs, extra, spa }) {
       ${spaArchiveLink(spa)}
       ${extra}
     </main>
+    <script src="/azar-boot.js" defer></script>
   </div>`;
 }
 
@@ -210,6 +220,16 @@ function relatedNav(entries, label, heading) {
   return `<nav class="seo-related" aria-label="${escapeHtml(label)}"><h2 class="collection-title">${escapeHtml(heading)}</h2><ul class="seo-list">${items}</ul></nav>`;
 }
 
+function matchShareHtml(entry) {
+  const url = absoluteUrl(entry.path);
+  const intent = randomMatchShareIntent(entry.match, url);
+  return `<nav class="match-share" aria-label="Compartir este partido">
+      <button type="button" class="btn btn-ghost" data-copy-match data-copy-url="${escapeHtml(url)}">Copiar enlace</button>
+      <a class="btn btn-ghost share-x" href="${escapeHtml(intent)}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">𝕏</span> Compartir en X</a>
+      <a class="btn btn-primary" href="${RANDOM_MATCH_PATH}#auto=1">Otro</a>
+    </nav>`;
+}
+
 function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament }) {
   const match = entry.match;
   const pagerLink = (rel, item, label) => (item
@@ -240,6 +260,7 @@ function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedT
         ${h2h.nextRival ? `<a href="${escapeHtml(h2h.nextRival.path)}">Siguiente vs. ${escapeHtml(match.opponent)}: ${escapeHtml(matchLinkLabel(h2h.nextRival))}</a>` : '<span>Último cruce vs. este rival</span>'}
       </nav>
       ${relatedNav(relatedTournament, 'Mismo torneo', `Más partidos de ${match.tournament}`)}
+      ${matchShareHtml(entry)}
     </article>`;
 }
 
@@ -407,8 +428,8 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Archivo histórico de Sporting Cristal',
     intro: homeDescription,
     crumbs: crumbsHome,
-    extra: `<p>${escapeHtml(statsLine(matches))}</p>
-      <p><a href="/partidos">Partidos</a> · <a href="/rivales">Rivales</a> · <a href="/paises">Países</a> · <a href="/temporadas">Temporadas</a></p>
+      extra: `<p>${escapeHtml(statsLine(matches))}</p>
+      <p><a href="/partidos">Partidos</a> · <a href="/rivales">Rivales</a> · <a href="/paises">Países</a> · <a href="/temporadas">Temporadas</a> · <a href="${RANDOM_MATCH_PATH}">Partido al azar</a></p>
       <section class="archive-section"><h2 class="collection-title">Últimos partidos</h2><ul class="seo-list">${recentLinks}</ul></section>`,
   });
   const homeHtml = injectRoot(applyHead(viteHtml, {
@@ -642,6 +663,36 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     });
   });
 
+  const azarDecades = decadesForRandom(matches).map(decade => `<option value="${decade}">${decade}s</option>`).join('');
+  const azarInner = siteChrome({
+    heading: 'Partido al azar',
+    intro: 'Un cruce cualquiera del archivo histórico de Sporting Cristal. Cada partido con ficha pesa igual. Esta página no se indexa.',
+    crumbs: [...crumbsHome, { name: 'Partidos', path: '/partidos' }, { name: 'Al azar', path: RANDOM_MATCH_PATH }],
+    extra: `<p><a href="/partidos">Ver el archivo de partidos</a></p>
+      <form class="random-match random-match--page" data-azar-form>
+        <fieldset class="random-match__filters">
+          <legend class="sr-only">Filtros opcionales</legend>
+          <label class="random-match__check"><input type="checkbox" name="wins" /> Solo victorias</label>
+          <label class="random-match__check"><input type="checkbox" name="clasico" /> Solo clásicos (Alianza o Universitario)</label>
+          <label class="random-match__decade"><span>Década</span>
+            <select name="decade"><option value="">Todas</option>${azarDecades}</select>
+          </label>
+        </fieldset>
+        <p class="random-match__status" data-azar-status role="status">Con JavaScript se abre una ficha al azar. Sin él, usa el archivo.</p>
+        <button type="submit" class="btn btn-primary">Partido al azar</button>
+      </form>
+      <noscript><p>Sin JavaScript puedes recorrer el <a href="/partidos">archivo de partidos</a>.</p></noscript>`,
+  });
+  const azarHtml = injectRoot(applyHead(viteHtml, {
+    title: 'Partido al azar | Sebiche Celeste',
+    description: 'Descubre un partido al azar del archivo histórico de Sporting Cristal. Esta página no se indexa.',
+    pathname: RANDOM_MATCH_PATH,
+    index: false,
+    schema: null,
+  }), azarInner);
+
+  await writeFile(path.join(distDir, 'azar-index.json'), JSON.stringify(compactRandomIndex(catalog.matches)), 'utf8');
+  await writeHtml(RANDOM_MATCH_PATH, azarHtml);
   await writeFile(path.join(distDir, '404.html'), notFoundHtml, 'utf8');
   const concurrency = 32;
   for (let index = 0; index < pages.length; index += concurrency) {
@@ -690,6 +741,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     'href="/partidos"',
     'href="/rivales"',
     'href="/temporadas"',
+    'href="/partidos/azar"',
     '"@type":"WebSite"',
     '"@type":"SportsTeam"',
     '"name":"Sporting Cristal"',
@@ -714,6 +766,9 @@ Sitemap: ${SITE_URL}/sitemap.xml
     'Mismo rival',
     'Mismo torneo',
     'rel="nofollow"',
+    'Copiar enlace',
+    'Compartir en X',
+    `${RANDOM_MATCH_PATH}#auto=1`,
   ]);
   const sitemapLocs = new Set(sitemapEntries.map(entry => absoluteUrl(entry.path)));
   pages.forEach(page => {
@@ -731,6 +786,15 @@ Sitemap: ${SITE_URL}/sitemap.xml
   ]);
   assertUniqueMatchMeta(pages);
   assertContains('404', notFoundHtml, ['Página no encontrada', 'noindex,nofollow']);
+  assertContains('azar', azarHtml, [
+    'Partido al azar',
+    'noindex,nofollow',
+    'href="/partidos"',
+    'data-azar-form',
+    'src="/azar-boot.js"',
+  ]);
+  if (azarHtml.includes('rel="canonical"')) throw new Error('Random match page must not expose a canonical URL');
+  if (sitemapLocs.has(absoluteUrl(RANDOM_MATCH_PATH))) throw new Error('Random match page must stay out of the sitemap');
 
   const generatedPages = pages.length;
   process.stdout.write(
