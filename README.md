@@ -7,6 +7,7 @@ Archivo público y estático para consultar 1,936 partidos y estadísticas hist�
 - Efemérides por día y mes.
 - Resumen histórico de resultados y goles.
 - Partidos filtrados por año y mes, con paginación.
+- Búsqueda combinada y rachas sobre el conjunto filtrado, compartible con `/?view=buscar`.
 - Análisis anual por década y tipo de torneo.
 - Historial consolidado por rival y país.
 - Vistas y filtros compartibles mediante parámetros de URL.

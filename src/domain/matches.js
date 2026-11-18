@@ -82,6 +82,7 @@ export const parseMatch = (record) => {
     scGoals,
     opponentGoals,
     resultCode,
+    round: record['Número de Fecha'] || '',
   };
 };
 

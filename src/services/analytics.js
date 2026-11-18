@@ -5,6 +5,7 @@ const PAGE_TITLES = {
   efemerides: 'Efemérides',
   dashboard: 'Dashboard histórico',
   partidos: 'Archivo de partidos',
+  buscar: 'Búsqueda y rachas',
   'analisis-anual': 'Análisis anual',
   rivales: 'Historial por rival',
   paises: 'Historial por país',
@@ -13,9 +14,10 @@ const PAGE_TITLES = {
 const FILTER_KEYS = new Set([
   'date', 'year', 'month', 'tournament', 'decade',
   'rival', 'rivalYear', 'country', 'countryYear',
+  'vs', 'comp', 'fase', 'sede', 'from', 'to', 'res', 'gfmin', 'gamax', 'score', 'goleador',
 ]);
 
-const PAGINATION_KEYS = new Set(['page', 'rivalPage', 'countryPage']);
+const PAGINATION_KEYS = new Set(['page', 'rivalPage', 'countryPage', 'sp']);
 
 let analyticsEnabled = false;
 let analyticsInitialized = false;

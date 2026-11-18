@@ -14,19 +14,28 @@ export const STREAK_TYPES = Object.freeze({
   cleanSheet: { label: 'Valla invicta', test: m => m.opponentGoals === 0 },
 });
 
-export function longestStreaks(matches, test) {
+export function streakRuns(matches, test) {
   const ordered = chronological(matches);
   let record = null;
   let run = null;
   for (const m of ordered) {
     if (test(m)) {
-      run = run ? { ...run, length: run.length + 1, end: m.date } : { length: 1, start: m.date, end: m.date };
+      run = run
+        ? { length: run.length + 1, start: run.start, end: m.date, matches: [...run.matches, m] }
+        : { length: 1, start: m.date, end: m.date, matches: [m] };
       if (!record || run.length > record.length) record = run;
     } else {
       run = null;
     }
   }
   return { record, current: run };
+}
+
+const slimStreak = streak => (streak ? { length: streak.length, start: streak.start, end: streak.end } : null);
+
+export function longestStreaks(matches, test) {
+  const { record, current } = streakRuns(matches, test);
+  return { record: slimStreak(record), current: slimStreak(current) };
 }
 
 export function calculateStreaks(matches) {
