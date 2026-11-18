@@ -11,6 +11,7 @@ import {
   SEARCH_PRESETS,
   SEARCH_VIEW,
   activeStreaks,
+  clipStreakMatches,
   filterMatches,
   hasSearchFilters,
   listSearchCompetitions,
@@ -47,19 +48,24 @@ function setField(assign, query, key, value) {
   assign(searchUpdates(query, { [key]: value, sp: '1' }));
 }
 
-function StreakMatches({ streak, matchPathByKey }) {
+function StreakMatches({ streak, matchPathByKey, cap = 10 }) {
   if (!streak?.matches?.length) return <p className="copy-muted text-sm">—</p>;
+  const { shown, hidden, split } = clipStreakMatches(streak.matches, cap);
   return (
     <ol className="search-streak-matches">
-      {streak.matches.map(match => {
+      {shown.map((match, index) => {
         const href = matchPathByKey.get(matchKey(match));
         const label = `${formatMatchDate(match.date)} · ${match.scoreLabel}`;
         return (
           <li key={matchKey(match)}>
+            {split && index === 4 && <span className="copy-muted" aria-hidden="true">… </span>}
             {href ? <a href={href}>{label}</a> : label}
           </li>
         );
       })}
+      {hidden > 0 && (
+        <li className="copy-muted">{`y ${hidden} más en la lista de partidos`}</li>
+      )}
     </ol>
   );
 }
@@ -340,7 +346,7 @@ function SearchView({ matches = [] }) {
               También abiertas: {current.slice(1).map(item => `${item.label} (${item.current.length})`).join(' · ')}
             </p>
           )}
-          <StreakMatches streak={featured.current} matchPathByKey={matchPathByKey} />
+          <StreakMatches streak={featured.current} matchPathByKey={matchPathByKey} cap={24} />
         </section>
       )}
 

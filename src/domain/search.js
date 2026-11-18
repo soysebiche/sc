@@ -258,6 +258,19 @@ export function streakCountLabel(length) {
   return `${length} ${matchNoun(length)}`;
 }
 
+export function clipStreakMatches(matches = [], cap = 10) {
+  if (!Array.isArray(matches) || matches.length <= cap) {
+    return { shown: matches, hidden: 0, split: false };
+  }
+  const head = 4;
+  const tail = 4;
+  return {
+    shown: [...matches.slice(0, head), ...matches.slice(-tail)],
+    hidden: matches.length - head - tail,
+    split: true,
+  };
+}
+
 export function activeStreaks(streaks, { minLength = 2 } = {}) {
   const order = ['winning', 'unbeaten', 'scoring', 'cleanSheet', 'winless'];
   return order

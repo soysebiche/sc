@@ -5,6 +5,7 @@ import { parseMatch } from './matches.js';
 import {
   SEARCH_PRESETS,
   activeStreaks,
+  clipStreakMatches,
   filterMatches,
   hasSearchFilters,
   phaseOf,
@@ -149,6 +150,31 @@ describe('filters (archive)', () => {
     expect(filterMatches([match], { ...readSearchQuery(''), gfmin: '4' })).toHaveLength(1);
     expect(filterMatches([match], { ...readSearchQuery(''), goleador: 'Yordi Vílchez' }, aliases)).toHaveLength(0);
     expect(filterMatches([match], { ...readSearchQuery(''), goleador: 'Maxloren Castro' }, aliases)).toHaveLength(1);
+  });
+
+  it('counts matches where Cristal scored 4 or more', () => {
+    const found = filterMatches(matches, { ...readSearchQuery(''), gfmin: '4' });
+    expect(found).toHaveLength(274);
+    expect(found.every(m => m.scGoals >= 4)).toBe(true);
+    expect(summarizeSearch(found)).toMatchObject({
+      total: 274,
+      victories: 268,
+      draws: 4,
+      defeats: 2,
+      goalsFor: 1277,
+      goalsAgainst: 272,
+      points: 808,
+    });
+  });
+
+  it('clips long streak lists to the first and last matches', () => {
+    const dates = Array.from({ length: 20 }, (_, i) => ({ date: `2020-01-${String(i + 1).padStart(2, '0')}` }));
+    expect(clipStreakMatches(dates.slice(0, 8), 10)).toEqual({ shown: dates.slice(0, 8), hidden: 0, split: false });
+    expect(clipStreakMatches(dates, 10)).toEqual({
+      shown: [...dates.slice(0, 4), ...dates.slice(-4)],
+      hidden: 12,
+      split: true,
+    });
   });
 
   it('filters knockout rounds from Número de Fecha', () => {
