@@ -5,6 +5,7 @@ const EMPTY_LOOKUPS = {
   matchPathByKey: new Map(),
   rivalPathByName: new Map(),
   countryPathByName: new Map(),
+  playerPathByName: new Map(),
 };
 
 const PublicCatalogContext = createContext(EMPTY_LOOKUPS);

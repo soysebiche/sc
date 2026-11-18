@@ -1,7 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import aliases from '../src/data/scorer-aliases.json' with { type: 'json' };
 import { formatMatchDate, parseMatch, sortMatchesNewest, summarizeMatches } from '../src/domain/matches.js';
+import { headToHead, sortRivals } from '../src/domain/rivals.js';
 import {
   h2hContext,
   matchDescription,
@@ -18,8 +20,10 @@ import {
   RESULT_WORD,
   SITE_URL,
   absoluteUrl,
+  buildCatalogLookups,
   buildPublicCatalog,
   countryPathByName,
+  matchKey,
   rivalPathByName,
   seasonPathByYear,
 } from '../src/domain/publicRoutes.js';
@@ -175,6 +179,115 @@ export function groupedMatchList(entries) {
 function statsLine(matches) {
   const stats = summarizeMatches(matches);
   return `${formatCount(stats.total)} partidos · ${formatCount(stats.victories)} victorias · ${formatCount(stats.draws)} empates · ${formatCount(stats.defeats)} derrotas · goles ${formatCount(stats.goalsFor)}-${formatCount(stats.goalsAgainst)}`;
+}
+
+function matchHref(match, lookups, label) {
+  const path = lookups.matchPathByKey.get(matchKey(match));
+  const text = escapeHtml(label);
+  return path ? `<a href="${escapeHtml(path)}">${text}</a>` : text;
+}
+
+function recordCells(row) {
+  if (!row?.played) return '<td>0</td><td>0</td><td>0</td><td>0</td><td>0-0</td><td>—</td>';
+  return `<td>${formatCount(row.played)}</td><td>${formatCount(row.V)}</td><td>${formatCount(row.E)}</td><td>${formatCount(row.P)}</td><td>${formatCount(row.goalsFor)}-${formatCount(row.goalsAgainst)}</td><td>${row.winRate}%</td>`;
+}
+
+function rivalIndexHtml(catalog) {
+  const rows = sortRivals(catalog.rivals.map(rival => {
+    const stats = summarizeMatches(rival.matches.map(entry => entry.match));
+    return { name: rival.name, path: rival.path, played: stats.total, ...stats };
+  }), 'played');
+  const body = rows.map(rival => `<tr>
+      <td><a href="${escapeHtml(rival.path)}">${escapeHtml(rival.name)}</a></td>
+      <td>${formatCount(rival.played)}</td>
+      <td>${formatCount(rival.victories)}</td>
+      <td>${formatCount(rival.draws)}</td>
+      <td>${formatCount(rival.defeats)}</td>
+      <td>${formatCount(rival.goalsFor)}-${formatCount(rival.goalsAgainst)}</td>
+    </tr>`).join('');
+  return `<div class="data-table-shell"><table>
+      <thead><tr><th scope="col">Rival</th><th scope="col">PJ</th><th scope="col">V</th><th scope="col">E</th><th scope="col">P</th><th scope="col">Goles</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table></div>`;
+}
+
+export function rivalArticleHtml(rival, h2h, lookups) {
+  const first = h2h.firstMatch;
+  const last = h2h.lastMatch;
+  const biggestWin = h2h.biggestWins[0];
+  const biggestLoss = h2h.biggestLosses[0];
+  const lineage = h2h.names.filter(name => name !== rival.name);
+  const playerPaths = lookups.playerPathByName;
+  const facts = [
+    factRow('Partidos', formatCount(h2h.total.played)),
+    factRow('Balance', `${h2h.total.V}V ${h2h.total.E}E ${h2h.total.P}P`),
+    factRow('Goles', `${formatCount(h2h.total.goalsFor)}-${formatCount(h2h.total.goalsAgainst)}`),
+    factRow('Local', h2h.home.played ? recordLinePlain(h2h.home) : 'Sin partidos'),
+    factRow('Visita', h2h.away.played ? recordLinePlain(h2h.away) : 'Sin partidos'),
+    h2h.neutral.played ? factRow('Neutral', recordLinePlain(h2h.neutral)) : '',
+    first ? factRow('Primer cruce', `${matchHref(first, lookups, longDate(first.date))} · ${escapeHtml(first.home)} ${escapeHtml(first.scoreLabel)} ${escapeHtml(first.away)}`) : '',
+    last ? factRow('Último cruce', `${matchHref(last, lookups, longDate(last.date))} · ${escapeHtml(last.home)} ${escapeHtml(last.scoreLabel)} ${escapeHtml(last.away)}`) : '',
+    h2h.streaks.winning.record ? factRow('Más victorias seguidas', `${h2h.streaks.winning.record.length} (${longDate(h2h.streaks.winning.record.start)} – ${longDate(h2h.streaks.winning.record.end)})`) : '',
+    h2h.streaks.unbeaten.record ? factRow('Mayor invicto', `${h2h.streaks.unbeaten.record.length} (${longDate(h2h.streaks.unbeaten.record.start)} – ${longDate(h2h.streaks.unbeaten.record.end)})`) : '',
+    h2h.streaks.winless.record ? factRow('Más partidos sin ganar', `${h2h.streaks.winless.record.length} (${longDate(h2h.streaks.winless.record.start)} – ${longDate(h2h.streaks.winless.record.end)})`) : '',
+    biggestWin ? factRow('Mayor victoria', matchHref(biggestWin, lookups, `${longDate(biggestWin.date)} · ${biggestWin.home} ${biggestWin.scoreLabel} ${biggestWin.away}`)) : '',
+    biggestLoss ? factRow('Peor derrota', matchHref(biggestLoss, lookups, `${longDate(biggestLoss.date)} · ${biggestLoss.home} ${biggestLoss.scoreLabel} ${biggestLoss.away}`)) : '',
+  ].join('');
+
+  const venueNote = h2h.neutral.played
+    ? ''
+    : '<p>El archivo no distingue sedes neutrales: local y visita salen de quién figura como equipo local.</p>';
+  const venueRows = [
+    `<tr><th scope="row">Local</th>${recordCells(h2h.home)}</tr>`,
+    `<tr><th scope="row">Visita</th>${recordCells(h2h.away)}</tr>`,
+    h2h.neutral.played ? `<tr><th scope="row">Neutral</th>${recordCells(h2h.neutral)}</tr>` : '',
+  ].join('');
+
+  const competitionRows = h2h.byCompetition.map(row => `<tr>
+      <td title="${escapeHtml(row.variants.join(' · '))}">${escapeHtml(row.family)}</td>
+      ${recordCells(row)}
+    </tr>`).join('');
+
+  const scorerItems = h2h.topScorers.map((scorer, index) => {
+    const href = playerPaths?.get(scorer.name);
+    const name = href ? `<a href="${escapeHtml(href)}">${escapeHtml(scorer.name)}</a>` : escapeHtml(scorer.name);
+    return `<li>${index + 1}. ${name} · ${formatCount(scorer.goals)} ${scorer.goals === 1 ? 'gol' : 'goles'}${scorer.lowerBound ? '*' : ''}</li>`;
+  }).join('');
+
+  const tieItems = h2h.ties.map(tie => {
+    const advanced = tie.advanced ? `Clasificó ${escapeHtml(tie.advanced)}` : 'El archivo no registra quién avanzó';
+    return `<li>${escapeHtml(tie.label)} · Ida ${matchHref(tie.ida, lookups, `${formatMatchDate(tie.ida.date)} ${tie.ida.scoreLabel}`)} · Vuelta ${matchHref(tie.vuelta, lookups, `${formatMatchDate(tie.vuelta.date)} ${tie.vuelta.scoreLabel}`)} · Global ${escapeHtml(tie.scoreLabel)} · ${advanced}</li>`;
+  }).join('');
+
+  return `<article class="archive-section seo-rival">
+      ${lineage.length ? `<p>Incluye partidos publicados como ${escapeHtml(lineage.join(', '))}.</p>` : ''}
+      <dl class="seo-facts">${facts}</dl>
+      <section class="archive-section">
+        <h2 class="collection-title">Local y visita</h2>
+        ${venueNote}
+        <div class="data-table-shell"><table>
+          <thead><tr><th scope="col"></th><th scope="col">PJ</th><th scope="col">V</th><th scope="col">E</th><th scope="col">P</th><th scope="col">Goles</th><th scope="col">%V</th></tr></thead>
+          <tbody>${venueRows}</tbody>
+        </table></div>
+      </section>
+      ${h2h.byCompetition.length ? `<section class="archive-section"><h2 class="collection-title">Por competición</h2>
+        <div class="data-table-shell"><table>
+          <thead><tr><th scope="col">Competición</th><th scope="col">PJ</th><th scope="col">V</th><th scope="col">E</th><th scope="col">P</th><th scope="col">Goles</th><th scope="col">%V</th></tr></thead>
+          <tbody>${competitionRows}</tbody>
+        </table></div></section>` : ''}
+      ${h2h.ties.length ? `<section class="archive-section"><h2 class="collection-title">Eliminatorias ida y vuelta</h2>
+        <p>Solo se agrupan llaves que el archivo marca como ida y vuelta de la misma serie.</p>
+        <ul class="seo-list">${tieItems}</ul></section>` : ''}
+      <section class="archive-section"><h2 class="collection-title">Goleadores celestes</h2>
+        ${scorerItems ? `<ol class="seo-list">${scorerItems}</ol>` : '<p>Sin goleadores registrados.</p>'}
+        <p>Los autogoles cuentan para Sporting Cristal en el marcador, pero no en esta lista.</p>
+      </section>
+      ${groupedMatchList(rival.matches)}
+    </article>`;
+}
+
+function recordLinePlain(row) {
+  return `${row.V}V ${row.E}E ${row.P}P · ${row.goalsFor}-${row.goalsAgainst}`;
 }
 
 function seasonJumpNav(catalog) {
@@ -380,6 +493,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
 
   const matches = records.map(parseMatch);
   const catalog = buildPublicCatalog(matches);
+  const lookups = buildCatalogLookups(catalog);
   // Legacy URL kept for already-shared links: serve the brand-kit home OG there too.
   const ogPng = await readFile(path.join(ROOT, 'public', 'og', 'home.png'));
   await writeFile(path.join(distDir, 'og-image.png'), ogPng);
@@ -482,7 +596,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     intro: rivalesDescription,
     crumbs: rivalesCrumbs,
     spa: catalog.indexes.rivales.spa,
-    extra: `<ul class="seo-list">${catalog.rivals.map(rival => `<li><a href="${escapeHtml(rival.path)}">${escapeHtml(rival.name)}</a> · ${formatCount(rival.matches.length)} partidos</li>`).join('')}</ul>`,
+    extra: rivalIndexHtml(catalog),
   }));
 
   const paisesCrumbs = [...crumbsHome, { name: 'Países', path: '/paises' }];
@@ -529,7 +643,11 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
 
   const chronological = sortEntriesChronologically(catalog.matches);
   const chronoIndex = new Map(chronological.map((item, index) => [item.id, index]));
-  const rivalByName = new Map(catalog.rivals.map(rival => [rival.name, rival]));
+  const rivalByName = new Map();
+  catalog.rivals.forEach(rival => {
+    rivalByName.set(rival.name, rival);
+    (rival.names || []).forEach(name => rivalByName.set(name, rival));
+  });
   const byTournament = new Map();
   catalog.matches.forEach(entry => {
     const key = entry.match.tournament || '';
@@ -580,6 +698,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     const heading = `Sporting Cristal vs. ${rival.name}`;
     const description = `Historial de Sporting Cristal vs. ${rival.name}: ${statsLine(rival.matches.map(item => item.match))}.`;
     const crumbs = [...rivalesCrumbs, { name: rival.name, path: rival.path }];
+    const h2h = headToHead(rival.matches.map(item => item.match), rival.name, aliases);
     pages.push({
       path: rival.path,
       html: injectRoot(applyHead(viteHtml, {
@@ -593,7 +712,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         intro: description,
         crumbs,
         spa: rival.spa,
-        extra: groupedMatchList(rival.matches),
+        extra: rivalArticleHtml(rival, h2h, lookups),
       })),
     });
   });
@@ -728,6 +847,10 @@ Sitemap: ${SITE_URL}/sitemap.xml
     '"@type":"BreadcrumbList"',
     '"@type":"ItemList"',
     sampleRival.matches[0].path,
+    'Local y visita',
+    'Por competición',
+    'Goleadores celestes',
+    'Mayor victoria',
   ]);
   assertUniqueMatchMeta(pages);
   assertContains('404', notFoundHtml, ['Página no encontrada', 'noindex,nofollow']);

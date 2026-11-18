@@ -105,6 +105,8 @@ try {
   const partidos = await curl(origin, '/partidos');
   const match = await curl(origin, matchPath);
   const rival = await curl(origin, rivalPath);
+  const rivalesIndex = await curl(origin, '/rivales');
+  const rivalAlias = await curl(origin, '/rivales/real-garcilaso');
   const country = await curl(origin, countryPath);
   const season = await curl(origin, seasonPath);
   const unknownHead = await curl(origin, '/no-existe-esta-ruta', { method: 'HEAD' });
@@ -178,6 +180,13 @@ try {
   requireSnippet(matchPath, match.body, 'seo-facts');
   requireSnippet(rivalPath, rival.body, `rel="canonical" href="${SITE_URL}${rivalPath}"`);
   requireSnippet(rivalPath, rival.body, 'href="/partidos/');
+  requireSnippet(rivalPath, rival.body, 'Local y visita');
+  requireSnippet(rivalPath, rival.body, 'Goleadores celestes');
+  requireSnippet('/rivales', rivalesIndex.body, '<th scope="col">PJ</th>');
+  if (rivalesIndex.status !== 200) throw new Error(`GET /rivales returned ${rivalesIndex.status}`);
+  if (rivalAlias.status !== 308 || rivalAlias.location !== '/rivales/cusco-fc') {
+    throw new Error(`GET /rivales/real-garcilaso returned ${rivalAlias.status} ${rivalAlias.location}`);
+  }
   requireSnippet(countryPath, country.body, `rel="canonical" href="${SITE_URL}${countryPath}"`);
   requireSnippet(seasonPath, season.body, `rel="canonical" href="${SITE_URL}${seasonPath}"`);
   requireSnippet(seasonPath, season.body, 'href="/partidos/');

@@ -23,6 +23,9 @@ describe('public URL duplicate redirects', () => {
     expect(redirectLocation('/seasons/1991')).toBe('/temporadas/1991');
     expect(redirectLocation('/rivals/alianza-lima')).toBe('/rivales/alianza-lima');
     expect(redirectLocation('/countries/argentina')).toBe('/paises/argentina');
+    expect(redirectLocation('/rivales/real-garcilaso')).toBe('/rivales/cusco-fc');
+    expect(redirectLocation('/rivals/real-garcilaso')).toBe('/rivales/cusco-fc');
+    expect(redirectLocation('/rivales/adt')).toBe('/rivales/a-d-t');
   });
 
   test('strips query strings on archive pages but not on the SPA home', () => {

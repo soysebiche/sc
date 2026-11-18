@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import MinuteBars from '../components/MinuteBars';
+import RivalLink from '../components/RivalLink';
 import StatTile from '../components/StatTile';
 import aliases from '../data/scorer-aliases.json';
 import { formatMatchDate } from '../domain/matches';
@@ -53,7 +54,7 @@ function SplitTable({ title, rows, labelHeader }) {
             {['PJ', 'V', 'E', 'P', '%V', 'PJ', 'V', 'E', 'P', '%V'].map((h, i) => <th scope="col" key={i}>{h}</th>)}
           </tr></thead>
           <tbody>{rows.map(r => (
-            <tr key={r.label}><td>{r.label}</td>{splitCells(r.home)}{splitCells(r.away)}</tr>
+            <tr key={r.label}><td>{r.link ? <RivalLink name={r.label} /> : r.label}</td>{splitCells(r.home)}{splitCells(r.away)}</tr>
           ))}</tbody>
         </table>
       </div></div>
@@ -146,7 +147,7 @@ function RecordsView({ matches }) {
         <ol className="text-sm">{minutes.lateScorers.slice(0, 8).map(s => <li key={s.name}>{s.name} · {s.goals}</li>)}</ol>
       </section>
       <SplitTable title="Local vs. visita por década" labelHeader="Década" rows={homeAway.perDecade.map(d => ({ ...d, label: `${d.decade}s` }))} />
-      <SplitTable title="Local vs. visita por rival (10+ partidos)" labelHeader="Rival" rows={homeAway.perRival.map(r => ({ ...r, label: r.name }))} />
+      <SplitTable title="Local vs. visita por rival (10+ partidos)" labelHeader="Rival" rows={homeAway.perRival.map(r => ({ ...r, label: r.name, link: true }))} />
     </div>
   );
 }

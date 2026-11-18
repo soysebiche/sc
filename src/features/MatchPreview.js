@@ -3,6 +3,7 @@ import aliases from '../data/scorer-aliases.json';
 import fixturesData from '../data/upcoming-fixtures.json';
 import StatTile from '../components/StatTile';
 import { MatchList, recordLine, ResultBadge, ScorerList, TotalsStrip } from '../components/HeadToHead';
+import RivalLink from '../components/RivalLink';
 import { formatMatchDate } from '../domain/matches';
 import { buildPreview, nextFixture } from '../domain/rivals';
 
@@ -31,7 +32,7 @@ function MatchPreview({ matches }) {
         <p className="mt-3">Primer partido oficial contra {rival} en el archivo. ¡Se escribe historia!</p>
       ) : (
         <>
-          <h3 className="collection-title mt-4">Historial vs. {rival}{lineage.length ? ` (incluye ${lineage.join(', ')})` : ''}</h3>
+          <h3 className="collection-title mt-4">Historial vs. <RivalLink name={rival} />{lineage.length ? ` (incluye ${lineage.join(', ')})` : ''}</h3>
           <TotalsStrip total={h2h.total} />
           <p className="copy-secondary text-sm mt-2">Primer cruce: {formatMatchDate(h2h.firstMatch.date)} · Local {recordLine(h2h.home)} · Visita {recordLine(h2h.away)}</p>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mt-3 [&>*]:min-w-0">
