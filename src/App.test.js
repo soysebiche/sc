@@ -39,11 +39,15 @@ test('renders the historical archive with a named date control', async () => {
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
-test('keeps eleven section tabs in the primary navigation', async () => {
+test('keeps the primary section tabs including the city map', async () => {
   render(<App />);
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
   const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
-  expect(within(nav).getAllByRole('button')).toHaveLength(11);
+  const labels = within(nav).getAllByRole('button').map(button => button.textContent);
+  expect(labels).toEqual(expect.arrayContaining([
+    'EFEMÉRIDES', 'DASHBOARD', 'PARTIDOS', 'AÑO', 'GOLEADORES', 'RÉCORDS',
+    'PALMARÉS', 'CURIOSIDADES', 'CLÁSICOS', 'RIVALES', 'PAÍSES', 'MAPA',
+  ]));
   const archiveNavs = screen.getAllByRole('navigation', { name: 'Archivo público' });
   expect(archiveNavs.length).toBeGreaterThanOrEqual(2);
   expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
@@ -148,6 +152,30 @@ test('persists the selected theme', async () => {
 
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   expect(window.localStorage.getItem('sc-theme')).toBe('dark');
+});
+
+test('opens the city map and restores a shareable city from the URL', async () => {
+  window.history.replaceState({}, '', '/?view=mapa&ciudad=tarma');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'Mapa por ciudades' })).toBeInTheDocument();
+  expect(screen.getByText(/no registra estadios/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Tarma, Perú/ })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'A.D.T.' })).toHaveAttribute('href', '/rivales/a-d-t');
+  const unmapped = screen.getByRole('heading', { name: 'Rivales sin ciudad asignada' }).closest('section');
+  expect(within(unmapped).getByText('Pirata (Perú)')).toBeInTheDocument();
+});
+
+test('lists city matches with public match URLs', async () => {
+  render(<App />);
+  fireEvent.click(await screen.findByRole('button', { name: 'MAPA' }));
+  expect(await screen.findByRole('heading', { name: 'Mapa por ciudades' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /Tarma/ }));
+  expect(window.location.search).toContain('ciudad=tarma');
+  await waitFor(() => {
+    const links = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/partidos/'));
+    expect(links.length).toBeGreaterThan(0);
+  });
 });
 
 test('restores the active view from a popstate change', async () => {

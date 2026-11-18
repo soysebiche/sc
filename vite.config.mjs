@@ -31,6 +31,7 @@ export default defineConfig(({ isPreview }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes('node_modules/leaflet')) return 'leaflet';
           if (id.includes('node_modules') && !/node_modules\/(react|react-dom|scheduler)\//.test(id) && !id.includes('web-vitals')) return 'charts';
           if (id.includes('historico_completo_sc.json')) return 'archive-data';
           // Only React lands in the eagerly-loaded vendor chunk; recharts' deps

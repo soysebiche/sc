@@ -23,6 +23,7 @@ const RecordsView = lazy(() => import('./features/RecordsView'));
 const ClasicosView = lazy(() => import('./features/ClasicosView'));
 const PalmaresView = lazy(() => import('./features/PalmaresView'));
 const CuriosidadesView = lazy(() => import('./features/CuriosidadesView'));
+const MapView = lazy(() => import('./features/MapView'));
 
 function RivalsView(props) {
   return <EntityHistory {...props} config={RIVALS_HISTORY} />;
@@ -44,6 +45,7 @@ const TABS = [
   { id: 'clasicos', label: 'CLÁSICOS', View: ClasicosView },
   { id: 'rivales', label: 'RIVALES', View: RivalsView },
   { id: 'paises', label: 'PAÍSES', View: CountriesView },
+  { id: 'mapa', label: 'MAPA', View: MapView },
 ];
 
 const TAB_IDS = new Set(TABS.map(tab => tab.id));
