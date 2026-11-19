@@ -11156,7 +11156,7 @@
     "Equipo Visita": "FBC Melgar",
     "Marcador": "7-1",
     "Resultado": "V",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Nilson (3), M.Asteggiano, J.Soto (2), Vassallo",
     "País": "Perú"
   },
   {
@@ -11291,7 +11291,7 @@
     "Equipo Visita": "Sport Boys",
     "Marcador": "1-0",
     "Resultado": "V",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Julinho",
     "País": "Perú"
   },
   {
@@ -11486,7 +11486,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-1",
     "Resultado": "E",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "J.Soto",
     "País": "Ecuador"
   },
   {
@@ -11516,7 +11516,7 @@
     "Equipo Visita": "América de Cali",
     "Marcador": "2-2",
     "Resultado": "E",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Carty (2)",
     "País": "Colombia"
   },
   {
@@ -11567,9 +11567,9 @@
   {
     "Año": 1998,
     "Mes": "Octubre",
-    "Dia": 14,
-    "Día de la Semana": "Miércoles",
-    "Fecha": "1998-10-14",
+    "Dia": 8,
+    "Día de la Semana": "Jueves",
+    "Fecha": "1998-10-08",
     "Torneo": "Liga",
     "Número de Fecha": "13 (Clausura)",
     "Equipo Local": "Deportivo Pesquero",
@@ -11591,7 +11591,7 @@
     "Equipo Visita": "Emelec",
     "Marcador": "1-1",
     "Resultado": "E",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "A.Mendoza",
     "País": "Ecuador"
   },
   {
@@ -11621,7 +11621,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "1-1",
     "Resultado": "E",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Carty",
     "País": "Colombia"
   },
   {
@@ -12341,7 +12341,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "5-3",
     "Resultado": "D",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Holsen, Charún, Sánchez",
     "País": "Ecuador"
   },
   {
@@ -12416,7 +12416,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "3-1",
     "Resultado": "D",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Ferrari",
     "País": "Venezuela"
   },
   {
@@ -12596,7 +12596,7 @@
     "Equipo Visita": "Caracas FC",
     "Marcador": "2-3",
     "Resultado": "D",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Charún, Holsen",
     "País": "Venezuela"
   },
   {
@@ -16061,7 +16061,7 @@
     "Equipo Visita": "Sporting Cristal",
     "Marcador": "2-1",
     "Resultado": "D",
-    "Goles (Solo SC)": "-",
+    "Goles (Solo SC)": "Carlos Zegarra (65')",
     "País": "Perú"
   },
   {
