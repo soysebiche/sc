@@ -10,6 +10,23 @@ export const RIVAL_ALIASES = Object.freeze({
   'Deportivo Los Chankas': 'Dep. Los Chankas',
   'Union Comercio': 'Unión Comercio',
   UTC: 'U.T.C.',
+  ADT: 'A.D.T.',
+  'Asociación Deportiva Tarma': 'A.D.T.',
+  'Asoc. Dep. Tarma': 'A.D.T.',
+});
+
+// Same club under a later or longer name. Spelling variants stay in RIVAL_ALIASES.
+// Do not merge distinct clubs (Pirata ≠ Pirata FC, Huancayo FC ≠ Sport Huancayo,
+// América ≠ América de Cali, Deportivo Garcilaso ≠ Cusco FC).
+export const CLUB_LINEAGE = Object.freeze({
+  'Real Garcilaso': 'Cusco FC',
+  'Inti Gas': 'Ayacucho FC',
+  'César Vallejo': 'Universidad César Vallejo',
+  'Universidad San Martín': 'Universidad San Martín de Porres',
+  Bolognesi: 'Coronel Bolognesi',
+  Wanka: 'Deportivo Wanka',
+  Municipal: 'Deportivo Municipal',
+  'San Agustín': 'Deportivo San Agustín',
 });
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -18,6 +35,10 @@ const WON_ON_PENALTIES = /gan[oó].*penal/i;
 const INTERNATIONAL_TOURNAMENTS = new Set(['Copa Libertadores', 'Copa Sudamericana', 'Copa Merconorte']);
 
 export const canonicalizeRival = (name = '') => RIVAL_ALIASES[name] || name;
+export const clubOf = (name = '') => {
+  const spelled = canonicalizeRival(name);
+  return CLUB_LINEAGE[spelled] || spelled;
+};
 
 export const parseCalendarDate = (value) => {
   if (!value || value === 'TBD' || !DATE_PATTERN.test(value)) return null;
@@ -77,6 +98,7 @@ export const parseMatch = (record) => {
     opponent: canonicalizeRival(isHome ? away : home),
     country: record.País || '',
     scoreLabel: record.Marcador || '',
+    round: record['Número de Fecha'] || '',
     goalsNote,
     isHome,
     scGoals,
@@ -172,7 +194,7 @@ export const calculateArchiveOverview = (matches) => {
 
   matches.forEach(match => {
     if (match.scGoals == null) return;
-    const rival = match.opponent;
+    const rival = clubOf(match.opponent);
     if (!rivalStats[rival]) rivalStats[rival] = { total: 0, victories: 0, draws: 0, defeats: 0 };
     rivalStats[rival].total += 1;
     if (match.resultCode === 'V') rivalStats[rival].victories += 1;

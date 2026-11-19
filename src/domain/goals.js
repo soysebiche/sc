@@ -76,14 +76,7 @@ const pushCount = (map, key, n = 1) => map.set(key, (map.get(key) || 0) + n);
 const sortedCounts = (map, keyName) => [...map].map(([k, goals]) => ({ [keyName]: k, goals }))
   .sort((a, b) => b.goals - a.goals || String(a[keyName]).localeCompare(String(b[keyName])));
 
-export function scorerProfile(matches, aliases, name) {
-  const resolve = buildResolver(aliases);
-  const rows = [];
-  for (const m of matches) {
-    const { goals, hasMinutes } = matchGoals(m, resolve);
-    const mine = goals.filter(g => g.name === name);
-    if (mine.length) rows.push({ match: m, goals: mine.length, minutes: hasMinutes ? mine.map(g => g.minute) : null, raw: mine });
-  }
+function profileFromRows(name, rows) {
   if (!rows.length) return null;
   rows.sort((a, b) => a.match.date.localeCompare(b.match.date));
   const byYear = new Map(), byRival = new Map(), byTournament = new Map();
@@ -103,7 +96,14 @@ export function scorerProfile(matches, aliases, name) {
   const ys = [...byYear.keys()];
   const yearSeries = [];
   for (let y = Math.min(...ys); y <= Math.max(...ys); y++) yearSeries.push({ year: y, goals: byYear.get(y) || 0 });
-  const pick = r => ({ date: r.match.date, opponent: r.match.opponent, scoreLabel: r.match.scoreLabel, home: r.match.home, away: r.match.away });
+  const pick = r => ({
+    date: r.match.date,
+    opponent: r.match.opponent,
+    scoreLabel: r.match.scoreLabel,
+    home: r.match.home,
+    away: r.match.away,
+    tournament: r.match.tournament,
+  });
   return {
     name, total, matches: rows.length, braces, hatTricks,
     lowerBound: preComplete > 0,
@@ -115,4 +115,39 @@ export function scorerProfile(matches, aliases, name) {
     minutes: { buckets, known: withMinute, late },
     rows: rows.slice().reverse().map(r => ({ ...r.match, goals: r.goals, minutes: r.minutes })),
   };
+}
+
+export function scorerProfile(matches, aliases, name) {
+  const resolve = buildResolver(aliases);
+  const rows = [];
+  for (const m of matches) {
+    const { goals, hasMinutes } = matchGoals(m, resolve);
+    const mine = goals.filter(g => g.name === name);
+    if (mine.length) rows.push({ match: m, goals: mine.length, minutes: hasMinutes ? mine.map(g => g.minute) : null, raw: mine });
+  }
+  return profileFromRows(name, rows);
+}
+
+export function scorerProfiles(matches, aliases) {
+  const resolve = buildResolver(aliases);
+  const byName = new Map();
+  for (const m of matches) {
+    const { goals, hasMinutes } = matchGoals(m, resolve);
+    const grouped = new Map();
+    for (const g of goals) {
+      if (!g.name) continue;
+      const row = grouped.get(g.name) || { match: m, goals: 0, minutes: hasMinutes ? [] : null, raw: [] };
+      row.goals += 1;
+      if (hasMinutes) {
+        row.minutes.push(g.minute);
+        row.raw.push(g);
+      }
+      grouped.set(g.name, row);
+    }
+    for (const [name, row] of grouped) {
+      if (!byName.has(name)) byName.set(name, []);
+      byName.get(name).push(row);
+    }
+  }
+  return new Map([...byName].map(([name, rows]) => [name, profileFromRows(name, rows)]));
 }

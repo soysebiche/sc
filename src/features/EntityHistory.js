@@ -2,24 +2,12 @@ import { useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import PaginatedMatchList from '../components/PaginatedMatchList';
 import {
-  canonicalizeRival,
   getUniqueYears,
   sortMatchesNewest,
   summarizeMatches,
 } from '../domain/matches';
 import { usePublicCatalog } from '../components/PublicCatalog';
 import { useUrlState } from '../hooks/useUrlState';
-
-function collectRivals(matches) {
-  const options = new Set();
-  const countryMap = {};
-  matches.forEach(match => {
-    const rival = match.opponent;
-    options.add(rival);
-    if (match.country) countryMap[rival] = match.country;
-  });
-  return { options: [...options].sort(), years: getUniqueYears(matches), meta: countryMap };
-}
 
 function collectCountries(matches) {
   const options = new Set();
@@ -28,30 +16,6 @@ function collectCountries(matches) {
   });
   return { options: [...options].sort(), years: getUniqueYears(matches), meta: {} };
 }
-
-export const RIVALS_HISTORY = {
-  title: 'HISTORIAL VS RIVALES',
-  subtitle: 'El registro completo frente a cada rival',
-  entityKey: 'rival',
-  yearKey: 'rivalYear',
-  pageKey: 'rivalPage',
-  control: 'combobox',
-  entityId: 'rival-search',
-  yearId: 'rival-year',
-  listId: 'rival-options',
-  helpId: 'rival-search-help',
-  entityLabel: 'Buscar rival',
-  yearLabel: 'Filtrar por año (opcional)',
-  placeholder: 'Escribe un equipo',
-  emptyPrompt: 'Selecciona un rival para ver el historial completo de enfrentamientos',
-  help: count => `${count} rivales canónicos disponibles`,
-  paginationLabel: entity => `Paginación del historial contra ${entity}`,
-  emptyMessage: (entity, year) => `No hay partidos contra ${entity}${year ? ` en ${year}` : ''}.`,
-  canonicalize: canonicalizeRival,
-  collect: collectRivals,
-  matches: (match, selected) => match.opponent === selected,
-  optionCaption: (option, meta) => (meta[option] && meta[option] !== 'Perú' ? meta[option] : ''),
-};
 
 export const COUNTRIES_HISTORY = {
   title: 'HISTORIAL VS PAÍSES',
@@ -75,7 +39,7 @@ export const COUNTRIES_HISTORY = {
 
 function EntityHistory({ matches = [], config }) {
   const canonicalize = config.canonicalize || (value => value);
-  const { rivalPathByName, countryPathByName } = usePublicCatalog();
+  const { countryPathByName } = usePublicCatalog();
   const [entityParam, setEntityParam] = useUrlState(config.entityKey, '');
   const [selectedYear, setSelectedYear] = useUrlState(config.yearKey, '');
   const [page, setPage] = useUrlState(config.pageKey, '1');
@@ -98,9 +62,7 @@ function EntityHistory({ matches = [], config }) {
   }, [config, matches, selectedEntity, selectedYear]);
 
   const stats = useMemo(() => summarizeMatches(filteredMatches), [filteredMatches]);
-  const publicPath = config.entityKey === 'country'
-    ? countryPathByName.get(selectedEntity)
-    : rivalPathByName.get(selectedEntity);
+  const publicPath = countryPathByName.get(selectedEntity);
 
   if (!matches.length) {
     return <div className="p-4 text-center copy-secondary">No hay datos disponibles</div>;

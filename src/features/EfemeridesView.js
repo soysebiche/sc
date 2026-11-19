@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo } from 'react';
 import BalanceSummary from '../components/BalanceSummary';
 import MatchRow from '../components/MatchRow';
+import PlayerLink from '../components/PlayerLink';
 import ShareButton from '../components/ShareButton';
 import UpcomingMatches from '../components/UpcomingMatches';
 import { formatMatchDate, getMatchesForDayMonth, summarizeMatches } from '../domain/matches';
@@ -41,10 +42,11 @@ function EfemeridesView({ matches }) {
       {birthdays.length > 0 && (
         <section className="archive-section birthday-section" aria-labelledby="hoy-cumple">
           <h2 id="hoy-cumple" className="section-title">Hoy cumple</h2>
+          <p className="section-subtitle">Goleadores celestes con fecha de nacimiento en el archivo. <a className="link-accent" href="/jugadores">Ver fichas</a></p>
           <ul className="birthday-list">
             {birthdays.map((p) => (
               <li key={p.name} className="birthday-item">
-                <span className="birthday-name">{p.name}</span>
+                <span className="birthday-name"><PlayerLink name={p.name} /></span>
                 <span className="birthday-meta">{p.age} años · {p.goals} gol{p.goals === 1 ? '' : 'es'} con Cristal</span>
               </li>
             ))}

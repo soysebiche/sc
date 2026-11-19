@@ -1,6 +1,7 @@
 import archive from '../data/historico_completo_sc.json';
 import {
   canonicalizeRival,
+  clubOf,
   getMatchesForDayMonth,
   getUniqueYears,
   paginateMatches,
@@ -24,8 +25,13 @@ describe('match domain', () => {
   test('normalizes confirmed rival aliases without changing historical records', () => {
     expect(canonicalizeRival('UTC')).toBe('U.T.C.');
     expect(canonicalizeRival('Union Comercio')).toBe('Unión Comercio');
+    expect(canonicalizeRival('ADT')).toBe('A.D.T.');
     expect(canonicalizeRival('Sport Boys')).toBe('Sport Boys');
+    expect(clubOf('ADT')).toBe('A.D.T.');
+    expect(clubOf('Real Garcilaso')).toBe('Cusco FC');
+    expect(clubOf('Deportivo Garcilaso')).toBe('Deportivo Garcilaso');
     expect(homeWin.opponent).toBe('U.T.C.');
+    expect(parseMatch({ ...rawHomeWin, 'Número de Fecha': 'Semifinal - Ida' }).round).toBe('Semifinal - Ida');
   });
 
   test('reads year and score from the club perspective', () => {
