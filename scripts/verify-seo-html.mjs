@@ -104,6 +104,10 @@ try {
 
   const home = await curl(origin, '/');
   const partidos = await curl(origin, '/partidos');
+  const azar = await curl(origin, '/partidos/azar');
+  const azarQuery = await curl(origin, '/partidos/azar?wins=1');
+  const azarIndex = await curl(origin, '/azar-index.json');
+  const azarBoot = await curl(origin, '/azar-boot.js');
   const match = await curl(origin, matchPath);
   const player = await curl(origin, playerPath);
   const jugadores = await curl(origin, '/jugadores');
@@ -173,11 +177,24 @@ try {
   requireSnippet('/', home.body, 'href="/jugadores"');
   requireSnippet('/', home.body, 'href="/rivales"');
   requireSnippet('/', home.body, 'href="/temporadas"');
+  requireSnippet('/', home.body, 'href="/partidos/azar"');
   requireSnippet('/', home.body, '"@type":"WebSite"');
   requireSnippet('/', home.body, '"@type":"SportsTeam"');
   requireSnippet('/', home.body, 'twitter:card" content="summary_large_image"');
   requireSnippet('/partidos', partidos.body, `rel="canonical" href="${SITE_URL}/partidos"`);
   requireSnippet('/partidos', partidos.body, 'href="/temporadas/');
+  if (azar.status !== 200) throw new Error(`GET /partidos/azar returned ${azar.status}`);
+  if (azarQuery.status !== 200) throw new Error(`GET /partidos/azar?wins=1 returned ${azarQuery.status}`);
+  if (azarIndex.status !== 200) throw new Error(`GET /azar-index.json returned ${azarIndex.status}`);
+  if (azarBoot.status !== 200) throw new Error(`GET /azar-boot.js returned ${azarBoot.status}`);
+  requireSnippet('/partidos/azar', azar.body, 'noindex,nofollow');
+  requireSnippet('/partidos/azar', azar.body, 'href="/partidos"');
+  requireSnippet('/partidos/azar', azar.body, 'Partido al azar');
+  if (azar.body.includes(`rel="canonical"`)) throw new Error('Random match page exposed a canonical URL');
+  if (allLocs.includes(`${SITE_URL}/partidos/azar`)) throw new Error('Random match page must stay out of the sitemap');
+  requireSnippet(matchPath, match.body, 'Copiar enlace');
+  requireSnippet(matchPath, match.body, 'Compartir en X');
+  requireSnippet(matchPath, match.body, 'href="/partidos/azar#auto=1"');
   requireSnippet(matchPath, match.body, `rel="canonical" href="${SITE_URL}${matchPath}"`);
   requireSnippet(matchPath, match.body, '<h1 class="section-title">');
   requireSnippet(matchPath, match.body, '"@type":"SportsEvent"');
@@ -238,6 +255,7 @@ try {
     `SEO verify OK against ${origin} (filesystem then 404.html, matching vercel.json)`,
     `GET / → ${home.status} title+canonical+h1+WebSite+SportsTeam`,
     `GET ${matchPath} → ${match.status} SportsEvent+canonical+unique copy+prev/next`,
+    `GET /partidos/azar → ${azar.status} noindex+archive link`,
     `GET ${matchPath}/ → ${slash.status}`,
     `GET ${playerPath} → ${player.status} Person+canonical+match links`,
     `GET ${rivalPath} → ${rival.status}`,

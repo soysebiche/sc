@@ -49,6 +49,9 @@ test('keeps thirteen section tabs in the primary navigation', async () => {
   expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
   expect(screen.getAllByRole('link', { name: 'Jugadores' }).some(link => link.getAttribute('href') === '/jugadores')).toBe(true);
   expect(screen.getAllByRole('link', { name: 'Temporadas' }).some(link => link.getAttribute('href') === '/temporadas')).toBe(true);
+  expect(screen.getAllByRole('link', { name: 'Partido al azar' }).some(link => link.getAttribute('href') === '/partidos/azar#auto=1')).toBe(true);
+  expect(screen.getAllByRole('button', { name: 'Partido al azar' }).length).toBeGreaterThanOrEqual(2);
+  expect(screen.getByRole('heading', { name: 'Partido al azar' })).toBeInTheDocument();
 });
 
 test('exposes public match URLs from the interactive archive', async () => {

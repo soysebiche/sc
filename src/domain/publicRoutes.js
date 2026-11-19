@@ -40,6 +40,8 @@ export function uniqueSlug(name, used) {
   return next;
 }
 
+const RESERVED_MATCH_IDS = new Set(['azar']);
+
 export function matchPublicId(match, used) {
   const candidates = [
     slugify(`${match.date}-${match.opponent}`),
@@ -47,7 +49,7 @@ export function matchPublicId(match, used) {
     slugify(`${match.date}-${match.home}-${match.away}-${match.tournament}`),
   ];
   for (const candidate of candidates) {
-    if (candidate && !used.has(candidate)) {
+    if (candidate && !used.has(candidate) && !RESERVED_MATCH_IDS.has(candidate)) {
       used.add(candidate);
       return candidate;
     }

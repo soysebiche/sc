@@ -164,6 +164,7 @@ test('public nav and SPA archive links stay on canonical paths', () => {
   assert.match(publicNavHtml(), /href="\/rivales"/);
   assert.match(publicNavHtml(), /href="\/temporadas"/);
   assert.match(publicNavHtml(), /href="\/jugadores"/);
+  assert.match(publicNavHtml(), /href="\/partidos\/azar#auto=1"/);
   assert.match(spaArchiveLink('/?view=rivales&rival=Alianza+Lima'), /rel="nofollow"/);
   assert.equal(spaArchiveLink(''), '');
 });

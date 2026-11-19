@@ -109,7 +109,7 @@ export function redirectLocation(pathname, search = '') {
   if (segs[0] && SKIP_HEAD.has(segs[0].toLowerCase())) return null;
 
   const destPath = normalizePublicPath(originalPath);
-  const destSearch = isArchivePath(destPath) ? '' : originalSearch;
+  const destSearch = isArchivePath(destPath) && destPath !== '/partidos/azar' ? '' : originalSearch;
   const dest = `${destPath}${destSearch}`;
   const current = `${originalPath}${originalSearch}`;
   return dest === current ? null : dest;

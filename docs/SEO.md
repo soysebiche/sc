@@ -9,7 +9,8 @@ En `/partidos/{id}`, `/jugadores/{slug}`, `/rivales/{slug}`, `/paises/{slug}`, `
 El generador es `scripts/generate-public-pages.mjs`. Se ejecuta al final de `npm run build` y escribe, en `dist/`:
 
 - `/index.html` (inicio: WebSite + SportsTeam + BreadcrumbList)
-- `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next)
+- `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next, copiar enlace / X / otro al azar)
+- `/partidos/azar/index.html` (`noindex`, enlace al archivo; el sorteo corre en el navegador)
 - `/jugadores/index.html` y `/jugadores/{slug}/index.html` para cada goleador de Sporting Cristal (Person + ItemList de partidos con gol; sin autogoles)
 - `/rivales/index.html` y `/rivales/{slug}/index.html` (índice ordenado por PJ; ficha con W/D/L, local/visita, competición, rachas, goleadores, llaves ida/vuelta solo si el archivo las marca, listado completo vs. ese rival + ItemList)
 - `/paises/index.html` y `/paises/{slug}/index.html`
