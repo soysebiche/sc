@@ -23,6 +23,18 @@ describe('public URL duplicate redirects', () => {
     expect(redirectLocation('/seasons/1991')).toBe('/temporadas/1991');
     expect(redirectLocation('/rivals/alianza-lima')).toBe('/rivales/alianza-lima');
     expect(redirectLocation('/countries/argentina')).toBe('/paises/argentina');
+    expect(redirectLocation('/temporadas/comparar')).toBeNull();
+    expect(redirectLocation('/comparar')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/compare')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/temporadas/compare')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/seasons/compare')).toBe('/temporadas/comparar');
+    expect(redirectLocation('/rivales/real-garcilaso')).toBe('/rivales/cusco-fc');
+    expect(redirectLocation('/rivals/real-garcilaso')).toBe('/rivales/cusco-fc');
+    expect(redirectLocation('/rivales/adt')).toBe('/rivales/a-d-t');
+    expect(redirectLocation('/players/jorge-soto')).toBe('/jugadores/jorge-soto');
+    expect(redirectLocation('/jugador/jorge-soto')).toBe('/jugadores/jorge-soto');
+    expect(redirectLocation('/goleadores/jorge-soto')).toBe('/jugadores/jorge-soto');
+    expect(redirectLocation('/Jugadores/Jorge-Soto')).toBe('/jugadores/jorge-soto');
   });
 
   test('strips query strings on archive pages but not on the SPA home', () => {

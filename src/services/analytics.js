@@ -7,6 +7,7 @@ const PAGE_TITLES = {
   partidos: 'Archivo de partidos',
   buscar: 'Búsqueda y rachas',
   'analisis-anual': 'Análisis anual',
+  comparar: 'Comparar temporadas',
   rivales: 'Historial por rival',
   paises: 'Historial por país',
 };
@@ -15,6 +16,7 @@ const FILTER_KEYS = new Set([
   'date', 'year', 'month', 'tournament', 'decade',
   'rival', 'rivalYear', 'country', 'countryYear',
   'vs', 'comp', 'fase', 'sede', 'from', 'to', 'res', 'gfmin', 'gamax', 'score', 'goleador',
+  'a', 'b', 'ap', 'bp',
 ]);
 
 const PAGINATION_KEYS = new Set(['page', 'rivalPage', 'countryPage', 'sp']);

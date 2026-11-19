@@ -1,8 +1,19 @@
 // Duplicate public URL variants → one canonical path. Used by Edge middleware and the SEO verifier.
+import { CLUB_LINEAGE, RIVAL_ALIASES } from './matches.js';
+
+function slugify(value) {
+  const slug = String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return slug || 'item';
+}
 
 const FILE_EXT = /\.[a-z0-9]+$/i;
 const SKIP_HEAD = new Set(['api', 'assets', 'fonts', 'icons', 'og']);
-const ARCHIVE_HEAD = new Set(['partidos', 'rivales', 'paises', 'temporadas']);
+const ARCHIVE_HEAD = new Set(['partidos', 'jugadores', 'rivales', 'paises', 'temporadas']);
 const LOCALE_HEAD = new Set(['en', 'es']);
 const ALIAS_HEAD = new Map([
   ['matches', 'partidos'],
@@ -20,7 +31,24 @@ const ALIAS_HEAD = new Map([
   ['countries', 'paises'],
   ['country', 'paises'],
   ['pais', 'paises'],
+  ['players', 'jugadores'],
+  ['player', 'jugadores'],
+  ['jugador', 'jugadores'],
+  ['goleadores', 'jugadores'],
+  ['goleador', 'jugadores'],
+  ['scorers', 'jugadores'],
+  ['scorer', 'jugadores'],
 ]);
+
+export const RIVAL_SLUG_REDIRECTS = (() => {
+  const map = new Map();
+  for (const [from, to] of [...Object.entries(RIVAL_ALIASES), ...Object.entries(CLUB_LINEAGE)]) {
+    const fromSlug = slugify(from);
+    const toSlug = slugify(to);
+    if (fromSlug && toSlug && fromSlug !== toSlug) map.set(fromSlug, toSlug);
+  }
+  return map;
+})();
 
 function stripIndexAndSlash(pathname) {
   let path = String(pathname || '/').split('?')[0].split('#')[0];
@@ -59,6 +87,14 @@ export function normalizePublicPath(pathname) {
 
   if (segs[0] && ARCHIVE_HEAD.has(segs[0])) {
     segs = segs.map(seg => seg.toLowerCase());
+    if (segs[0] === 'rivales' && segs[1] && RIVAL_SLUG_REDIRECTS.has(segs[1])) {
+      segs[1] = RIVAL_SLUG_REDIRECTS.get(segs[1]);
+    }
+  }
+
+  const joined = segs.map(seg => seg.toLowerCase()).join('/');
+  if (joined === 'comparar' || joined === 'compare' || joined === 'temporadas/compare' || joined === 'seasons/compare') {
+    segs = ['temporadas', 'comparar'];
   }
 
   return stripIndexAndSlash(`/${segs.join('/')}`);

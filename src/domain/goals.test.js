@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { matchGoals, minuteDistribution, minuteTokens, scorerProfile } from './goals';
+import { matchGoals, minuteDistribution, minuteTokens, scorerProfile, scorerProfiles } from './goals';
 
 const m = (goalsNote, scoreLabel, extra = {}) => ({ date: '2024-05-01', year: 2024, home: 'Sporting Cristal', away: 'Rival', opponent: 'Rival', tournament: 'Liga 1', scoreLabel, goalsNote, resultCode: 'V', ...extra });
 const aliases = { players: { 'Jorge Soto': ['J. Soto'] } };
@@ -44,5 +44,15 @@ describe('scorerProfile', () => {
   });
   it('returns null for unknown names', () => {
     expect(scorerProfile([m('Zunino', '1-0')], aliases, 'Nadie')).toBeNull();
+  });
+  it('builds every Cristal scorer in one pass and skips own goals', () => {
+    const rows = [
+      m("J. Soto (10', 20')", '2-0'),
+      m('Ángel Martínez (87og)', '1-1', { date: '2024-06-01', scoreLabel: '1-1' }),
+    ];
+    const all = scorerProfiles(rows, aliases);
+    expect([...all.keys()]).toEqual(['Jorge Soto']);
+    expect(all.get('Jorge Soto').total).toBe(2);
+    expect(all.has('Ángel Martínez')).toBe(false);
   });
 });

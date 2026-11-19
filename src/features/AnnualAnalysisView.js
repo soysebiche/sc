@@ -1,7 +1,7 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
 import StatTile from '../components/StatTile';
 import { calculateYearlyStats, getUniqueYears } from '../domain/matches';
-import { seasonPathByYear } from '../domain/publicRoutes';
+import { compareSpaSearch, seasonPathByYear } from '../domain/publicRoutes';
 import { useUrlState } from '../hooks/useUrlState';
 
 const YearChart = lazy(() => import('../components/YearChart'));
@@ -79,7 +79,11 @@ function AnnualAnalysisView({ matches }) {
       {currentYearStats && (
         <section className="archive-section" key={currentYearStats.year}>
           <h3 className="balance-title">Resumen {currentYearStats.year}</h3>
-          <p className="seo-spa-link"><a href={seasonPathByYear(currentYearStats.year)}>Ver temporada {currentYearStats.year}</a></p>
+          <p className="seo-spa-link">
+            <a href={seasonPathByYear(currentYearStats.year)}>Ver temporada {currentYearStats.year}</a>
+            {' · '}
+            <a href={compareSpaSearch({ a: currentYearStats.year })} rel="nofollow">Comparar {currentYearStats.year}</a>
+          </p>
           <div className="stat-strip stat-strip--5">
             <StatTile label="Partidos" value={currentYearStats.total} tone="celeste" />
             <StatTile label="Victorias" value={currentYearStats.victories} detail={`${currentYearStats.winPercentage}%`} tone="win" />

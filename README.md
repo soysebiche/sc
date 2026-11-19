@@ -9,6 +9,7 @@ Archivo público y estático para consultar 1,936 partidos y estadísticas hist�
 - Partidos filtrados por año y mes, con paginación.
 - Búsqueda combinada y rachas sobre el conjunto filtrado, compartible con `/?view=buscar`.
 - Análisis anual por década y tipo de torneo.
+- Comparador de temporadas (puntos, local/visita, goleadores, rachas y Palmarés), compartible con `/?view=comparar&a=2023&b=2024`.
 - Historial consolidado por rival y país.
 - Vistas y filtros compartibles mediante parámetros de URL.
 - Tema claro/oscuro y soporte para reduced motion.

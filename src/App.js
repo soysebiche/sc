@@ -10,7 +10,7 @@ import archiveMetadata from './data/archive-metadata.json';
 import AnnualAnalysisView from './features/AnnualAnalysisView';
 import DashboardView from './features/DashboardView';
 import EfemeridesView from './features/EfemeridesView';
-import EntityHistory, { COUNTRIES_HISTORY, RIVALS_HISTORY } from './features/EntityHistory';
+import EntityHistory, { COUNTRIES_HISTORY } from './features/EntityHistory';
 import MatchesView from './features/MatchesView';
 import { useTheme } from './hooks/useTheme';
 import { UrlStateProvider, useUrlState } from './hooks/useUrlState';
@@ -24,10 +24,8 @@ const ClasicosView = lazy(() => import('./features/ClasicosView'));
 const PalmaresView = lazy(() => import('./features/PalmaresView'));
 const CuriosidadesView = lazy(() => import('./features/CuriosidadesView'));
 const SearchView = lazy(() => import('./features/SearchView'));
-
-function RivalsView(props) {
-  return <EntityHistory {...props} config={RIVALS_HISTORY} />;
-}
+const SeasonCompareView = lazy(() => import('./features/SeasonCompareView'));
+const RivalsView = lazy(() => import('./features/RivalsView'));
 
 function CountriesView(props) {
   return <EntityHistory {...props} config={COUNTRIES_HISTORY} />;
@@ -39,6 +37,7 @@ const TABS = [
   { id: 'partidos', label: 'PARTIDOS', View: MatchesView },
   { id: 'buscar', label: 'BUSCAR', View: SearchView },
   { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
+  { id: 'comparar', label: 'COMPARAR', View: SeasonCompareView },
   { id: 'goleadores', label: 'GOLEADORES', View: ScorersView },
   { id: 'records', label: 'RÉCORDS', View: RecordsView },
   { id: 'palmares', label: 'PALMARÉS', View: PalmaresView },
