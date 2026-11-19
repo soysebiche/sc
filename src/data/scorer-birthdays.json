@@ -783,5 +783,440 @@
     "name": "Santiago Salazar",
     "birthDate": "1974-11-02",
     "goals": 1
+  },
+  {
+    "name": "Carlos Zegarra",
+    "birthDate": "1977-03-02",
+    "goals": 31
+  },
+  {
+    "name": "Javier Ferreira",
+    "birthDate": "1968-12-30",
+    "goals": 17
+  },
+  {
+    "name": "Brenner Marlos",
+    "birthDate": "1994-03-01",
+    "goals": 15
+  },
+  {
+    "name": "Jorge Hirano",
+    "birthDate": "1959-12-17",
+    "goals": 15
+  },
+  {
+    "name": "Alfredo Quesada",
+    "birthDate": "1949-04-22",
+    "goals": 14
+  },
+  {
+    "name": "Santiago Silva",
+    "birthDate": "1990-08-26",
+    "goals": 14
+  },
+  {
+    "name": "Omar Merlo",
+    "birthDate": "1987-06-12",
+    "goals": 13
+  },
+  {
+    "name": "Fernando Pacheco",
+    "birthDate": "1999-06-26",
+    "goals": 12
+  },
+  {
+    "name": "Maximiliano Núñez",
+    "birthDate": "1986-09-17",
+    "goals": 12
+  },
+  {
+    "name": "Sergio Leal",
+    "birthDate": "1982-09-25",
+    "goals": 12
+  },
+  {
+    "name": "César Pereyra",
+    "birthDate": "1981-11-23",
+    "goals": 11
+  },
+  {
+    "name": "Gastón Córdoba",
+    "birthDate": "1974-06-12",
+    "goals": 11
+  },
+  {
+    "name": "Ignácio da Silva",
+    "birthDate": "1996-12-01",
+    "goals": 10
+  },
+  {
+    "name": "Andy Pando",
+    "birthDate": "1983-07-28",
+    "goals": 9
+  },
+  {
+    "name": "Diego Ifrán",
+    "birthDate": "1987-06-08",
+    "goals": 9
+  },
+  {
+    "name": "Luis Alberto Mora",
+    "birthDate": "1959-12-21",
+    "goals": 9
+  },
+  {
+    "name": "Luis Redher",
+    "birthDate": "1964-08-27",
+    "goals": 9
+  },
+  {
+    "name": "Felipe Vizeu",
+    "birthDate": "1997-03-12",
+    "goals": 8
+  },
+  {
+    "name": "Kevin Sandoval",
+    "birthDate": "1997-05-03",
+    "goals": 8
+  },
+  {
+    "name": "Marcos Riquelme",
+    "birthDate": "1988-02-18",
+    "goals": 8
+  },
+  {
+    "name": "Rafael Lutiger",
+    "birthDate": "2001-07-03",
+    "goals": 8
+  },
+  {
+    "name": "Flavio Gómez",
+    "birthDate": "1997-01-04",
+    "goals": 7
+  },
+  {
+    "name": "Francesco Manassero",
+    "birthDate": "1965-12-04",
+    "goals": 7
+  },
+  {
+    "name": "Edinson Chávez",
+    "birthDate": "1993-11-20",
+    "goals": 6
+  },
+  {
+    "name": "Joazinho Arroé",
+    "birthDate": "1992-06-05",
+    "goals": 6
+  },
+  {
+    "name": "Alexis Cossio",
+    "birthDate": "1995-02-11",
+    "goals": 5
+  },
+  {
+    "name": "Diego Buonanotte",
+    "birthDate": "1988-04-19",
+    "goals": 5
+  },
+  {
+    "name": "Frank Rojas",
+    "birthDate": "1979-07-17",
+    "goals": 5
+  },
+  {
+    "name": "Ian Wisdom",
+    "birthDate": "2005-09-14",
+    "goals": 5
+  },
+  {
+    "name": "Jhon Marchan",
+    "birthDate": "1998-09-02",
+    "goals": 5
+  },
+  {
+    "name": "Jostin Alarcón",
+    "birthDate": "2002-07-12",
+    "goals": 5
+  },
+  {
+    "name": "Marcelo Asteggiano",
+    "birthDate": "1965-08-04",
+    "goals": 5
+  },
+  {
+    "name": "Michael Hoyos",
+    "birthDate": "1991-08-02",
+    "goals": 5
+  },
+  {
+    "name": "Alfredo Ramua",
+    "birthDate": "1986-09-04",
+    "goals": 4
+  },
+  {
+    "name": "Catriel Cabellos",
+    "birthDate": "2004-08-18",
+    "goals": 4
+  },
+  {
+    "name": "Diego Manicero",
+    "birthDate": "1985-05-24",
+    "goals": 4
+  },
+  {
+    "name": "Francisco Gonzales",
+    "birthDate": "1947-03-28",
+    "goals": 4
+  },
+  {
+    "name": "Joffré Escobar",
+    "birthDate": "1996-10-24",
+    "goals": 4
+  },
+  {
+    "name": "Leandro Franco",
+    "birthDate": "1981-08-10",
+    "goals": 4
+  },
+  {
+    "name": "Luis González",
+    "birthDate": "1980-07-14",
+    "goals": 4
+  },
+  {
+    "name": "Marcos Delgado",
+    "birthDate": "1988-02-17",
+    "goals": 4
+  },
+  {
+    "name": "Marquinho",
+    "birthDate": "1966-11-11",
+    "goals": 4
+  },
+  {
+    "name": "Baldessari",
+    "birthDate": "1958-11-21",
+    "goals": 3
+  },
+  {
+    "name": "Diego Otoya",
+    "birthDate": "1991-05-07",
+    "goals": 3
+  },
+  {
+    "name": "Gabriel Santana",
+    "birthDate": "1990-01-06",
+    "goals": 3
+  },
+  {
+    "name": "Josué Estrada",
+    "birthDate": "1994-09-07",
+    "goals": 3
+  },
+  {
+    "name": "Juan Lojas",
+    "birthDate": "1989-04-23",
+    "goals": 3
+  },
+  {
+    "name": "Roberto Salazar",
+    "birthDate": "1973-09-10",
+    "goals": 3
+  },
+  {
+    "name": "Charly Vicente",
+    "birthDate": "1982-07-24",
+    "goals": 2
+  },
+  {
+    "name": "César Gonzales",
+    "birthDate": "1956-07-17",
+    "goals": 2
+  },
+  {
+    "name": "Daniel Neculman",
+    "birthDate": "1985-05-25",
+    "goals": 2
+  },
+  {
+    "name": "Diego Chavarri",
+    "birthDate": "1989-03-07",
+    "goals": 2
+  },
+  {
+    "name": "Donizete Amorim",
+    "birthDate": "1976-01-22",
+    "goals": 2
+  },
+  {
+    "name": "Federico Arias",
+    "birthDate": "1979-04-24",
+    "goals": 2
+  },
+  {
+    "name": "Isaac Ponte",
+    "birthDate": "1984-11-17",
+    "goals": 2
+  },
+  {
+    "name": "Julio Aliaga",
+    "birthDate": "1989-07-26",
+    "goals": 2
+  },
+  {
+    "name": "Luis Escalada",
+    "birthDate": "1986-02-27",
+    "goals": 2
+  },
+  {
+    "name": "Rodolfo Espinoza",
+    "birthDate": "1981-06-14",
+    "goals": 2
+  },
+  {
+    "name": "Adrián Ascues",
+    "birthDate": "2002-11-15",
+    "goals": 1
+  },
+  {
+    "name": "Alejandro Frezzotti",
+    "birthDate": "1984-02-15",
+    "goals": 1
+  },
+  {
+    "name": "Alejandro González",
+    "birthDate": "1988-03-23",
+    "goals": 1
+  },
+  {
+    "name": "Anderson Cueto",
+    "birthDate": "1989-05-24",
+    "goals": 1
+  },
+  {
+    "name": "Annor Aziz",
+    "birthDate": "1974-01-07",
+    "goals": 1
+  },
+  {
+    "name": "Arnao",
+    "birthDate": "1978-05-15",
+    "goals": 1
+  },
+  {
+    "name": "Breyner Bonilla",
+    "birthDate": "1986-07-21",
+    "goals": 1
+  },
+  {
+    "name": "Christian Adrianzen",
+    "birthDate": "1994-03-21",
+    "goals": 1
+  },
+  {
+    "name": "Edson Salazar",
+    "birthDate": "1993-10-27",
+    "goals": 1
+  },
+  {
+    "name": "Giuliano Portilla",
+    "birthDate": "1973-05-25",
+    "goals": 1
+  },
+  {
+    "name": "Irwing Acuña",
+    "birthDate": "1993-03-04",
+    "goals": 1
+  },
+  {
+    "name": "Javier Soria",
+    "birthDate": "1974-12-15",
+    "goals": 1
+  },
+  {
+    "name": "Jeickson Reyes",
+    "birthDate": "1987-10-09",
+    "goals": 1
+  },
+  {
+    "name": "José Granda",
+    "birthDate": "1992-04-13",
+    "goals": 1
+  },
+  {
+    "name": "José Zevallos",
+    "birthDate": "1999-01-13",
+    "goals": 1
+  },
+  {
+    "name": "Juan Cruz González",
+    "birthDate": "1996-12-02",
+    "goals": 1
+  },
+  {
+    "name": "Manuel Corrales",
+    "birthDate": "1982-09-03",
+    "goals": 1
+  },
+  {
+    "name": "Manuel Tejada",
+    "birthDate": "1989-01-12",
+    "goals": 1
+  },
+  {
+    "name": "Masakatsu Sawa",
+    "birthDate": "1983-01-12",
+    "goals": 1
+  },
+  {
+    "name": "Minzum Quina",
+    "birthDate": "1987-05-11",
+    "goals": 1
+  },
+  {
+    "name": "Nicolás Ayr",
+    "birthDate": "1982-10-11",
+    "goals": 1
+  },
+  {
+    "name": "Nicolás Pasquini",
+    "birthDate": "1991-01-02",
+    "goals": 1
+  },
+  {
+    "name": "Patricio Arce",
+    "birthDate": "1993-02-23",
+    "goals": 1
+  },
+  {
+    "name": "Paulo Gallardo",
+    "birthDate": "2001-01-29",
+    "goals": 1
+  },
+  {
+    "name": "Piero Casella",
+    "birthDate": "1987-02-17",
+    "goals": 1
+  },
+  {
+    "name": "Tarek Carranza",
+    "birthDate": "1992-02-13",
+    "goals": 1
+  },
+  {
+    "name": "Yamir Oliva",
+    "birthDate": "1996-01-17",
+    "goals": 1
+  },
+  {
+    "name": "Yancarlo Casas",
+    "birthDate": "1981-07-15",
+    "goals": 1
+  },
+  {
+    "name": "Óscar Calvo",
+    "birthDate": "1964-06-22",
+    "goals": 1
   }
 ]
