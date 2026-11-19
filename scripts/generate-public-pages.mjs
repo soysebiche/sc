@@ -8,11 +8,13 @@ import {
   matchHeading,
   matchLinkLabel,
   matchTitle,
+  relatedEntries,
   sortEntriesChronologically,
   venuePhrase,
 } from '../src/domain/matchSeo.js';
 import {
   OG_IMAGE_PATH,
+  PUBLIC_NAV,
   RESULT_WORD,
   SITE_URL,
   absoluteUrl,
@@ -122,25 +124,27 @@ export function breadcrumbList(items) {
   };
 }
 
+export function spaArchiveLink(spa) {
+  if (!spa) return '';
+  return `<p class="seo-spa-link"><a href="${escapeHtml(spa)}" rel="nofollow">Abrir en el archivo interactivo</a></p>`;
+}
+
+export function publicNavHtml() {
+  const links = PUBLIC_NAV.map(item => `<a href="${escapeHtml(item.path)}">${escapeHtml(item.label)}</a>`).join('');
+  return `<nav class="seo-nav" aria-label="Archivo público">${links}</nav>`;
+}
+
 function siteChrome({ heading, intro, crumbs, extra, spa }) {
-  const spaLink = spa
-    ? `<p class="seo-spa-link"><a href="${escapeHtml(spa)}">Abrir en el archivo interactivo</a></p>`
-    : '';
   return `<div class="app-shell seo-page">
     <header class="app-header"><div class="app-header__inner"><div class="app-header__layout">
       <a href="/" class="brand-lockup"><img src="/sebiche-celeste-logo.webp" alt="Sebiche Celeste" width="512" height="233" class="brand-logo" /></a>
-      <nav class="seo-nav" aria-label="Archivo público">
-        <a href="/partidos">Partidos</a>
-        <a href="/rivales">Rivales</a>
-        <a href="/paises">Países</a>
-        <a href="/temporadas">Temporadas</a>
-      </nav>
+      ${publicNavHtml()}
     </div></div></header>
     <main id="main-content" class="w-full max-w-7xl mx-auto px-4 py-6 flex-1">
       ${crumbsHtml(crumbs)}
       <h1 class="section-title">${escapeHtml(heading)}</h1>
       <p class="section-subtitle">${escapeHtml(intro)}</p>
-      ${spaLink}
+      ${spaArchiveLink(spa)}
       ${extra}
     </main>
   </div>`;
@@ -198,7 +202,15 @@ function factRow(term, value) {
   return `<div><dt>${term}</dt><dd>${value}</dd></div>`;
 }
 
-function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref }) {
+function relatedNav(entries, label, heading) {
+  if (!entries.length) return '';
+  const items = entries.map(item => (
+    `<li><a href="${escapeHtml(item.path)}">${escapeHtml(matchLinkLabel(item))}</a> · ${escapeHtml(item.match.tournament)}</li>`
+  )).join('');
+  return `<nav class="seo-related" aria-label="${escapeHtml(label)}"><h2 class="collection-title">${escapeHtml(heading)}</h2><ul class="seo-list">${items}</ul></nav>`;
+}
+
+function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament }) {
   const match = entry.match;
   const pagerLink = (rel, item, label) => (item
     ? `<a href="${escapeHtml(item.path)}" rel="${rel}">${label}: ${escapeHtml(matchLinkLabel(item))}</a>`
@@ -227,6 +239,7 @@ function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref }) {
         ${h2h.prevRival ? `<a href="${escapeHtml(h2h.prevRival.path)}">Anterior vs. ${escapeHtml(match.opponent)}: ${escapeHtml(matchLinkLabel(h2h.prevRival))}</a>` : '<span>Primer cruce vs. este rival</span>'}
         ${h2h.nextRival ? `<a href="${escapeHtml(h2h.nextRival.path)}">Siguiente vs. ${escapeHtml(match.opponent)}: ${escapeHtml(matchLinkLabel(h2h.nextRival))}</a>` : '<span>Último cruce vs. este rival</span>'}
       </nav>
+      ${relatedNav(relatedTournament, 'Mismo torneo', `Más partidos de ${match.tournament}`)}
     </article>`;
 }
 
@@ -517,6 +530,12 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   const chronological = sortEntriesChronologically(catalog.matches);
   const chronoIndex = new Map(chronological.map((item, index) => [item.id, index]));
   const rivalByName = new Map(catalog.rivals.map(rival => [rival.name, rival]));
+  const byTournament = new Map();
+  catalog.matches.forEach(entry => {
+    const key = entry.match.tournament || '';
+    if (!byTournament.has(key)) byTournament.set(key, []);
+    byTournament.get(key).push(entry);
+  });
 
   catalog.matches.forEach(entry => {
     const match = entry.match;
@@ -528,8 +547,13 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
       prev: chronological[position - 1] || null,
       next: chronological[position + 1] || null,
     };
+    const relatedTournament = relatedEntries(entry, byTournament.get(match.tournament) || []);
     const description = matchDescription(match, h2h);
-    const crumbs = [...partidosCrumbs, { name: `${match.home} vs. ${match.away}`, path: entry.path }];
+    const crumbs = [
+      ...partidosCrumbs,
+      ...(match.year != null ? [{ name: `Temporada ${match.year}`, path: seasonPathByYear(match.year) }] : []),
+      { name: `${match.home} vs. ${match.away}`, path: entry.path },
+    ];
     const rivalHref = rivalPathByName(catalog, match.opponent);
     const countryHref = match.country ? countryPathByName(catalog, match.country) : null;
     pages.push({
@@ -547,7 +571,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         intro: description,
         crumbs,
         spa: entry.spa,
-        extra: matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref }),
+        extra: matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament }),
       })),
     });
   });
@@ -624,6 +648,10 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     await Promise.all(pages.slice(index, index + concurrency).map(page => writeHtml(page.path, page.html)));
   }
 
+  const latestEntryDate = (entries, fallback) => {
+    const dates = entries.map(entry => sitemapLastmod(entry.match.date, '')).filter(Boolean);
+    return dates.sort().at(-1) || fallback;
+  };
   const sitemapEntries = [
     { path: '/', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '1.0' },
     { path: '/partidos', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.9' },
@@ -631,9 +659,9 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     { path: '/paises', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     { path: '/temporadas', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     ...STATIC_SITEMAP_PATHS.map(staticPath => ({ path: staticPath, group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'yearly', priority: '0.3' })),
-    ...catalog.rivals.map(rival => ({ path: rival.path, group: 'rivals', lastmod: metadata.lastUpdated, changefreq: 'monthly', priority: '0.6' })),
-    ...catalog.countries.map(country => ({ path: country.path, group: 'countries', lastmod: metadata.lastUpdated, changefreq: 'monthly', priority: '0.5' })),
-    ...catalog.seasons.map(season => ({ path: season.path, group: 'seasons', lastmod: metadata.lastUpdated, changefreq: 'monthly', priority: '0.6' })),
+    ...catalog.rivals.map(rival => ({ path: rival.path, group: 'rivals', lastmod: latestEntryDate(rival.matches, metadata.lastUpdated), changefreq: 'monthly', priority: '0.6' })),
+    ...catalog.countries.map(country => ({ path: country.path, group: 'countries', lastmod: latestEntryDate(country.matches, metadata.lastUpdated), changefreq: 'monthly', priority: '0.5' })),
+    ...catalog.seasons.map(season => ({ path: season.path, group: 'seasons', lastmod: latestEntryDate(season.matches, metadata.lastUpdated), changefreq: 'monthly', priority: '0.6' })),
     ...catalog.matches.map(entry => ({ path: entry.path, group: 'matches', lastmod: entry.match.date, changefreq: 'yearly', priority: '0.5' })),
   ];
   const sitemapFiles = buildSitemapDocuments(sitemapEntries, metadata.lastUpdated, { splitByGroup: true });
@@ -661,6 +689,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     '<h1 class="section-title">Archivo histórico de Sporting Cristal</h1>',
     'href="/partidos"',
     'href="/rivales"',
+    'href="/temporadas"',
     '"@type":"WebSite"',
     '"@type":"SportsTeam"',
     '"name":"Sporting Cristal"',
@@ -680,9 +709,19 @@ Sitemap: ${SITE_URL}/sitemap.xml
     '"startDate"',
     rivalPathByName(catalog, sampleMatch.match.opponent),
     seasonPathByYear(sampleMatch.match.year),
+    `Temporada ${sampleMatch.match.year}`,
     'Partidos contiguos',
     'Mismo rival',
+    'Mismo torneo',
+    'rel="nofollow"',
   ]);
+  const sitemapLocs = new Set(sitemapEntries.map(entry => absoluteUrl(entry.path)));
+  pages.forEach(page => {
+    const canonical = page.html.match(/rel="canonical" href="([^"]*)"/)?.[1];
+    const expected = absoluteUrl(page.path);
+    if (canonical !== expected) throw new Error(`Canonical for ${page.path} was ${canonical}`);
+    if (!sitemapLocs.has(canonical)) throw new Error(`Canonical ${canonical} is missing from the sitemap`);
+  });
   assertContains('rival', rivalHtml, [
     sampleRival.name,
     `rel="canonical" href="${absoluteUrl(sampleRival.path)}"`,

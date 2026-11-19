@@ -7,6 +7,7 @@ import {
   sortMatchesNewest,
   summarizeMatches,
 } from '../domain/matches';
+import { usePublicCatalog } from '../components/PublicCatalog';
 import { useUrlState } from '../hooks/useUrlState';
 
 function collectRivals(matches) {
@@ -74,6 +75,7 @@ export const COUNTRIES_HISTORY = {
 
 function EntityHistory({ matches = [], config }) {
   const canonicalize = config.canonicalize || (value => value);
+  const { rivalPathByName, countryPathByName } = usePublicCatalog();
   const [entityParam, setEntityParam] = useUrlState(config.entityKey, '');
   const [selectedYear, setSelectedYear] = useUrlState(config.yearKey, '');
   const [page, setPage] = useUrlState(config.pageKey, '1');
@@ -96,6 +98,9 @@ function EntityHistory({ matches = [], config }) {
   }, [config, matches, selectedEntity, selectedYear]);
 
   const stats = useMemo(() => summarizeMatches(filteredMatches), [filteredMatches]);
+  const publicPath = config.entityKey === 'country'
+    ? countryPathByName.get(selectedEntity)
+    : rivalPathByName.get(selectedEntity);
 
   if (!matches.length) {
     return <div className="p-4 text-center copy-secondary">No hay datos disponibles</div>;
@@ -157,6 +162,11 @@ function EntityHistory({ matches = [], config }) {
       {selectedEntity ? (
         <>
           <BalanceSummary title={`Balance vs ${selectedEntity}${selectedYear ? ` (${selectedYear})` : ''}`} stats={stats} />
+          {publicPath && (
+            <p className="seo-spa-link">
+              <a href={publicPath}>Ficha pública vs. {selectedEntity}</a>
+            </p>
+          )}
           <section className="archive-section">
             <h3 className="collection-title">Historial de encuentros</h3>
             <PaginatedMatchList

@@ -3,6 +3,7 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE_URL } from '../src/domain/publicRoutes.js';
+import { redirectLocation } from '../src/domain/publicRedirects.js';
 
 const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 
@@ -37,19 +38,11 @@ async function resolveFile(urlPath) {
 function startServer() {
   return new Promise(resolve => {
     const server = createServer(async (request, response) => {
-      const urlPath = (request.url || '/').split('?')[0];
-      if (urlPath === '/index.html') {
-        response.writeHead(308, { Location: '/' });
-        response.end();
-        return;
-      }
-      if (urlPath.length > 1 && urlPath.endsWith('/index.html')) {
-        response.writeHead(308, { Location: urlPath.slice(0, -'/index.html'.length) || '/' });
-        response.end();
-        return;
-      }
-      if (urlPath.length > 1 && urlPath.endsWith('/')) {
-        response.writeHead(308, { Location: urlPath.replace(/\/+$/, '') || '/' });
+      const requestUrl = new URL(request.url || '/', 'http://127.0.0.1');
+      const urlPath = requestUrl.pathname;
+      const dest = redirectLocation(urlPath, requestUrl.search);
+      if (dest) {
+        response.writeHead(308, { Location: dest });
         response.end();
         return;
       }
@@ -72,7 +65,7 @@ function startServer() {
 async function curl(origin, urlPath, { method = 'GET' } = {}) {
   const response = await fetch(`${origin}${urlPath}`, { method, redirect: 'manual' });
   const body = method === 'HEAD' ? '' : await response.text();
-  return { status: response.status, body };
+  return { status: response.status, body, location: response.headers.get('location') };
 }
 
 function requireSnippet(label, body, snippet) {
@@ -121,6 +114,11 @@ try {
   const robots = await curl(origin, '/robots.txt');
   const slash = await curl(origin, `${matchPath}/`);
   const indexHtml = await curl(origin, `${matchPath}/index.html`);
+  const upper = await curl(origin, matchPath.replace('/partidos/', '/Partidos/'));
+  const english = await curl(origin, matchPath.replace('/partidos/', '/matches/'));
+  const locale = await curl(origin, `/en${matchPath}`);
+  const celestePath = await curl(origin, `/celeste${matchPath}`);
+  const queryOnMatch = await curl(origin, `${matchPath}?utm=1`);
 
   if (home.status !== 200) throw new Error(`GET / returned ${home.status}`);
   if (match.status !== 200) throw new Error(`GET ${matchPath} returned ${match.status}`);
@@ -130,10 +128,35 @@ try {
   if (querySpa.status !== 200) throw new Error('Shareable query URLs must still hit the home document');
   if (slash.status !== 308) throw new Error(`GET ${matchPath}/ returned ${slash.status}, expected 308`);
   if (indexHtml.status !== 308) throw new Error(`GET ${matchPath}/index.html returned ${indexHtml.status}, expected 308`);
+  if (upper.status !== 308) throw new Error(`GET uppercase match path returned ${upper.status}, expected 308`);
+  if (english.status !== 308) throw new Error(`GET /matches/... returned ${english.status}, expected 308`);
+  if (locale.status !== 308) throw new Error(`GET /en/... returned ${locale.status}, expected 308`);
+  if (celestePath.status !== 308) throw new Error(`GET /celeste/... returned ${celestePath.status}, expected 308`);
+  if (queryOnMatch.status !== 308) throw new Error(`GET match with query returned ${queryOnMatch.status}, expected 308`);
+  const expectedMatch = matchPath;
+  for (const [label, result] of [
+    ['slash', slash],
+    ['index.html', indexHtml],
+    ['uppercase', upper],
+    ['english', english],
+    ['locale', locale],
+    ['celeste prefix', celestePath],
+    ['query', queryOnMatch],
+  ]) {
+    if (result.location !== expectedMatch) {
+      throw new Error(`${label} redirect Location was ${result.location}, expected ${expectedMatch}`);
+    }
+  }
+  if (!allLocs.includes(`${SITE_URL}${matchPath}`)) {
+    throw new Error(`Sitemap is missing canonical ${SITE_URL}${matchPath}`);
+  }
 
   requireSnippet('/', home.body, 'lang="es-PE"');
   requireSnippet('/', home.body, `rel="canonical" href="${SITE_URL}/"`);
   requireSnippet('/', home.body, '<h1 class="section-title">Archivo histórico de Sporting Cristal</h1>');
+  requireSnippet('/', home.body, 'href="/partidos"');
+  requireSnippet('/', home.body, 'href="/rivales"');
+  requireSnippet('/', home.body, 'href="/temporadas"');
   requireSnippet('/', home.body, '"@type":"WebSite"');
   requireSnippet('/', home.body, '"@type":"SportsTeam"');
   requireSnippet('/', home.body, 'twitter:card" content="summary_large_image"');
@@ -148,6 +171,10 @@ try {
   requireSnippet(matchPath, match.body, 'href="/rivales/');
   requireSnippet(matchPath, match.body, 'href="/temporadas/');
   requireSnippet(matchPath, match.body, 'Partidos contiguos');
+  requireSnippet(matchPath, match.body, 'Mismo torneo');
+  requireSnippet(matchPath, match.body, '"@type":"BreadcrumbList"');
+  requireSnippet(matchPath, match.body, 'Temporada ');
+  requireSnippet(matchPath, match.body, 'rel="nofollow"');
   requireSnippet(matchPath, match.body, 'seo-facts');
   requireSnippet(rivalPath, rival.body, `rel="canonical" href="${SITE_URL}${rivalPath}"`);
   requireSnippet(rivalPath, rival.body, 'href="/partidos/');

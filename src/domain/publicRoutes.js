@@ -5,6 +5,13 @@ export { SITE_URL };
 
 export const OG_IMAGE_PATH = '/og/home.png';
 export const RESULT_WORD = Object.freeze({ V: 'Victoria', E: 'Empate', P: 'Derrota' });
+export const PUBLIC_NAV = Object.freeze([
+  { path: '/partidos', label: 'Partidos' },
+  { path: '/rivales', label: 'Rivales' },
+  { path: '/paises', label: 'Países' },
+  { path: '/temporadas', label: 'Temporadas' },
+]);
+export const ARCHIVE_HEADS = Object.freeze(['partidos', 'rivales', 'paises', 'temporadas']);
 
 export function slugify(value) {
   const slug = String(value || '')
@@ -147,12 +154,29 @@ export function seasonPathByYear(year) {
   return `/temporadas/${year}`;
 }
 
+export function matchKey(match) {
+  return [match.date, match.home, match.away, match.tournament].join('|');
+}
+
+export function buildCatalogLookups(catalog) {
+  return {
+    matchPathByKey: new Map(catalog.matches.map(entry => [matchKey(entry.match), entry.path])),
+    rivalPathByName: new Map(catalog.rivals.map(rival => [rival.name, rival.path])),
+    countryPathByName: new Map(catalog.countries.map(country => [country.name, country.path])),
+  };
+}
+
 export function canonicalPath(pathname) {
   const raw = String(pathname || '/').split('?')[0].split('#')[0];
   let path = raw.replace(/\/+$/, '');
   if (!path || path === '/index.html') return '/';
   if (path.endsWith('/index.html')) path = path.slice(0, -'/index.html'.length);
-  return path || '/';
+  path = path || '/';
+  const segs = path.split('/').filter(Boolean);
+  if (segs[0] && ARCHIVE_HEADS.includes(segs[0].toLowerCase())) {
+    return `/${segs.map(seg => seg.toLowerCase()).join('/')}`;
+  }
+  return path;
 }
 
 export function absoluteUrl(pathname, origin = SITE_URL) {

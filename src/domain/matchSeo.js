@@ -80,3 +80,18 @@ export function matchLinkLabel(entry) {
   const match = entry.match;
   return `${formatMatchDate(match.date)} · ${match.home} ${match.scoreLabel} ${match.away}`;
 }
+
+export const RELATED_MATCH_LIMIT = 4;
+
+export function relatedEntries(entry, pool, limit = RELATED_MATCH_LIMIT) {
+  const origin = Date.parse(entry.match.date) || 0;
+  const others = sortEntriesChronologically(pool.filter(item => item.id !== entry.id));
+  return others
+    .map(item => ({
+      item,
+      dist: Math.abs((Date.parse(item.match.date) || 0) - origin),
+    }))
+    .sort((a, b) => a.dist - b.dist || String(a.item.id).localeCompare(String(b.item.id)))
+    .slice(0, limit)
+    .map(row => row.item);
+}

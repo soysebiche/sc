@@ -13,7 +13,7 @@ test('renders the historical archive with a named date control', async () => {
     level: 1,
     name: /Sebiche Celeste — Archivo Histórico de Sporting Cristal/i,
   })).toBeInTheDocument();
-  expect(await screen.findByText(/Archivo Histórico · 2154 Partidos/i)).toBeInTheDocument();
+  expect(await screen.findByText(/Archivo Histórico · 2155 Partidos/i)).toBeInTheDocument();
   expect(await screen.findByLabelText('Fecha para consultar')).toHaveAttribute('type', 'date');
   expect(screen.getByRole('heading', { name: 'Próximos encuentros' })).toBeInTheDocument();
   expect(screen.queryByText('Fecha 8')).not.toBeInTheDocument();
@@ -32,8 +32,8 @@ test('renders the historical archive with a named date control', async () => {
   expect(within(upcoming).queryByText(/FC Cajamarca/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/Fecha 16/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/ADT/)).not.toBeInTheDocument();
-  expect(within(upcoming).getByText('Final')).toBeInTheDocument();
-  expect(within(upcoming).getByText(/Alianza Atlético/)).toBeInTheDocument();
+  expect(within(upcoming).queryByText('Final')).not.toBeInTheDocument();
+  expect(within(upcoming).queryByText(/Alianza Atlético/)).not.toBeInTheDocument();
   expect(within(upcoming).getByText('Fecha 17')).toBeInTheDocument();
   expect(within(upcoming).getByText(/Cienciano/)).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
@@ -44,6 +44,19 @@ test('keeps eleven section tabs in the primary navigation', async () => {
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
   const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
   expect(within(nav).getAllByRole('button')).toHaveLength(11);
+  const archiveNavs = screen.getAllByRole('navigation', { name: 'Archivo público' });
+  expect(archiveNavs.length).toBeGreaterThanOrEqual(2);
+  expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
+  expect(screen.getAllByRole('link', { name: 'Temporadas' }).some(link => link.getAttribute('href') === '/temporadas')).toBe(true);
+});
+
+test('exposes public match URLs from the interactive archive', async () => {
+  render(<App />);
+  fireEvent.click(await screen.findByRole('button', { name: 'PARTIDOS' }));
+  await waitFor(() => {
+    const links = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/partidos/'));
+    expect(links.length).toBeGreaterThan(0);
+  });
 });
 
 test('lazy-loads scorers, records and clasicos tabs', async () => {
@@ -95,6 +108,7 @@ test('restores a shareable rival view from the URL', async () => {
   expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
   expect(screen.getByLabelText('Buscar rival')).toHaveValue('Alianza Lima');
   expect(screen.getByText(/Balance vs Alianza Lima/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Ficha pública vs. Alianza Lima/ })).toHaveAttribute('href', '/rivales/alianza-lima');
 });
 
 test('normalizes rival aliases from a shared URL', async () => {
@@ -129,7 +143,7 @@ test('paginates country histories independently', async () => {
 
 test('persists the selected theme', async () => {
   render(<App />);
-  await screen.findByText(/2154 Partidos/i);
+  await screen.findByText(/2155 Partidos/i);
   fireEvent.click(screen.getByRole('button', { name: 'Cambiar a modo noche' }));
 
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark');

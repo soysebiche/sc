@@ -1,4 +1,4 @@
-import { adjacentEntries, h2hContext, matchDescription, matchHeading, matchTitle, venuePhrase } from './matchSeo';
+import { adjacentEntries, h2hContext, matchDescription, matchHeading, matchTitle, relatedEntries, venuePhrase } from './matchSeo';
 
 const entry = (id, extras = {}) => ({
   id,
@@ -67,5 +67,13 @@ describe('match SEO copy', () => {
     expect(secondContext.h2hSentence).toContain('1V 0E 0P');
     expect(secondContext.prevRival.id).toBe('1');
     expect(secondContext.nextRival.id).toBe('3');
+  });
+
+  test('relatedEntries picks the closest matches in the same pool', () => {
+    const a = entry('a', { date: '1990-01-01', match: { tournament: 'Liga' } });
+    const b = entry('b', { date: '1990-06-01', match: { tournament: 'Liga' } });
+    const c = entry('c', { date: '1991-01-01', match: { tournament: 'Liga' } });
+    const d = entry('d', { date: '1995-01-01', match: { tournament: 'Liga' } });
+    expect(relatedEntries(b, [d, c, a, b], 2).map(item => item.id)).toEqual(['a', 'c']);
   });
 });

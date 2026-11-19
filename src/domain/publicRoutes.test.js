@@ -1,6 +1,6 @@
 import archive from '../data/historico_completo_sc.json';
 import { parseMatch } from './matches';
-import { absoluteUrl, buildPublicCatalog, canonicalPath, matchPublicId, slugify, spaSearch } from './publicRoutes';
+import { absoluteUrl, buildCatalogLookups, buildPublicCatalog, canonicalPath, matchKey, matchPublicId, slugify, spaSearch } from './publicRoutes';
 
 const matches = archive.map(parseMatch);
 
@@ -19,7 +19,7 @@ describe('public archive routes', () => {
     expect(new Set(catalog.rivals.map(rival => rival.slug)).size).toBe(catalog.rivals.length);
     expect(new Set(catalog.countries.map(country => country.slug)).size).toBe(catalog.countries.length);
     expect(new Set(catalog.seasons.map(season => season.path)).size).toBe(catalog.seasons.length);
-    expect(catalog.matches).toHaveLength(2154);
+    expect(catalog.matches).toHaveLength(2155);
     expect(catalog.rivals.length).toBeGreaterThan(100);
     expect(catalog.countries.map(country => country.name)).toEqual(expect.arrayContaining(['Perú', 'Argentina']));
   });
@@ -36,8 +36,17 @@ describe('public archive routes', () => {
     expect(canonicalPath('/rivales/alianza-lima?utm=1')).toBe('/rivales/alianza-lima');
     expect(canonicalPath('/index.html')).toBe('/');
     expect(canonicalPath('/temporadas/1991/index.html')).toBe('/temporadas/1991');
+    expect(canonicalPath('/Partidos/1956-08-05-Alianza-Lima')).toBe('/partidos/1956-08-05-alianza-lima');
     expect(absoluteUrl('/partidos/foo/')).toBe('https://celeste.sebiche.com/partidos/foo');
     expect(absoluteUrl('/')).toBe('https://celeste.sebiche.com/');
+  });
+
+  test('lookups map a match and rival to the public path used in the sitemap', () => {
+    const lookups = buildCatalogLookups(catalog);
+    const alianzas = catalog.rivals.find(rival => rival.name === 'Alianza Lima');
+    const first = alianzas.matches[0];
+    expect(lookups.matchPathByKey.get(matchKey(first.match))).toBe(first.path);
+    expect(lookups.rivalPathByName.get('Alianza Lima')).toBe('/rivales/alianza-lima');
   });
 
   test('disambiguates a colliding match id without inventing a match', () => {

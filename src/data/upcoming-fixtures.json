@@ -6,21 +6,10 @@
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
     "lastVerifiedAt": "2026-11-11T14:20:49Z",
-    "sourceName": "Liga1 Te Apuesto (@Liga1TeApuesto) / Infobae, Trome y Líbero",
+    "sourceName": "Liga1 Te Apuesto (@Liga1TeApuesto)",
     "sourceUrl": "https://x.com/Liga1TeApuesto/status/2120174356395692119"
   },
   "fixtures": [
-    {
-      "id": "copa-de-la-liga-2026-final-sporting-cristal-alianza-atletico",
-      "competition": "Copa de la Liga",
-      "round": "Final",
-      "homeTeam": "Sporting Cristal",
-      "awayTeam": "Alianza Atlético",
-      "start": "2026-11-15T17:00:00-05:00",
-      "end": "2026-11-15T20:00:00-05:00",
-      "venue": "Estadio Mansiche, Trujillo",
-      "status": "confirmed"
-    },
     {
       "id": "clausura-2026-f17-sporting-cristal-cienciano",
       "competition": "Liga 1 — Torneo Clausura",
