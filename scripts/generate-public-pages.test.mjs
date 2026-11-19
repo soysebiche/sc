@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, publicNavHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
+import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, playerPerson, publicNavHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
 
 const shell = `<!doctype html>
 <html lang="es">
@@ -100,9 +100,22 @@ test('breadcrumb JSON-LD keeps absolute items', () => {
   assert.equal(crumbs.itemListElement[1].item, 'https://celeste.sebiche.com/partidos');
 });
 
+test('Person JSON-LD keeps birthday optional and does not invent fields', () => {
+  const withBirth = playerPerson(
+    { name: 'Jorge Soto', path: '/jugadores/jorge-soto' },
+    { total: 160 },
+    { birthDate: '1971-10-27' },
+  );
+  assert.equal(withBirth['@type'], 'Person');
+  assert.equal(withBirth.birthDate, '1971-10-27');
+  const without = playerPerson({ name: 'X', path: '/jugadores/x' }, { total: 1 }, null);
+  assert.equal(without.birthDate, undefined);
+});
+
 test('public nav and SPA archive links stay on canonical paths', () => {
   assert.match(publicNavHtml(), /href="\/rivales"/);
   assert.match(publicNavHtml(), /href="\/temporadas"/);
+  assert.match(publicNavHtml(), /href="\/jugadores"/);
   assert.match(spaArchiveLink('/?view=rivales&rival=Alianza+Lima'), /rel="nofollow"/);
   assert.equal(spaArchiveLink(''), '');
 });

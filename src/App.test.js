@@ -47,6 +47,7 @@ test('keeps eleven section tabs in the primary navigation', async () => {
   const archiveNavs = screen.getAllByRole('navigation', { name: 'Archivo público' });
   expect(archiveNavs.length).toBeGreaterThanOrEqual(2);
   expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
+  expect(screen.getAllByRole('link', { name: 'Jugadores' }).some(link => link.getAttribute('href') === '/jugadores')).toBe(true);
   expect(screen.getAllByRole('link', { name: 'Temporadas' }).some(link => link.getAttribute('href') === '/temporadas')).toBe(true);
 });
 
@@ -65,12 +66,23 @@ test('lazy-loads scorers, records and clasicos tabs', async () => {
 
   fireEvent.click(screen.getByRole('button', { name: 'GOLEADORES' }));
   expect(await screen.findByRole('heading', { name: 'Goleadores' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Buscar jugador')).toBeInTheDocument();
+  expect(screen.getByLabelText('Ordenar por')).toHaveValue('goals');
+  expect(screen.getByRole('link', { name: 'Jorge Soto' })).toHaveAttribute('href', '/jugadores/jorge-soto');
 
   fireEvent.click(screen.getByRole('button', { name: 'RÉCORDS' }));
   expect(await screen.findByRole('heading', { name: 'Rachas y récords' })).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: 'CLÁSICOS' }));
   expect(await screen.findByRole('heading', { name: 'Clásicos' })).toBeInTheDocument();
+});
+
+test('restores a scorer profile from a shared URL', async () => {
+  window.history.replaceState({}, '', '/?view=goleadores&jugador=Jorge%20Soto');
+  render(<App />);
+  expect(await screen.findByRole('heading', { name: 'Jorge Soto' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Ficha pública' })).toHaveAttribute('href', '/jugadores/jorge-soto');
+  expect(screen.getByText(/Nació el/)).toBeInTheDocument();
 });
 
 test('requires explicit consent before enabling anonymous measurement', async () => {

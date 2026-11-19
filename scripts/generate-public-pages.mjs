@@ -1,6 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import aliases from '../src/data/scorer-aliases.json' with { type: 'json' };
+import birthdayData from '../src/data/scorer-birthdays.json' with { type: 'json' };
+import { scorerProfiles } from '../src/domain/goals.js';
 import { formatMatchDate, parseMatch, sortMatchesNewest, summarizeMatches } from '../src/domain/matches.js';
 import {
   h2hContext,
@@ -12,6 +15,7 @@ import {
   sortEntriesChronologically,
   venuePhrase,
 } from '../src/domain/matchSeo.js';
+import { birthdayFor, linkedGoalsNoteHtml } from '../src/domain/players.js';
 import {
   OG_IMAGE_PATH,
   PUBLIC_NAV,
@@ -20,6 +24,7 @@ import {
   absoluteUrl,
   buildPublicCatalog,
   countryPathByName,
+  matchKey,
   rivalPathByName,
   seasonPathByYear,
 } from '../src/domain/publicRoutes.js';
@@ -210,7 +215,7 @@ function relatedNav(entries, label, heading) {
   return `<nav class="seo-related" aria-label="${escapeHtml(label)}"><h2 class="collection-title">${escapeHtml(heading)}</h2><ul class="seo-list">${items}</ul></nav>`;
 }
 
-function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament }) {
+function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament, playerPaths }) {
   const match = entry.match;
   const pagerLink = (rel, item, label) => (item
     ? `<a href="${escapeHtml(item.path)}" rel="${rel}">${label}: ${escapeHtml(matchLinkLabel(item))}</a>`
@@ -222,7 +227,7 @@ function matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedT
     factRow('Competición', escapeHtml(match.tournament)),
     factRow('Condición', escapeHtml(venuePhrase(match))),
     match.country && countryHref ? factRow('País', `<a href="${escapeHtml(countryHref)}">${escapeHtml(match.country)}</a>`) : '',
-    match.goalsNote ? factRow('Goles de Sporting Cristal', escapeHtml(match.goalsNote)) : '',
+    match.goalsNote ? factRow('Goles de Sporting Cristal', linkedGoalsNoteHtml(match.goalsNote, match.date, aliases, playerPaths, escapeHtml) || escapeHtml(match.goalsNote)) : '',
   ].join('');
 
   return `<article class="archive-section seo-match">
@@ -266,6 +271,72 @@ function jsonLdGraph(nodes) {
   return { '@context': 'https://schema.org', '@graph': nodes };
 }
 
+function playerCountList(rows, labelKey, hrefFor) {
+  if (!rows.length) return '';
+  const items = rows.map(row => {
+    const label = escapeHtml(String(row[labelKey]));
+    const href = hrefFor?.(row);
+    const body = href ? `<a href="${escapeHtml(href)}">${label}</a>` : label;
+    return `<li>${body} · ${formatCount(row.goals)} ${row.goals === 1 ? 'gol' : 'goles'}</li>`;
+  }).join('');
+  return `<ul class="seo-list">${items}</ul>`;
+}
+
+function playerMatchList(profile, matchPathByKey) {
+  const items = profile.rows.map(match => {
+    const path = matchPathByKey.get(matchKey(match));
+    const label = `${longDate(match.date)} · ${match.home} vs. ${match.away} · ${match.scoreLabel}`;
+    const body = path ? `<a href="${escapeHtml(path)}">${escapeHtml(label)}</a>` : escapeHtml(label);
+    const minutes = match.minutes ? ` (${match.minutes.map(minute => `${minute}'`).join(', ')})` : '';
+    return `<li>${body} · ${match.goals} ${match.goals === 1 ? 'gol' : 'goles'}${minutes} · ${escapeHtml(match.tournament)}</li>`;
+  }).join('');
+  return `<section class="archive-section"><h2 class="collection-title">Partidos con gol</h2><ul class="seo-list">${items}</ul></section>`;
+}
+
+export function playerPerson(player, profile, birthday) {
+  const person = {
+    '@type': 'Person',
+    name: player.name,
+    url: absoluteUrl(player.path),
+    affiliation: { '@id': `${SITE_URL}/#sporting-cristal`, '@type': 'SportsTeam', name: 'Sporting Cristal' },
+  };
+  if (profile) {
+    person.description = `${player.name} marcó ${profile.total} goles con Sporting Cristal en el archivo.`;
+  }
+  if (birthday?.birthDate) person.birthDate = birthday.birthDate;
+  return person;
+}
+
+function playerArticleHtml(player, profile, birthday, lookups) {
+  const first = profile.rows[profile.rows.length - 1];
+  const last = profile.rows[0];
+  const firstPath = lookups.matchPathByKey.get(matchKey(first));
+  const lastPath = lookups.matchPathByKey.get(matchKey(last));
+  const goalLink = (entry, path) => {
+    const dateLabel = longDate(entry.date);
+    const detail = `vs. ${entry.opponent} (${entry.home} ${entry.scoreLabel} ${entry.away})`;
+    const date = path ? `<a href="${escapeHtml(path)}">${escapeHtml(dateLabel)}</a>` : escapeHtml(dateLabel);
+    return `${date} · ${escapeHtml(detail)}`;
+  };
+  const facts = [
+    factRow('Goles', `${formatCount(profile.total)}${profile.lowerBound ? '*' : ''}`),
+    factRow('Partidos con gol', formatCount(profile.matches)),
+    birthday ? factRow('Cumpleaños', `<time datetime="${escapeHtml(birthday.birthDate)}">${escapeHtml(longDate(birthday.birthDate))}</time>`) : '',
+    factRow('Primer gol', goalLink(first, firstPath)),
+    factRow('Último gol', goalLink(last, lastPath)),
+    profile.rivals[0] ? factRow('Rival con más goles', `${escapeHtml(profile.rivals[0].rival)} (${formatCount(profile.rivals[0].goals)})`) : '',
+  ].join('');
+  const seasons = [...profile.yearSeries].reverse().filter(row => row.goals > 0);
+  return `<article class="archive-section seo-player">
+      <dl class="seo-facts">${facts}</dl>
+      ${profile.lowerBound ? '<p>Total mínimo: antes de 1990 faltan goleadores en el archivo.</p>' : ''}
+      <section class="archive-section"><h2 class="collection-title">Goles por competición</h2>${playerCountList(profile.tournaments, 'tournament')}</section>
+      <section class="archive-section"><h2 class="collection-title">Goles por temporada</h2>${playerCountList(seasons, 'year', row => seasonPathByYear(row.year))}</section>
+      <section class="archive-section"><h2 class="collection-title">Rivales a los que más les marcó</h2>${playerCountList(profile.rivals.slice(0, 10), 'rival', row => lookups.rivalPathByName.get(row.rival))}</section>
+      ${playerMatchList(profile, lookups.matchPathByKey)}
+    </article>`;
+}
+
 export function matchSportsEvent(entry, description) {
   const match = entry.match;
   const event = {
@@ -293,7 +364,7 @@ async function writeHtml(pathname, html) {
 }
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
-const SITEMAP_GROUP_ORDER = ['pages', 'rivals', 'countries', 'seasons', 'matches'];
+const SITEMAP_GROUP_ORDER = ['pages', 'players', 'rivals', 'countries', 'seasons', 'matches'];
 
 export function sitemapLastmod(value, fallback) {
   return DATE_ONLY.test(value) ? value : fallback;
@@ -379,7 +450,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   ]);
 
   const matches = records.map(parseMatch);
-  const catalog = buildPublicCatalog(matches);
+  const catalog = buildPublicCatalog(matches, aliases);
   // Legacy URL kept for already-shared links: serve the brand-kit home OG there too.
   const ogPng = await readFile(path.join(ROOT, 'public', 'og', 'home.png'));
   await writeFile(path.join(distDir, 'og-image.png'), ogPng);
@@ -387,13 +458,20 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   const crumbsHome = [{ name: 'Inicio', path: '/' }];
   const pageCount = {
     home: 1,
-    indexes: 4,
+    indexes: 5,
     matches: catalog.matches.length,
+    players: catalog.players.length,
     rivals: catalog.rivals.length,
     countries: catalog.countries.length,
     seasons: catalog.seasons.length,
     notFound: 1,
   };
+  const lookups = {
+    matchPathByKey: new Map(catalog.matches.map(entry => [matchKey(entry.match), entry.path])),
+    rivalPathByName: new Map(catalog.rivals.map(rival => [rival.name, rival.path])),
+    playerPathByName: new Map(catalog.players.map(player => [player.name, player.path])),
+  };
+  const profiles = scorerProfiles(matches, aliases);
 
   const homeTitle = 'Sebiche Celeste | Archivo histórico de Sporting Cristal';
   const homeDescription = `Archivo histórico de Sporting Cristal: ${formatCount(metadata.recordCount)} partidos, rivales, países y temporadas desde ${longDate(metadata.firstMatchDate)}.`;
@@ -407,8 +485,8 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Archivo histórico de Sporting Cristal',
     intro: homeDescription,
     crumbs: crumbsHome,
-    extra: `<p>${escapeHtml(statsLine(matches))}</p>
-      <p><a href="/partidos">Partidos</a> · <a href="/rivales">Rivales</a> · <a href="/paises">Países</a> · <a href="/temporadas">Temporadas</a></p>
+      extra: `<p>${escapeHtml(statsLine(matches))}</p>
+      <p><a href="/partidos">Partidos</a> · <a href="/jugadores">Jugadores</a> · <a href="/rivales">Rivales</a> · <a href="/paises">Países</a> · <a href="/temporadas">Temporadas</a></p>
       <section class="archive-section"><h2 class="collection-title">Últimos partidos</h2><ul class="seo-list">${recentLinks}</ul></section>`,
   });
   const homeHtml = injectRoot(applyHead(viteHtml, {
@@ -441,7 +519,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     heading: 'Página no encontrada',
     intro: 'Esta URL no existe en el archivo de Sporting Cristal.',
     crumbs: crumbsHome,
-    extra: '<p><a href="/">Volver al inicio</a> · <a href="/partidos">Partidos</a> · <a href="/rivales">Rivales</a></p>',
+    extra: '<p><a href="/">Volver al inicio</a> · <a href="/partidos">Partidos</a> · <a href="/jugadores">Jugadores</a> · <a href="/rivales">Rivales</a></p>',
   });
   const notFoundHtml = injectRoot(applyHead(viteHtml, {
     title: 'Página no encontrada | Sebiche Celeste',
@@ -485,6 +563,23 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     extra: `<ul class="seo-list">${catalog.rivals.map(rival => `<li><a href="${escapeHtml(rival.path)}">${escapeHtml(rival.name)}</a> · ${formatCount(rival.matches.length)} partidos</li>`).join('')}</ul>`,
   }));
 
+  const jugadoresCrumbs = [...crumbsHome, { name: 'Jugadores', path: '/jugadores' }];
+  const jugadoresTitle = 'Goleadores de Sporting Cristal | Sebiche Celeste';
+  const jugadoresDescription = `${formatCount(catalog.players.length)} goleadores de Sporting Cristal en el archivo, ordenados por goles. Sin autogoles.`;
+  const jugadoresIndexHtml = injectRoot(applyHead(viteHtml, {
+    title: jugadoresTitle,
+    description: jugadoresDescription,
+    pathname: '/jugadores',
+    spa: catalog.indexes.jugadores.spa,
+    schema: jsonLdGraph([breadcrumbList(jugadoresCrumbs)]),
+  }), siteChrome({
+    heading: 'Goleadores de Sporting Cristal',
+    intro: jugadoresDescription,
+    crumbs: jugadoresCrumbs,
+    spa: catalog.indexes.jugadores.spa,
+    extra: `<ul class="seo-list">${catalog.players.map(player => `<li><a href="${escapeHtml(player.path)}">${escapeHtml(player.name)}</a> · ${formatCount(player.goals)} ${player.goals === 1 ? 'gol' : 'goles'}${player.lowerBound ? '*' : ''} · ${formatCount(player.matches)} partidos con gol</li>`).join('')}</ul>`,
+  }));
+
   const paisesCrumbs = [...crumbsHome, { name: 'Países', path: '/paises' }];
   const paisesTitle = 'Países enfrentados por Sporting Cristal | Sebiche Celeste';
   const paisesDescription = `Historial internacional y doméstico de Sporting Cristal por país: ${catalog.countries.map(item => item.name).join(', ')}.`;
@@ -522,6 +617,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   const pages = [
     { path: '/', html: homeHtml },
     { path: '/partidos', html: partidosHtml },
+    { path: '/jugadores', html: jugadoresIndexHtml },
     { path: '/rivales', html: rivalesIndexHtml },
     { path: '/paises', html: paisesIndexHtml },
     { path: '/temporadas', html: temporadasIndexHtml },
@@ -571,7 +667,35 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         intro: description,
         crumbs,
         spa: entry.spa,
-        extra: matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament }),
+        extra: matchArticleHtml(entry, { h2h, chrono, rivalHref, countryHref, relatedTournament, playerPaths: lookups.playerPathByName }),
+      })),
+    });
+  });
+
+  catalog.players.forEach(player => {
+    const profile = profiles.get(player.name);
+    if (!profile) throw new Error(`Missing scorer profile for ${player.name}`);
+    const birthday = birthdayFor(player.name, birthdayData);
+    const heading = player.name;
+    const description = `${player.name} marcó ${formatCount(profile.total)} goles con Sporting Cristal en ${formatCount(profile.matches)} partidos del archivo.`;
+    const crumbs = [...jugadoresCrumbs, { name: player.name, path: player.path }];
+    pages.push({
+      path: player.path,
+      html: injectRoot(applyHead(viteHtml, {
+        title: `${heading} | Goleador de Sporting Cristal | Sebiche Celeste`,
+        description,
+        pathname: player.path,
+        spa: player.spa,
+        schema: jsonLdGraph([playerPerson(player, profile, birthday), breadcrumbList(crumbs), itemListSchema(
+          profile.rows.map(match => ({ match, path: lookups.matchPathByKey.get(matchKey(match)) })).filter(entry => entry.path),
+          `Partidos con gol de ${player.name}`,
+        )]),
+      }), siteChrome({
+        heading,
+        intro: description,
+        crumbs,
+        spa: player.spa,
+        extra: playerArticleHtml(player, profile, birthday, lookups),
       })),
     });
   });
@@ -655,10 +779,16 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   const sitemapEntries = [
     { path: '/', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '1.0' },
     { path: '/partidos', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.9' },
+    { path: '/jugadores', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     { path: '/rivales', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     { path: '/paises', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     { path: '/temporadas', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     ...STATIC_SITEMAP_PATHS.map(staticPath => ({ path: staticPath, group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'yearly', priority: '0.3' })),
+    ...catalog.players.map(player => {
+      const profile = profiles.get(player.name);
+      const lastGoal = profile?.last?.date;
+      return { path: player.path, group: 'players', lastmod: sitemapLastmod(lastGoal, metadata.lastUpdated), changefreq: 'monthly', priority: '0.6' };
+    }),
     ...catalog.rivals.map(rival => ({ path: rival.path, group: 'rivals', lastmod: latestEntryDate(rival.matches, metadata.lastUpdated), changefreq: 'monthly', priority: '0.6' })),
     ...catalog.countries.map(country => ({ path: country.path, group: 'countries', lastmod: latestEntryDate(country.matches, metadata.lastUpdated), changefreq: 'monthly', priority: '0.5' })),
     ...catalog.seasons.map(season => ({ path: season.path, group: 'seasons', lastmod: latestEntryDate(season.matches, metadata.lastUpdated), changefreq: 'monthly', priority: '0.6' })),
@@ -677,10 +807,12 @@ Sitemap: ${SITE_URL}/sitemap.xml
   await writeFile(path.join(distDir, 'robots.txt'), robots, 'utf8');
 
   const sampleMatch = catalog.matches[0];
+  const samplePlayer = catalog.players.find(player => player.name === 'Jorge Soto') || catalog.players[0];
   const sampleRival = catalog.rivals.find(rival => rival.name === 'Alianza Lima') || catalog.rivals[0];
   const sampleCountry = catalog.countries.find(country => country.name === 'Argentina') || catalog.countries[0];
   const sampleSeason = catalog.seasons[0];
   const matchHtml = pages.find(page => page.path === sampleMatch.path).html;
+  const playerHtml = pages.find(page => page.path === samplePlayer.path).html;
   const rivalHtml = pages.find(page => page.path === sampleRival.path).html;
 
   assertContains('home', homeHtml, [
@@ -688,6 +820,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     `rel="canonical" href="${SITE_URL}/"`,
     '<h1 class="section-title">Archivo histórico de Sporting Cristal</h1>',
     'href="/partidos"',
+    'href="/jugadores"',
     'href="/rivales"',
     'href="/temporadas"',
     '"@type":"WebSite"',
@@ -722,6 +855,18 @@ Sitemap: ${SITE_URL}/sitemap.xml
     if (canonical !== expected) throw new Error(`Canonical for ${page.path} was ${canonical}`);
     if (!sitemapLocs.has(canonical)) throw new Error(`Canonical ${canonical} is missing from the sitemap`);
   });
+  assertContains('player', playerHtml, [
+    samplePlayer.name,
+    `rel="canonical" href="${absoluteUrl(samplePlayer.path)}"`,
+    '"@type":"Person"',
+    '"@type":"BreadcrumbList"',
+    '"@type":"ItemList"',
+    'href="/partidos/',
+    'Goles por competición',
+    'Goles por temporada',
+    '1971-10-27',
+    'rel="nofollow"',
+  ]);
   assertContains('rival', rivalHtml, [
     sampleRival.name,
     `rel="canonical" href="${absoluteUrl(sampleRival.path)}"`,
@@ -734,7 +879,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
 
   const generatedPages = pages.length;
   process.stdout.write(
-    `Generated ${generatedPages} public HTML pages (${pageCount.matches} matches, ${pageCount.rivals} rivals, ${pageCount.countries} countries, ${pageCount.seasons} seasons) and ${sitemapEntries.length} sitemap URLs.\n`,
+    `Generated ${generatedPages} public HTML pages (${pageCount.matches} matches, ${pageCount.players} players, ${pageCount.rivals} rivals, ${pageCount.countries} countries, ${pageCount.seasons} seasons) and ${sitemapEntries.length} sitemap URLs.\n`,
   );
 
   return {
@@ -742,6 +887,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     sitemapUrls: sitemapEntries.length,
     pageCount,
     sampleMatch,
+    samplePlayer,
     sampleRival,
     sampleCountry,
     sampleSeason,
