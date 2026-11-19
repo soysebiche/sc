@@ -39,11 +39,11 @@ test('renders the historical archive with a named date control', async () => {
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
-test('keeps twelve section tabs in the primary navigation', async () => {
+test('keeps thirteen section tabs in the primary navigation', async () => {
   render(<App />);
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
   const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
-  expect(within(nav).getAllByRole('button')).toHaveLength(12);
+  expect(within(nav).getAllByRole('button')).toHaveLength(13);
   const archiveNavs = screen.getAllByRole('navigation', { name: 'Archivo público' });
   expect(archiveNavs.length).toBeGreaterThanOrEqual(2);
   expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
@@ -58,6 +58,22 @@ test('exposes public match URLs from the interactive archive', async () => {
     const links = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/partidos/'));
     expect(links.length).toBeGreaterThan(0);
   });
+});
+
+test('restores a shareable custom search with streaks and public match links', async () => {
+  window.history.replaceState({}, '', '/?view=buscar&vs=Alianza%20Lima&sede=local&from=2000');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'Búsqueda y rachas' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Rival')).toHaveValue('Alianza Lima');
+  expect(screen.getByLabelText('Condición')).toHaveValue('local');
+  expect(await screen.findByText(/Mostrando 1–18 de 44 partidos/i)).toBeInTheDocument();
+  expect(screen.getByText('Puntos')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Rachas más largas' })).toBeInTheDocument();
+  const links = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/partidos/'));
+  expect(links.length).toBeGreaterThan(0);
+  expect(window.location.search).toContain('view=buscar');
+  expect(window.location.search).toContain('vs=Alianza');
 });
 
 test('lazy-loads scorers, records and clasicos tabs', async () => {

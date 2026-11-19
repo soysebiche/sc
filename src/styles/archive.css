@@ -395,10 +395,83 @@ header.app-header {
   margin-bottom: 1rem;
 }
 
+.filter-bar--search {
+  margin-bottom: 0.85rem;
+}
+
+@media (min-width: 900px) {
+  .filter-bar--search {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 960px) {
   .filter-bar {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+.search-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.search-preset {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: transform var(--duration-fast) var(--ease-out-expo), background-color var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth);
+}
+
+.search-preset:hover {
+  color: var(--text-primary);
+  background: var(--bg-inset);
+}
+
+.search-preset:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.search-preset.is-active {
+  color: var(--text-on-accent);
+  background: var(--color-celeste);
+  border-color: transparent;
+}
+
+.search-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: 0.85rem;
+}
+
+.search-streak-matches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-streak-matches a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.search-active-streak .search-streak-matches {
+  margin-top: 0.75rem;
 }
 
 .match-list {
@@ -1138,6 +1211,8 @@ input[type="date"]:focus {
   .chart-container,
   .match-preview,
   .filter-bar,
+  .filter-bar--search,
+  .search-presets,
   .view-intro,
   .annual-toolbar,
   .compare-toolbar,
@@ -1182,6 +1257,7 @@ input[type="date"]:focus {
   }
 
   .filter-bar,
+  .filter-bar--search,
   .annual-toolbar__filters {
     grid-template-columns: 1fr;
   }

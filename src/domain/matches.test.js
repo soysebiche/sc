@@ -39,6 +39,7 @@ describe('match domain', () => {
     expect(homeWin.scGoals).toBe(2);
     expect(homeWin.opponentGoals).toBe(0);
     expect(homeWin.resultCode).toBe('V');
+    expect(parseMatch({ ...rawHomeWin, 'Número de Fecha': 'Octavos (Ida)' }).round).toBe('Octavos (Ida)');
   });
 
   test('honors a documented penalty shootout after a drawn score', () => {

@@ -60,3 +60,9 @@ export function useUrlState(key, defaultValue = '', options = {}) {
 
   return [value, setValue];
 }
+
+export function useUrlStore() {
+  const context = useContext(UrlStateContext);
+  if (!context) throw new Error('useUrlStore must be used within UrlStateProvider');
+  return context;
+}

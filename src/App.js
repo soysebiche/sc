@@ -23,6 +23,7 @@ const RecordsView = lazy(() => import('./features/RecordsView'));
 const ClasicosView = lazy(() => import('./features/ClasicosView'));
 const PalmaresView = lazy(() => import('./features/PalmaresView'));
 const CuriosidadesView = lazy(() => import('./features/CuriosidadesView'));
+const SearchView = lazy(() => import('./features/SearchView'));
 const SeasonCompareView = lazy(() => import('./features/SeasonCompareView'));
 const RivalsView = lazy(() => import('./features/RivalsView'));
 
@@ -34,6 +35,7 @@ const TABS = [
   { id: 'efemerides', label: 'EFEMÉRIDES', View: EfemeridesView },
   { id: 'dashboard', label: 'DASHBOARD', View: DashboardView },
   { id: 'partidos', label: 'PARTIDOS', View: MatchesView },
+  { id: 'buscar', label: 'BUSCAR', View: SearchView },
   { id: 'analisis-anual', label: 'AÑO', View: AnnualAnalysisView },
   { id: 'comparar', label: 'COMPARAR', View: SeasonCompareView },
   { id: 'goleadores', label: 'GOLEADORES', View: ScorersView },
