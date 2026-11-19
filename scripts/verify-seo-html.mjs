@@ -200,6 +200,9 @@ try {
   requireSnippet(rivalPath, rival.body, 'href="/partidos/');
   requireSnippet(rivalPath, rival.body, 'Local y visita');
   requireSnippet(rivalPath, rival.body, 'Goleadores celestes');
+  const alianza = await curl(origin, '/rivales/alianza-lima');
+  if (alianza.status !== 200) throw new Error(`GET /rivales/alianza-lima returned ${alianza.status}`);
+  requireSnippet('/rivales/alianza-lima', alianza.body, 'href="/jugadores/');
   requireSnippet('/rivales', rivalesIndex.body, '<th scope="col">PJ</th>');
   if (rivalesIndex.status !== 200) throw new Error(`GET /rivales returned ${rivalesIndex.status}`);
   if (rivalAlias.status !== 308 || rivalAlias.location !== '/rivales/cusco-fc') {

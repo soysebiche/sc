@@ -988,6 +988,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     'Local y visita',
     'Por competición',
     'Goleadores celestes',
+    'href="/jugadores/',
     'Mayor victoria',
   ]);
   assertUniqueMatchMeta(pages);

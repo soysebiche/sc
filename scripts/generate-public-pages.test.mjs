@@ -137,12 +137,13 @@ test('rival article lists balance, venue split, ties and scorers', () => {
     },
     {
       matchPathByKey: new Map([['2026-09-27|A.D.T.|Sporting Cristal|Copa de la Liga', '/partidos/2026-09-27-a-d-t']]),
-      playerPathByName: new Map(),
+      playerPathByName: new Map([['Martín Cauteruccio', '/jugadores/martin-cauteruccio']]),
     },
   );
   assert.match(html, /Local y visita/);
   assert.match(html, /Por competición/);
   assert.match(html, /Goleadores celestes/);
+  assert.match(html, /href="\/jugadores\/martin-cauteruccio"/);
   assert.match(html, /Martín Cauteruccio/);
   assert.match(html, /Global 6-0/);
   assert.match(html, /href="\/partidos\/2026-09-27-a-d-t"/);

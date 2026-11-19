@@ -52,7 +52,7 @@ npm run build
 
 - `GET /` trae H1, canonical del homepage, `lang="es-PE"`, WebSite, SportsTeam y `twitter:card=summary_large_image`
 - un partido, un jugador, un rival, un país y una temporada tienen canonical propio y contenido en el HTML
-- `/rivales` lista PJ y `/rivales/real-garcilaso` responde 308 a `/rivales/cusco-fc`
+- `/rivales` lista PJ, `/rivales/alianza-lima` enlaza goleadores a `/jugadores/…` y `/rivales/real-garcilaso` responde 308 a `/rivales/cusco-fc`
 - cada partido enlaza a su rival, su temporada, partidos contiguos, el mismo torneo y BreadcrumbList, con SportsEvent (`homeTeam`, `awayTeam`, `startDate`)
 - `GET /partidos/{id}/`, `.../index.html`, mayúsculas, `/matches/…`, `/en/…`, `/celeste/…` y `?utm=` responden 308 al canonical
 - `GET /no-existe-esta-ruta` responde 404

@@ -130,6 +130,8 @@ test('restores a shareable rival view from the URL', async () => {
   expect(screen.getByLabelText('Buscar rival')).toHaveValue('Alianza Lima');
   expect(screen.getByText(/Balance vs Alianza Lima/i)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /Ficha pública vs. Alianza Lima/ })).toHaveAttribute('href', '/rivales/alianza-lima');
+  expect(await screen.findByRole('heading', { name: 'Goleadores celestes vs. Alianza Lima' })).toBeInTheDocument();
+  expect(screen.getAllByRole('link').some(link => link.getAttribute('href')?.startsWith('/jugadores/'))).toBe(true);
 });
 
 test('resolves a lineage alias from a shared rival URL', async () => {
