@@ -11,7 +11,7 @@ El generador es `scripts/generate-public-pages.mjs`. Se ejecuta al final de `npm
 - `/index.html` (inicio: WebSite + SportsTeam + BreadcrumbList)
 - `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next)
 - `/jugadores/index.html` y `/jugadores/{slug}/index.html` para cada goleador de Sporting Cristal (Person + ItemList de partidos con gol; sin autogoles)
-- `/rivales/index.html` y `/rivales/{slug}/index.html` (listado completo vs. ese rival + ItemList)
+- `/rivales/index.html` y `/rivales/{slug}/index.html` (índice ordenado por PJ; ficha con W/D/L, local/visita, competición, rachas, goleadores, llaves ida/vuelta solo si el archivo las marca, listado completo vs. ese rival + ItemList)
 - `/paises/index.html` y `/paises/{slug}/index.html`
 - `/temporadas/index.html` y `/temporadas/{año}/index.html` (cada partido de la temporada)
 - `/404.html` para URLs desconocidas (`noindex`)
@@ -52,6 +52,7 @@ npm run build
 
 - `GET /` trae H1, canonical del homepage, `lang="es-PE"`, WebSite, SportsTeam y `twitter:card=summary_large_image`
 - un partido, un jugador, un rival, un país y una temporada tienen canonical propio y contenido en el HTML
+- `/rivales` lista PJ y `/rivales/real-garcilaso` responde 308 a `/rivales/cusco-fc`
 - cada partido enlaza a su rival, su temporada, partidos contiguos, el mismo torneo y BreadcrumbList, con SportsEvent (`homeTeam`, `awayTeam`, `startDate`)
 - `GET /partidos/{id}/`, `.../index.html`, mayúsculas, `/matches/…`, `/en/…`, `/celeste/…` y `?utm=` responden 308 al canonical
 - `GET /no-existe-esta-ruta` responde 404

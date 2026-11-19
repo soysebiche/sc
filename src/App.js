@@ -10,7 +10,7 @@ import archiveMetadata from './data/archive-metadata.json';
 import AnnualAnalysisView from './features/AnnualAnalysisView';
 import DashboardView from './features/DashboardView';
 import EfemeridesView from './features/EfemeridesView';
-import EntityHistory, { COUNTRIES_HISTORY, RIVALS_HISTORY } from './features/EntityHistory';
+import EntityHistory, { COUNTRIES_HISTORY } from './features/EntityHistory';
 import MatchesView from './features/MatchesView';
 import { useTheme } from './hooks/useTheme';
 import { UrlStateProvider, useUrlState } from './hooks/useUrlState';
@@ -23,10 +23,7 @@ const RecordsView = lazy(() => import('./features/RecordsView'));
 const ClasicosView = lazy(() => import('./features/ClasicosView'));
 const PalmaresView = lazy(() => import('./features/PalmaresView'));
 const CuriosidadesView = lazy(() => import('./features/CuriosidadesView'));
-
-function RivalsView(props) {
-  return <EntityHistory {...props} config={RIVALS_HISTORY} />;
-}
+const RivalsView = lazy(() => import('./features/RivalsView'));
 
 function CountriesView(props) {
   return <EntityHistory {...props} config={COUNTRIES_HISTORY} />;

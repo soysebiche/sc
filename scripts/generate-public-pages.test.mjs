@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, playerPerson, publicNavHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
+import { applyHead, breadcrumbList, buildSitemapDocuments, escapeHtml, injectRoot, matchSportsEvent, playerPerson, publicNavHtml, rivalArticleHtml, spaArchiveLink, SITEMAP_URL_LIMIT, sitemapLastmod } from './generate-public-pages.mjs';
 
 const shell = `<!doctype html>
 <html lang="es">
@@ -98,6 +98,54 @@ test('breadcrumb JSON-LD keeps absolute items', () => {
   ]);
   assert.equal(crumbs.itemListElement[0].item, 'https://celeste.sebiche.com/');
   assert.equal(crumbs.itemListElement[1].item, 'https://celeste.sebiche.com/partidos');
+});
+
+test('rival article lists balance, venue split, ties and scorers', () => {
+  const match = {
+    date: '2026-09-27',
+    home: 'A.D.T.',
+    away: 'Sporting Cristal',
+    scoreLabel: '0-1',
+    tournament: 'Copa de la Liga',
+    scGoals: 1,
+    opponentGoals: 0,
+    resultCode: 'V',
+    isHome: false,
+    opponent: 'A.D.T.',
+    year: 2026,
+  };
+  const html = rivalArticleHtml(
+    { name: 'A.D.T.', matches: [{ match, path: '/partidos/2026-09-27-a-d-t' }] },
+    {
+      names: ['A.D.T.'],
+      total: { played: 1, V: 1, E: 0, P: 0, goalsFor: 1, goalsAgainst: 0 },
+      home: { played: 0, V: 0, E: 0, P: 0, goalsFor: 0, goalsAgainst: 0, winRate: 0 },
+      away: { played: 1, V: 1, E: 0, P: 0, goalsFor: 1, goalsAgainst: 0, winRate: 100 },
+      neutral: { played: 0 },
+      firstMatch: match,
+      lastMatch: match,
+      streaks: {
+        winning: { record: { length: 1, start: '2026-09-27', end: '2026-09-27' } },
+        unbeaten: { record: { length: 1, start: '2026-09-27', end: '2026-09-27' } },
+        winless: { record: null },
+      },
+      biggestWins: [match],
+      biggestLosses: [],
+      byCompetition: [{ family: 'Copa de la Liga', variants: ['Copa de la Liga'], played: 1, V: 1, E: 0, P: 0, goalsFor: 1, goalsAgainst: 0, winRate: 100 }],
+      ties: [{ label: 'Semifinal', ida: match, vuelta: match, scoreLabel: '6-0', advanced: 'Sporting Cristal' }],
+      topScorers: [{ name: 'Martín Cauteruccio', goals: 3 }],
+    },
+    {
+      matchPathByKey: new Map([['2026-09-27|A.D.T.|Sporting Cristal|Copa de la Liga', '/partidos/2026-09-27-a-d-t']]),
+      playerPathByName: new Map(),
+    },
+  );
+  assert.match(html, /Local y visita/);
+  assert.match(html, /Por competición/);
+  assert.match(html, /Goleadores celestes/);
+  assert.match(html, /Martín Cauteruccio/);
+  assert.match(html, /Global 6-0/);
+  assert.match(html, /href="\/partidos\/2026-09-27-a-d-t"/);
 });
 
 test('Person JSON-LD keeps birthday optional and does not invent fields', () => {

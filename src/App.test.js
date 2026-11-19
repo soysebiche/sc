@@ -113,6 +113,15 @@ test('keeps annual table, summary and sort direction consistent', async () => {
   });
 });
 
+test('lists rivals on the index sorted by matches played', async () => {
+  window.history.replaceState({}, '', '/?view=rivales');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Ordenar por')).toHaveValue('played');
+  expect(screen.getByRole('button', { name: 'Alianza Lima' })).toBeInTheDocument();
+});
+
 test('restores a shareable rival view from the URL', async () => {
   window.history.replaceState({}, '', '/?view=rivales&rival=Alianza%20Lima');
   render(<App />);
@@ -121,6 +130,17 @@ test('restores a shareable rival view from the URL', async () => {
   expect(screen.getByLabelText('Buscar rival')).toHaveValue('Alianza Lima');
   expect(screen.getByText(/Balance vs Alianza Lima/i)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /Ficha pública vs. Alianza Lima/ })).toHaveAttribute('href', '/rivales/alianza-lima');
+});
+
+test('resolves a lineage alias from a shared rival URL', async () => {
+  window.history.replaceState({}, '', '/?view=rivales&rival=Real%20Garcilaso');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Buscar rival')).toHaveValue('Cusco FC');
+  expect(screen.getByText(/Balance vs Cusco FC/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Ficha pública vs. Cusco FC/ })).toHaveAttribute('href', '/rivales/cusco-fc');
+  expect(screen.getByText(/Incluye partidos publicados como Real Garcilaso/)).toBeInTheDocument();
 });
 
 test('normalizes rival aliases from a shared URL', async () => {

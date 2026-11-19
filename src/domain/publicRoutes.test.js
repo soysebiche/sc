@@ -54,7 +54,17 @@ describe('public archive routes', () => {
     const first = alianzas.matches[0];
     expect(lookups.matchPathByKey.get(matchKey(first.match))).toBe(first.path);
     expect(lookups.rivalPathByName.get('Alianza Lima')).toBe('/rivales/alianza-lima');
+    expect(lookups.rivalPathByName.get('Real Garcilaso')).toBe('/rivales/cusco-fc');
     expect(lookups.playerPathByName.get('Jorge Soto')).toBe('/jugadores/jorge-soto');
+  });
+
+  test('groups lineage aliases onto one rival slug and keeps distinct clubs apart', () => {
+    const cusco = catalog.rivals.find(rival => rival.name === 'Cusco FC');
+    expect(cusco.slug).toBe('cusco-fc');
+    expect(cusco.names).toEqual(expect.arrayContaining(['Cusco FC', 'Real Garcilaso']));
+    expect(catalog.rivals.find(rival => rival.name === 'Real Garcilaso')).toBeUndefined();
+    expect(catalog.rivals.find(rival => rival.name === 'Deportivo Garcilaso').slug).toBe('deportivo-garcilaso');
+    expect(catalog.rivals.find(rival => rival.name === 'A.D.T.').slug).toBe('a-d-t');
   });
 
   test('disambiguates a colliding match id without inventing a match', () => {
