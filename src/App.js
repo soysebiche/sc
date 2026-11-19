@@ -26,6 +26,7 @@ const PalmaresView = lazy(() => import('./features/PalmaresView'));
 const CuriosidadesView = lazy(() => import('./features/CuriosidadesView'));
 const SearchView = lazy(() => import('./features/SearchView'));
 const SeasonCompareView = lazy(() => import('./features/SeasonCompareView'));
+const MapView = lazy(() => import('./features/MapView'));
 const RivalsView = lazy(() => import('./features/RivalsView'));
 
 function CountriesView(props) {
@@ -46,6 +47,7 @@ const TABS = [
   { id: 'clasicos', label: 'CLÁSICOS', View: ClasicosView },
   { id: 'rivales', label: 'RIVALES', View: RivalsView },
   { id: 'paises', label: 'PAÍSES', View: CountriesView },
+  { id: 'mapa', label: 'MAPA', View: MapView },
 ];
 
 const TAB_IDS = new Set(TABS.map(tab => tab.id));

@@ -11,6 +11,7 @@ Archivo público y estático para consultar 1,936 partidos y estadísticas hist�
 - Análisis anual por década y tipo de torneo.
 - Comparador de temporadas (puntos, local/visita, goleadores, rachas y Palmarés), compartible con `/?view=comparar&a=2023&b=2024`.
 - Historial consolidado por rival y país.
+- Mapa por ciudad del rival (no por estadio: el archivo no registra recintos).
 - Vistas y filtros compartibles mediante parámetros de URL.
 - Tema claro/oscuro y soporte para reduced motion.
 
@@ -18,7 +19,7 @@ Archivo público y estático para consultar 1,936 partidos y estadísticas hist�
 
 - React 19 sobre Vite 7.
 - Tailwind CSS 3 y Autoprefixer compilados localmente con PostCSS.
-- Recharts cargado solo al abrir la vista Año.
+- Recharts cargado solo al abrir la vista Año; Leaflet, solo al abrir el mapa.
 - Dataset cargado como chunk diferido desde `src/data/historico_completo_sc.json`.
 - Metadata editorial en `src/data/archive-metadata.json` y auditor reproducible en `scripts/audit-data.mjs`.
 - Helpers y agregaciones de dominio en `src/domain/matches.js`.
