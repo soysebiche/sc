@@ -18,6 +18,7 @@ import {
 } from '../src/domain/matchSeo.js';
 import { birthdayFor, linkedGoalsNoteHtml } from '../src/domain/players.js';
 import {
+  COMPARE_PATH,
   OG_IMAGE_PATH,
   PUBLIC_NAV,
   RESULT_WORD,
@@ -25,11 +26,13 @@ import {
   absoluteUrl,
   buildCatalogLookups,
   buildPublicCatalog,
+  compareSpaSearch,
   countryPathByName,
   matchKey,
   rivalPathByName,
   seasonPathByYear,
 } from '../src/domain/publicRoutes.js';
+import { archiveCompareContext, compareSeasons } from '../src/domain/seasons.js';
 import { OG_HEIGHT, OG_WIDTH } from './og-png.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -182,6 +185,51 @@ export function groupedMatchList(entries) {
 function statsLine(matches) {
   const stats = summarizeMatches(matches);
   return `${formatCount(stats.total)} partidos · ${formatCount(stats.victories)} victorias · ${formatCount(stats.draws)} empates · ${formatCount(stats.defeats)} derrotas · goles ${formatCount(stats.goalsFor)}-${formatCount(stats.goalsAgainst)}`;
+}
+
+function signedNumber(value) {
+  if (value == null) return '—';
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function compareCellDisplay(row, value) {
+  if (row.id === 'goalDiff' || row.id === 'biggestWin' || row.id === 'biggestLoss') return signedNumber(value);
+  if (row.id === 'winPercentage') return `${value}%`;
+  if (value == null) return '—';
+  return String(value);
+}
+
+export function seasonCompareTableHtml(compared) {
+  const rows = compared.rows.map(row => {
+    const leftClass = row.winner === 'left' ? ' class="compare-better"' : '';
+    const rightClass = row.winner === 'right' ? ' class="compare-better"' : '';
+    return `<tr><th scope="row">${escapeHtml(row.label)}</th><td${leftClass}>${escapeHtml(compareCellDisplay(row, row.left))}</td><td${rightClass}>${escapeHtml(compareCellDisplay(row, row.right))}</td></tr>`;
+  }).join('');
+  return `<div class="data-table-shell"><table class="compare-table"><thead><tr><th scope="col">Métrica</th><th scope="col">${escapeHtml(compared.left.label)}</th><th scope="col">${escapeHtml(compared.right.label)}</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function coverageListHtml(season) {
+  if (!season.coverage.notes.length) return '';
+  return `<ul class="compare-notes">${season.coverage.notes.map(note => `<li>${escapeHtml(note)}</li>`).join('')}</ul>`;
+}
+
+function scorerListHtml(scorers) {
+  if (!scorers.length) return '<p>No hay goles de Sporting Cristal registrados en esta selección. Los autogoles cuentan en el marcador, no aquí.</p>';
+  return `<ol class="compare-scorers">${scorers.map(row => `<li>${escapeHtml(row.name)} · ${row.goals}${row.lowerBound ? '*' : ''}</li>`).join('')}</ol>`;
+}
+
+function honoursHtml(honours) {
+  if (!honours.titles.length && !honours.runnersUp.length) {
+    return '<p>Sin títulos registrados en Palmarés para este año.</p>';
+  }
+  const titles = honours.titles.length ? `<p><strong>Campeón:</strong> ${escapeHtml(honours.titles.map(item => item.name).join(' · '))}</p>` : '';
+  const runners = honours.runnersUp.length ? `<p><strong>Subcampeón:</strong> ${escapeHtml(honours.runnersUp.map(item => item.name).join(' · '))}</p>` : '';
+  return `${titles}${runners}`;
+}
+
+function splitHtml(label, split) {
+  const points = split.V * 3 + split.E;
+  return `<p><strong>${label}:</strong> ${split.played} PJ · ${split.V}V ${split.E}E ${split.P}P · ${points} pts · ${split.goalsFor}-${split.goalsAgainst}</p>`;
 }
 
 function matchHref(match, lookups, label) {
@@ -554,15 +602,28 @@ function assertContains(label, html, snippets) {
 }
 
 export async function generatePublicPages({ distDir = DIST, dataDir = path.join(ROOT, 'src', 'data') } = {}) {
-  const [viteHtml, records, metadata] = await Promise.all([
+  const [viteHtml, records, metadata, palmares, aliases] = await Promise.all([
     readFile(path.join(distDir, 'index.html'), 'utf8'),
     readFile(path.join(dataDir, 'historico_completo_sc.json'), 'utf8').then(JSON.parse),
     readFile(path.join(dataDir, 'archive-metadata.json'), 'utf8').then(JSON.parse),
+    readFile(path.join(dataDir, 'palmares.json'), 'utf8').then(JSON.parse),
+    readFile(path.join(dataDir, 'scorer-aliases.json'), 'utf8').then(JSON.parse),
   ]);
 
   const matches = records.map(parseMatch);
   const catalog = buildPublicCatalog(matches, aliases);
   const lookups = buildCatalogLookups(catalog);
+  const compareCtx = archiveCompareContext(matches, palmares);
+  const defaultCompared = compareCtx.defaults.a && compareCtx.defaults.b
+    ? compareSeasons(
+      matches,
+      aliases,
+      palmares,
+      { year: compareCtx.defaults.a },
+      { year: compareCtx.defaults.b },
+      { latestYear: compareCtx.latestYear, latestMatchDate: compareCtx.latestMatchDate },
+    )
+    : null;
   // Legacy URL kept for already-shared links: serve the brand-kit home OG there too.
   const ogPng = await readFile(path.join(ROOT, 'public', 'og', 'home.png'));
   await writeFile(path.join(distDir, 'og-image.png'), ogPng);
@@ -593,7 +654,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     intro: homeDescription,
     crumbs: crumbsHome,
       extra: `<p>${escapeHtml(statsLine(matches))}</p>
-      <p><a href="/partidos">Partidos</a> · <a href="/jugadores">Jugadores</a> · <a href="/rivales">Rivales</a> · <a href="/paises">Países</a> · <a href="/temporadas">Temporadas</a></p>
+      <p><a href="/partidos">Partidos</a> · <a href="/jugadores">Jugadores</a> · <a href="/rivales">Rivales</a> · <a href="/paises">Países</a> · <a href="/temporadas">Temporadas</a> · <a href="${COMPARE_PATH}">Comparar temporadas</a></p>
       <section class="archive-section"><h2 class="collection-title">Últimos partidos</h2><ul class="seo-list">${recentLinks}</ul></section>`,
   });
   const homeHtml = injectRoot(applyHead(viteHtml, {
@@ -718,7 +779,50 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     intro: temporadasDescription,
     crumbs: temporadasCrumbs,
     spa: catalog.indexes.temporadas.spa,
-    extra: `<ul class="seo-list">${catalog.seasons.map(season => `<li><a href="${escapeHtml(season.path)}">Temporada ${season.year}</a> · ${formatCount(season.matches.length)} partidos</li>`).join('')}</ul>`,
+    extra: `<p><a href="${COMPARE_PATH}">Comparar temporadas</a></p><ul class="seo-list">${catalog.seasons.map(season => `<li><a href="${escapeHtml(season.path)}">Temporada ${season.year}</a> · ${formatCount(season.matches.length)} partidos${season.matches.length < 15 ? ' · archivo incompleto' : ''}</li>`).join('')}</ul>`,
+  }));
+
+  const compareCrumbs = [...temporadasCrumbs, { name: 'Comparar', path: COMPARE_PATH }];
+  const compareTitle = 'Comparar temporadas de Sporting Cristal | Sebiche Celeste';
+  const compareDescription = defaultCompared
+    ? `Compara temporadas de Sporting Cristal. Ejemplo del archivo: ${defaultCompared.left.label} (${defaultCompared.left.summary.played} partidos, ${defaultCompared.left.summary.points} pts) frente a ${defaultCompared.right.label} (${defaultCompared.right.summary.played} partidos, ${defaultCompared.right.summary.points} pts).`
+    : 'Compara temporadas de Sporting Cristal con partidos, puntos, goles, rachas y Palmarés del archivo.';
+  const palmaresGapLine = compareCtx.palmaresGaps.length
+    ? `<p>Palmarés registra honores en años sin partidos en el archivo: ${escapeHtml(compareCtx.palmaresGaps.map(row => `${row.year} (${row.kind === 'title' ? 'título' : 'subcampeón'}: ${row.competition})`).join(' · '))}.</p>`
+    : '';
+  const compareColumns = defaultCompared ? `<div class="compare-heads">
+      ${[defaultCompared.left, defaultCompared.right].map(season => `<section class="archive-section">
+        <h2 class="collection-title">${escapeHtml(season.label)}</h2>
+        <p><a href="${escapeHtml(season.path)}">Ver temporada ${season.year}</a></p>
+        <p>${season.summary.played} partidos · ${season.summary.V}V ${season.summary.E}E ${season.summary.P}P · ${season.summary.points} pts · goles ${season.summary.goalsFor}-${season.summary.goalsAgainst}</p>
+        ${splitHtml('Local', season.home)}${splitHtml('Visita', season.away)}
+        <h3 class="collection-title">Goleadores</h3>
+        ${scorerListHtml(season.scorers)}
+        <h3 class="collection-title">Palmarés</h3>
+        ${honoursHtml(season.honours)}
+        ${coverageListHtml(season)}
+      </section>`).join('')}
+    </div>
+    <section class="archive-section">
+      <h2 class="collection-title">Lado a lado</h2>
+      ${seasonCompareTableHtml(defaultCompared)}
+    </section>` : '';
+  const compareHtml = injectRoot(applyHead(viteHtml, {
+    title: compareTitle,
+    description: compareDescription,
+    pathname: COMPARE_PATH,
+    spa: catalog.indexes.comparar.spa,
+    schema: jsonLdGraph([breadcrumbList(compareCrumbs)]),
+  }), siteChrome({
+    heading: 'Comparar temporadas de Sporting Cristal',
+    intro: compareDescription,
+    crumbs: compareCrumbs,
+    spa: catalog.indexes.comparar.spa,
+    extra: `<p>Los puntos se calculan con 3 por victoria y 1 por empate para comparar. El archivo no registra el sistema de puntaje de cada época.</p>
+      <p>Años sin partidos entre ${compareCtx.years.at(-1)} y ${compareCtx.years[0]}: ${escapeHtml(compareCtx.missingYears.join(', '))}.</p>
+      ${palmaresGapLine}
+      ${compareColumns}
+      <p><a href="${escapeHtml(compareSpaSearch({ a: compareCtx.defaults.a, b: compareCtx.defaults.b }))}" rel="nofollow">Elegir otras temporadas en el archivo interactivo</a></p>`,
   }));
 
   const pages = [
@@ -728,6 +832,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     { path: '/rivales', html: rivalesIndexHtml },
     { path: '/paises', html: paisesIndexHtml },
     { path: '/temporadas', html: temporadasIndexHtml },
+    { path: COMPARE_PATH, html: compareHtml },
   ];
 
   const chronological = sortEntriesChronologically(catalog.matches);
@@ -873,7 +978,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
         intro: description,
         crumbs,
         spa: season.spa,
-        extra: groupedMatchList(season.matches),
+        extra: `<p><a href="${COMPARE_PATH}">Comparar temporadas</a> · <a href="${escapeHtml(compareSpaSearch({ a: season.year }))}" rel="nofollow">Comparar ${season.year} en el archivo interactivo</a></p>${groupedMatchList(season.matches)}`,
       })),
     });
   });
@@ -895,6 +1000,7 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
     { path: '/rivales', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     { path: '/paises', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
     { path: '/temporadas', group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.8' },
+    { path: COMPARE_PATH, group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'weekly', priority: '0.7' },
     ...STATIC_SITEMAP_PATHS.map(staticPath => ({ path: staticPath, group: 'pages', lastmod: metadata.lastUpdated, changefreq: 'yearly', priority: '0.3' })),
     ...catalog.players.map(player => {
       const profile = profiles.get(player.name);
@@ -935,6 +1041,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
     'href="/jugadores"',
     'href="/rivales"',
     'href="/temporadas"',
+    `href="${COMPARE_PATH}"`,
     '"@type":"WebSite"',
     '"@type":"SportsTeam"',
     '"name":"Sporting Cristal"',
@@ -992,6 +1099,17 @@ Sitemap: ${SITE_URL}/sitemap.xml
   ]);
   assertUniqueMatchMeta(pages);
   assertContains('404', notFoundHtml, ['Página no encontrada', 'noindex,nofollow']);
+  if (defaultCompared) {
+    assertContains('comparar', compareHtml, [
+      'Comparar temporadas de Sporting Cristal',
+      `rel="canonical" href="${absoluteUrl(COMPARE_PATH)}"`,
+      defaultCompared.left.label,
+      defaultCompared.right.label,
+      'compare-table',
+      '3 por victoria',
+      '1991',
+    ]);
+  }
 
   const generatedPages = pages.length;
   process.stdout.write(

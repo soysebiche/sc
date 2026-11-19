@@ -13,13 +13,13 @@ El generador es `scripts/generate-public-pages.mjs`. Se ejecuta al final de `npm
 - `/jugadores/index.html` y `/jugadores/{slug}/index.html` para cada goleador de Sporting Cristal (Person + ItemList de partidos con gol; sin autogoles)
 - `/rivales/index.html` y `/rivales/{slug}/index.html` (índice ordenado por PJ; ficha con W/D/L, local/visita, competición, rachas, goleadores, llaves ida/vuelta solo si el archivo las marca, listado completo vs. ese rival + ItemList)
 - `/paises/index.html` y `/paises/{slug}/index.html`
-- `/temporadas/index.html` y `/temporadas/{año}/index.html` (cada partido de la temporada)
+- `/temporadas/index.html`, `/temporadas/comparar/index.html` (comparador con las dos temporadas más recientes del archivo) y `/temporadas/{año}/index.html` (cada partido de la temporada)
 - `/404.html` para URLs desconocidas (`noindex`)
 - `/og-image.png` (1200×630)
 - `/sitemap.xml` (índice) más `sitemap-pages.xml`, `sitemap-players.xml`, `sitemap-rivals.xml`, `sitemap-countries.xml`, `sitemap-seasons.xml` y `sitemap-matches.xml`
 - `/robots.txt`
 
-No se inventan partidos, jugadores, rivales, países ni temporadas: solo salen valores que ya están en el archivo. Los autogoles (`Name (71og)`) no generan ficha. Los parámetros compartibles (`view`, `rival`, `country`, `year`, …) no cambian. Cada página pública enlaza a `/?view=…` como “archivo interactivo” con `rel="nofollow"` para no pasar equidad a una variante de query.
+No se inventan partidos, jugadores, rivales, países ni temporadas: solo salen valores que ya están en el archivo. Los autogoles (`Name (71og)`) no generan ficha. Los parámetros compartibles (`view`, `rival`, `country`, `year`, …) no cambian. El comparador interactivo usa `view=comparar` más `a`, `b`, `ap` y `bp` (`/?view=comparar&a=2023&b=2024`). Cada página pública enlaza a `/?view=…` como “archivo interactivo” con `rel="nofollow"` para no pasar equidad a una variante de query.
 
 El homepage hidratado y el nav principal conservan enlaces reales a `/partidos`, `/jugadores`, `/rivales`, `/paises` y `/temporadas`. Cada fila de partido del SPA apunta a `/partidos/{id}`. Los nombres de goleadores del archivo enlazan a `/jugadores/{slug}`. Las fichas de rival/país del SPA enlazan a su página pública. Cada partido prerenderizado enlaza a su rival, su temporada, prev/next cronológico, prev/next del mismo rival y unos partidos del mismo torneo, con migas de pan visibles y `BreadcrumbList` JSON-LD.
 

@@ -92,6 +92,11 @@ export function normalizePublicPath(pathname) {
     }
   }
 
+  const joined = segs.map(seg => seg.toLowerCase()).join('/');
+  if (joined === 'comparar' || joined === 'compare' || joined === 'temporadas/compare' || joined === 'seasons/compare') {
+    segs = ['temporadas', 'comparar'];
+  }
+
   return stripIndexAndSlash(`/${segs.join('/')}`);
 }
 

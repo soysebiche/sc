@@ -14,6 +14,7 @@ describe('SPA mount on public archive HTML', () => {
     expect(shouldMountSpa('/rivales/alianza-lima/', seoRoot)).toBe(false);
     expect(shouldMountSpa('/jugadores/jorge-soto', seoRoot)).toBe(false);
     expect(shouldMountSpa('/temporadas/1991', seoRoot)).toBe(false);
+    expect(shouldMountSpa('/temporadas/comparar', seoRoot)).toBe(false);
   });
 
   test('hydrates unknown documents that are not prerendered archive pages', () => {
