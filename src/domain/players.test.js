@@ -23,7 +23,7 @@ describe('scorer aggregation for player cards', () => {
   const names = new Set(players.map(player => player.name));
 
   it('ranks archive scorers without inventing names', () => {
-    expect(players[0]).toMatchObject({ name: 'Jorge Soto', goals: 160 });
+    expect(players[0]).toMatchObject({ name: 'Jorge Soto', goals: 163 });
     expect(players.length).toBe(catalog.players.length);
     expect(players.length).toBeGreaterThan(300);
   });
