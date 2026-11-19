@@ -34,19 +34,20 @@ test('renders the historical archive with a named date control', async () => {
   expect(within(upcoming).queryByText(/ADT/)).not.toBeInTheDocument();
   expect(within(upcoming).queryByText('Final')).not.toBeInTheDocument();
   expect(within(upcoming).queryByText(/Alianza Atlético/)).not.toBeInTheDocument();
-  expect(within(upcoming).queryByText(/Cienciano/)).not.toBeInTheDocument();
-  expect(within(upcoming).queryByText(/Fecha 17/)).not.toBeInTheDocument();
+  expect(within(upcoming).getByText('Fecha 17')).toBeInTheDocument();
+  expect(within(upcoming).getByText(/Cienciano/)).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Suscribirme al calendario de partidos de Sporting Cristal' })).toHaveLength(2);
 });
 
-test('keeps eleven section tabs in the primary navigation', async () => {
+test('keeps thirteen section tabs in the primary navigation', async () => {
   render(<App />);
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
   const nav = screen.getByRole('navigation', { name: 'Secciones principales' });
-  expect(within(nav).getAllByRole('button')).toHaveLength(11);
+  expect(within(nav).getAllByRole('button')).toHaveLength(13);
   const archiveNavs = screen.getAllByRole('navigation', { name: 'Archivo público' });
   expect(archiveNavs.length).toBeGreaterThanOrEqual(2);
   expect(screen.getAllByRole('link', { name: 'Rivales' }).some(link => link.getAttribute('href') === '/rivales')).toBe(true);
+  expect(screen.getAllByRole('link', { name: 'Jugadores' }).some(link => link.getAttribute('href') === '/jugadores')).toBe(true);
   expect(screen.getAllByRole('link', { name: 'Temporadas' }).some(link => link.getAttribute('href') === '/temporadas')).toBe(true);
   expect(screen.getAllByRole('link', { name: 'Partido al azar' }).some(link => link.getAttribute('href') === '/partidos/azar#auto=1')).toBe(true);
   expect(screen.getAllByRole('button', { name: 'Partido al azar' }).length).toBeGreaterThanOrEqual(2);
@@ -62,18 +63,45 @@ test('exposes public match URLs from the interactive archive', async () => {
   });
 });
 
+test('restores a shareable custom search with streaks and public match links', async () => {
+  window.history.replaceState({}, '', '/?view=buscar&vs=Alianza%20Lima&sede=local&from=2000');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'Búsqueda y rachas' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Rival')).toHaveValue('Alianza Lima');
+  expect(screen.getByLabelText('Condición')).toHaveValue('local');
+  expect(await screen.findByText(/Mostrando 1–18 de 44 partidos/i)).toBeInTheDocument();
+  expect(screen.getByText('Puntos')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Rachas más largas' })).toBeInTheDocument();
+  const links = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/partidos/'));
+  expect(links.length).toBeGreaterThan(0);
+  expect(window.location.search).toContain('view=buscar');
+  expect(window.location.search).toContain('vs=Alianza');
+});
+
 test('lazy-loads scorers, records and clasicos tabs', async () => {
   render(<App />);
   await screen.findByRole('heading', { name: 'Próximos encuentros' });
 
   fireEvent.click(screen.getByRole('button', { name: 'GOLEADORES' }));
   expect(await screen.findByRole('heading', { name: 'Goleadores' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Buscar jugador')).toBeInTheDocument();
+  expect(screen.getByLabelText('Ordenar por')).toHaveValue('goals');
+  expect(screen.getByRole('link', { name: 'Jorge Soto' })).toHaveAttribute('href', '/jugadores/jorge-soto');
 
   fireEvent.click(screen.getByRole('button', { name: 'RÉCORDS' }));
   expect(await screen.findByRole('heading', { name: 'Rachas y récords' })).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: 'CLÁSICOS' }));
   expect(await screen.findByRole('heading', { name: 'Clásicos' })).toBeInTheDocument();
+});
+
+test('restores a scorer profile from a shared URL', async () => {
+  window.history.replaceState({}, '', '/?view=goleadores&jugador=Jorge%20Soto');
+  render(<App />);
+  expect(await screen.findByRole('heading', { name: 'Jorge Soto' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Ficha pública' })).toHaveAttribute('href', '/jugadores/jorge-soto');
+  expect(screen.getByText(/Nació el/)).toBeInTheDocument();
 });
 
 test('requires explicit consent before enabling anonymous measurement', async () => {
@@ -104,6 +132,15 @@ test('keeps annual table, summary and sort direction consistent', async () => {
   });
 });
 
+test('lists rivals on the index sorted by matches played', async () => {
+  window.history.replaceState({}, '', '/?view=rivales');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Ordenar por')).toHaveValue('played');
+  expect(screen.getByRole('button', { name: 'Alianza Lima' })).toBeInTheDocument();
+});
+
 test('restores a shareable rival view from the URL', async () => {
   window.history.replaceState({}, '', '/?view=rivales&rival=Alianza%20Lima');
   render(<App />);
@@ -112,6 +149,17 @@ test('restores a shareable rival view from the URL', async () => {
   expect(screen.getByLabelText('Buscar rival')).toHaveValue('Alianza Lima');
   expect(screen.getByText(/Balance vs Alianza Lima/i)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /Ficha pública vs. Alianza Lima/ })).toHaveAttribute('href', '/rivales/alianza-lima');
+});
+
+test('resolves a lineage alias from a shared rival URL', async () => {
+  window.history.replaceState({}, '', '/?view=rivales&rival=Real%20Garcilaso');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'HISTORIAL VS RIVALES' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Buscar rival')).toHaveValue('Cusco FC');
+  expect(screen.getByText(/Balance vs Cusco FC/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Ficha pública vs. Cusco FC/ })).toHaveAttribute('href', '/rivales/cusco-fc');
+  expect(screen.getByText(/Incluye partidos publicados como Real Garcilaso/)).toBeInTheDocument();
 });
 
 test('normalizes rival aliases from a shared URL', async () => {
@@ -151,6 +199,24 @@ test('persists the selected theme', async () => {
 
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   expect(window.localStorage.getItem('sc-theme')).toBe('dark');
+});
+
+test('restores a shareable season comparison from the URL', async () => {
+  window.history.replaceState({}, '', '/?view=comparar&a=2023&b=2024');
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: 'Comparar temporadas' })).toBeInTheDocument();
+  const seasonA = screen.getByRole('group', { name: 'Temporada A' });
+  const seasonB = screen.getByRole('group', { name: 'Temporada B' });
+  expect(within(seasonA).getByLabelText('Año')).toHaveValue('2023');
+  expect(within(seasonB).getByLabelText('Año')).toHaveValue('2024');
+  expect(screen.getByRole('columnheader', { name: '2023' })).toBeInTheDocument();
+  expect(screen.getByRole('columnheader', { name: '2024' })).toBeInTheDocument();
+  expect(screen.getByText(/Faltan \d+ años entre/)).toBeInTheDocument();
+  expect(screen.getAllByText(/1991/).length).toBeGreaterThan(0);
+  fireEvent.change(within(seasonA).getByLabelText('Fase'), { target: { value: 'Apertura' } });
+  expect(window.location.search).toContain('ap=apertura');
+  expect(screen.getByRole('columnheader', { name: '2023 · Apertura' })).toBeInTheDocument();
 });
 
 test('restores the active view from a popstate change', async () => {

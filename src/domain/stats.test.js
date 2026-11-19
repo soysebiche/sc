@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import records from '../data/historico_completo_sc.json';
 import aliases from '../data/scorer-aliases.json';
 import { parseMatch } from './matches.js';
-import { calculateHomeAway, calculateRecords, calculateStreaks, longestStreaks, rankScorers } from './stats.js';
+import { calculateHomeAway, calculateRecords, calculateStreaks, longestStreaks, rankScorers, streakRuns } from './stats.js';
 
 const mk = (date, sc, op, extra = {}) => ({
   date, year: Number(date.slice(0, 4)), scGoals: sc, opponentGoals: op, isHome: true, opponent: 'X',
@@ -19,6 +19,9 @@ describe('streaks', () => {
     const s = calculateStreaks(ms);
     expect(s.winning.record.length).toBe(2);
     expect(s.cleanSheet.current.length).toBe(2);
+    const withMatches = streakRuns(ms, m => m.resultCode !== 'P');
+    expect(withMatches.record.matches.map(m => m.date)).toEqual(['2020-01-01', '2020-01-02']);
+    expect(withMatches.current.matches.map(m => m.date)).toEqual(['2020-01-04', '2020-01-05']);
   });
   it('a loss ends the current run', () => {
     expect(longestStreaks([mk('2020-01-01', 1, 0), mk('2020-01-02', 0, 1)], m => m.resultCode === 'V').current).toBeNull();

@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { UrlStateProvider, useUrlState } from './useUrlState';
+import { UrlStateProvider, useUrlState, useUrlStore } from './useUrlState';
 
 function Probe() {
   const [view, setView] = useUrlState('view', 'efemerides', { history: 'push' });
@@ -73,6 +73,35 @@ test('writes year and page in one history update', () => {
   expect(window.location.search).toBe('?year=2024');
   expect(screen.getByTestId('year')).toHaveTextContent('2024');
   expect(screen.getByTestId('page')).toHaveTextContent('1');
+  replace.mockRestore();
+});
+
+test('assigns several search keys in one history update', () => {
+  function SearchProbe() {
+    const { search, assign } = useUrlStore();
+    return (
+      <div>
+        <span data-testid="search">{search}</span>
+        <button
+          type="button"
+          onClick={() => assign({
+            vs: { value: 'Alianza Lima', defaultValue: '' },
+            sede: { value: 'local', defaultValue: '' },
+            from: { value: '2000', defaultValue: '' },
+            sp: { value: '1', defaultValue: '1' },
+          })}
+        >
+          apply-preset
+        </button>
+      </div>
+    );
+  }
+  const replace = vi.spyOn(window.history, 'replaceState');
+  render(<UrlStateProvider><SearchProbe /></UrlStateProvider>);
+  replace.mockClear();
+  fireEvent.click(screen.getByRole('button', { name: 'apply-preset' }));
+  expect(replace).toHaveBeenCalledTimes(1);
+  expect(window.location.search).toBe('?vs=Alianza+Lima&sede=local&from=2000');
   replace.mockRestore();
 });
 

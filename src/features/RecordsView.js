@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import MinuteBars from '../components/MinuteBars';
+import RivalLink from '../components/RivalLink';
+import PlayerLink from '../components/PlayerLink';
 import StatTile from '../components/StatTile';
 import aliases from '../data/scorer-aliases.json';
 import { formatMatchDate } from '../domain/matches';
@@ -53,7 +55,7 @@ function SplitTable({ title, rows, labelHeader }) {
             {['PJ', 'V', 'E', 'P', '%V', 'PJ', 'V', 'E', 'P', '%V'].map((h, i) => <th scope="col" key={i}>{h}</th>)}
           </tr></thead>
           <tbody>{rows.map(r => (
-            <tr key={r.label}><td>{r.label}</td>{splitCells(r.home)}{splitCells(r.away)}</tr>
+            <tr key={r.label}><td>{r.link ? <RivalLink name={r.label} /> : r.label}</td>{splitCells(r.home)}{splitCells(r.away)}</tr>
           ))}</tbody>
         </table>
       </div></div>
@@ -104,7 +106,7 @@ function RecordsView({ matches }) {
                 <td className="text-center text-victory">{t.V}</td><td className="text-center text-draw">{t.E}</td><td className="text-center text-defeat">{t.P}</td>
                 <td className="text-center">{t.goalsFor}</td><td className="text-center">{t.goalsAgainst}</td>
                 <td className="text-center font-bold text-accent">{t.winRate}%</td>
-                <td>{t.topScorer ? `${t.topScorer.name} (${t.topScorer.goals}${t.topScorer.lowerBound ? '*' : ''})` : '—'}</td>
+                <td>{t.topScorer ? <><PlayerLink name={t.topScorer.name} /> ({t.topScorer.goals}{t.topScorer.lowerBound ? '*' : ''})</> : '—'}</td>
               </tr>
             ))}</tbody>
           </table>
@@ -139,14 +141,14 @@ function RecordsView({ matches }) {
           <StatTile label="Tramo más goleador" value={`${peak.label}'`} detail={`${peak.goals} goles`} tone="celeste" />
           <StatTile label="Primer tiempo" value={minutes.halves.first} detail={`${Math.round((minutes.halves.first / Math.max(1, minutes.coverage.goals)) * 100)}%`} />
           <StatTile label="Segundo tiempo" value={minutes.halves.second} detail={`${Math.round((minutes.halves.second / Math.max(1, minutes.coverage.goals)) * 100)}%`} />
-          <StatTile label="Goles del 90' en adelante" value={minutes.lateGoals} detail={minutes.lateScorers[0] ? `Más: ${minutes.lateScorers[0].name} (${minutes.lateScorers[0].goals})` : ''} />
+          <StatTile label="Goles del 90' en adelante" value={minutes.lateGoals} detail={minutes.lateScorers[0] ? <>Más: <PlayerLink name={minutes.lateScorers[0].name} /> ({minutes.lateScorers[0].goals})</> : ''} />
         </div>
         <MinuteBars buckets={minutes.buckets} />
         <h4 className="font-bold mt-4 mb-2">Goleadores del final (90{"'"} o más)</h4>
-        <ol className="text-sm">{minutes.lateScorers.slice(0, 8).map(s => <li key={s.name}>{s.name} · {s.goals}</li>)}</ol>
+        <ol className="text-sm">{minutes.lateScorers.slice(0, 8).map(s => <li key={s.name}><PlayerLink name={s.name} /> · {s.goals}</li>)}</ol>
       </section>
       <SplitTable title="Local vs. visita por década" labelHeader="Década" rows={homeAway.perDecade.map(d => ({ ...d, label: `${d.decade}s` }))} />
-      <SplitTable title="Local vs. visita por rival (10+ partidos)" labelHeader="Rival" rows={homeAway.perRival.map(r => ({ ...r, label: r.name }))} />
+      <SplitTable title="Local vs. visita por rival (10+ partidos)" labelHeader="Rival" rows={homeAway.perRival.map(r => ({ ...r, label: r.name, link: true }))} />
     </div>
   );
 }
