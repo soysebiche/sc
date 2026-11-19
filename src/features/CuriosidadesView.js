@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import RivalLink from '../components/RivalLink';
+import PlayerLink from '../components/PlayerLink';
 import StatTile from '../components/StatTile';
 import aliases from '../data/scorer-aliases.json';
 import { formatMatchDate } from '../domain/matches';
@@ -24,7 +26,7 @@ function StreakList({ title, rows, empty }) {
       <h4 className="font-bold mt-3 mb-2">{title}</h4>
       {rows.length ? (
         <ol className="text-sm curio-list">{rows.map(r => (
-          <li key={r.rival}><strong>{r.length}</strong> · {r.rival} <span className="copy-muted">({span(r)})</span></li>
+          <li key={r.rival}><strong>{r.length}</strong> · <RivalLink name={r.rival} /> <span className="copy-muted">({span(r)})</span></li>
         ))}</ol>
       ) : <p className="copy-muted text-sm">{empty}</p>}
     </div>
@@ -50,7 +52,7 @@ function CuriosidadesView({ matches = [] }) {
   const goalRow = g => (
     <tr key={`${g.date}-${g.name}-${g.minute}-${g.added}`}>
       <td className="text-center font-bold text-accent">{minuteLabel(g)}</td>
-      <td>{g.name}</td>
+      <td><PlayerLink name={g.name} /></td>
       <td>{g.home} {g.scoreLabel} {g.away}</td>
       <td>{formatMatchDate(g.date)}</td>
     </tr>
@@ -64,9 +66,9 @@ function CuriosidadesView({ matches = [] }) {
       </div>
 
       <div className="stat-strip stat-strip--3">
-        <StatTile label="Rival más enfrentado" value={extremes.mostPlayed.played} detail={`${extremes.mostPlayed.rival} · partidos`} tone="celeste" />
-        <StatTile label="Rival al que más goles le metimos" value={extremes.mostGoalsFor.goalsFor} detail={`${extremes.mostGoalsFor.rival} · en ${extremes.mostGoalsFor.played} PJ`} tone="win" />
-        <StatTile label="Rival que más goles nos metió" value={extremes.mostGoalsAgainst.goalsAgainst} detail={`${extremes.mostGoalsAgainst.rival} · en ${extremes.mostGoalsAgainst.played} PJ`} tone="loss" />
+        <StatTile label="Rival más enfrentado" value={extremes.mostPlayed.played} detail={<><RivalLink name={extremes.mostPlayed.rival} /> · partidos</>} tone="celeste" />
+        <StatTile label="Rival al que más goles le metimos" value={extremes.mostGoalsFor.goalsFor} detail={<><RivalLink name={extremes.mostGoalsFor.rival} /> · en {extremes.mostGoalsFor.played} PJ</>} tone="win" />
+        <StatTile label="Rival que más goles nos metió" value={extremes.mostGoalsAgainst.goalsAgainst} detail={<><RivalLink name={extremes.mostGoalsAgainst.rival} /> · en {extremes.mostGoalsAgainst.played} PJ</>} tone="loss" />
       </div>
 
       <section className="archive-section">
@@ -87,8 +89,9 @@ function CuriosidadesView({ matches = [] }) {
 
       <section className="archive-section">
         <h3 className="collection-title">Verdugos: más goles a un mismo rival</h3>
+        <p className="copy-secondary text-sm mb-2">Cada goleador enlaza a su <a className="link-accent" href="/jugadores">ficha</a>.</p>
         <Table head={['Jugador', 'Rival', 'Goles', 'PJ con gol']} rows={pairs.map(p => (
-          <tr key={`${p.name}-${p.rival}`}><td>{p.name}</td><td>{p.rival}</td><td className="text-center font-bold text-accent">{p.goals}</td><td className="text-center">{p.matches}</td></tr>
+          <tr key={`${p.name}-${p.rival}`}><td><PlayerLink name={p.name} /></td><td><RivalLink name={p.rival} /></td><td className="text-center font-bold text-accent">{p.goals}</td><td className="text-center">{p.matches}</td></tr>
         ))} />
         <p className="copy-muted text-xs mt-2">PJ con gol: partidos en los que marcó a ese rival.</p>
       </section>
@@ -96,11 +99,11 @@ function CuriosidadesView({ matches = [] }) {
       <section className="archive-section">
         <h3 className="collection-title">Hat-tricks ({hats.rows.length})</h3>
         <div className="stat-strip stat-strip--3">
-          {hats.leaders.slice(0, 3).map((l, i) => <StatTile key={l.name} label={i ? `${i + 1}.º` : 'Más hat-tricks'} value={l.count} detail={l.name} tone={i ? undefined : 'celeste'} />)}
+          {hats.leaders.slice(0, 3).map((l, i) => <StatTile key={l.name} label={i ? `${i + 1}.º` : 'Más hat-tricks'} value={l.count} detail={<PlayerLink name={l.name} />} tone={i ? undefined : 'celeste'} />)}
         </div>
         <Table head={['Fecha', 'Jugador', 'Goles', 'Partido', 'Torneo']} rows={hats.rows.map(h => (
           <tr key={`${h.date}-${h.name}`}>
-            <td>{formatMatchDate(h.date)}</td><td>{h.name}</td>
+            <td>{formatMatchDate(h.date)}</td><td><PlayerLink name={h.name} /></td>
             <td className="text-center font-bold text-accent">{h.goals}</td>
             <td>{h.home} {h.scoreLabel} {h.away}</td><td>{h.tournament}</td>
           </tr>

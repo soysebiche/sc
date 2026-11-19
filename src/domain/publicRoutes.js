@@ -1,5 +1,7 @@
 // Canonical public paths for the static HTML archive. Query param names stay unchanged.
+import { clubOf } from './matches.js';
 import { SITE_URL } from './shareLinks.js';
+import { rankScorers } from './stats.js';
 
 export { SITE_URL };
 
@@ -7,11 +9,13 @@ export const OG_IMAGE_PATH = '/og/home.png';
 export const RESULT_WORD = Object.freeze({ V: 'Victoria', E: 'Empate', P: 'Derrota' });
 export const PUBLIC_NAV = Object.freeze([
   { path: '/partidos', label: 'Partidos' },
+  { path: '/jugadores', label: 'Jugadores' },
   { path: '/rivales', label: 'Rivales' },
   { path: '/paises', label: 'Países' },
   { path: '/temporadas', label: 'Temporadas' },
 ]);
-export const ARCHIVE_HEADS = Object.freeze(['partidos', 'rivales', 'paises', 'temporadas']);
+export const ARCHIVE_HEADS = Object.freeze(['partidos', 'jugadores', 'rivales', 'paises', 'temporadas']);
+export const COMPARE_PATH = '/temporadas/comparar';
 
 export function slugify(value) {
   const slug = String(value || '')
@@ -36,6 +40,8 @@ export function uniqueSlug(name, used) {
   return next;
 }
 
+const RESERVED_MATCH_IDS = new Set(['azar']);
+
 export function matchPublicId(match, used) {
   const candidates = [
     slugify(`${match.date}-${match.opponent}`),
@@ -43,7 +49,7 @@ export function matchPublicId(match, used) {
     slugify(`${match.date}-${match.home}-${match.away}-${match.tournament}`),
   ];
   for (const candidate of candidates) {
-    if (candidate && !used.has(candidate)) {
+    if (candidate && !used.has(candidate) && !RESERVED_MATCH_IDS.has(candidate)) {
       used.add(candidate);
       return candidate;
     }
@@ -65,10 +71,11 @@ export function spaSearch(params) {
   return query ? `/?${query}` : '/';
 }
 
-export function buildPublicCatalog(matches) {
+export function buildPublicCatalog(matches, scorerAliases = { players: {} }) {
   const usedMatchIds = new Set();
   const usedRivalSlugs = new Set();
   const usedCountrySlugs = new Set();
+  const usedPlayerSlugs = new Set();
 
   const matchEntries = matches.map(match => {
     const id = matchPublicId(match, usedMatchIds);
@@ -86,8 +93,12 @@ export function buildPublicCatalog(matches) {
 
   matchEntries.forEach(entry => {
     const { match } = entry;
-    if (!byRival.has(match.opponent)) byRival.set(match.opponent, []);
-    byRival.get(match.opponent).push(entry);
+    const rivalName = clubOf(match.opponent);
+    if (!byRival.has(rivalName)) byRival.set(rivalName, { names: new Set(), entries: [] });
+    const group = byRival.get(rivalName);
+    group.names.add(match.opponent);
+    group.names.add(rivalName);
+    group.entries.push(entry);
     if (match.country) {
       if (!byCountry.has(match.country)) byCountry.set(match.country, []);
       byCountry.get(match.country).push(entry);
@@ -100,11 +111,13 @@ export function buildPublicCatalog(matches) {
 
   const rivals = [...byRival.keys()].sort((a, b) => a.localeCompare(b, 'es')).map(name => {
     const slug = uniqueSlug(name, usedRivalSlugs);
+    const group = byRival.get(name);
     return {
       name,
+      names: [...group.names].sort((a, b) => a.localeCompare(b, 'es')),
       slug,
       path: `/rivales/${slug}`,
-      matches: byRival.get(name),
+      matches: group.entries,
       spa: spaSearch({ view: 'rivales', rival: name }),
     };
   });
@@ -127,23 +140,46 @@ export function buildPublicCatalog(matches) {
     spa: spaSearch({ view: 'partidos', year }),
   }));
 
+  const players = rankScorers(matches, scorerAliases).map(player => {
+    const slug = uniqueSlug(player.name, usedPlayerSlugs);
+    return {
+      name: player.name,
+      goals: player.goals,
+      matches: player.matches,
+      first: player.first,
+      last: player.last,
+      lowerBound: player.lowerBound,
+      slug,
+      path: `/jugadores/${slug}`,
+      spa: spaSearch({ view: 'goleadores', jugador: player.name }),
+    };
+  });
+
   return {
     matches: matchEntries,
     rivals,
     countries,
     seasons,
+    players,
     indexes: {
       home: { path: '/', spa: '/' },
       partidos: { path: '/partidos', spa: spaSearch({ view: 'partidos' }) },
+      jugadores: { path: '/jugadores', spa: spaSearch({ view: 'goleadores' }) },
       rivales: { path: '/rivales', spa: spaSearch({ view: 'rivales' }) },
       paises: { path: '/paises', spa: spaSearch({ view: 'paises' }) },
       temporadas: { path: '/temporadas', spa: spaSearch({ view: 'analisis-anual' }) },
+      comparar: { path: COMPARE_PATH, spa: spaSearch({ view: 'comparar' }) },
     },
   };
 }
 
+export function compareSpaSearch({ a, b, ap, bp } = {}) {
+  return spaSearch({ view: 'comparar', a, b, ap, bp });
+}
+
 export function rivalPathByName(catalog, name) {
-  return catalog.rivals.find(rival => rival.name === name)?.path || '/rivales';
+  const canonical = clubOf(name);
+  return catalog.rivals.find(rival => rival.name === name || rival.name === canonical || rival.names?.includes(name) || rival.names?.includes(canonical))?.path || '/rivales';
 }
 
 export function countryPathByName(catalog, name) {
@@ -158,11 +194,21 @@ export function matchKey(match) {
   return [match.date, match.home, match.away, match.tournament].join('|');
 }
 
+export function playerPathByName(catalog, name) {
+  return catalog.players.find(player => player.name === name)?.path || '/jugadores';
+}
+
 export function buildCatalogLookups(catalog) {
+  const rivalPaths = new Map();
+  for (const rival of catalog.rivals) {
+    rivalPaths.set(rival.name, rival.path);
+    for (const alias of rival.names || []) rivalPaths.set(alias, rival.path);
+  }
   return {
     matchPathByKey: new Map(catalog.matches.map(entry => [matchKey(entry.match), entry.path])),
-    rivalPathByName: new Map(catalog.rivals.map(rival => [rival.name, rival.path])),
+    rivalPathByName: rivalPaths,
     countryPathByName: new Map(catalog.countries.map(country => [country.name, country.path])),
+    playerPathByName: new Map(catalog.players.map(player => [player.name, player.path])),
   };
 }
 

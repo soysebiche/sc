@@ -94,19 +94,30 @@ try {
   }
 
   const matchPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/partidos/') && pathname !== '/partidos');
+  const playerPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/jugadores/') && pathname !== '/jugadores');
   const rivalPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/rivales/') && pathname !== '/rivales');
   const countryPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/paises/') && pathname !== '/paises');
-  const seasonPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => pathname.startsWith('/temporadas/') && pathname !== '/temporadas');
-  if (!matchPath || !rivalPath || !countryPath || !seasonPath) {
-    throw new Error('Sitemap is missing match, rival, country or season URLs');
+  const seasonPath = allLocs.map(loc => new URL(loc).pathname).find(pathname => /^\/temporadas\/\d{4}$/.test(pathname));
+  if (!matchPath || !playerPath || !rivalPath || !countryPath || !seasonPath) {
+    throw new Error('Sitemap is missing match, player, rival, country or season URLs');
   }
 
   const home = await curl(origin, '/');
   const partidos = await curl(origin, '/partidos');
+  const azar = await curl(origin, '/partidos/azar');
+  const azarQuery = await curl(origin, '/partidos/azar?wins=1');
+  const azarIndex = await curl(origin, '/azar-index.json');
+  const azarBoot = await curl(origin, '/azar-boot.js');
   const match = await curl(origin, matchPath);
+  const player = await curl(origin, playerPath);
+  const jugadores = await curl(origin, '/jugadores');
   const rival = await curl(origin, rivalPath);
+  const rivalesIndex = await curl(origin, '/rivales');
+  const rivalAlias = await curl(origin, '/rivales/real-garcilaso');
   const country = await curl(origin, countryPath);
   const season = await curl(origin, seasonPath);
+  const compare = await curl(origin, '/temporadas/comparar');
+  const compareAlias = await curl(origin, '/comparar');
   const unknownHead = await curl(origin, '/no-existe-esta-ruta', { method: 'HEAD' });
   const unknownGet = await curl(origin, '/no-existe-esta-ruta');
   const querySpa = await curl(origin, '/?view=rivales&rival=Alianza%20Lima');
@@ -115,6 +126,8 @@ try {
   const slash = await curl(origin, `${matchPath}/`);
   const indexHtml = await curl(origin, `${matchPath}/index.html`);
   const upper = await curl(origin, matchPath.replace('/partidos/', '/Partidos/'));
+  const playerSlash = await curl(origin, `${playerPath}/`);
+  const playerEnglish = await curl(origin, playerPath.replace('/jugadores/', '/players/'));
   const english = await curl(origin, matchPath.replace('/partidos/', '/matches/'));
   const locale = await curl(origin, `/en${matchPath}`);
   const celestePath = await curl(origin, `/celeste${matchPath}`);
@@ -129,6 +142,12 @@ try {
   if (slash.status !== 308) throw new Error(`GET ${matchPath}/ returned ${slash.status}, expected 308`);
   if (indexHtml.status !== 308) throw new Error(`GET ${matchPath}/index.html returned ${indexHtml.status}, expected 308`);
   if (upper.status !== 308) throw new Error(`GET uppercase match path returned ${upper.status}, expected 308`);
+  if (player.status !== 200) throw new Error(`GET ${playerPath} returned ${player.status}`);
+  if (jugadores.status !== 200) throw new Error(`GET /jugadores returned ${jugadores.status}`);
+  if (playerSlash.status !== 308) throw new Error(`GET ${playerPath}/ returned ${playerSlash.status}, expected 308`);
+  if (playerEnglish.status !== 308) throw new Error(`GET /players/... returned ${playerEnglish.status}, expected 308`);
+  if (playerSlash.location !== playerPath) throw new Error(`player slash Location was ${playerSlash.location}`);
+  if (playerEnglish.location !== playerPath) throw new Error(`player english Location was ${playerEnglish.location}`);
   if (english.status !== 308) throw new Error(`GET /matches/... returned ${english.status}, expected 308`);
   if (locale.status !== 308) throw new Error(`GET /en/... returned ${locale.status}, expected 308`);
   if (celestePath.status !== 308) throw new Error(`GET /celeste/... returned ${celestePath.status}, expected 308`);
@@ -155,13 +174,27 @@ try {
   requireSnippet('/', home.body, `rel="canonical" href="${SITE_URL}/"`);
   requireSnippet('/', home.body, '<h1 class="section-title">Archivo histórico de Sporting Cristal</h1>');
   requireSnippet('/', home.body, 'href="/partidos"');
+  requireSnippet('/', home.body, 'href="/jugadores"');
   requireSnippet('/', home.body, 'href="/rivales"');
   requireSnippet('/', home.body, 'href="/temporadas"');
+  requireSnippet('/', home.body, 'href="/partidos/azar"');
   requireSnippet('/', home.body, '"@type":"WebSite"');
   requireSnippet('/', home.body, '"@type":"SportsTeam"');
   requireSnippet('/', home.body, 'twitter:card" content="summary_large_image"');
   requireSnippet('/partidos', partidos.body, `rel="canonical" href="${SITE_URL}/partidos"`);
   requireSnippet('/partidos', partidos.body, 'href="/temporadas/');
+  if (azar.status !== 200) throw new Error(`GET /partidos/azar returned ${azar.status}`);
+  if (azarQuery.status !== 200) throw new Error(`GET /partidos/azar?wins=1 returned ${azarQuery.status}`);
+  if (azarIndex.status !== 200) throw new Error(`GET /azar-index.json returned ${azarIndex.status}`);
+  if (azarBoot.status !== 200) throw new Error(`GET /azar-boot.js returned ${azarBoot.status}`);
+  requireSnippet('/partidos/azar', azar.body, 'noindex,nofollow');
+  requireSnippet('/partidos/azar', azar.body, 'href="/partidos"');
+  requireSnippet('/partidos/azar', azar.body, 'Partido al azar');
+  if (azar.body.includes(`rel="canonical"`)) throw new Error('Random match page exposed a canonical URL');
+  if (allLocs.includes(`${SITE_URL}/partidos/azar`)) throw new Error('Random match page must stay out of the sitemap');
+  requireSnippet(matchPath, match.body, 'Copiar enlace');
+  requireSnippet(matchPath, match.body, 'Compartir en X');
+  requireSnippet(matchPath, match.body, 'href="/partidos/azar#auto=1"');
   requireSnippet(matchPath, match.body, `rel="canonical" href="${SITE_URL}${matchPath}"`);
   requireSnippet(matchPath, match.body, '<h1 class="section-title">');
   requireSnippet(matchPath, match.body, '"@type":"SportsEvent"');
@@ -176,11 +209,32 @@ try {
   requireSnippet(matchPath, match.body, 'Temporada ');
   requireSnippet(matchPath, match.body, 'rel="nofollow"');
   requireSnippet(matchPath, match.body, 'seo-facts');
+  requireSnippet('/jugadores', jugadores.body, `rel="canonical" href="${SITE_URL}/jugadores"`);
+  requireSnippet(playerPath, player.body, `rel="canonical" href="${SITE_URL}${playerPath}"`);
+  requireSnippet(playerPath, player.body, '"@type":"Person"');
+  requireSnippet(playerPath, player.body, 'href="/partidos/');
+  requireSnippet(playerPath, player.body, 'Goles por competición');
+  requireSnippet(playerPath, player.body, 'rel="nofollow"');
   requireSnippet(rivalPath, rival.body, `rel="canonical" href="${SITE_URL}${rivalPath}"`);
   requireSnippet(rivalPath, rival.body, 'href="/partidos/');
+  requireSnippet(rivalPath, rival.body, 'Local y visita');
+  requireSnippet(rivalPath, rival.body, 'Goleadores celestes');
+  requireSnippet('/rivales', rivalesIndex.body, '<th scope="col">PJ</th>');
+  if (rivalesIndex.status !== 200) throw new Error(`GET /rivales returned ${rivalesIndex.status}`);
+  if (rivalAlias.status !== 308 || rivalAlias.location !== '/rivales/cusco-fc') {
+    throw new Error(`GET /rivales/real-garcilaso returned ${rivalAlias.status} ${rivalAlias.location}`);
+  }
   requireSnippet(countryPath, country.body, `rel="canonical" href="${SITE_URL}${countryPath}"`);
   requireSnippet(seasonPath, season.body, `rel="canonical" href="${SITE_URL}${seasonPath}"`);
   requireSnippet(seasonPath, season.body, 'href="/partidos/');
+  requireSnippet(seasonPath, season.body, 'href="/temporadas/comparar');
+  if (compare.status !== 200) throw new Error(`GET /temporadas/comparar returned ${compare.status}`);
+  if (compareAlias.status !== 308 || compareAlias.location !== '/temporadas/comparar') {
+    throw new Error(`GET /comparar returned ${compareAlias.status} ${compareAlias.location}`);
+  }
+  requireSnippet('/temporadas/comparar', compare.body, `rel="canonical" href="${SITE_URL}/temporadas/comparar"`);
+  requireSnippet('/temporadas/comparar', compare.body, 'compare-table');
+  requireSnippet('/temporadas/comparar', compare.body, '3 por victoria');
   requireSnippet('/zzz', unknownGet.body, 'Página no encontrada');
   requireSnippet('robots', robots.body, `Sitemap: ${SITE_URL}/sitemap.xml`);
   if (home.body.includes(`rel="canonical" href="${SITE_URL}${matchPath}"`)) {
@@ -201,7 +255,9 @@ try {
     `SEO verify OK against ${origin} (filesystem then 404.html, matching vercel.json)`,
     `GET / → ${home.status} title+canonical+h1+WebSite+SportsTeam`,
     `GET ${matchPath} → ${match.status} SportsEvent+canonical+unique copy+prev/next`,
+    `GET /partidos/azar → ${azar.status} noindex+archive link`,
     `GET ${matchPath}/ → ${slash.status}`,
+    `GET ${playerPath} → ${player.status} Person+canonical+match links`,
     `GET ${rivalPath} → ${rival.status}`,
     `GET ${countryPath} → ${country.status}`,
     `GET ${seasonPath} → ${season.status}`,
