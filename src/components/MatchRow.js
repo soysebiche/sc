@@ -1,5 +1,6 @@
 import { formatMatchDate } from '../domain/matches';
 import { matchKey } from '../domain/publicRoutes';
+import { GoalsNote } from './PlayerLink';
 import { usePublicCatalog } from './PublicCatalog';
 
 const RESULT_META = {
@@ -34,7 +35,7 @@ function MatchRow({ match }) {
 
       <div className="match-row__fixture">
         <p className="match-teams">{href ? <a href={href}>{fixture}</a> : fixture}</p>
-        {hasGoals && <p className="match-goals"><span>Goles</span> · {match.goalsNote}</p>}
+        {hasGoals && <p className="match-goals"><span>Goles</span> · <GoalsNote match={match} /></p>}
       </div>
 
       <div className="match-row__outcome">

@@ -26,6 +26,10 @@ describe('public URL duplicate redirects', () => {
     expect(redirectLocation('/rivales/real-garcilaso')).toBe('/rivales/cusco-fc');
     expect(redirectLocation('/rivals/real-garcilaso')).toBe('/rivales/cusco-fc');
     expect(redirectLocation('/rivales/adt')).toBe('/rivales/a-d-t');
+    expect(redirectLocation('/players/jorge-soto')).toBe('/jugadores/jorge-soto');
+    expect(redirectLocation('/jugador/jorge-soto')).toBe('/jugadores/jorge-soto');
+    expect(redirectLocation('/goleadores/jorge-soto')).toBe('/jugadores/jorge-soto');
+    expect(redirectLocation('/Jugadores/Jorge-Soto')).toBe('/jugadores/jorge-soto');
   });
 
   test('strips query strings on archive pages but not on the SPA home', () => {

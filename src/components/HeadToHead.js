@@ -1,6 +1,7 @@
 import { formatMatchDate } from '../domain/matches';
 import { matchKey } from '../domain/publicRoutes';
 import { usePublicCatalog } from './PublicCatalog';
+import PlayerLink from './PlayerLink';
 import StatTile from './StatTile';
 
 const BADGE = { V: ['badge-green', 'V'], E: ['badge-yellow', 'E'], P: ['badge-red', 'P'] };
@@ -53,13 +54,6 @@ export function MatchList({ title, rows, empty = 'Sin partidos.' }) {
   );
 }
 
-function ScorerName({ name }) {
-  const { playerPathByName } = usePublicCatalog();
-  const href = playerPathByName?.get(name);
-  if (!href) return name;
-  return <a className="link-accent" href={href}>{name}</a>;
-}
-
 export function ScorerList({ title, scorers }) {
   return (
     <section className="archive-section">
@@ -67,7 +61,7 @@ export function ScorerList({ title, scorers }) {
       {scorers.length === 0 ? <p className="copy-secondary">Sin goleadores registrados.</p> : (
         <ol className="space-y-1">
           {scorers.map((s, i) => (
-            <li key={s.name}><span className="copy-secondary">{i + 1}.</span> <strong><ScorerName name={s.name} /></strong> — {s.goals} {s.goals === 1 ? 'gol' : 'goles'}{s.lowerBound ? '*' : ''}</li>
+            <li key={s.name}><span className="copy-secondary">{i + 1}.</span> <strong><PlayerLink name={s.name} /></strong> — {s.goals} {s.goals === 1 ? 'gol' : 'goles'}{s.lowerBound ? '*' : ''}</li>
           ))}
         </ol>
       )}

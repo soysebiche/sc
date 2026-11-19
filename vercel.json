@@ -155,7 +155,21 @@
     { "source": "/rivales/municipal", "destination": "/rivales/deportivo-municipal", "permanent": true },
     { "source": "/rivales/san-agustin", "destination": "/rivales/deportivo-san-agustin", "permanent": true },
     { "source": "/rivales/utc", "destination": "/rivales/u-t-c", "permanent": true },
-    { "source": "/rivales/adt", "destination": "/rivales/a-d-t", "permanent": true }
+    { "source": "/rivales/adt", "destination": "/rivales/a-d-t", "permanent": true },
+    { "source": "/players", "destination": "/jugadores", "permanent": true },
+    { "source": "/players/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/player", "destination": "/jugadores", "permanent": true },
+    { "source": "/player/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/jugador", "destination": "/jugadores", "permanent": true },
+    { "source": "/jugador/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/goleadores", "destination": "/jugadores", "permanent": true },
+    { "source": "/goleadores/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/goleador", "destination": "/jugadores", "permanent": true },
+    { "source": "/goleador/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/scorers", "destination": "/jugadores", "permanent": true },
+    { "source": "/scorers/:path*", "destination": "/jugadores/:path*", "permanent": true },
+    { "source": "/scorer", "destination": "/jugadores", "permanent": true },
+    { "source": "/scorer/:path*", "destination": "/jugadores/:path*", "permanent": true }
   ],
   "rewrites": [
     {

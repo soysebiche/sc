@@ -9,11 +9,12 @@ export const OG_IMAGE_PATH = '/og/home.png';
 export const RESULT_WORD = Object.freeze({ V: 'Victoria', E: 'Empate', P: 'Derrota' });
 export const PUBLIC_NAV = Object.freeze([
   { path: '/partidos', label: 'Partidos' },
+  { path: '/jugadores', label: 'Jugadores' },
   { path: '/rivales', label: 'Rivales' },
   { path: '/paises', label: 'Países' },
   { path: '/temporadas', label: 'Temporadas' },
 ]);
-export const ARCHIVE_HEADS = Object.freeze(['partidos', 'rivales', 'paises', 'temporadas']);
+export const ARCHIVE_HEADS = Object.freeze(['partidos', 'jugadores', 'rivales', 'paises', 'temporadas']);
 
 export function slugify(value) {
   const slug = String(value || '')
@@ -67,7 +68,7 @@ export function spaSearch(params) {
   return query ? `/?${query}` : '/';
 }
 
-export function buildPublicCatalog(matches, scorerAliases) {
+export function buildPublicCatalog(matches, scorerAliases = { players: {} }) {
   const usedMatchIds = new Set();
   const usedRivalSlugs = new Set();
   const usedCountrySlugs = new Set();
@@ -136,22 +137,20 @@ export function buildPublicCatalog(matches, scorerAliases) {
     spa: spaSearch({ view: 'partidos', year }),
   }));
 
-  const players = scorerAliases
-    ? rankScorers(matches, scorerAliases).map(player => {
-        const slug = uniqueSlug(player.name, usedPlayerSlugs);
-        return {
-          name: player.name,
-          goals: player.goals,
-          matches: player.matches,
-          first: player.first,
-          last: player.last,
-          lowerBound: player.lowerBound,
-          slug,
-          path: `/jugadores/${slug}`,
-          spa: spaSearch({ view: 'goleadores', jugador: player.name }),
-        };
-      })
-    : [];
+  const players = rankScorers(matches, scorerAliases).map(player => {
+    const slug = uniqueSlug(player.name, usedPlayerSlugs);
+    return {
+      name: player.name,
+      goals: player.goals,
+      matches: player.matches,
+      first: player.first,
+      last: player.last,
+      lowerBound: player.lowerBound,
+      slug,
+      path: `/jugadores/${slug}`,
+      spa: spaSearch({ view: 'goleadores', jugador: player.name }),
+    };
+  });
 
   return {
     matches: matchEntries,
@@ -162,6 +161,7 @@ export function buildPublicCatalog(matches, scorerAliases) {
     indexes: {
       home: { path: '/', spa: '/' },
       partidos: { path: '/partidos', spa: spaSearch({ view: 'partidos' }) },
+      jugadores: { path: '/jugadores', spa: spaSearch({ view: 'goleadores' }) },
       rivales: { path: '/rivales', spa: spaSearch({ view: 'rivales' }) },
       paises: { path: '/paises', spa: spaSearch({ view: 'paises' }) },
       temporadas: { path: '/temporadas', spa: spaSearch({ view: 'analisis-anual' }) },
@@ -187,7 +187,7 @@ export function matchKey(match) {
 }
 
 export function playerPathByName(catalog, name) {
-  return catalog.players?.find(player => player.name === name)?.path || '/jugadores';
+  return catalog.players.find(player => player.name === name)?.path || '/jugadores';
 }
 
 export function buildCatalogLookups(catalog) {
@@ -200,7 +200,7 @@ export function buildCatalogLookups(catalog) {
     matchPathByKey: new Map(catalog.matches.map(entry => [matchKey(entry.match), entry.path])),
     rivalPathByName: rivalPaths,
     countryPathByName: new Map(catalog.countries.map(country => [country.name, country.path])),
-    playerPathByName: new Map((catalog.players || []).map(player => [player.name, player.path])),
+    playerPathByName: new Map(catalog.players.map(player => [player.name, player.path])),
   };
 }
 
