@@ -154,16 +154,16 @@ describe('filters (archive)', () => {
 
   it('counts matches where Cristal scored 4 or more', () => {
     const found = filterMatches(matches, { ...readSearchQuery(''), gfmin: '4' });
-    expect(found).toHaveLength(274);
+    expect(found).toHaveLength(275);
     expect(found.every(m => m.scGoals >= 4)).toBe(true);
     expect(summarizeSearch(found)).toMatchObject({
-      total: 274,
-      victories: 268,
+      total: 275,
+      victories: 269,
       draws: 4,
       defeats: 2,
-      goalsFor: 1277,
-      goalsAgainst: 272,
-      points: 808,
+      goalsFor: 1281,
+      goalsAgainst: 273,
+      points: 811,
     });
   });
 
