@@ -21,7 +21,7 @@ describe('public archive routes', () => {
     expect(new Set(catalog.countries.map(country => country.slug)).size).toBe(catalog.countries.length);
     expect(new Set(catalog.seasons.map(season => season.path)).size).toBe(catalog.seasons.length);
     expect(new Set(catalog.players.map(player => player.slug)).size).toBe(catalog.players.length);
-    expect(catalog.matches).toHaveLength(2155);
+    expect(catalog.matches).toHaveLength(2156);
     expect(catalog.rivals.length).toBeGreaterThan(100);
     expect(catalog.players.length).toBeGreaterThan(300);
     expect(catalog.players[0].name).toBe('Jorge Soto');

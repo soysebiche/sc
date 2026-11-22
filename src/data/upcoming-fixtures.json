@@ -5,21 +5,9 @@
     "timeZone": "America/Lima",
     "canonicalUrl": "https://celeste.sebiche.com/sporting-cristal.ics",
     "subscriptionUrl": "webcal://celeste.sebiche.com/sporting-cristal.ics",
-    "lastVerifiedAt": "2026-11-11T14:20:49Z",
-    "sourceName": "Liga1 Te Apuesto (@Liga1TeApuesto)",
-    "sourceUrl": "https://x.com/Liga1TeApuesto/status/2120174356395692119"
+    "lastVerifiedAt": "2026-11-22T22:47:37Z",
+    "sourceName": "Andina / Infobae / América TV (resultado Clausura Fecha 17)",
+    "sourceUrl": "https://andina.pe/agencia/noticia-sporting-cristal-golei-41-a-cienciano-y-clasifico-a-copa-sudamericana-1101029.aspx"
   },
-  "fixtures": [
-    {
-      "id": "clausura-2026-f17-sporting-cristal-cienciano",
-      "competition": "Liga 1 — Torneo Clausura",
-      "round": "Fecha 17",
-      "homeTeam": "Sporting Cristal",
-      "awayTeam": "Cienciano",
-      "start": "2026-11-22T15:00:00-05:00",
-      "end": "2026-11-22T17:15:00-05:00",
-      "venue": "Estadio Alberto Gallardo, Lima",
-      "status": "confirmed"
-    }
-  ]
+  "fixtures": []
 }
