@@ -46,7 +46,7 @@ test('injectRoot fills the SPA mount and refuses a missing root', () => {
   assert.throws(() => injectRoot('<html></html>', '<h1>x</h1>'), /missing empty/);
 });
 
-test('SportsEvent omits location when the archive has no venue', () => {
+test('SportsEvent fills Google required fields without inventing a stadium', () => {
   const event = matchSportsEvent({
     path: '/partidos/1956-08-05-alianza-lima',
     match: {
@@ -54,13 +54,49 @@ test('SportsEvent omits location when the archive has no venue', () => {
       away: 'Sporting Cristal',
       date: '1956-08-05',
       tournament: 'Liga',
+      country: 'Perú',
+      isHome: false,
+      opponent: 'Alianza Lima',
+      scoreLabel: '2-1',
     },
-  });
+  }, 'Derrota 2-1 de Sporting Cristal ante Alianza Lima.');
   assert.equal(event['@type'], 'SportsEvent');
   assert.equal(event.startDate, '1956-08-05');
+  assert.equal(event.eventStatus, 'https://schema.org/EventScheduled');
+  assert.equal(event.location['@type'], 'Place');
+  assert.equal(event.location.address['@type'], 'PostalAddress');
+  assert.equal(event.location.address.addressCountry, 'PE');
+  assert.match(event.location.name, /Lima|Perú/);
+  assert.equal(event.organizer['@type'], 'SportsOrganization');
+  assert.equal(event.superEvent['@type'], 'SportsOrganization');
   assert.equal(event.homeTeam.name, 'Alianza Lima');
   assert.equal(event.awayTeam.name, 'Sporting Cristal');
-  assert.equal(event.location, undefined);
+  assert.equal(event.competitor.length, 2);
+  assert.match(event.name, /2-1/);
+  assert.match(event.description, /2-1/);
+  assert.equal(event.score, undefined);
+});
+
+test('SportsEvent is omitted when required Event fields cannot be filled', () => {
+  assert.equal(matchSportsEvent({
+    path: '/partidos/tbd',
+    match: {
+      home: 'Sporting Cristal',
+      away: 'Alianza Lima',
+      date: 'TBD',
+      tournament: 'Liga',
+      country: 'Perú',
+    },
+  }), null);
+  assert.equal(matchSportsEvent({
+    path: '/partidos/1956-08-05-alianza-lima',
+    match: {
+      home: 'Sporting Cristal',
+      away: 'Alianza Lima',
+      date: '1956-08-05',
+      tournament: 'Liga',
+    },
+  }), null);
 });
 
 test('splits a sitemap index above 50k URLs', () => {

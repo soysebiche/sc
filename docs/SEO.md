@@ -9,10 +9,10 @@ En `/partidos/{id}`, `/jugadores/{slug}`, `/rivales/{slug}`, `/paises/{slug}`, `
 El generador es `scripts/generate-public-pages.mjs`. Se ejecuta al final de `npm run build` y escribe, en `dist/`:
 
 - `/index.html` (inicio: WebSite + SportsTeam + BreadcrumbList)
-- `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next, copiar enlace / X / otro al azar)
+- `/partidos/index.html` y `/partidos/{id}/index.html` para cada partido (SportsEvent + BreadcrumbList, título/H1 únicos, prev/next, copiar enlace / X / otro al azar). El SportsEvent de un resultado histórico lleva `startDate` ISO (`YYYY-MM-DD`), `eventStatus` `EventScheduled` (el partido se jugó; schema.org no tiene “completed”), `location` como `Place` de ciudad o país (el archivo no registra estadios), `organizer` del torneo, `homeTeam`/`awayTeam`/`competitor`, y el marcador en `name` y `description`. El torneo va en `superEvent` como `SportsOrganization`, no como otro Event. Si faltara fecha o país, esa página no emite Event y conserva BreadcrumbList. Los índices y fichas de rival/país/temporada no marcan Event.
 - `/partidos/azar/index.html` (`noindex`, enlace al archivo; el sorteo corre en el navegador)
 - `/jugadores/index.html` y `/jugadores/{slug}/index.html` para cada goleador de Sporting Cristal (Person + ItemList de partidos con gol; sin autogoles)
-- `/rivales/index.html` y `/rivales/{slug}/index.html` (índice ordenado por PJ; ficha con W/D/L, local/visita, competición, rachas, goleadores, llaves ida/vuelta solo si el archivo las marca, listado completo vs. ese rival + ItemList)
+- `/rivales/index.html` y `/rivales/{slug}/index.html` (índice ordenado por PJ; ficha con W/D/L, local/visita, competición, rachas, goleadores, llaves ida/vuelta solo si el archivo las marca, listado completo vs. ese rival + ItemList). El `<title>` y la meta description (también og/twitter) van en el HTML prerenderizado: `Sporting Cristal vs {rival}: historial | Celeste` (~60 caracteres; nombres largos usan `Cristal vs …`) y ~150–160 caracteres con la palabra historial, el balance (PJ / V-E-P) y el último resultado.
 - `/paises/index.html` y `/paises/{slug}/index.html`
 - `/temporadas/index.html`, `/temporadas/comparar/index.html` (comparador con las dos temporadas más recientes del archivo) y `/temporadas/{año}/index.html` (cada partido de la temporada)
 - `/404.html` para URLs desconocidas (`noindex`)
@@ -54,7 +54,8 @@ npm run build
 - `GET /` trae H1, canonical del homepage, `lang="es-PE"`, WebSite, SportsTeam y `twitter:card=summary_large_image`
 - un partido, un jugador, un rival, un país y una temporada tienen canonical propio y contenido en el HTML
 - `/rivales` lista PJ y `/rivales/real-garcilaso` responde 308 a `/rivales/cusco-fc`
-- cada partido enlaza a su rival, su temporada, partidos contiguos, el mismo torneo y BreadcrumbList, con SportsEvent (`homeTeam`, `awayTeam`, `startDate`)
+- cada partido enlaza a su rival, su temporada, partidos contiguos, el mismo torneo y BreadcrumbList, con un solo SportsEvent (`startDate`, `location.Place`, `organizer`, `eventStatus=EventScheduled`, `homeTeam`/`awayTeam`)
+- `/rivales/{slug}` no emite Event; el title/og/twitter incluyen “historial” y el recorte de Alianza Atlético es `Sporting Cristal vs Alianza Atlético: historial | Celeste`
 - `GET /partidos/{id}/`, `.../index.html`, mayúsculas, `/matches/…`, `/en/…`, `/celeste/…` y `?utm=` responden 308 al canonical
 - `GET /no-existe-esta-ruta` responde 404
 - el sitemap índice lista todas las URLs públicas, con `lastmod` distinto entre partidos y `loc` igual al canonical

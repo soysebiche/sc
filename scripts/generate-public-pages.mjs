@@ -6,6 +6,7 @@ import birthdayData from '../src/data/scorer-birthdays.json' with { type: 'json'
 import { scorerProfiles } from '../src/domain/goals.js';
 import { formatMatchDate, parseMatch, sortMatchesNewest, summarizeMatches } from '../src/domain/matches.js';
 import { headToHead, sortRivals } from '../src/domain/rivals.js';
+import { matchSportsEvent, sportsEventIssues } from '../src/domain/matchEvent.js';
 import {
   h2hContext,
   matchDescription,
@@ -16,6 +17,7 @@ import {
   sortEntriesChronologically,
   venuePhrase,
 } from '../src/domain/matchSeo.js';
+import { rivalDescription, rivalHeading, rivalTitle } from '../src/domain/rivalSeo.js';
 import { birthdayFor, linkedGoalsNoteHtml } from '../src/domain/players.js';
 import {
   COMPARE_PATH,
@@ -448,7 +450,27 @@ function assertUniqueMatchMeta(pages) {
 }
 
 function jsonLdGraph(nodes) {
-  return { '@context': 'https://schema.org', '@graph': nodes };
+  return { '@context': 'https://schema.org', '@graph': nodes.filter(Boolean) };
+}
+
+function pageJsonLdGraph(html) {
+  const raw = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  if (!raw) return [];
+  const parsed = JSON.parse(raw.replaceAll('\\u003c', '<'));
+  return parsed['@graph'] || (Array.isArray(parsed) ? parsed : [parsed]);
+}
+
+function assertValidMatchEvents(pages) {
+  pages.filter(page => page.path.startsWith('/partidos/') && page.path !== '/partidos' && !page.path.startsWith('/partidos/azar')).forEach(page => {
+    const graph = pageJsonLdGraph(page.html);
+    const events = graph.filter(node => node['@type'] === 'SportsEvent' || node['@type'] === 'Event');
+    if (events.length !== 1) throw new Error(`${page.path} has ${events.length} Event nodes`);
+    const issues = sportsEventIssues(events[0]);
+    if (issues.length) throw new Error(`${page.path} SportsEvent: ${issues.join(', ')}`);
+    if (!graph.some(node => node['@type'] === 'BreadcrumbList')) {
+      throw new Error(`${page.path} is missing BreadcrumbList`);
+    }
+  });
 }
 
 function playerCountList(rows, labelKey, hrefFor) {
@@ -517,22 +539,7 @@ function playerArticleHtml(player, profile, birthday, lookups) {
     </article>`;
 }
 
-export function matchSportsEvent(entry, description) {
-  const match = entry.match;
-  const event = {
-    '@type': 'SportsEvent',
-    name: [match.home, match.scoreLabel, match.away].filter(Boolean).join(' '),
-    url: absoluteUrl(entry.path),
-    startDate: match.date,
-    sport: 'Soccer',
-    homeTeam: { '@type': 'SportsTeam', name: match.home },
-    awayTeam: { '@type': 'SportsTeam', name: match.away },
-    image: absoluteUrl(OG_IMAGE_PATH),
-  };
-  if (description) event.description = description;
-  if (match.tournament) event.superEvent = { '@type': 'SportsEvent', name: match.tournament };
-  return event;
-}
+export { matchSportsEvent } from '../src/domain/matchEvent.js';
 
 async function writeHtml(pathname, html) {
   const target = pathname === '/'
@@ -938,21 +945,22 @@ export async function generatePublicPages({ distDir = DIST, dataDir = path.join(
   });
 
   catalog.rivals.forEach(rival => {
-    const heading = `Sporting Cristal vs. ${rival.name}`;
-    const description = `Historial de Sporting Cristal vs. ${rival.name}: ${statsLine(rival.matches.map(item => item.match))}.`;
-    const crumbs = [...rivalesCrumbs, { name: rival.name, path: rival.path }];
+    const heading = rivalHeading(rival.name);
     const h2h = headToHead(rival.matches.map(item => item.match), rival.name, aliases);
+    const description = rivalDescription(rival.name, h2h);
+    const intro = `Historial de Sporting Cristal vs. ${rival.name}: ${statsLine(rival.matches.map(item => item.match))}.`;
+    const crumbs = [...rivalesCrumbs, { name: rival.name, path: rival.path }];
     pages.push({
       path: rival.path,
       html: injectRoot(applyHead(viteHtml, {
-        title: `${heading} | Sebiche Celeste`,
+        title: rivalTitle(rival.name),
         description,
         pathname: rival.path,
         spa: rival.spa,
         schema: jsonLdGraph([breadcrumbList(crumbs), itemListSchema(rival.matches, heading)]),
       }), siteChrome({
         heading,
-        intro: description,
+        intro,
         crumbs,
         spa: rival.spa,
         extra: rivalArticleHtml(rival, h2h, lookups),
@@ -1111,6 +1119,10 @@ Sitemap: ${SITE_URL}/sitemap.xml
     '"homeTeam"',
     '"awayTeam"',
     '"startDate"',
+    '"eventStatus"',
+    '"organizer"',
+    '"@type":"Place"',
+    '"addressCountry"',
     rivalPathByName(catalog, sampleMatch.match.opponent),
     seasonPathByYear(sampleMatch.match.year),
     `Temporada ${sampleMatch.match.year}`,
@@ -1143,6 +1155,8 @@ Sitemap: ${SITE_URL}/sitemap.xml
   ]);
   assertContains('rival', rivalHtml, [
     sampleRival.name,
+    rivalTitle(sampleRival.name),
+    'historial',
     `rel="canonical" href="${absoluteUrl(sampleRival.path)}"`,
     '"@type":"BreadcrumbList"',
     '"@type":"ItemList"',
@@ -1152,7 +1166,30 @@ Sitemap: ${SITE_URL}/sitemap.xml
     'Goleadores celestes',
     'Mayor victoria',
   ]);
+  const listingEventPages = ['/partidos', '/rivales', '/paises', '/temporadas', sampleRival.path, sampleCountry.path, sampleSeason.path];
+  listingEventPages.forEach(pathname => {
+    const page = pages.find(item => item.path === pathname);
+    const events = pageJsonLdGraph(page.html).filter(node => node['@type'] === 'SportsEvent' || node['@type'] === 'Event');
+    if (events.length) throw new Error(`${pathname} must not ship Event markup`);
+  });
+  const atletico = catalog.rivals.find(rival => rival.name === 'Alianza Atlético');
+  if (!atletico) throw new Error('Missing Alianza Atlético rival page');
+  const atleticoHtml = pages.find(page => page.path === atletico.path).html;
+  const atleticoTitle = rivalTitle(atletico.name);
+  const atleticoH2h = headToHead(atletico.matches.map(item => item.match), atletico.name, aliases);
+  const atleticoDescription = rivalDescription(atletico.name, atleticoH2h);
+  assertContains('alianza-atletico', atleticoHtml, [
+    `<title>${escapeHtml(atleticoTitle)}</title>`,
+    `og:title" content="${escapeHtml(atleticoTitle)}"`,
+    `twitter:title" content="${escapeHtml(atleticoTitle)}"`,
+    `og:description" content="${escapeHtml(atleticoDescription)}"`,
+    `twitter:description" content="${escapeHtml(atleticoDescription)}"`,
+    'historial',
+    `${atleticoH2h.total.V}V`,
+    atleticoH2h.lastMatch.scoreLabel,
+  ]);
   assertUniqueMatchMeta(pages);
+  assertValidMatchEvents(pages);
   assertContains('404', notFoundHtml, ['Página no encontrada', 'noindex,nofollow']);
   if (defaultCompared) {
     assertContains('comparar', compareHtml, [
