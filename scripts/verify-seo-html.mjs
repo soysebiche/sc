@@ -72,6 +72,17 @@ function requireSnippet(label, body, snippet) {
   if (!body.includes(snippet)) throw new Error(`${label} missing ${JSON.stringify(snippet)}`);
 }
 
+function jsonLdGraph(body) {
+  const match = body.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  if (!match) throw new Error('missing JSON-LD script');
+  const parsed = JSON.parse(match[1]);
+  return parsed['@graph'] || (Array.isArray(parsed) ? parsed : [parsed]);
+}
+
+function eventNodes(body) {
+  return jsonLdGraph(body).filter(node => node['@type'] === 'SportsEvent' || node['@type'] === 'Event');
+}
+
 function countSitemapLocs(xml) {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
 }
@@ -114,6 +125,7 @@ try {
   const rival = await curl(origin, rivalPath);
   const rivalesIndex = await curl(origin, '/rivales');
   const rivalAlias = await curl(origin, '/rivales/real-garcilaso');
+  const atletico = await curl(origin, '/rivales/alianza-atletico');
   const country = await curl(origin, countryPath);
   const season = await curl(origin, seasonPath);
   const compare = await curl(origin, '/temporadas/comparar');
@@ -201,6 +213,27 @@ try {
   requireSnippet(matchPath, match.body, '"homeTeam"');
   requireSnippet(matchPath, match.body, '"awayTeam"');
   requireSnippet(matchPath, match.body, '"startDate"');
+  requireSnippet(matchPath, match.body, '"eventStatus"');
+  requireSnippet(matchPath, match.body, '"organizer"');
+  requireSnippet(matchPath, match.body, '"@type":"Place"');
+  const matchEvents = eventNodes(match.body);
+  if (matchEvents.length !== 1) throw new Error(`${matchPath} has ${matchEvents.length} Event nodes`);
+  const matchEvent = matchEvents[0];
+  if (matchEvent['@type'] !== 'SportsEvent') throw new Error(`${matchPath} Event type was ${matchEvent['@type']}`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(matchEvent.startDate)) throw new Error(`${matchPath} startDate was ${matchEvent.startDate}`);
+  if (matchEvent.eventStatus !== 'https://schema.org/EventScheduled') {
+    throw new Error(`${matchPath} eventStatus was ${matchEvent.eventStatus}`);
+  }
+  if (matchEvent.location?.['@type'] !== 'Place' || !matchEvent.location.name || matchEvent.location.address?.['@type'] !== 'PostalAddress') {
+    throw new Error(`${matchPath} is missing a Place with PostalAddress`);
+  }
+  if (!matchEvent.organizer?.name) throw new Error(`${matchPath} is missing organizer`);
+  if (matchEvent.superEvent?.['@type'] === 'SportsEvent' || matchEvent.superEvent?.['@type'] === 'Event') {
+    throw new Error(`${matchPath} nested an Event in superEvent`);
+  }
+  if (!matchEvent.homeTeam?.name || !matchEvent.awayTeam?.name || matchEvent.competitor?.length !== 2) {
+    throw new Error(`${matchPath} has incomplete competitor data`);
+  }
   requireSnippet(matchPath, match.body, 'href="/rivales/');
   requireSnippet(matchPath, match.body, 'href="/temporadas/');
   requireSnippet(matchPath, match.body, 'Partidos contiguos');
@@ -219,6 +252,16 @@ try {
   requireSnippet(rivalPath, rival.body, 'href="/partidos/');
   requireSnippet(rivalPath, rival.body, 'Local y visita');
   requireSnippet(rivalPath, rival.body, 'Goleadores celestes');
+  requireSnippet(rivalPath, rival.body, 'historial');
+  if (eventNodes(rival.body).length) throw new Error(`${rivalPath} must not ship Event markup`);
+  if (eventNodes(rivalesIndex.body).length) throw new Error('/rivales must not ship Event markup');
+  if (eventNodes(partidos.body).length) throw new Error('/partidos must not ship Event markup');
+  if (atletico.status !== 200) throw new Error(`GET /rivales/alianza-atletico returned ${atletico.status}`);
+  requireSnippet('/rivales/alianza-atletico', atletico.body, 'Sporting Cristal vs Alianza Atlético: historial | Celeste');
+  requireSnippet('/rivales/alianza-atletico', atletico.body, 'og:title" content="Sporting Cristal vs Alianza Atlético: historial | Celeste"');
+  requireSnippet('/rivales/alianza-atletico', atletico.body, 'twitter:title" content="Sporting Cristal vs Alianza Atlético: historial | Celeste"');
+  requireSnippet('/rivales/alianza-atletico', atletico.body, 'historial');
+  requireSnippet('/rivales/alianza-atletico', atletico.body, `rel="canonical" href="${SITE_URL}/rivales/alianza-atletico"`);
   requireSnippet('/rivales', rivalesIndex.body, '<th scope="col">PJ</th>');
   if (rivalesIndex.status !== 200) throw new Error(`GET /rivales returned ${rivalesIndex.status}`);
   if (rivalAlias.status !== 308 || rivalAlias.location !== '/rivales/cusco-fc') {
@@ -254,7 +297,8 @@ try {
   const lines = [
     `SEO verify OK against ${origin} (filesystem then 404.html, matching vercel.json)`,
     `GET / → ${home.status} title+canonical+h1+WebSite+SportsTeam`,
-    `GET ${matchPath} → ${match.status} SportsEvent+canonical+unique copy+prev/next`,
+    `GET ${matchPath} → ${match.status} SportsEvent+Place+organizer+EventScheduled+canonical`,
+    `GET /rivales/alianza-atletico → ${atletico.status} historial title`,
     `GET /partidos/azar → ${azar.status} noindex+archive link`,
     `GET ${matchPath}/ → ${slash.status}`,
     `GET ${playerPath} → ${player.status} Person+canonical+match links`,
